@@ -3,9 +3,11 @@ local CoreGui = game:GetService("CoreGui")
 
 local player = Players.LocalPlayer
 
-local Theme = loadstring(readfile("lua/modules/theme.lua"))()
-local Api = loadstring(readfile("lua/modules/api.lua"))()
-local MainWindow = loadstring(readfile("lua/modules/main_window.lua"))()
+local BASE_RAW = "https://raw.githubusercontent.com/clayyy333/StrikeChat-lua/main/"
+
+local Theme = loadstring(game:HttpGet(BASE_RAW .. "modules/theme.lua"))()
+local Api = loadstring(game:HttpGet(BASE_RAW .. "modules/api.lua"))()
+local MainWindow = loadstring(game:HttpGet(BASE_RAW .. "modules/main_window.lua"))()
 
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
