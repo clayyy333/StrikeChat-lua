@@ -28,7 +28,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     local success, content = pcall(function()
         return Players:GetUserThumbnailAsync(
             player.UserId,
-            Enum.ThumbnailType.AvatarThumbnail,
+            Enum.ThumbnailType.AvatarBust,
             Enum.ThumbnailSize.Size150x150
         )
     end)
