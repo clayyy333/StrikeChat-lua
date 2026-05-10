@@ -3,7 +3,7 @@ local LeftPanel = {}
 function LeftPanel.Create(parent, Theme, profile, player)
     local avatar = Instance.new("Frame")
     avatar.Name = "AvatarPlaceholder"
-    avatar.Size = UDim2.new(0, 64, 0, 64)
+    avatar.Size = UDim2.new(0, 68, 0, 68)
     avatar.Position = UDim2.new(0, 14, 0, 14)
     avatar.BackgroundColor3 = Theme.Colors.PanelLight
     avatar.BorderSizePixel = 0
@@ -19,13 +19,13 @@ function LeftPanel.Create(parent, Theme, profile, player)
     avatarText.Text = "👤"
     avatarText.TextColor3 = Theme.Colors.Text
     avatarText.Font = Theme.Font.Bold
-    avatarText.TextSize = 24
+    avatarText.TextSize = 25
     avatarText.Parent = avatar
 
     local displayName = Instance.new("TextLabel")
     displayName.Name = "DisplayName"
-    displayName.Size = UDim2.new(1, -96, 0, 24)
-    displayName.Position = UDim2.new(0, 88, 0, 18)
+    displayName.Size = UDim2.new(1, -104, 0, 24)
+    displayName.Position = UDim2.new(0, 92, 0, 18)
     displayName.BackgroundTransparency = 1
     displayName.Text = tostring(profile.display_name or player.DisplayName)
     displayName.TextColor3 = Theme.Colors.Text
@@ -37,8 +37,8 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     local username = Instance.new("TextLabel")
     username.Name = "Username"
-    username.Size = UDim2.new(1, -96, 0, 20)
-    username.Position = UDim2.new(0, 88, 0, 42)
+    username.Size = UDim2.new(1, -104, 0, 20)
+    username.Position = UDim2.new(0, 92, 0, 42)
     username.BackgroundTransparency = 1
     username.Text = "@" .. tostring(player.Name)
     username.TextColor3 = Theme.Colors.TextMuted
@@ -51,7 +51,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     local pointsBox = Instance.new("Frame")
     pointsBox.Name = "PointsBox"
     pointsBox.Size = UDim2.new(1, -28, 0, 54)
-    pointsBox.Position = UDim2.new(0, 14, 0, 94)
+    pointsBox.Position = UDim2.new(0, 14, 0, 98)
     pointsBox.BackgroundColor3 = Theme.Colors.Panel
     pointsBox.BorderSizePixel = 0
     pointsBox.Parent = parent
@@ -73,95 +73,95 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     local pointsValue = Instance.new("TextLabel")
     pointsValue.Size = UDim2.new(1, -16, 0, 24)
-    pointsValue.Position = UDim2.new(0, 10, 0, 25)
+    pointsValue.Position = UDim2.new(0, 8, 0, 25)
     pointsValue.BackgroundTransparency = 1
     pointsValue.Text = tostring(profile.personal_points or 0)
     pointsValue.TextColor3 = Theme.Colors.Text
     pointsValue.Font = Theme.Font.Bold
     pointsValue.TextSize = 17
-    pointsValue.TextXAlignment = Enum.TextXAlignment.Left
+    pointsValue.TextXAlignment = Enum.TextXAlignment.Center
     pointsValue.Parent = pointsBox
-
-    local topButtons = {
-        {
-            name = "Perfil",
-            icon = "👤",
-            x = 14
-        },
-        {
-            name = "Tienda",
-            icon = "🛒",
-            x = 116
-        }
-    }
 
     local createdButtons = {}
 
-    for _, data in ipairs(topButtons) do
+    local function createButton(name, text, icon, size, position)
         local btn = Instance.new("TextButton")
-        btn.Name = data.name .. "Button"
-        btn.Size = UDim2.new(0, 88, 0, 36)
-        btn.Position = UDim2.new(0, data.x, 0, 162)
+        btn.Name = name .. "Button"
+        btn.Size = size
+        btn.Position = position
         btn.BackgroundColor3 = Theme.Colors.PanelLight
-        btn.Text = data.icon .. "  " .. data.name
+        btn.Text = text .. "  " .. icon
         btn.TextColor3 = Theme.Colors.Text
         btn.Font = Theme.Font.Bold
-        btn.TextSize = 13
-        btn.TextXAlignment = Enum.TextXAlignment.Left
+        btn.TextSize = 12
+        btn.TextXAlignment = Enum.TextXAlignment.Center
         btn.Parent = parent
 
-        local padding = Instance.new("UIPadding")
-        padding.PaddingLeft = UDim.new(0, 10)
-        padding.Parent = btn
+        local btnCorner = Instance.new("UICorner")
+        btnCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+        btnCorner.Parent = btn
+
+        createdButtons[name] = btn
+        return btn
+    end
+
+    createButton(
+        "Tienda",
+        "Tienda",
+        "🛒",
+        UDim2.new(0.5, -19, 0, 32),
+        UDim2.new(0, 14, 0, 166)
+    )
+
+    createButton(
+        "Perfil",
+        "Perfil",
+        "👤",
+        UDim2.new(0.5, -19, 0, 32),
+        UDim2.new(0.5, 5, 0, 166)
+    )
+
+    local menuButtons = {
+        {
+            name = "CrearSalas",
+            text = "+  Salas",
+            y = 214
+        },
+        {
+            name = "SalasPublicas",
+            text = "Salas Públicas  🌐",
+            y = 254
+        },
+        {
+            name = "SalasPrivadas",
+            text = "Salas Privadas  🔒",
+            y = 294
+        },
+        {
+            name = "TablaClanes",
+            text = "Tabla de Clanes  🏆",
+            y = 334
+        }
+    }
+
+    for _, data in ipairs(menuButtons) do
+        local btn = Instance.new("TextButton")
+        btn.Name = data.name .. "Button"
+        btn.Size = UDim2.new(1, -36, 0, 32)
+        btn.Position = UDim2.new(0, 18, 0, data.y)
+        btn.BackgroundColor3 = Theme.Colors.PanelLight
+        btn.Text = data.text
+        btn.TextColor3 = Theme.Colors.Text
+        btn.Font = Theme.Font.Bold
+        btn.TextSize = 12
+        btn.TextXAlignment = Enum.TextXAlignment.Center
+        btn.Parent = parent
 
         local btnCorner = Instance.new("UICorner")
         btnCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
         btnCorner.Parent = btn
 
         createdButtons[data.name] = btn
-    end
-
-    local menuButtons = {
-        {
-            text = "+  Salas",
-            y = 214
-        },
-        {
-            text = "🌐  Salas Públicas",
-            y = 258
-        },
-        {
-            text = "🔒  Salas Privadas",
-            y = 302
-        },
-        {
-            text = "🏆  Tabla de Clanes",
-            y = 346
-        }
-    }
-
-    for _, data in ipairs(menuButtons) do
-        local btn = Instance.new("TextButton")
-        btn.Name = data.text .. "Button"
-        btn.Size = UDim2.new(1, -28, 0, 36)
-        btn.Position = UDim2.new(0, 14, 0, data.y)
-        btn.BackgroundColor3 = Theme.Colors.PanelLight
-        btn.Text = data.text
-        btn.TextColor3 = Theme.Colors.Text
-        btn.Font = Theme.Font.Bold
-        btn.TextSize = 13
-        btn.TextXAlignment = Enum.TextXAlignment.Left
-        btn.Parent = parent
-
-        local padding = Instance.new("UIPadding")
-        padding.PaddingLeft = UDim.new(0, 12)
-        padding.Parent = btn
-
-        local btnCorner = Instance.new("UICorner")
-        btnCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
-        btnCorner.Parent = btn
-
-        createdButtons[data.text] = btn
     end
 
     return {
