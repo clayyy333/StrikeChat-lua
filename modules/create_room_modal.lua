@@ -214,10 +214,10 @@ function CreateRoomModal.Create(parent, Theme)
         publicOption.BackgroundColor3 = Theme.Colors.PanelLight
         privateOption.BackgroundColor3 = Theme.Colors.PanelLight
 
-        if isPrivate then
-            publicOption.BackgroundTransparency = 0
-            privateOption.BackgroundTransparency = 0.35
+        publicOption.BackgroundTransparency = 0
+        privateOption.BackgroundTransparency = 0
 
+        if isPrivate then
             publicCircle.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
             privateCircle.BackgroundColor3 = Theme.Colors.AccentSoft
 
@@ -226,19 +226,35 @@ function CreateRoomModal.Create(parent, Theme)
 
             passwordInput.Visible = true
         else
-            publicOption.BackgroundTransparency = 0.35
-            privateOption.BackgroundTransparency = 0
-
             publicCircle.BackgroundColor3 = Theme.Colors.AccentSoft
+            privateCircle.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
 
             publicStroke.Enabled = true
             privateStroke.Enabled = false
 
-            privateCircle.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
-
             passwordInput.Visible = false
         end
     end
+
+    publicOption.MouseEnter:Connect(function()
+        publicStroke.Enabled = true
+    end)
+
+    publicOption.MouseLeave:Connect(function()
+        if isPrivate then
+            publicStroke.Enabled = false
+        end
+    end)
+
+    privateOption.MouseEnter:Connect(function()
+        privateStroke.Enabled = true
+    end)
+
+    privateOption.MouseLeave:Connect(function()
+        if not isPrivate then
+            privateStroke.Enabled = false
+        end
+    end)
 
     publicOption.MouseButton1Click:Connect(function()
         isPrivate = false
