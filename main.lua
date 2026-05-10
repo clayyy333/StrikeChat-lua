@@ -240,12 +240,17 @@ local function setRoom(roomId, roomName, roomType)
 
     chatPanel.LeaveButton.Visible = roomId ~= "global"
 
-    if roomId ~= "global" then
-        leftPanel.Buttons.CrearSalas.AutoButtonColor = false
-        leftPanel.Buttons.CrearSalas.BackgroundTransparency = 0.35
+    local createRoomButton = leftPanel.Buttons.CrearSalas
+    local isInRoom = roomId ~= "global"
+
+    chatPanel.LeaveButton.Visible = isInRoom
+    createRoomButton.Active = not isInRoom
+    createRoomButton.AutoButtonColor = not isInRoom
+
+    if isInRoom then
+        createRoomButton.BackgroundTransparency = 0.45
     else
-        leftPanel.Buttons.CrearSalas.AutoButtonColor = true
-        leftPanel.Buttons.CrearSalas.BackgroundTransparency = 1
+        createRoomButton.BackgroundTransparency = 0
     end
 
     lastChatSignature = ""
@@ -287,6 +292,10 @@ chatPanel.Input.FocusLost:Connect(function(enterPressed)
 end)
 
 leftPanel.Buttons.CrearSalas.MouseButton1Click:Connect(function()
+    if currentRoom.id ~= "global" then
+        return
+    end
+
     createRoomModal.Open()
 end)
 
@@ -296,7 +305,12 @@ end)
 
 createRoomModal.CreateButton.MouseButton1Click:Connect(function()
     local roomName = createRoomModal.RoomInput.Text
-    local password = createRoomModal.PasswordInput.Text
+    local password = nil
+
+    if createRoomModal.IsPrivate() then
+        password = createRoomModal.PasswordInput.Text
+    end
+
     local isPrivate = createRoomModal.IsPrivate()
 
     if not roomName or roomName:gsub("%s+", "") == "" then

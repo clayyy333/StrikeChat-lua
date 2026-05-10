@@ -198,12 +198,20 @@ function CreateRoomModal.Create(parent, Theme)
 
     local function updateRoomTypeUI()
         if isPrivate then
-            publicCircle.BackgroundColor3 = Color3.fromRGB(45,45,45)
+            publicOption.BackgroundColor3 = Theme.Colors.Panel
+            privateOption.BackgroundColor3 = Theme.Colors.PanelLight
+
+            publicCircle.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
             privateCircle.BackgroundColor3 = Theme.Colors.AccentSoft
+
             passwordInput.Visible = true
         else
+            publicOption.BackgroundColor3 = Theme.Colors.PanelLight
+            privateOption.BackgroundColor3 = Theme.Colors.Panel
+
             publicCircle.BackgroundColor3 = Theme.Colors.AccentSoft
-            privateCircle.BackgroundColor3 = Color3.fromRGB(45,45,45)
+            privateCircle.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
+
             passwordInput.Visible = false
         end
     end
