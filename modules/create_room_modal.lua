@@ -69,16 +69,19 @@ function CreateRoomModal.Create(parent, Theme)
     publicOption.ZIndex = 52
     publicOption.Parent = modal
 
+    
+
+    local publicCorner = Instance.new("UICorner")
+    publicCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    publicCorner.Parent = publicOption
+
     local publicStroke = Instance.new("UIStroke")
+    publicStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     publicStroke.Color = Color3.fromRGB(255, 255, 255)
     publicStroke.Thickness = 1
     publicStroke.Transparency = 0
     publicStroke.Enabled = true
     publicStroke.Parent = publicOption
-
-    local publicCorner = Instance.new("UICorner")
-    publicCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
-    publicCorner.Parent = publicOption
 
     local publicCircle = Instance.new("Frame")
     publicCircle.Size = UDim2.new(0, 14, 0, 14)
@@ -114,16 +117,19 @@ function CreateRoomModal.Create(parent, Theme)
     privateOption.ZIndex = 52
     privateOption.Parent = modal
 
+   
+
+    local privateCorner = Instance.new("UICorner")
+    privateCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    privateCorner.Parent = privateOption
+
     local privateStroke = Instance.new("UIStroke")
+    privateStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
     privateStroke.Color = Color3.fromRGB(255, 255, 255)
     privateStroke.Thickness = 1
     privateStroke.Transparency = 0
     privateStroke.Enabled = false
     privateStroke.Parent = privateOption
-
-    local privateCorner = Instance.new("UICorner")
-    privateCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
-    privateCorner.Parent = privateOption
 
     local privateCircle = Instance.new("Frame")
     privateCircle.Size = UDim2.new(0, 14, 0, 14)
