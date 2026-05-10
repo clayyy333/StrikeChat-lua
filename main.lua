@@ -8,6 +8,8 @@ local BASE_RAW = "https://raw.githubusercontent.com/clayyy333/StrikeChat-lua/mai
 local Theme = loadstring(game:HttpGet(BASE_RAW .. "modules/theme.lua"))()
 local Api = loadstring(game:HttpGet(BASE_RAW .. "modules/api.lua"))()
 local MainWindow = loadstring(game:HttpGet(BASE_RAW .. "modules/main_window.lua"))()
+local ChatPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/chat_panel.lua"))()
+
 
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
@@ -22,6 +24,7 @@ if not heartbeatResult or heartbeatResult.status ~= "ok" then
 end
 
 local window = MainWindow.Create(CoreGui, Theme)
+local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 
 window.CloseButton.MouseButton1Click:Connect(function()
     window.Gui:Destroy()
