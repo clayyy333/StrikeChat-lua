@@ -35,9 +35,18 @@ local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme)
 
+chatPanel.Title.Text = currentRoom.name
+chatPanel.RoomType.Text = currentRoom.type
+
 local lastChatSignature = ""
 
 local avatarCache = {}
+
+local currentRoom = {
+    id = "global",
+    name = "Chat General",
+    type = "GLOBAL"
+}
 
 local function getAvatarImage(userId)
     if avatarCache[userId] then
@@ -178,7 +187,13 @@ local function renderMessages(messages)
 end
 
 local function refreshChat()
-    local result = Api.GetGlobalMessages()
+    local result
+
+    if currentRoom.id == "global" then
+        result = Api.GetGlobalMessages()
+    else
+        result = Api.GetRoomMessages(currentRoom.id)
+    end
 
     if result and result.messages then
         renderMessages(result.messages)
@@ -209,6 +224,19 @@ local function showStatus(message)
     end
 end
 
+local function setRoom(roomId, roomName, roomType)
+    currentRoom.id = roomId
+    currentRoom.name = roomName
+    currentRoom.type = roomType
+
+    chatPanel.Title.Text = roomName
+    chatPanel.RoomType.Text = roomType
+
+    lastChatSignature = ""
+
+    refreshChat()
+end
+
 local function sendCurrentMessage()
     local text = chatPanel.Input.Text
 
@@ -218,7 +246,13 @@ local function sendCurrentMessage()
 
     chatPanel.Input.Text = ""
 
-    local result = Api.SendGlobalMessage(player, text)
+    local result
+
+    if currentRoom.id == "global" then
+        result = Api.SendGlobalMessage(player, text)
+    else
+        result = Api.SendRoomMessage(player, currentRoom.id, text)
+    end
 
     if result and result.status == "blocked" then
         showStatus(result.display_message or "No puedes enviar este mensaje.")
