@@ -238,6 +238,16 @@ local function setRoom(roomId, roomName, roomType)
     chatPanel.Title.Text = roomName
     chatPanel.RoomType.Text = roomType
 
+    chatPanel.LeaveButton.Visible = roomId ~= "global"
+
+    if roomId ~= "global" then
+        leftPanel.Buttons.CrearSalas.AutoButtonColor = false
+        leftPanel.Buttons.CrearSalas.BackgroundTransparency = 0.35
+    else
+        leftPanel.Buttons.CrearSalas.AutoButtonColor = true
+        leftPanel.Buttons.CrearSalas.BackgroundTransparency = 1
+    end
+
     lastChatSignature = ""
 end
 
@@ -327,6 +337,27 @@ createRoomModal.CreateButton.MouseButton1Click:Connect(function()
     end
 end)
 
+chatPanel.LeaveButton.MouseButton1Click:Connect(function()
+    if currentRoom.id == "global" then
+        return
+    end
+
+    local result = Api.LeaveRoom(player, currentRoom.id)
+
+    if result and (
+        result.status == "left" or
+        result.status == "deleted"
+    ) then
+
+        setRoom(
+            "global",
+            "Chat General",
+            "GLOBAL"
+        )
+
+        refreshChat()
+    end
+end)
 
 window.CloseButton.MouseButton1Click:Connect(function()
     running = false

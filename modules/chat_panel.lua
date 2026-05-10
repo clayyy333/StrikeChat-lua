@@ -25,6 +25,25 @@ function ChatPanel.Create(parent, Theme)
     roomType.TextXAlignment = Enum.TextXAlignment.Left
     roomType.Parent = parent
 
+    local leaveButton = Instance.new("TextButton")
+    leaveButton.Name = "LeaveButton"
+    leaveButton.Size = UDim2.new(0, 54, 0, 24)
+    leaveButton.Position = UDim2.new(1, -68, 0, 8)
+    leaveButton.BackgroundColor3 = Color3.fromRGB(95, 45, 55)
+    leaveButton.BackgroundTransparency = 0.15
+    leaveButton.BorderSizePixel = 0
+    leaveButton.Text = "Salir"
+    leaveButton.TextColor3 = Color3.fromRGB(255, 205, 210)
+    leaveButton.Font = Theme.Font.Bold
+    leaveButton.TextSize = 11
+    leaveButton.Visible = false
+    leaveButton.Parent = parent
+
+    local leaveCorner = Instance.new("UICorner")
+    leaveCorner.CornerRadius = UDim.new(0, 8)
+    leaveCorner.Parent = leaveButton
+
+
     local messagesBox = Instance.new("ScrollingFrame")
     messagesBox.Name = "MessagesBox"
     messagesBox.Size = UDim2.new(1, -24, 1, -92)
@@ -118,6 +137,7 @@ function ChatPanel.Create(parent, Theme)
     return {
         Title = title,
         RoomType = roomType,
+        LeaveButton = leaveButton,
         MessagesBox = messagesBox,
         Layout = layout,
         Input = input,
