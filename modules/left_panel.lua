@@ -1,6 +1,8 @@
 local LeftPanel = {}
 
 function LeftPanel.Create(parent, Theme, profile, player)
+    local Players = game:GetService("Players")
+
     local avatar = Instance.new("Frame")
     avatar.Name = "AvatarPlaceholder"
     avatar.Size = UDim2.new(0, 68, 0, 68)
@@ -13,14 +15,40 @@ function LeftPanel.Create(parent, Theme, profile, player)
     avatarCorner.CornerRadius = UDim.new(0, 14)
     avatarCorner.Parent = avatar
 
-    local avatarText = Instance.new("TextLabel")
-    avatarText.Size = UDim2.new(1, 0, 1, 0)
-    avatarText.BackgroundTransparency = 1
-    avatarText.Text = "👤"
-    avatarText.TextColor3 = Theme.Colors.Text
-    avatarText.Font = Theme.Font.Bold
-    avatarText.TextSize = 25
-    avatarText.Parent = avatar
+    local avatarImage = Instance.new("ImageLabel")
+    avatarImage.Name = "AvatarImage"
+    avatarImage.Size = UDim2.new(1, 0, 1, 0)
+    avatarImage.BackgroundTransparency = 1
+    avatarImage.Parent = avatar
+
+    local avatarImageCorner = Instance.new("UICorner")
+    avatarImageCorner.CornerRadius = UDim.new(0, 14)
+    avatarImageCorner.Parent = avatarImage
+
+    local success, content = pcall(function()
+        return Players:GetUserThumbnailAsync(
+            player.UserId,
+            Enum.ThumbnailType.HeadShot,
+            Enum.ThumbnailSize.Size150x150
+        )
+    end)
+
+    if success then
+        avatarImage.Image = content
+    end
+
+    local onlineDot = Instance.new("Frame")
+    onlineDot.Name = "OnlineDot"
+    onlineDot.Size = UDim2.new(0, 12, 0, 12)
+    onlineDot.Position = UDim2.new(1, -10, 1, -10)
+    onlineDot.BackgroundColor3 = Theme.Colors.Success
+    onlineDot.BorderSizePixel = 0
+    onlineDot.ZIndex = 3
+    onlineDot.Parent = avatar
+
+    local onlineCorner = Instance.new("UICorner")
+    onlineCorner.CornerRadius = UDim.new(1, 0)
+    onlineCorner.Parent = onlineDot
 
     local displayName = Instance.new("TextLabel")
     displayName.Name = "DisplayName"
