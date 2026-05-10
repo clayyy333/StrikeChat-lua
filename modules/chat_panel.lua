@@ -53,7 +53,7 @@ function ChatPanel.Create(parent, Theme)
     local inputContainer = Instance.new("Frame")
     inputContainer.Name = "InputContainer"
     inputContainer.Size = UDim2.new(1, -24, 0, 40)
-    inputContainer.Position = UDim2.new(0, 12, 1, -48)
+    inputContainer.Position = UDim2.new(0, 12, 1, -46)
     inputContainer.BackgroundColor3 = Theme.Colors.PanelLight
     inputContainer.BorderSizePixel = 0
     inputContainer.Parent = parent
