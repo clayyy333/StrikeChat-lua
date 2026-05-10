@@ -5,6 +5,12 @@ local HttpService = game:GetService("HttpService")
 local player = Players.LocalPlayer
 local running = true
 
+local currentRoom = {
+    id = "global",
+    name = "Chat General",
+    type = "GLOBAL"
+}
+
 local HEARTBEAT_INTERVAL = 15
 local CHAT_REFRESH_INTERVAL = 3
 local ONLINE_REFRESH_INTERVAL = 5
@@ -46,11 +52,7 @@ local lastChatSignature = ""
 
 local avatarCache = {}
 
-local currentRoom = {
-    id = "global",
-    name = "Chat General",
-    type = "GLOBAL"
-}
+
 
 local function getAvatarImage(userId)
     if avatarCache[userId] then
