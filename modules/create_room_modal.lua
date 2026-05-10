@@ -75,7 +75,7 @@ function CreateRoomModal.Create(parent, Theme)
 
     local publicCircle = Instance.new("Frame")
     publicCircle.Size = UDim2.new(0, 14, 0, 14)
-    publicCircle.Position = UDim2.new(0, 12, 0.5, -7)
+    publicCircle.Position = UDim2.new(1, -26, 0.5, -7)
     publicCircle.BackgroundColor3 = Theme.Colors.AccentSoft
     publicCircle.BorderSizePixel = 0
     publicCircle.ZIndex = 53
@@ -113,7 +113,7 @@ function CreateRoomModal.Create(parent, Theme)
 
     local privateCircle = Instance.new("Frame")
     privateCircle.Size = UDim2.new(0, 14, 0, 14)
-    privateCircle.Position = UDim2.new(0, 12, 0.5, -7)
+    privateCircle.Position = UDim2.new(1, -26, 0.5, -7)
     privateCircle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     privateCircle.BorderSizePixel = 0
     privateCircle.ZIndex = 53
@@ -197,17 +197,20 @@ function CreateRoomModal.Create(parent, Theme)
     local isPrivate = false
 
     local function updateRoomTypeUI()
+        publicOption.BackgroundColor3 = Theme.Colors.PanelLight
+        privateOption.BackgroundColor3 = Theme.Colors.PanelLight
+
         if isPrivate then
-            publicOption.BackgroundColor3 = Theme.Colors.Panel
-            privateOption.BackgroundColor3 = Theme.Colors.PanelLight
+            publicOption.BackgroundTransparency = 0
+            privateOption.BackgroundTransparency = 0.35
 
             publicCircle.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
             privateCircle.BackgroundColor3 = Theme.Colors.AccentSoft
 
             passwordInput.Visible = true
         else
-            publicOption.BackgroundColor3 = Theme.Colors.PanelLight
-            privateOption.BackgroundColor3 = Theme.Colors.Panel
+            publicOption.BackgroundTransparency = 0.35
+            privateOption.BackgroundTransparency = 0
 
             publicCircle.BackgroundColor3 = Theme.Colors.AccentSoft
             privateCircle.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
