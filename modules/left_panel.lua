@@ -124,23 +124,23 @@ function LeftPanel.Create(parent, Theme, profile, player)
     local menuButtons = {
         {
             name = "CrearSalas",
-            text = "+  Salas",
-            y = 214
+            text = "Salas  +",
+            y = 204
         },
         {
             name = "SalasPublicas",
             text = "Salas Públicas  🌐",
-            y = 254
+            y = 244
         },
         {
             name = "SalasPrivadas",
             text = "Salas Privadas  🔒",
-            y = 294
+            y = 284
         },
         {
             name = "TablaClanes",
             text = "Tabla de Clanes  🏆",
-            y = 334
+            y = 324
         }
     }
 
@@ -154,7 +154,12 @@ function LeftPanel.Create(parent, Theme, profile, player)
         btn.TextColor3 = Theme.Colors.Text
         btn.Font = Theme.Font.Bold
         btn.TextSize = 12
-        btn.TextXAlignment = Enum.TextXAlignment.Center
+        btn.TextXAlignment = Enum.TextXAlignment.Left
+
+        local padding = Instance.new("UIPadding")
+        padding.PaddingLeft = UDim.new(0, 14)
+        padding.Parent = btn
+
         btn.Parent = parent
 
         local btnCorner = Instance.new("UICorner")
