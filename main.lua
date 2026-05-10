@@ -37,6 +37,29 @@ local rightPanel = RightPanel.Create(window.RightPanel, Theme)
 
 local lastChatSignature = ""
 
+local avatarCache = {}
+
+local function getAvatarImage(userId)
+    if avatarCache[userId] then
+        return avatarCache[userId]
+    end
+
+    local success, content = pcall(function()
+        return Players:GetUserThumbnailAsync(
+            userId,
+            Enum.ThumbnailType.HeadShot,
+            Enum.ThumbnailSize.Size100x100
+        )
+    end)
+
+    if success then
+        avatarCache[userId] = content
+        return content
+    end
+
+    return ""
+end
+
 local function renderMessages(messages)
     local signature = HttpService:JSONEncode(messages or {})
 
@@ -47,48 +70,107 @@ local function renderMessages(messages)
     lastChatSignature = signature
 
     for _, child in ipairs(chatPanel.MessagesBox:GetChildren()) do
-        if child:IsA("TextLabel") then
+        if child:IsA("Frame") or child:IsA("TextLabel") then
             child:Destroy()
         end
     end
 
     for _, msg in ipairs(messages or {}) do
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, -8, 0, 34)
-        label.BackgroundTransparency = 1
-        label.TextColor3 = Theme.Colors.Text
-        label.Font = Theme.Font.Regular
-        label.TextSize = 13
-        label.TextXAlignment = Enum.TextXAlignment.Left
-        label.TextWrapped = true
-
-        local name = msg.display_name or msg.username or "Usuario"
-
-        if msg.clan_tag then
-            if msg.clan_tag_style == "plain" then
-                name = name .. msg.clan_tag
-            else
-                name = name .. "[" .. msg.clan_tag .. "]"
-            end
-        end
-
         if msg.type == "system" then
-            label.TextColor3 = Theme.Colors.TextMuted
-            label.Text = "[SYSTEM] " .. tostring(msg.message)
+            local systemLabel = Instance.new("TextLabel")
+            systemLabel.Size = UDim2.new(1, -8, 0, 28)
+            systemLabel.BackgroundTransparency = 1
+            systemLabel.TextColor3 = Theme.Colors.TextMuted
+            systemLabel.Font = Theme.Font.Regular
+            systemLabel.TextSize = 12
+            systemLabel.TextXAlignment = Enum.TextXAlignment.Left
+            systemLabel.TextWrapped = true
+            systemLabel.Text = "[SYSTEM] " .. tostring(msg.message)
+            systemLabel.Parent = chatPanel.MessagesBox
         else
-            label.Text = name .. ": " .. tostring(msg.message)
-        end
+            local container = Instance.new("Frame")
+            container.Name = "MessageContainer"
+            container.Size = UDim2.new(1, -8, 0, 58)
+            container.BackgroundColor3 = Theme.Colors.Panel
+            container.BackgroundTransparency = 1
+            container.BorderSizePixel = 0
+            container.Parent = chatPanel.MessagesBox
 
-        label.Parent = chatPanel.MessagesBox
+            local avatar = Instance.new("ImageLabel")
+            avatar.Name = "Avatar"
+            avatar.Size = UDim2.new(0, 34, 0, 34)
+            avatar.Position = UDim2.new(0, 0, 0, 4)
+            avatar.BackgroundTransparency = 1
+            avatar.Image = getAvatarImage(msg.roblox_user_id)
+            avatar.Parent = container
+
+            local avatarCorner = Instance.new("UICorner")
+            avatarCorner.CornerRadius = UDim.new(1, 0)
+            avatarCorner.Parent = avatar
+
+            local name = msg.display_name or msg.username or "Usuario"
+
+            local nameLabel = Instance.new("TextLabel")
+            nameLabel.Name = "Name"
+            nameLabel.Size = UDim2.new(0.65, 0, 0, 18)
+            nameLabel.Position = UDim2.new(0, 44, 0, 0)
+            nameLabel.BackgroundTransparency = 1
+            nameLabel.Text = tostring(name)
+            nameLabel.TextColor3 = Theme.Colors.Text
+            nameLabel.Font = Theme.Font.Bold
+            nameLabel.TextSize = 12
+            nameLabel.TextXAlignment = Enum.TextXAlignment.Left
+            nameLabel.TextTruncate = Enum.TextTruncate.AtEnd
+            nameLabel.Parent = container
+
+            local clanText = ""
+
+            if msg.clan_tag then
+                if msg.clan_tag_style == "plain" then
+                    clanText = tostring(msg.clan_tag)
+                else
+                    clanText = "[" .. tostring(msg.clan_tag) .. "]"
+                end
+            end
+
+            local clanLabel = Instance.new("TextLabel")
+            clanLabel.Name = "ClanTag"
+            clanLabel.Size = UDim2.new(0.3, 0, 0, 18)
+            clanLabel.Position = UDim2.new(0.65, 44, 0, 0)
+            clanLabel.BackgroundTransparency = 1
+            clanLabel.Text = clanText
+            clanLabel.TextColor3 = Theme.Colors.TextMuted
+            clanLabel.Font = Theme.Font.Bold
+            clanLabel.TextSize = 11
+            clanLabel.TextXAlignment = Enum.TextXAlignment.Left
+            clanLabel.TextTruncate = Enum.TextTruncate.AtEnd
+            clanLabel.Parent = container
+
+            local messageText = Instance.new("TextLabel")
+            messageText.Name = "Message"
+            messageText.Size = UDim2.new(1, -50, 0, 34)
+            messageText.Position = UDim2.new(0, 44, 0, 20)
+            messageText.BackgroundTransparency = 1
+            messageText.Text = tostring(msg.message)
+            messageText.TextColor3 = Theme.Colors.Text
+            messageText.Font = Theme.Font.Regular
+            messageText.TextSize = 13
+            messageText.TextXAlignment = Enum.TextXAlignment.Left
+            messageText.TextYAlignment = Enum.TextYAlignment.Top
+            messageText.TextWrapped = true
+            messageText.Parent = container
+        end
     end
 
     task.wait()
+
     chatPanel.MessagesBox.CanvasSize = UDim2.new(
         0,
         0,
         0,
         chatPanel.Layout.AbsoluteContentSize.Y + 16
     )
+
     chatPanel.MessagesBox.CanvasPosition = Vector2.new(
         0,
         chatPanel.MessagesBox.AbsoluteCanvasSize.Y
