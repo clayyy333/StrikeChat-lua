@@ -3,20 +3,20 @@ local ChatPanel = {}
 function ChatPanel.Create(parent, Theme)
     local title = Instance.new("TextLabel")
     title.Name = "ChatTitle"
-    title.Size = UDim2.new(1, -20, 0, 38)
-    title.Position = UDim2.new(0, 12, 0, 8)
+    title.Size = UDim2.new(1, -20, 0, 30)
+    title.Position = UDim2.new(0, 12, 0, 2)
     title.BackgroundTransparency = 1
     title.Text = "Chat General"
     title.TextColor3 = Theme.Colors.Text
     title.Font = Theme.Font.Bold
-    title.TextSize = 15
+    title.TextSize = 16
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = parent
 
     local messagesBox = Instance.new("ScrollingFrame")
     messagesBox.Name = "MessagesBox"
-    messagesBox.Size = UDim2.new(1, -24, 1, -98)
-    messagesBox.Position = UDim2.new(0, 12, 0, 50)
+    messagesBox.Size = UDim2.new(1, -24, 1, -92)
+    messagesBox.Position = UDim2.new(0, 12, 0, 36)
     messagesBox.BackgroundColor3 = Theme.Colors.Panel
     messagesBox.BorderSizePixel = 0
     messagesBox.ScrollBarThickness = 4
@@ -40,8 +40,8 @@ function ChatPanel.Create(parent, Theme)
 
     local statusLabel = Instance.new("TextLabel")
     statusLabel.Name = "StatusLabel"
-    statusLabel.Size = UDim2.new(1, -24, 0, 20)
-    statusLabel.Position = UDim2.new(0, 12, 1, -60)
+    statusLabel.Size = UDim2.new(1, -24, 0, 18)
+    statusLabel.Position = UDim2.new(0, 12, 1, -58)
     statusLabel.BackgroundTransparency = 1
     statusLabel.Text = ""
     statusLabel.TextColor3 = Theme.Colors.Danger
@@ -50,12 +50,34 @@ function ChatPanel.Create(parent, Theme)
     statusLabel.TextXAlignment = Enum.TextXAlignment.Left
     statusLabel.Parent = parent
 
+    local inputContainer = Instance.new("Frame")
+    inputContainer.Name = "InputContainer"
+    inputContainer.Size = UDim2.new(1, -24, 0, 40)
+    inputContainer.Position = UDim2.new(0, 12, 1, -42)
+    inputContainer.BackgroundColor3 = Theme.Colors.PanelLight
+    inputContainer.BorderSizePixel = 0
+    inputContainer.Parent = parent
+
+    local inputContainerCorner = Instance.new("UICorner")
+    inputContainerCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    inputContainerCorner.Parent = inputContainer
+
+    local emojiButton = Instance.new("TextButton")
+    emojiButton.Name = "EmojiButton"
+    emojiButton.Size = UDim2.new(0, 30, 0, 30)
+    emojiButton.Position = UDim2.new(0, 6, 0.5, -15)
+    emojiButton.BackgroundTransparency = 1
+    emojiButton.Text = "🙂"
+    emojiButton.TextColor3 = Theme.Colors.TextMuted
+    emojiButton.Font = Theme.Font.Bold
+    emojiButton.TextSize = 17
+    emojiButton.Parent = inputContainer
+
     local input = Instance.new("TextBox")
     input.Name = "MessageInput"
-    input.Size = UDim2.new(1, -112, 0, 38)
-    input.Position = UDim2.new(0, 12, 1, -43)
-    input.BackgroundColor3 = Theme.Colors.PanelLight
-    input.BorderSizePixel = 0
+    input.Size = UDim2.new(1, -86, 1, 0)
+    input.Position = UDim2.new(0, 40, 0, 0)
+    input.BackgroundTransparency = 1
     input.PlaceholderText = "Escribe un mensaje..."
     input.Text = ""
     input.TextColor3 = Theme.Colors.Text
@@ -63,30 +85,22 @@ function ChatPanel.Create(parent, Theme)
     input.Font = Theme.Font.Regular
     input.TextSize = 14
     input.TextXAlignment = Enum.TextXAlignment.Left
-
-    local inputPadding = Instance.new("UIPadding")
-    inputPadding.PaddingLeft = UDim.new(0, 16)
-    inputPadding.Parent = input
     input.ClearTextOnFocus = false
-    input.Parent = parent
-
-    local inputCorner = Instance.new("UICorner")
-    inputCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
-    inputCorner.Parent = input
+    input.Parent = inputContainer
 
     local send = Instance.new("TextButton")
     send.Name = "SendButton"
-    send.Size = UDim2.new(0, 84, 0, 38)
-    send.Position = UDim2.new(1, -96, 1, -43)
+    send.Size = UDim2.new(0, 30, 0, 30)
+    send.Position = UDim2.new(1, -36, 0.5, -15)
     send.BackgroundColor3 = Theme.Colors.AccentSoft
-    send.Text = "Enviar"
+    send.Text = "➤"
     send.TextColor3 = Color3.fromRGB(255, 255, 255)
     send.Font = Theme.Font.Bold
-    send.TextSize = 14
-    send.Parent = parent
+    send.TextSize = 16
+    send.Parent = inputContainer
 
     local sendCorner = Instance.new("UICorner")
-    sendCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    sendCorner.CornerRadius = UDim.new(1, 0)
     sendCorner.Parent = send
 
     return {
@@ -94,6 +108,7 @@ function ChatPanel.Create(parent, Theme)
         Layout = layout,
         Input = input,
         SendButton = send,
+        EmojiButton = emojiButton,
         StatusLabel = statusLabel
     }
 end

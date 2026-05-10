@@ -6,7 +6,7 @@ function RightPanel.Create(parent, Theme)
     title.Size = UDim2.new(1, -24, 0, 36)
     title.Position = UDim2.new(0, 12, 0, 8)
     title.BackgroundTransparency = 1
-    title.Text = "Usuarios Online"
+    title.Text = "En Línea - 0"
     title.TextColor3 = Theme.Colors.Text
     title.Font = Theme.Font.Bold
     title.TextSize = 15
