@@ -65,7 +65,7 @@ function ChatPanel.Create(parent, Theme)
     input.TextXAlignment = Enum.TextXAlignment.Left
 
     local inputPadding = Instance.new("UIPadding")
-    inputPadding.PaddingLeft = UDim.new(0, 12)
+    inputPadding.PaddingLeft = UDim.new(0, 16)
     inputPadding.Parent = input
     input.ClearTextOnFocus = false
     input.Parent = parent
