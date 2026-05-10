@@ -89,4 +89,24 @@ function Api.SendGlobalMessage(player, message)
     )
 end
 
+function Api.GetRoomMessages(roomId)
+    return Api.Request(
+        Api.BaseUrl .. "/chat/messages?room_id=" .. Api.Encode(roomId),
+        "GET"
+    )
+end
+
+function Api.SendRoomMessage(player, roomId, message)
+    return Api.Request(
+        Api.BaseUrl .. "/chat/send",
+        "POST",
+        {
+            room_id = roomId,
+            roblox_user_id = player.UserId,
+            username = player.DisplayName,
+            message = message
+        }
+    )
+end
+
 return Api
