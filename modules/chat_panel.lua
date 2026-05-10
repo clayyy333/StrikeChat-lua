@@ -13,10 +13,22 @@ function ChatPanel.Create(parent, Theme)
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = parent
 
+    local roomType = Instance.new("TextLabel")
+    roomType.Name = "RoomType"
+    roomType.Size = UDim2.new(1, -20, 0, 16)
+    roomType.Position = UDim2.new(0, 12, 0, 24)
+    roomType.BackgroundTransparency = 1
+    roomType.Text = "GLOBAL"
+    roomType.TextColor3 = Theme.Colors.TextMuted
+    roomType.Font = Theme.Font.Bold
+    roomType.TextSize = 10
+    roomType.TextXAlignment = Enum.TextXAlignment.Left
+    roomType.Parent = parent
+
     local messagesBox = Instance.new("ScrollingFrame")
     messagesBox.Name = "MessagesBox"
     messagesBox.Size = UDim2.new(1, -24, 1, -92)
-    messagesBox.Position = UDim2.new(0, 12, 0, 36)
+    messagesBox.Position = UDim2.new(0, 12, 0, 42)
     messagesBox.BackgroundColor3 = Theme.Colors.Panel
     messagesBox.BorderSizePixel = 0
     messagesBox.ScrollBarThickness = 4
@@ -104,12 +116,15 @@ function ChatPanel.Create(parent, Theme)
     sendCorner.Parent = send
 
     return {
+        Title = title,
+        RoomType = roomType,
         MessagesBox = messagesBox,
         Layout = layout,
         Input = input,
         SendButton = send,
         EmojiButton = emojiButton,
         StatusLabel = statusLabel
+        
     }
 end
 
