@@ -109,4 +109,47 @@ function Api.SendRoomMessage(player, roomId, message)
     )
 end
 
+function Api.CreateRoom(player, displayName, isPrivate, password)
+    return Api.Request(
+        Api.BaseUrl .. "/rooms/create?owner_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            display_name = displayName,
+            is_private = isPrivate,
+            password = password
+        }
+    )
+end
+
+function Api.GetPublicRooms()
+    return Api.Request(Api.BaseUrl .. "/rooms/public", "GET")
+end
+
+function Api.GetPrivateRooms()
+    return Api.Request(Api.BaseUrl .. "/rooms/private", "GET")
+end
+
+function Api.JoinRoom(player, roomId, password)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/rooms/join" ..
+        "?room_id=" .. Api.Encode(roomId) ..
+        "&roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            password = password
+        }
+    )
+end
+
+function Api.LeaveRoom(player, roomId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/rooms/leave" ..
+        "?room_id=" .. Api.Encode(roomId) ..
+        "&roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
 return Api
