@@ -5,7 +5,7 @@ Theme.Colors = {
     Panel = Color3.fromRGB(24, 25, 35),
     PanelLight = Color3.fromRGB(35, 37, 52),
 
-    Accent = Color3.fromRGB(135, 95, 255),
+    Accent = Color3.fromRGB(42, 44, 58),
     AccentSoft = Color3.fromRGB(110, 82, 230),
 
     Text = Color3.fromRGB(235, 235, 255),
