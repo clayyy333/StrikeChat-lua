@@ -65,6 +65,12 @@ function CreateRoomModal.Create(parent, Theme)
     publicOption.Position = UDim2.new(0, 12, 0, 108)
     publicOption.BackgroundColor3 = Theme.Colors.PanelLight
     publicOption.BorderSizePixel = 0
+
+    local publicStroke = Instance.new("UIStroke")
+    publicStroke.Color = Color3.fromRGB(58, 58, 68)
+    publicStroke.Thickness = 1
+    publicStroke.Transparency = 0.15
+    publicStroke.Parent = publicOption
     publicOption.Text = ""
     publicOption.ZIndex = 52
     publicOption.Parent = modal
@@ -103,6 +109,11 @@ function CreateRoomModal.Create(parent, Theme)
     privateOption.Position = UDim2.new(0.5, 6, 0, 108)
     privateOption.BackgroundColor3 = Theme.Colors.PanelLight
     privateOption.BorderSizePixel = 0
+    local privateStroke = Instance.new("UIStroke")
+    privateStroke.Color = Color3.fromRGB(58, 58, 68)
+    privateStroke.Thickness = 1
+    privateStroke.Transparency = 0.15
+    privateStroke.Parent = privateOption
     privateOption.Text = ""
     privateOption.ZIndex = 52
     privateOption.Parent = modal
