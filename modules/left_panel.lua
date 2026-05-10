@@ -29,7 +29,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
         return Players:GetUserThumbnailAsync(
             player.UserId,
             Enum.ThumbnailType.AvatarBust,
-            Enum.ThumbnailSize.Size150x150
+            Enum.ThumbnailSize.Size420x420
         )
     end)
 
