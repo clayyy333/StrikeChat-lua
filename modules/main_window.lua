@@ -20,7 +20,7 @@ function MainWindow.Create(CoreGui, Theme)
     mainCorner.Parent = main
 
     local mainStroke = Instance.new("UIStroke")
-    mainStroke.Color = Theme.Colors.Accent
+    mainStroke.Color = Theme.Colors.Border
     mainStroke.Thickness = 1.5
     mainStroke.Transparency = 0.25
     mainStroke.Parent = main

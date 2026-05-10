@@ -2,10 +2,13 @@ local Theme = {}
 
 Theme.Colors = {
     Background = Color3.fromRGB(18, 19, 28),
+
     Panel = Color3.fromRGB(24, 25, 35),
+    Border = Color3.fromRGB(24, 25, 35),
+
     PanelLight = Color3.fromRGB(35, 37, 52),
 
-    Accent = Color3.fromRGB(42, 44, 58),
+    Accent = Color3.fromRGB(110, 82, 230),
     AccentSoft = Color3.fromRGB(110, 82, 230),
 
     Text = Color3.fromRGB(235, 235, 255),
