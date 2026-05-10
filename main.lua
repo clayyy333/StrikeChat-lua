@@ -237,8 +237,6 @@ local function setRoom(roomId, roomName, roomType)
     chatPanel.RoomType.Text = roomType
 
     lastChatSignature = ""
-
-    refreshChat()
 end
 
 local function sendCurrentMessage()
@@ -321,6 +319,7 @@ createRoomModal.CreateButton.MouseButton1Click:Connect(function()
         )
 
         createRoomModal.Close()
+        refreshChat()
     else
         showStatus(result.reason or "No se pudo crear la sala.")
     end
