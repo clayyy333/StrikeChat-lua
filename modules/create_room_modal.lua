@@ -62,7 +62,7 @@ function CreateRoomModal.Create(parent, Theme)
     local publicOption = Instance.new("TextButton")
     publicOption.Name = "PublicOption"
     publicOption.Size = UDim2.new(0.5, -18, 0, 42)
-    publicOption.Position = UDim2.new(0, 12, 0, 102)
+    publicOption.Position = UDim2.new(0, 12, 0, 108)
     publicOption.BackgroundColor3 = Theme.Colors.PanelLight
     publicOption.BorderSizePixel = 0
     publicOption.Text = ""
@@ -110,7 +110,7 @@ function CreateRoomModal.Create(parent, Theme)
     local privateOption = Instance.new("TextButton")
     privateOption.Name = "PrivateOption"
     privateOption.Size = UDim2.new(0.5, -18, 0, 42)
-    privateOption.Position = UDim2.new(0.5, 6, 0, 102)
+    privateOption.Position = UDim2.new(0.5, 6, 0, 108)
     privateOption.BackgroundColor3 = Theme.Colors.PanelLight
     privateOption.BorderSizePixel = 0
     privateOption.Text = ""
