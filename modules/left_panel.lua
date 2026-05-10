@@ -51,7 +51,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     local pointsBox = Instance.new("Frame")
     pointsBox.Name = "PointsBox"
     pointsBox.Size = UDim2.new(1, -28, 0, 54)
-    pointsBox.Position = UDim2.new(0, 14, 0, 98)
+    pointsBox.Position = UDim2.new(0, 14, 0, 92)
     pointsBox.BackgroundColor3 = Theme.Colors.Panel
     pointsBox.BorderSizePixel = 0
     pointsBox.Parent = parent
@@ -84,90 +84,114 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     local createdButtons = {}
 
-    local function createButton(name, text, icon, size, position)
+    local function createTopButton(name, text, icon, size, position)
         local btn = Instance.new("TextButton")
         btn.Name = name .. "Button"
         btn.Size = size
         btn.Position = position
         btn.BackgroundColor3 = Theme.Colors.PanelLight
-        btn.Text = text .. "  " .. icon
+        btn.Text = ""
         btn.TextColor3 = Theme.Colors.Text
         btn.Font = Theme.Font.Bold
         btn.TextSize = 12
-        btn.TextXAlignment = Enum.TextXAlignment.Center
         btn.Parent = parent
 
         local btnCorner = Instance.new("UICorner")
         btnCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
         btnCorner.Parent = btn
+
+        local label = Instance.new("TextLabel")
+        label.Name = "Label"
+        label.Size = UDim2.new(1, -36, 1, 0)
+        label.Position = UDim2.new(0, 10, 0, 0)
+        label.BackgroundTransparency = 1
+        label.Text = text
+        label.TextColor3 = Theme.Colors.Text
+        label.Font = Theme.Font.Bold
+        label.TextSize = 12
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.Parent = btn
+
+        local iconLabel = Instance.new("TextLabel")
+        iconLabel.Name = "Icon"
+        iconLabel.Size = UDim2.new(0, 24, 1, 0)
+        iconLabel.Position = UDim2.new(1, -30, 0, 0)
+        iconLabel.BackgroundTransparency = 1
+        iconLabel.Text = icon
+        iconLabel.TextColor3 = Theme.Colors.Text
+        iconLabel.Font = Theme.Font.Bold
+        iconLabel.TextSize = 14
+        iconLabel.TextXAlignment = Enum.TextXAlignment.Center
+        iconLabel.Parent = btn
 
         createdButtons[name] = btn
         return btn
     end
 
-    createButton(
-        "Tienda",
-        "Tienda",
-        "🛒",
-        UDim2.new(0.5, -19, 0, 32),
-        UDim2.new(0, 14, 0, 166)
-    )
-
-    createButton(
-        "Perfil",
-        "Perfil",
-        "👤",
-        UDim2.new(0.5, -19, 0, 32),
-        UDim2.new(0.5, 5, 0, 166)
-    )
-
-    local menuButtons = {
-        {
-            name = "CrearSalas",
-            text = "Salas  +",
-            y = 204
-        },
-        {
-            name = "SalasPublicas",
-            text = "Salas Públicas  🌐",
-            y = 244
-        },
-        {
-            name = "SalasPrivadas",
-            text = "Salas Privadas  🔒",
-            y = 284
-        },
-        {
-            name = "TablaClanes",
-            text = "Tabla de Clanes  🏆",
-            y = 324
-        }
-    }
-
-    for _, data in ipairs(menuButtons) do
+    local function createMenuButton(name, text, icon, y)
         local btn = Instance.new("TextButton")
-        btn.Name = data.name .. "Button"
+        btn.Name = name .. "Button"
         btn.Size = UDim2.new(1, -36, 0, 32)
-        btn.Position = UDim2.new(0, 18, 0, data.y)
+        btn.Position = UDim2.new(0, 18, 0, y)
         btn.BackgroundColor3 = Theme.Colors.PanelLight
-        btn.Text = data.text
+        btn.Text = ""
         btn.TextColor3 = Theme.Colors.Text
         btn.Font = Theme.Font.Bold
         btn.TextSize = 12
-        btn.TextXAlignment = Enum.TextXAlignment.Left
-
-        local padding = Instance.new("UIPadding")
-        padding.PaddingLeft = UDim.new(0, 14)
-        padding.Parent = btn
-
         btn.Parent = parent
 
         local btnCorner = Instance.new("UICorner")
         btnCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
         btnCorner.Parent = btn
 
-        createdButtons[data.name] = btn
+        local iconLabel = Instance.new("TextLabel")
+        iconLabel.Name = "Icon"
+        iconLabel.Size = UDim2.new(0, 26, 1, 0)
+        iconLabel.Position = UDim2.new(0, 12, 0, 0)
+        iconLabel.BackgroundTransparency = 1
+        iconLabel.Text = icon
+        iconLabel.TextColor3 = Theme.Colors.Text
+        iconLabel.Font = Theme.Font.Bold
+        iconLabel.TextSize = 14
+        iconLabel.TextXAlignment = Enum.TextXAlignment.Center
+        iconLabel.Parent = btn
+
+        local label = Instance.new("TextLabel")
+        label.Name = "Label"
+        label.Size = UDim2.new(1, -52, 1, 0)
+        label.Position = UDim2.new(0, 46, 0, 0)
+        label.BackgroundTransparency = 1
+        label.Text = text
+        label.TextColor3 = Theme.Colors.Text
+        label.Font = Theme.Font.Bold
+        label.TextSize = 12
+        label.TextXAlignment = Enum.TextXAlignment.Left
+        label.Parent = btn
+
+        createdButtons[name] = btn
+        return btn
     end
+
+    createTopButton(
+        "Tienda",
+        "Tienda",
+        "🛒",
+        UDim2.new(0.5, -19, 0, 32),
+        UDim2.new(0, 14, 0, 158)
+    )
+
+    createTopButton(
+        "Perfil",
+        "Perfil",
+        "👤",
+        UDim2.new(0.5, -19, 0, 32),
+        UDim2.new(0.5, 5, 0, 158)
+    )
+
+    createMenuButton("CrearSalas", "Salas", "+", 204)
+    createMenuButton("SalasPublicas", "Salas Públicas", "🌐", 244)
+    createMenuButton("SalasPrivadas", "Salas Privadas", "🔒", 284)
+    createMenuButton("TablaClanes", "Tabla de Clanes", "🏆", 324)
 
     return {
         Avatar = avatar,
