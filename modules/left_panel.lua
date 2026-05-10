@@ -91,9 +91,6 @@ function LeftPanel.Create(parent, Theme, profile, player)
         btn.Position = position
         btn.BackgroundColor3 = Theme.Colors.PanelLight
         btn.Text = ""
-        btn.TextColor3 = Theme.Colors.Text
-        btn.Font = Theme.Font.Bold
-        btn.TextSize = 12
         btn.Parent = parent
 
         local btnCorner = Instance.new("UICorner")
@@ -135,31 +132,16 @@ function LeftPanel.Create(parent, Theme, profile, player)
         btn.Position = UDim2.new(0, 18, 0, y)
         btn.BackgroundColor3 = Theme.Colors.PanelLight
         btn.Text = ""
-        btn.TextColor3 = Theme.Colors.Text
-        btn.Font = Theme.Font.Bold
-        btn.TextSize = 12
         btn.Parent = parent
 
         local btnCorner = Instance.new("UICorner")
         btnCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
         btnCorner.Parent = btn
 
-        local iconLabel = Instance.new("TextLabel")
-        iconLabel.Name = "Icon"
-        iconLabel.Size = UDim2.new(0, 26, 1, 0)
-        iconLabel.Position = UDim2.new(0, 12, 0, 0)
-        iconLabel.BackgroundTransparency = 1
-        iconLabel.Text = icon
-        iconLabel.TextColor3 = Theme.Colors.Text
-        iconLabel.Font = Theme.Font.Bold
-        iconLabel.TextSize = 14
-        iconLabel.TextXAlignment = Enum.TextXAlignment.Center
-        iconLabel.Parent = btn
-
         local label = Instance.new("TextLabel")
         label.Name = "Label"
-        label.Size = UDim2.new(1, -52, 1, 0)
-        label.Position = UDim2.new(0, 46, 0, 0)
+        label.Size = UDim2.new(1, -58, 1, 0)
+        label.Position = UDim2.new(0, 16, 0, 0)
         label.BackgroundTransparency = 1
         label.Text = text
         label.TextColor3 = Theme.Colors.Text
@@ -167,6 +149,18 @@ function LeftPanel.Create(parent, Theme, profile, player)
         label.TextSize = 12
         label.TextXAlignment = Enum.TextXAlignment.Left
         label.Parent = btn
+
+        local iconLabel = Instance.new("TextLabel")
+        iconLabel.Name = "Icon"
+        iconLabel.Size = UDim2.new(0, 26, 1, 0)
+        iconLabel.Position = UDim2.new(1, -38, 0, 0)
+        iconLabel.BackgroundTransparency = 1
+        iconLabel.Text = icon
+        iconLabel.TextColor3 = Theme.Colors.Text
+        iconLabel.Font = Theme.Font.Bold
+        iconLabel.TextSize = 14
+        iconLabel.TextXAlignment = Enum.TextXAlignment.Center
+        iconLabel.Parent = btn
 
         createdButtons[name] = btn
         return btn
@@ -188,7 +182,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
         UDim2.new(0.5, 5, 0, 158)
     )
 
-    createMenuButton("CrearSalas", "Salas", "+", 204)
+    createMenuButton("CrearSalas", "Crear Sala", "+", 204)
     createMenuButton("SalasPublicas", "Salas Públicas", "🌐", 244)
     createMenuButton("SalasPrivadas", "Salas Privadas", "🔒", 284)
     createMenuButton("TablaClanes", "Tabla de Clanes", "🏆", 324)
