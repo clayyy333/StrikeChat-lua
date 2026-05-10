@@ -65,7 +65,7 @@ function ChatPanel.Create(parent, Theme)
     local emojiButton = Instance.new("TextButton")
     emojiButton.Name = "EmojiButton"
     emojiButton.Size = UDim2.new(0, 30, 0, 30)
-    emojiButton.Position = UDim2.new(0, 6, 0.5, -15)
+    emojiButton.Position = UDim2.new(1, -76, 0.5, -15)
     emojiButton.BackgroundTransparency = 1
     emojiButton.Text = "🙂"
     emojiButton.TextColor3 = Theme.Colors.TextMuted
@@ -75,7 +75,7 @@ function ChatPanel.Create(parent, Theme)
 
     local input = Instance.new("TextBox")
     input.Name = "MessageInput"
-    input.Size = UDim2.new(1, -86, 1, 0)
+    input.Size = UDim2.new(1, -110, 1, 0)
     input.Position = UDim2.new(0, 40, 0, 0)
     input.BackgroundTransparency = 1
     input.PlaceholderText = "Escribe un mensaje..."
@@ -90,13 +90,13 @@ function ChatPanel.Create(parent, Theme)
 
     local send = Instance.new("TextButton")
     send.Name = "SendButton"
-    send.Size = UDim2.new(0, 30, 0, 30)
-    send.Position = UDim2.new(1, -36, 0.5, -15)
+    send.Size = UDim2.new(0, 46, 0, 30)
+    send.Position = UDim2.new(1, -52, 0.5, -15)
     send.BackgroundColor3 = Theme.Colors.AccentSoft
-    send.Text = "➤"
+    send.Text = "Enviar"
     send.TextColor3 = Color3.fromRGB(255, 255, 255)
     send.Font = Theme.Font.Bold
-    send.TextSize = 16
+    send.TextSize = 11
     send.Parent = inputContainer
 
     local sendCorner = Instance.new("UICorner")
