@@ -65,7 +65,7 @@ function ChatPanel.Create(parent, Theme)
     local emojiButton = Instance.new("TextButton")
     emojiButton.Name = "EmojiButton"
     emojiButton.Size = UDim2.new(0, 30, 0, 30)
-    emojiButton.Position = UDim2.new(1, -76, 0.5, -15)
+    emojiButton.Position = UDim2.new(1, -84, 0.5, -15)
     emojiButton.BackgroundTransparency = 1
     emojiButton.Text = "🙂"
     emojiButton.TextColor3 = Theme.Colors.TextMuted
@@ -76,7 +76,7 @@ function ChatPanel.Create(parent, Theme)
     local input = Instance.new("TextBox")
     input.Name = "MessageInput"
     input.Size = UDim2.new(1, -110, 1, 0)
-    input.Position = UDim2.new(0, 40, 0, 0)
+    input.Position = UDim2.new(0, 32, 0, 0)
     input.BackgroundTransparency = 1
     input.PlaceholderText = "Escribe un mensaje..."
     input.Text = ""
