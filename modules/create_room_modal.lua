@@ -59,22 +59,81 @@ function CreateRoomModal.Create(parent, Theme)
     roomPadding.PaddingLeft = UDim.new(0, 12)
     roomPadding.Parent = roomInput
 
-    local privateToggle = Instance.new("TextButton")
-    privateToggle.Name = "PrivateToggle"
-    privateToggle.Size = UDim2.new(1, -24, 0, 34)
-    privateToggle.Position = UDim2.new(0, 12, 0, 108)
-    privateToggle.BackgroundColor3 = Theme.Colors.PanelLight
-    privateToggle.BorderSizePixel = 0
-    privateToggle.Text = "Sala Pública"
-    privateToggle.TextColor3 = Theme.Colors.Text
-    privateToggle.Font = Theme.Font.Bold
-    privateToggle.TextSize = 13
-    privateToggle.ZIndex = 52
-    privateToggle.Parent = modal
+    local publicOption = Instance.new("TextButton")
+    publicOption.Name = "PublicOption"
+    publicOption.Size = UDim2.new(0.5, -18, 0, 42)
+    publicOption.Position = UDim2.new(0, 12, 0, 108)
+    publicOption.BackgroundColor3 = Theme.Colors.PanelLight
+    publicOption.BorderSizePixel = 0
+    publicOption.Text = ""
+    publicOption.ZIndex = 52
+    publicOption.Parent = modal
 
-    local toggleCorner = Instance.new("UICorner")
-    toggleCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
-    toggleCorner.Parent = privateToggle
+    local publicCorner = Instance.new("UICorner")
+    publicCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    publicCorner.Parent = publicOption
+
+    local publicCircle = Instance.new("Frame")
+    publicCircle.Size = UDim2.new(0, 14, 0, 14)
+    publicCircle.Position = UDim2.new(0, 12, 0.5, -7)
+    publicCircle.BackgroundColor3 = Theme.Colors.AccentSoft
+    publicCircle.BorderSizePixel = 0
+    publicCircle.ZIndex = 53
+    publicCircle.Parent = publicOption
+
+    local publicCircleCorner = Instance.new("UICorner")
+    publicCircleCorner.CornerRadius = UDim.new(1, 0)
+    publicCircleCorner.Parent = publicCircle
+
+    local publicText = Instance.new("TextLabel")
+    publicText.Size = UDim2.new(1, -36, 1, 0)
+    publicText.Position = UDim2.new(0, 32, 0, 0)
+    publicText.BackgroundTransparency = 1
+    publicText.Text = "Sala Pública"
+    publicText.TextColor3 = Theme.Colors.Text
+    publicText.Font = Theme.Font.Bold
+    publicText.TextSize = 13
+    publicText.TextXAlignment = Enum.TextXAlignment.Left
+    publicText.ZIndex = 53
+    publicText.Parent = publicOption
+
+    local privateOption = Instance.new("TextButton")
+    privateOption.Name = "PrivateOption"
+    privateOption.Size = UDim2.new(0.5, -18, 0, 42)
+    privateOption.Position = UDim2.new(0.5, 6, 0, 108)
+    privateOption.BackgroundColor3 = Theme.Colors.PanelLight
+    privateOption.BorderSizePixel = 0
+    privateOption.Text = ""
+    privateOption.ZIndex = 52
+    privateOption.Parent = modal
+
+    local privateCorner = Instance.new("UICorner")
+    privateCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    privateCorner.Parent = privateOption
+
+    local privateCircle = Instance.new("Frame")
+    privateCircle.Size = UDim2.new(0, 14, 0, 14)
+    privateCircle.Position = UDim2.new(0, 12, 0.5, -7)
+    privateCircle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    privateCircle.BorderSizePixel = 0
+    privateCircle.ZIndex = 53
+    privateCircle.Parent = privateOption
+
+    local privateCircleCorner = Instance.new("UICorner")
+    privateCircleCorner.CornerRadius = UDim.new(1, 0)
+    privateCircleCorner.Parent = privateCircle
+
+    local privateText = Instance.new("TextLabel")
+    privateText.Size = UDim2.new(1, -36, 1, 0)
+    privateText.Position = UDim2.new(0, 32, 0, 0)
+    privateText.BackgroundTransparency = 1
+    privateText.Text = "Sala Privada"
+    privateText.TextColor3 = Theme.Colors.Text
+    privateText.Font = Theme.Font.Bold
+    privateText.TextSize = 13
+    privateText.TextXAlignment = Enum.TextXAlignment.Left
+    privateText.ZIndex = 53
+    privateText.Parent = privateOption
 
     local passwordInput = Instance.new("TextBox")
     passwordInput.Name = "PasswordInput"
@@ -137,23 +196,34 @@ function CreateRoomModal.Create(parent, Theme)
 
     local isPrivate = false
 
-    privateToggle.MouseButton1Click:Connect(function()
-        isPrivate = not isPrivate
-
+    local function updateRoomTypeUI()
         if isPrivate then
-            privateToggle.Text = "Sala Privada"
+            publicCircle.BackgroundColor3 = Color3.fromRGB(45,45,45)
+            privateCircle.BackgroundColor3 = Theme.Colors.AccentSoft
             passwordInput.Visible = true
         else
-            privateToggle.Text = "Sala Pública"
+            publicCircle.BackgroundColor3 = Theme.Colors.AccentSoft
+            privateCircle.BackgroundColor3 = Color3.fromRGB(45,45,45)
             passwordInput.Visible = false
         end
+    end
+
+    publicOption.MouseButton1Click:Connect(function()
+        isPrivate = false
+        updateRoomTypeUI()
     end)
+
+    privateOption.MouseButton1Click:Connect(function()
+        isPrivate = true
+        updateRoomTypeUI()
+    end)
+
+    updateRoomTypeUI()
 
     return {
         Overlay = overlay,
         RoomInput = roomInput,
         PasswordInput = passwordInput,
-        PrivateToggle = privateToggle,
         CreateButton = createButton,
         CancelButton = cancelButton,
 
