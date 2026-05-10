@@ -53,7 +53,7 @@ function ChatPanel.Create(parent, Theme)
     local input = Instance.new("TextBox")
     input.Name = "MessageInput"
     input.Size = UDim2.new(1, -112, 0, 38)
-    input.Position = UDim2.new(0, 12, 1, -42)
+    input.Position = UDim2.new(0, 12, 1, -43)
     input.BackgroundColor3 = Theme.Colors.PanelLight
     input.BorderSizePixel = 0
     input.PlaceholderText = "Escribe un mensaje..."
@@ -77,7 +77,7 @@ function ChatPanel.Create(parent, Theme)
     local send = Instance.new("TextButton")
     send.Name = "SendButton"
     send.Size = UDim2.new(0, 84, 0, 38)
-    send.Position = UDim2.new(1, -96, 1, -42)
+    send.Position = UDim2.new(1, -96, 1, -43)
     send.BackgroundColor3 = Theme.Colors.AccentSoft
     send.Text = "Enviar"
     send.TextColor3 = Color3.fromRGB(255, 255, 255)
