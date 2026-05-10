@@ -17,6 +17,7 @@ local MainWindow = loadstring(game:HttpGet(BASE_RAW .. "modules/main_window.lua"
 local ChatPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/chat_panel.lua"))()
 local LeftPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/left_panel.lua"))()
 local RightPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/right_panel.lua"))()
+local CreateRoomModal = loadstring(game:HttpGet(BASE_RAW .. "modules/create_room_modal.lua"))()
 
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
@@ -34,6 +35,9 @@ local window = MainWindow.Create(CoreGui, Theme)
 local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme)
+local createRoomModal = CreateRoomModal.Create(window.Gui, Theme)
+
+
 
 chatPanel.Title.Text = currentRoom.name
 chatPanel.RoomType.Text = currentRoom.type
@@ -271,6 +275,57 @@ chatPanel.Input.FocusLost:Connect(function(enterPressed)
         sendCurrentMessage()
     end
 end)
+
+leftPanel.Buttons.CrearSalas.MouseButton1Click:Connect(function()
+    createRoomModal.Open()
+end)
+
+createRoomModal.CancelButton.MouseButton1Click:Connect(function()
+    createRoomModal.Close()
+end)
+
+createRoomModal.CreateButton.MouseButton1Click:Connect(function()
+    local roomName = createRoomModal.RoomInput.Text
+    local password = createRoomModal.PasswordInput.Text
+    local isPrivate = createRoomModal.IsPrivate()
+
+    if not roomName or roomName:gsub("%s+", "") == "" then
+        showStatus("Ingresa un nombre para la sala.")
+        return
+    end
+
+    if isPrivate and (#password < 3) then
+        showStatus("La contraseña debe tener mínimo 3 caracteres.")
+        return
+    end
+
+    local result = Api.CreateRoom(
+        player,
+        roomName,
+        isPrivate,
+        password
+    )
+
+    if not result then
+        showStatus("No se pudo crear la sala.")
+        return
+    end
+
+    if result.status == "created" then
+        local room = result.room
+
+        setRoom(
+            room.room_id,
+            room.display_name,
+            room.is_private and "PRIVADA" or "PUBLICA"
+        )
+
+        createRoomModal.Close()
+    else
+        showStatus(result.reason or "No se pudo crear la sala.")
+    end
+end)
+
 
 window.CloseButton.MouseButton1Click:Connect(function()
     running = false
