@@ -67,13 +67,11 @@ function CreateRoomModal.Create(parent, Theme)
     publicOption.BorderSizePixel = 0
 
     local publicStroke = Instance.new("UIStroke")
-    publicStroke.Color = Color3.fromRGB(58, 58, 68)
+    publicStroke.Color = Color3.fromRGB(255, 255, 255)
     publicStroke.Thickness = 1
-    publicStroke.Transparency = 0.15
+    publicStroke.Transparency = 0
+    publicStroke.Enabled = true
     publicStroke.Parent = publicOption
-    publicOption.Text = ""
-    publicOption.ZIndex = 52
-    publicOption.Parent = modal
 
     local publicCorner = Instance.new("UICorner")
     publicCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
@@ -109,14 +107,13 @@ function CreateRoomModal.Create(parent, Theme)
     privateOption.Position = UDim2.new(0.5, 6, 0, 108)
     privateOption.BackgroundColor3 = Theme.Colors.PanelLight
     privateOption.BorderSizePixel = 0
+
     local privateStroke = Instance.new("UIStroke")
-    privateStroke.Color = Color3.fromRGB(58, 58, 68)
+    privateStroke.Color = Color3.fromRGB(255, 255, 255)
     privateStroke.Thickness = 1
-    privateStroke.Transparency = 0.15
+    privateStroke.Transparency = 0
+    privateStroke.Enabled = false
     privateStroke.Parent = privateOption
-    privateOption.Text = ""
-    privateOption.ZIndex = 52
-    privateOption.Parent = modal
 
     local privateCorner = Instance.new("UICorner")
     privateCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
@@ -218,12 +215,19 @@ function CreateRoomModal.Create(parent, Theme)
             publicCircle.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
             privateCircle.BackgroundColor3 = Theme.Colors.AccentSoft
 
+            publicStroke.Enabled = false
+            privateStroke.Enabled = true
+
             passwordInput.Visible = true
         else
             publicOption.BackgroundTransparency = 0.35
             privateOption.BackgroundTransparency = 0
 
             publicCircle.BackgroundColor3 = Theme.Colors.AccentSoft
+
+            publicStroke.Enabled = true
+            privateStroke.Enabled = false
+
             privateCircle.BackgroundColor3 = Color3.fromRGB(55, 55, 65)
 
             passwordInput.Visible = false
