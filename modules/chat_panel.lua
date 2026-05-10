@@ -9,13 +9,13 @@ function ChatPanel.Create(parent, Theme)
     title.Text = "Chat General"
     title.TextColor3 = Theme.Colors.Text
     title.Font = Theme.Font.Bold
-    title.TextSize = 18
+    title.TextSize = 15
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = parent
 
     local messagesBox = Instance.new("ScrollingFrame")
     messagesBox.Name = "MessagesBox"
-    messagesBox.Size = UDim2.new(1, -24, 1, -110)
+    messagesBox.Size = UDim2.new(1, -24, 1, -98)
     messagesBox.Position = UDim2.new(0, 12, 0, 50)
     messagesBox.BackgroundColor3 = Theme.Colors.Panel
     messagesBox.BorderSizePixel = 0
@@ -41,7 +41,7 @@ function ChatPanel.Create(parent, Theme)
     local statusLabel = Instance.new("TextLabel")
     statusLabel.Name = "StatusLabel"
     statusLabel.Size = UDim2.new(1, -24, 0, 20)
-    statusLabel.Position = UDim2.new(0, 12, 1, -58)
+    statusLabel.Position = UDim2.new(0, 12, 1, -64)
     statusLabel.BackgroundTransparency = 1
     statusLabel.Text = ""
     statusLabel.TextColor3 = Theme.Colors.Danger
@@ -53,7 +53,7 @@ function ChatPanel.Create(parent, Theme)
     local input = Instance.new("TextBox")
     input.Name = "MessageInput"
     input.Size = UDim2.new(1, -112, 0, 38)
-    input.Position = UDim2.new(0, 12, 1, -40)
+    input.Position = UDim2.new(0, 12, 1, -46)
     input.BackgroundColor3 = Theme.Colors.PanelLight
     input.BorderSizePixel = 0
     input.PlaceholderText = "Escribe un mensaje..."
@@ -62,6 +62,7 @@ function ChatPanel.Create(parent, Theme)
     input.PlaceholderColor3 = Theme.Colors.TextMuted
     input.Font = Theme.Font.Regular
     input.TextSize = 14
+    input.TextXAlignment = Enum.TextXAlignment.Left
     input.ClearTextOnFocus = false
     input.Parent = parent
 
@@ -72,7 +73,7 @@ function ChatPanel.Create(parent, Theme)
     local send = Instance.new("TextButton")
     send.Name = "SendButton"
     send.Size = UDim2.new(0, 84, 0, 38)
-    send.Position = UDim2.new(1, -96, 1, -40)
+    send.Position = UDim2.new(1, -96, 1, -46)
     send.BackgroundColor3 = Theme.Colors.AccentSoft
     send.Text = "Enviar"
     send.TextColor3 = Color3.fromRGB(255, 255, 255)
