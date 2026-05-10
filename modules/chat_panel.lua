@@ -76,7 +76,7 @@ function ChatPanel.Create(parent, Theme)
     local input = Instance.new("TextBox")
     input.Name = "MessageInput"
     input.Size = UDim2.new(1, -110, 1, 0)
-    input.Position = UDim2.new(0, 28, 0, 0)
+    input.Position = UDim2.new(0, 20, 0, 0)
     input.BackgroundTransparency = 1
     input.PlaceholderText = "Escribe un mensaje..."
     input.Text = ""
