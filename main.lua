@@ -347,6 +347,27 @@ local function refreshPublicRooms()
         memberCount.TextXAlignment = Enum.TextXAlignment.Right
         memberCount.ZIndex = 64
         memberCount.Parent = button
+
+        button.MouseButton1Click:Connect(function()
+            local result = Api.JoinRoom(player, room.room_id, nil)
+
+            if result and result.status == "joined" then
+                setRoom(
+                    room.room_id,
+                    room.display_name,
+                    "PUBLICA"
+                )
+
+                roomsListModal.Close()
+                refreshChat()
+                refreshOnlineUsers()
+            else
+                showStatus(result and result.reason or "No se pudo entrar a la sala.")
+            end
+        end)
+
+
+
     end
 
     task.wait()
