@@ -298,11 +298,12 @@ local function refreshPublicRooms()
         local button = Instance.new("TextButton")
 
         button.Size = UDim2.new(1, 0, 0, 46)
-        button.BackgroundColor3 = Theme.Colors.Panel
+        button.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
         button.BorderSizePixel = 0
         button.Text = room.display_name
         button.TextColor3 = Theme.Colors.Text
         button.Font = Theme.Font.Bold
+        button.TextSize = 13
         button.TextSize = 13
         button.Parent = roomsListModal.List
 
