@@ -336,6 +336,10 @@ leftPanel.Buttons.CrearSalas.MouseButton1Click:Connect(function()
     createRoomModal.Open()
 end)
 
+leftPanel.Buttons.SalasPublicas.MouseButton1Click:Connect(function()
+    roomsListModal.Open()
+end)
+
 createRoomModal.CancelButton.MouseButton1Click:Connect(function()
     createRoomModal.Close()
 end)
