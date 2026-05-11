@@ -142,7 +142,6 @@ function RightPanel.Create(parent, Theme)
     local function render(users)
         clear()
 
-        title.Text = "En Línea - " .. tostring(#(users or {}))
 
         for _, user in ipairs(users or {}) do
             renderUser(user)
