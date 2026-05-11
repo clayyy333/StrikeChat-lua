@@ -77,7 +77,7 @@ function RightPanel.Create(parent, Theme)
         avatar.Image =
             "https://www.roblox.com/headshot-thumbnail/image?userId="
             .. tostring(user.roblox_user_id)
-            .. "&width=100&height=100&format=png"
+            .. "&width=48&height=48&format=png"
         avatar.Parent = avatarHolder
 
         local avatarImageCorner = Instance.new("UICorner")
