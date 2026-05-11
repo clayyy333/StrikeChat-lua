@@ -85,6 +85,16 @@ function RoomsListModal.Create(parent, Theme)
     membersHeader.ZIndex = 62
     membersHeader.Parent = modal
 
+    local divider = Instance.new("Frame")
+    divider.Name = "Divider"
+    divider.Size = UDim2.new(1, -52, 0, 1)
+    divider.Position = UDim2.new(0, 26, 0, 76)
+    divider.BackgroundColor3 = Color3.fromRGB(75, 75, 88)
+    divider.BackgroundTransparency = 0.2
+    divider.BorderSizePixel = 0
+    divider.ZIndex = 62
+    divider.Parent = modal
+
     local closeButton = Instance.new("TextButton")
     closeButton.Name = "CloseButton"
     closeButton.Size = UDim2.new(0, 32, 0, 28)
@@ -104,7 +114,7 @@ function RoomsListModal.Create(parent, Theme)
     local list = Instance.new("ScrollingFrame")
     list.Name = "RoomsList"
     list.Size = UDim2.new(1, -28, 1, -92)
-    list.Position = UDim2.new(0, 14, 0, 70)
+    list.Position = UDim2.new(0, 14, 0, 82)
     list.BackgroundTransparency = 1
     list.BorderSizePixel = 0
     list.ScrollBarThickness = 4

@@ -297,7 +297,7 @@ local function refreshPublicRooms()
     for index, room in ipairs(result.rooms) do
 
         local button = Instance.new("TextButton")
-        button.Size = UDim2.new(1, 0, 0, 48)
+        button.Size = UDim2.new(1, 0, 0, 38)
         button.BackgroundColor3 = Theme.Colors.PanelLight
         button.BackgroundTransparency = 0.25
         button.BorderSizePixel = 0
@@ -311,7 +311,7 @@ local function refreshPublicRooms()
 
         local roomName = Instance.new("TextLabel")
         roomName.Size = UDim2.new(1, -80, 1, 0)
-        roomName.Position = UDim2.new(0, 78, 0, 0)
+        roomName.Position = UDim2.new(0, 96, 0, 0)
         roomName.BackgroundTransparency = 1
         roomName.Text =
             tostring(index) ..
@@ -327,7 +327,7 @@ local function refreshPublicRooms()
 
         local memberCount = Instance.new("TextLabel")
         memberCount.Size = UDim2.new(0, 56, 1, 0)
-        memberCount.Position = UDim2.new(1, -96, 0, 0)
+        memberCount.Position = UDim2.new(1, -122, 0, 0)
         memberCount.BackgroundTransparency = 1
         memberCount.Text =
             tostring(#(room.members or {})) ..
