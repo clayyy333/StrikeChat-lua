@@ -159,4 +159,13 @@ function Api.GetRoomMembers(roomId)
     )
 end
 
+function Api.LeaveAnyRoom(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/rooms/leave-any" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
 return Api

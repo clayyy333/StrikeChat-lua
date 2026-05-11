@@ -311,7 +311,7 @@ local function refreshPublicRooms()
 
         local roomName = Instance.new("TextLabel")
         roomName.Size = UDim2.new(1, -80, 1, 0)
-        roomName.Position = UDim2.new(0, 96, 0, 0)
+        roomName.Position = UDim2.new(0, 62, 0, 0)
         roomName.BackgroundTransparency = 1
         roomName.Text =
             tostring(index) ..
@@ -327,7 +327,7 @@ local function refreshPublicRooms()
 
         local memberCount = Instance.new("TextLabel")
         memberCount.Size = UDim2.new(0, 56, 1, 0)
-        memberCount.Position = UDim2.new(1, -122, 0, 0)
+        memberCount.Position = UDim2.new(1, -108, 0, 0)
         memberCount.BackgroundTransparency = 1
         memberCount.Text =
             tostring(#(room.members or {})) ..
@@ -495,7 +495,12 @@ createRoomModal.CreateButton.MouseButton1Click:Connect(function()
         createRoomModal.Close()
         refreshChat()
     else
-        showStatus(result.reason or "No se pudo crear la sala.")
+        if result.reason == "user_already_in_room" then
+            Api.LeaveAnyRoom(player)
+            showStatus("Se limpió una sala anterior. Intenta crear la sala otra vez.")
+        else
+            showStatus(result.reason or "No se pudo crear la sala.")
+        end
     end
 end)
 
