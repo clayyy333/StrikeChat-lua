@@ -102,7 +102,7 @@ function RightPanel.Create(parent, Theme)
         local name = Instance.new("TextLabel")
         name.Name = "Name"
         name.Size = UDim2.new(1, -54, 0, 16)
-        name.Position = UDim2.new(0, 46, 0, 8)
+        name.Position = UDim2.new(0, 42, 0, 8)
         name.BackgroundTransparency = 1
 
         local clanText = ""
