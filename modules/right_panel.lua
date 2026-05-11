@@ -124,7 +124,7 @@ function RightPanel.Create(parent, Theme)
         local status = Instance.new("TextLabel")
         status.Name = "Status"
         status.Size = UDim2.new(1, -60, 0, 14)
-        status.Position = UDim2.new(0, 46, 0, 26)
+        status.Position = UDim2.new(0, 42, 0, 26)
         status.BackgroundTransparency = 1
         status.Text = "En línea"
         status.TextColor3 = Theme.Colors.TextMuted
