@@ -257,6 +257,14 @@ local function refreshPublicRooms()
     local result = Api.GetPublicRooms()
 
     if not result or not result.rooms then
+        local empty = Instance.new("TextLabel")
+        empty.Size = UDim2.new(1, 0, 0, 40)
+        empty.BackgroundTransparency = 1
+        empty.Text = "No se pudieron cargar salas."
+        empty.TextColor3 = Theme.Colors.TextMuted
+        empty.Font = Theme.Font.Regular
+        empty.TextSize = 12
+        empty.Parent = roomsListModal.List
         return
     end
 
