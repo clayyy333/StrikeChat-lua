@@ -251,6 +251,44 @@ local function refreshOnlineUsers()
     rightPanel.Render(roomUsers)
 end
 
+local function refreshPublicRooms()
+    roomsListModal.Clear()
+
+    local result = Api.GetPublicRooms()
+
+    if not result or not result.rooms then
+        return
+    end
+
+    for _, room in ipairs(result.rooms) do
+        local button = Instance.new("TextButton")
+
+        button.Size = UDim2.new(1, 0, 0, 46)
+        button.BackgroundColor3 = Theme.Colors.Panel
+        button.BorderSizePixel = 0
+        button.Text = room.display_name
+        button.TextColor3 = Theme.Colors.Text
+        button.Font = Theme.Font.Bold
+        button.TextSize = 13
+        button.Parent = roomsListModal.List
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+        corner.Parent = button
+    end
+
+    task.wait()
+
+    roomsListModal.List.CanvasSize =
+        UDim2.new(
+            0,
+            0,
+            0,
+            roomsListModal.Layout.AbsoluteContentSize.Y + 16
+        )
+end
+
+
 local function showStatus(message)
     chatPanel.StatusLabel.Text = message or ""
 
@@ -337,6 +375,7 @@ leftPanel.Buttons.CrearSalas.MouseButton1Click:Connect(function()
 end)
 
 leftPanel.Buttons.SalasPublicas.MouseButton1Click:Connect(function()
+    refreshPublicRooms()
     roomsListModal.Open()
 end)
 
