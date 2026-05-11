@@ -101,10 +101,17 @@ function RightPanel.Create(parent, Theme)
 
         local name = Instance.new("TextLabel")
         name.Name = "Name"
-        name.Size = UDim2.new(1, -80, 0, 16)
-        name.Position = UDim2.new(0, 52, 0, 8)
+        name.Size = UDim2.new(1, -54, 0, 16)
+        name.Position = UDim2.new(0, 46, 0, 8)
         name.BackgroundTransparency = 1
-        name.Text = displayName
+
+        local clanText = ""
+
+        if user.clan_tag then
+            clanText = "[" .. tostring(user.clan_tag) .. "]"
+        end
+
+        name.Text = displayName .. clanText
         name.TextColor3 = Theme.Colors.Text
         name.Font = Theme.Font.Bold
         name.TextSize = 12
@@ -112,24 +119,12 @@ function RightPanel.Create(parent, Theme)
         name.TextTruncate = Enum.TextTruncate.AtEnd
         name.Parent = row
 
-        if user.clan_tag then
-            local clan = Instance.new("TextLabel")
-            clan.Name = "ClanTag"
-            clan.Size = UDim2.new(0, 60, 0, 16)
-            clan.Position = UDim2.new(1, -68, 0, 8)
-            clan.BackgroundTransparency = 1
-            clan.Text = "[" .. tostring(user.clan_tag) .. "]"
-            clan.TextColor3 = Theme.Colors.AccentSoft
-            clan.Font = Theme.Font.Bold
-            clan.TextSize = 11
-            clan.TextXAlignment = Enum.TextXAlignment.Right
-            clan.Parent = row
-        end
+        
 
         local status = Instance.new("TextLabel")
         status.Name = "Status"
         status.Size = UDim2.new(1, -60, 0, 14)
-        status.Position = UDim2.new(0, 52, 0, 26)
+        status.Position = UDim2.new(0, 46, 0, 26)
         status.BackgroundTransparency = 1
         status.Text = "En línea"
         status.TextColor3 = Theme.Colors.TextMuted
