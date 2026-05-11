@@ -17,7 +17,7 @@ function RightPanel.Create(parent, Theme)
     list.Name = "OnlineList"
     list.Size = UDim2.new(1, -24, 1, -56)
     list.Position = UDim2.new(0, 12, 0, 46)
-    list.BackgroundColor3 = Theme.Colors.Panel
+    list.BackgroundColor3 = Theme.Colors.Background
     list.BorderSizePixel = 0
     list.ScrollBarThickness = 4
     list.CanvasSize = UDim2.new(0, 0, 0, 0)
@@ -34,7 +34,7 @@ function RightPanel.Create(parent, Theme)
 
     local padding = Instance.new("UIPadding")
     padding.PaddingTop = UDim.new(0, 8)
-    padding.PaddingLeft = UDim.new(0, 8)
+    padding.PaddingLeft = UDim.new(0, 4)
     padding.PaddingRight = UDim.new(0, 8)
     padding.Parent = list
 
