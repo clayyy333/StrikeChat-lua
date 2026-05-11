@@ -114,7 +114,7 @@ function RoomsListModal.Create(parent, Theme)
     local list = Instance.new("ScrollingFrame")
     list.Name = "RoomsList"
     list.Size = UDim2.new(1, -28, 1, -92)
-    list.Position = UDim2.new(0, 14, 0, 44)
+    list.Position = UDim2.new(0, 14, 0, 40)
     list.BackgroundTransparency = 1
     list.BorderSizePixel = 0
     list.ScrollBarThickness = 4
