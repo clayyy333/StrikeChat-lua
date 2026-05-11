@@ -43,6 +43,23 @@ local window = MainWindow.Create(CoreGui, Theme)
 local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme)
+
+if heartbeatResult.user and heartbeatResult.user.current_room_id then
+    currentRoom.id = heartbeatResult.user.current_room_id
+    currentRoom.name = heartbeatResult.user.current_room_name or "Sala"
+    currentRoom.type = "SALA"
+
+    chatPanel.Title.Text = currentRoom.name
+    chatPanel.RoomType.Text = currentRoom.type
+    chatPanel.LeaveButton.Visible = true
+
+    leftPanel.Buttons.CrearSalas.Active = false
+    leftPanel.Buttons.CrearSalas.AutoButtonColor = false
+    leftPanel.Buttons.CrearSalas.BackgroundTransparency = 0.45
+else
+    chatPanel.LeaveButton.Visible = false
+end
+
 local createRoomModal = CreateRoomModal.Create(window.Gui, Theme)
 local roomsListModal = RoomsListModal.Create(window.Gui, Theme)
 
@@ -468,6 +485,11 @@ end)
 
 window.CloseButton.MouseButton1Click:Connect(function()
     running = false
+
+    if currentRoom.id ~= "global" then
+        Api.LeaveRoom(player, currentRoom.id)
+    end
+
     window.Gui:Destroy()
 end)
 
