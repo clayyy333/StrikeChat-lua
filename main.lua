@@ -319,6 +319,7 @@ local function refreshPublicRooms()
         roomNumber.TextSize = 13
         roomNumber.TextXAlignment = Enum.TextXAlignment.Left
         roomNumber.ZIndex = 64
+        roomNumber.Active = false
         roomNumber.Parent = button
 
         local roomName = Instance.new("TextLabel")
@@ -332,6 +333,7 @@ local function refreshPublicRooms()
         roomName.TextXAlignment = Enum.TextXAlignment.Left
         roomName.TextTruncate = Enum.TextTruncate.AtEnd
         roomName.ZIndex = 64
+        roomName.Active = false
         roomName.Parent = button
 
         local memberCount = Instance.new("TextLabel")
@@ -346,6 +348,7 @@ local function refreshPublicRooms()
         memberCount.TextSize = 11
         memberCount.TextXAlignment = Enum.TextXAlignment.Right
         memberCount.ZIndex = 64
+        memberCount.Active = false
         memberCount.Parent = button
 
         button.MouseButton1Click:Connect(function()
