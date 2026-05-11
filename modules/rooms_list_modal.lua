@@ -51,7 +51,7 @@ function RoomsListModal.Create(parent, Theme)
 
     local numberHeader = Instance.new("TextLabel")
     numberHeader.Size = UDim2.new(0, 40, 0, 18)
-    numberHeader.Position = UDim2.new(0, 18, 0, 52)
+    numberHeader.Position = UDim2.new(0, 34, 0, 52)
     numberHeader.BackgroundTransparency = 1
     numberHeader.Text = "Nº"
     numberHeader.TextColor3 = Theme.Colors.TextMuted
@@ -63,7 +63,7 @@ function RoomsListModal.Create(parent, Theme)
 
     local roomHeader = Instance.new("TextLabel")
     roomHeader.Size = UDim2.new(0, 220, 0, 18)
-    roomHeader.Position = UDim2.new(0, 98, 0, 52)
+    roomHeader.Position = UDim2.new(0, 112, 0, 52)
     roomHeader.BackgroundTransparency = 1
     roomHeader.Text = "Nombre de sala"
     roomHeader.TextColor3 = Theme.Colors.TextMuted
