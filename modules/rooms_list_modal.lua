@@ -51,7 +51,7 @@ function RoomsListModal.Create(parent, Theme)
 
     local numberHeader = Instance.new("TextLabel")
     numberHeader.Size = UDim2.new(0, 40, 0, 18)
-    numberHeader.Position = UDim2.new(0, 34, 0, 52)
+    numberHeader.Position = UDim2.new(0, 40, 0, 52)
     numberHeader.BackgroundTransparency = 1
     numberHeader.Text = "Nº"
     numberHeader.TextColor3 = Theme.Colors.TextMuted
