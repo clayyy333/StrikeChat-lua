@@ -352,7 +352,7 @@ local function refreshPublicRooms()
         memberCount.Parent = button
 
         button.MouseButton1Click:Connect(function()
-            local result = Api.JoinRoom(player, room.room_id, nil)
+            local result = Api.JoinRoom(player, room.room_id, "")
 
             if result and result.status == "joined" then
                 setRoom(
