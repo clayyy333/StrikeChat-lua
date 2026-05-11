@@ -305,7 +305,9 @@ local function refreshPublicRooms()
         button.Font = Theme.Font.Bold
         button.TextSize = 13
         button.TextSize = 13
+        button.ZIndex = 63
         button.Parent = roomsListModal.List
+
 
         local corner = Instance.new("UICorner")
         corner.CornerRadius = UDim.new(0, Theme.Radius.Button)
