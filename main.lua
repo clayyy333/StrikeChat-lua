@@ -271,6 +271,15 @@ end
 local function refreshPublicRooms()
     roomsListModal.Clear()
 
+    local testLabel = Instance.new("TextLabel")
+    testLabel.Size = UDim2.new(1, 0, 0, 40)
+    testLabel.BackgroundTransparency = 1
+    testLabel.Text = "Cargando salas..."
+    testLabel.TextColor3 = Theme.Colors.Text
+    testLabel.Font = Theme.Font.Bold
+    testLabel.TextSize = 13
+    testLabel.Parent = roomsListModal.List
+
     local result = Api.GetPublicRooms()
 
     if not result or not result.rooms then
