@@ -24,6 +24,8 @@ local ChatPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/chat_panel.lua"))
 local LeftPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/left_panel.lua"))()
 local RightPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/right_panel.lua"))()
 local CreateRoomModal = loadstring(game:HttpGet(BASE_RAW .. "modules/create_room_modal.lua"))()
+local RoomsListModal = loadstring(game:HttpGet(BASE_RAW .. "modules/rooms_list_modal.lua"))()
+
 
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
@@ -42,7 +44,7 @@ local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme)
 local createRoomModal = CreateRoomModal.Create(window.Gui, Theme)
-
+local roomsListModal = RoomsListModal.Create(window.Gui, Theme)
 
 
 chatPanel.Title.Text = currentRoom.name
@@ -337,6 +339,11 @@ end)
 createRoomModal.CancelButton.MouseButton1Click:Connect(function()
     createRoomModal.Close()
 end)
+
+roomsListModal.CloseButton.MouseButton1Click:Connect(function()
+    roomsListModal.Close()
+end)
+
 
 createRoomModal.CreateButton.MouseButton1Click:Connect(function()
     local roomName = createRoomModal.RoomInput.Text
