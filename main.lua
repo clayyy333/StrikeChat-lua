@@ -309,14 +309,23 @@ local function refreshPublicRooms()
         corner.CornerRadius = UDim.new(0, Theme.Radius.Button)
         corner.Parent = button
 
+        local roomNumber = Instance.new("TextLabel")
+        roomNumber.Size = UDim2.new(0, 40, 1, 0)
+        roomNumber.Position = UDim2.new(0, 18, 0, 0)
+        roomNumber.BackgroundTransparency = 1
+        roomNumber.Text = tostring(index) .. "."
+        roomNumber.TextColor3 = Theme.Colors.Text
+        roomNumber.Font = Theme.Font.Bold
+        roomNumber.TextSize = 13
+        roomNumber.TextXAlignment = Enum.TextXAlignment.Left
+        roomNumber.ZIndex = 64
+        roomNumber.Parent = button
+
         local roomName = Instance.new("TextLabel")
         roomName.Size = UDim2.new(1, -80, 1, 0)
-        roomName.Position = UDim2.new(0, 62, 0, 0)
+        roomName.Position = UDim2.new(0, 88, 0, 0)
         roomName.BackgroundTransparency = 1
-        roomName.Text =
-            tostring(index) ..
-            ".   " ..
-            room.display_name
+        roomName.Text = room.display_name
         roomName.TextColor3 = Theme.Colors.Text
         roomName.Font = Theme.Font.Bold
         roomName.TextSize = 13
