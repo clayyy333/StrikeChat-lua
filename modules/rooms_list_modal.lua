@@ -12,8 +12,8 @@ function RoomsListModal.Create(parent, Theme)
 
     local modal = Instance.new("Frame")
     modal.Name = "Modal"
-    modal.Size = UDim2.new(0, 360, 0, 360)
-    modal.Position = UDim2.new(0.5, -180, 0.5, -180)
+    modal.Size = UDim2.new(0, 520, 0, 420)
+    modal.Position = UDim2.new(0.5, -260, 0.5, -210)
     modal.BackgroundColor3 = Theme.Colors.Panel
     modal.BorderSizePixel = 0
     modal.ZIndex = 61
@@ -41,13 +41,49 @@ function RoomsListModal.Create(parent, Theme)
     columns.Size = UDim2.new(1, -28, 0, 18)
     columns.Position = UDim2.new(0, 14, 0, 52)
     columns.BackgroundTransparency = 1
-    columns.Text = "   Nº          Nombre de sala                         Participantes"
+    columns.Text = ""
     columns.TextColor3 = Theme.Colors.TextMuted
     columns.Font = Theme.Font.Bold
     columns.TextSize = 11
     columns.TextXAlignment = Enum.TextXAlignment.Left
     columns.ZIndex = 62
     columns.Parent = modal
+
+    local numberHeader = Instance.new("TextLabel")
+    numberHeader.Size = UDim2.new(0, 40, 0, 18)
+    numberHeader.Position = UDim2.new(0, 26, 0, 52)
+    numberHeader.BackgroundTransparency = 1
+    numberHeader.Text = "Nº"
+    numberHeader.TextColor3 = Theme.Colors.TextMuted
+    numberHeader.Font = Theme.Font.Bold
+    numberHeader.TextSize = 11
+    numberHeader.TextXAlignment = Enum.TextXAlignment.Left
+    numberHeader.ZIndex = 62
+    numberHeader.Parent = modal
+
+    local roomHeader = Instance.new("TextLabel")
+    roomHeader.Size = UDim2.new(0, 220, 0, 18)
+    roomHeader.Position = UDim2.new(0, 86, 0, 52)
+    roomHeader.BackgroundTransparency = 1
+    roomHeader.Text = "Nombre de sala"
+    roomHeader.TextColor3 = Theme.Colors.TextMuted
+    roomHeader.Font = Theme.Font.Bold
+    roomHeader.TextSize = 11
+    roomHeader.TextXAlignment = Enum.TextXAlignment.Left
+    roomHeader.ZIndex = 62
+    roomHeader.Parent = modal
+
+    local membersHeader = Instance.new("TextLabel")
+    membersHeader.Size = UDim2.new(0, 120, 0, 18)
+    membersHeader.Position = UDim2.new(1, -150, 0, 52)
+    membersHeader.BackgroundTransparency = 1
+    membersHeader.Text = "Participantes"
+    membersHeader.TextColor3 = Theme.Colors.TextMuted
+    membersHeader.Font = Theme.Font.Bold
+    membersHeader.TextSize = 11
+    membersHeader.TextXAlignment = Enum.TextXAlignment.Left
+    membersHeader.ZIndex = 62
+    membersHeader.Parent = modal
 
     local closeButton = Instance.new("TextButton")
     closeButton.Name = "CloseButton"
@@ -69,7 +105,7 @@ function RoomsListModal.Create(parent, Theme)
     list.Name = "RoomsList"
     list.Size = UDim2.new(1, -28, 1, -92)
     list.Position = UDim2.new(0, 14, 0, 70)
-    list.BackgroundColor3 = Theme.Colors.Background
+    list.BackgroundTransparency = 1
     list.BorderSizePixel = 0
     list.ScrollBarThickness = 4
     list.CanvasSize = UDim2.new(0, 0, 0, 0)
@@ -81,7 +117,7 @@ function RoomsListModal.Create(parent, Theme)
     listCorner.Parent = list
 
     local layout = Instance.new("UIListLayout")
-    layout.Padding = UDim.new(0, 2)
+    layout.Padding = UDim.new(0, 8)
     layout.SortOrder = Enum.SortOrder.LayoutOrder
     layout.Parent = list
 
