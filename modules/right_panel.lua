@@ -61,7 +61,7 @@ function RightPanel.Create(parent, Theme)
         local avatarHolder = Instance.new("Frame")
         avatarHolder.Name = "AvatarHolder"
         avatarHolder.Size = UDim2.new(0, 34, 0, 34)
-        avatarHolder.Position = UDim2.new(0, 2, 0.5, -17)
+        avatarHolder.Position = UDim2.new(0, -2, 0.5, -17)
         avatarHolder.BackgroundColor3 = Theme.Colors.Panel
         avatarHolder.BorderSizePixel = 0
         avatarHolder.Parent = row
