@@ -297,7 +297,7 @@ local function refreshPublicRooms()
     for index, room in ipairs(result.rooms) do
 
         local button = Instance.new("TextButton")
-        button.Size = UDim2.new(1, 0, 0, 38)
+        button.Size = UDim2.new(1, 0, 0, 34)
         button.BackgroundColor3 = Theme.Colors.PanelLight
         button.BackgroundTransparency = 0.25
         button.BorderSizePixel = 0
