@@ -50,7 +50,7 @@ function RightPanel.Create(parent, Theme)
         local row = Instance.new("Frame")
         row.Name = "UserRow"
         row.Size = UDim2.new(1, -4, 0, 54)
-        row.BackgroundColor3 = Theme.Colors.PanelLight
+        row.BackgroundColor3 = Theme.Colors.Panel
         row.BorderSizePixel = 0
         row.Parent = list
 
