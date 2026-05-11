@@ -35,13 +35,13 @@ function RoomsListModal.Create(parent, Theme)
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.ZIndex = 62
     title.Parent = modal
-    
+
     local columns = Instance.new("TextLabel")
     columns.Name = "Columns"
     columns.Size = UDim2.new(1, -28, 0, 18)
     columns.Position = UDim2.new(0, 14, 0, 52)
     columns.BackgroundTransparency = 1
-    columns.Text = "Nº     Nombre de sala                              Participantes"
+    columns.Text = "   Nº          Nombre de sala                         Participantes"
     columns.TextColor3 = Theme.Colors.TextMuted
     columns.Font = Theme.Font.Bold
     columns.TextSize = 11
@@ -68,7 +68,7 @@ function RoomsListModal.Create(parent, Theme)
     local list = Instance.new("ScrollingFrame")
     list.Name = "RoomsList"
     list.Size = UDim2.new(1, -28, 1, -92)
-    list.Position = UDim2.new(0, 14, 0, 78)
+    list.Position = UDim2.new(0, 14, 0, 70)
     list.BackgroundColor3 = Theme.Colors.Background
     list.BorderSizePixel = 0
     list.ScrollBarThickness = 4
@@ -81,7 +81,7 @@ function RoomsListModal.Create(parent, Theme)
     listCorner.Parent = list
 
     local layout = Instance.new("UIListLayout")
-    layout.Padding = UDim.new(0, 8)
+    layout.Padding = UDim.new(0, 2)
     layout.SortOrder = Enum.SortOrder.LayoutOrder
     layout.Parent = list
 
