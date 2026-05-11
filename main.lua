@@ -207,11 +207,46 @@ local function refreshChat()
 end
 
 local function refreshOnlineUsers()
-    local result = Api.GetOnlineUsers()
+    if currentRoom.id == "global" then
+        local result = Api.GetOnlineUsers()
 
-    if result and result.users then
-        rightPanel.Render(result.users)
+        if result and result.users then
+            rightPanel.Title.Text =
+                "En Línea - " .. tostring(#result.users)
+
+            rightPanel.Render(result.users)
+        end
+
+        return
     end
+
+    local membersResult = Api.GetRoomMembers(currentRoom.id)
+
+    if not membersResult or not membersResult.members then
+        return
+    end
+
+    local onlineResult = Api.GetOnlineUsers()
+
+    if not onlineResult or not onlineResult.users then
+        return
+    end
+
+    local roomUsers = {}
+
+    for _, onlineUser in ipairs(onlineResult.users) do
+        for _, memberId in ipairs(membersResult.members) do
+            if onlineUser.roblox_user_id == memberId then
+                table.insert(roomUsers, onlineUser)
+                break
+            end
+        end
+    end
+
+    rightPanel.Title.Text =
+        "En Sala - " .. tostring(#roomUsers)
+
+    rightPanel.Render(roomUsers)
 end
 
 local function showStatus(message)

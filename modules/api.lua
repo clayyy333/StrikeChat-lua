@@ -152,4 +152,11 @@ function Api.LeaveRoom(player, roomId)
     )
 end
 
+function Api.GetRoomMembers(roomId)
+    return Api.Request(
+        Api.BaseUrl .. "/rooms/members?room_id=" .. Api.Encode(roomId),
+        "GET"
+    )
+end
+
 return Api
