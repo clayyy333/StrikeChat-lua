@@ -295,23 +295,43 @@ local function refreshPublicRooms()
     end
 
     for _, room in ipairs(result.rooms) do
+        
         local button = Instance.new("TextButton")
-
-        button.Size = UDim2.new(1, 0, 0, 46)
-        button.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+        button.Size = UDim2.new(1, 0, 0, 36)
+        button.BackgroundColor3 = Theme.Colors.Background
         button.BorderSizePixel = 0
-        button.Text = room.display_name
-        button.TextColor3 = Theme.Colors.Text
-        button.Font = Theme.Font.Bold
-        button.TextSize = 13
-        button.TextSize = 13
+        button.Text = ""
         button.ZIndex = 63
         button.Parent = roomsListModal.List
-
 
         local corner = Instance.new("UICorner")
         corner.CornerRadius = UDim.new(0, Theme.Radius.Button)
         corner.Parent = button
+
+        local roomName = Instance.new("TextLabel")
+        roomName.Size = UDim2.new(1, -80, 1, 0)
+        roomName.Position = UDim2.new(0, 12, 0, 0)
+        roomName.BackgroundTransparency = 1
+        roomName.Text = room.display_name
+        roomName.TextColor3 = Theme.Colors.Text
+        roomName.Font = Theme.Font.Bold
+        roomName.TextSize = 13
+        roomName.TextXAlignment = Enum.TextXAlignment.Left
+        roomName.TextTruncate = Enum.TextTruncate.AtEnd
+        roomName.ZIndex = 64
+        roomName.Parent = button
+
+        local memberCount = Instance.new("TextLabel")
+        memberCount.Size = UDim2.new(0, 56, 1, 0)
+        memberCount.Position = UDim2.new(1, -64, 0, 0)
+        memberCount.BackgroundTransparency = 1
+        memberCount.Text = tostring(#(room.members or {})) .. " user"
+        memberCount.TextColor3 = Theme.Colors.TextMuted
+        memberCount.Font = Theme.Font.Regular
+        memberCount.TextSize = 11
+        memberCount.TextXAlignment = Enum.TextXAlignment.Right
+        memberCount.ZIndex = 64
+        memberCount.Parent = button
     end
 
     task.wait()
