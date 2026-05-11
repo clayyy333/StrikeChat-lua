@@ -132,7 +132,7 @@ function RoomsListModal.Create(parent, Theme)
     layout.Parent = list
 
     local padding = Instance.new("UIPadding")
-    padding.PaddingTop = UDim.new(0, 8)
+    padding.PaddingTop = UDim.new(0, 0)
     padding.PaddingLeft = UDim.new(0, 8)
     padding.PaddingRight = UDim.new(0, 8)
     padding.Parent = list
