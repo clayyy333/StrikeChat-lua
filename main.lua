@@ -70,6 +70,7 @@ chatPanel.RoomType.Text = currentRoom.type
 local lastChatSignature = ""
 
 local avatarCache = {}
+local setRoom
 
 
 
