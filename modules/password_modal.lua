@@ -60,6 +60,21 @@ function PasswordModal.Create(parent, Theme)
     inputPadding.PaddingLeft = UDim.new(0, 12)
     inputPadding.Parent = input
 
+    local errorLabel = Instance.new("TextLabel")
+    errorLabel.Name = "ErrorLabel"
+    errorLabel.Size = UDim2.new(1, -24, 0, 18)
+    errorLabel.Position = UDim2.new(0, 12, 0, 98)
+    errorLabel.BackgroundTransparency = 1
+    errorLabel.Text = ""
+    errorLabel.TextColor3 = Theme.Colors.Danger
+    errorLabel.Font = Theme.Font.Bold
+    errorLabel.TextSize = 11
+    errorLabel.TextXAlignment = Enum.TextXAlignment.Left
+    errorLabel.ZIndex = 82
+    errorLabel.Parent = modal
+
+
+
     local enterButton = Instance.new("TextButton")
     enterButton.Name = "EnterButton"
     enterButton.Size = UDim2.new(0.5, -18, 0, 36)
@@ -97,11 +112,13 @@ function PasswordModal.Create(parent, Theme)
     return {
         Overlay = overlay,
         Input = input,
+        ErrorLabel = errorLabel,
         EnterButton = enterButton,
         CancelButton = cancelButton,
 
         Open = function()
             input.Text = ""
+            errorLabel.Text = ""
             overlay.Visible = true
         end,
 

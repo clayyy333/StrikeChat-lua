@@ -544,10 +544,9 @@ passwordModal.EnterButton.MouseButton1Click:Connect(function()
         refreshOnlineUsers()
 
     else
-        showStatus(
-            result and result.reason or
-            "Contraseña incorrecta."
-        )
+
+        passwordModal.ErrorLabel.Text = "Contraseña incorrecta"
+        
     end
 end)
 
