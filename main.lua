@@ -27,7 +27,7 @@ local CreateRoomModal = loadstring(game:HttpGet(BASE_RAW .. "modules/create_room
 local RoomsListModal = loadstring(game:HttpGet(BASE_RAW .. "modules/rooms_list_modal.lua"))()
 local PasswordModal = loadstring(game:HttpGet(BASE_RAW .. "modules/password_modal.lua"))()
 local ConfirmModal = loadstring(game:HttpGet(BASE_RAW .. "modules/confirm_modal.lua"))()
-local ClanTableUI = loadstring(game:HttpGet(BASE_RAW .. "modules/clan_table_ui.lua"))()
+--local ClanTableUI = loadstring(game:HttpGet(BASE_RAW .. "modules/clan_table_ui.lua"))()
 
 
 if not Api.HasRequest() then
@@ -580,16 +580,16 @@ leftPanel.Buttons.SalasPrivadas.MouseButton1Click:Connect(function()
 end)
 
 
-leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
-    window.Gui.Enabled = false
+--leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
+--    window.Gui.Enabled = false
 
-    local clanUI = ClanTableUI.Create(CoreGui, Theme)
+--    local clanUI = ClanTableUI.Create(CoreGui, Theme)
 
-    clanUI.CloseButton.MouseButton1Click:Connect(function()
-        clanUI.Destroy()
-        window.Gui.Enabled = true
-    end)
-end)
+--    clanUI.CloseButton.MouseButton1Click:Connect(function()
+--        clanUI.Destroy()
+--        window.Gui.Enabled = true
+--    end)
+-- end)
 
 
 createRoomModal.CancelButton.MouseButton1Click:Connect(function()
