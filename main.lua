@@ -71,6 +71,7 @@ local lastChatSignature = ""
 
 local avatarCache = {}
 local setRoom
+local selectedPrivateRoom = nil
 
 
 
@@ -363,6 +364,7 @@ local function refreshRooms(isPrivate)
         button.MouseButton1Click:Connect(function()
 
             if isPrivate then
+                selectedPrivateRoom = room
                 passwordModal.Open()
                 return
             end
@@ -510,6 +512,45 @@ end)
 passwordModal.CancelButton.MouseButton1Click:Connect(function()
     passwordModal.Close()
 end)
+
+passwordModal.EnterButton.MouseButton1Click:Connect(function()
+
+    if not selectedPrivateRoom then
+        return
+    end
+
+    local password = passwordModal.Input.Text or ""
+
+    local result = Api.JoinRoom(
+        player,
+        selectedPrivateRoom.room_id,
+        password
+    )
+
+    if result and result.status == "joined" then
+
+        local joinedRoom = result.room or selectedPrivateRoom
+
+        setRoom(
+            joinedRoom.room_id,
+            joinedRoom.display_name,
+            "PRIVADA"
+        )
+
+        passwordModal.Close()
+        roomsListModal.Close()
+
+        refreshChat()
+        refreshOnlineUsers()
+
+    else
+        showStatus(
+            result and result.reason or
+            "Contraseña incorrecta."
+        )
+    end
+end)
+
 
 
 createRoomModal.CreateButton.MouseButton1Click:Connect(function()
