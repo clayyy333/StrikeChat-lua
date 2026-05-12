@@ -25,7 +25,7 @@ local LeftPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/left_panel.lua"))
 local RightPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/right_panel.lua"))()
 local CreateRoomModal = loadstring(game:HttpGet(BASE_RAW .. "modules/create_room_modal.lua"))()
 local RoomsListModal = loadstring(game:HttpGet(BASE_RAW .. "modules/rooms_list_modal.lua"))()
-
+local PasswordModal = loadstring(game:HttpGet(BASE_RAW .. "modules/password_modal.lua"))()
 
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
@@ -62,7 +62,7 @@ end
 
 local createRoomModal = CreateRoomModal.Create(window.Gui, Theme)
 local roomsListModal = RoomsListModal.Create(window.Gui, Theme)
-
+local passwordModal = PasswordModal.Create(window.Gui, Theme)
 
 chatPanel.Title.Text = currentRoom.name
 chatPanel.RoomType.Text = currentRoom.type
@@ -361,6 +361,12 @@ local function refreshRooms(isPrivate)
         memberCount.Parent = button
 
         button.MouseButton1Click:Connect(function()
+
+            if isPrivate then
+                passwordModal.Open()
+                return
+            end
+
             
             local result = Api.JoinRoom(player, room.room_id, "")
 
@@ -499,6 +505,10 @@ end)
 
 roomsListModal.CloseButton.MouseButton1Click:Connect(function()
     roomsListModal.Close()
+end)
+
+passwordModal.CancelButton.MouseButton1Click:Connect(function()
+    passwordModal.Close()
 end)
 
 
