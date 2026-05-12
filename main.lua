@@ -405,7 +405,7 @@ local function showStatus(message)
     end
 end
 
-local function setRoom(roomId, roomName, roomType)
+setRoom = function(roomId, roomName, roomType)
     currentRoom.id = roomId
     currentRoom.name = roomName
     currentRoom.type = roomType
