@@ -269,7 +269,7 @@ local function refreshOnlineUsers()
     rightPanel.Render(roomUsers)
 end
 
-local function refreshPublicRooms()
+local function refreshRooms(isPrivate)
     roomsListModal.Clear()
 
     local testLabel = Instance.new("TextLabel")
@@ -281,7 +281,15 @@ local function refreshPublicRooms()
     testLabel.TextSize = 13
     testLabel.Parent = roomsListModal.List
 
-    local result = Api.GetPublicRooms()
+    local result
+
+    if isPrivate then
+        result = Api.GetPrivateRooms()
+        roomsListModal.Title.Text = "Salas Privadas"
+    else
+        result = Api.GetPublicRooms()
+        roomsListModal.Title.Text = "Salas Públicas"
+    end
 
     if not result or not result.rooms then
         local empty = Instance.new("TextLabel")
@@ -475,9 +483,15 @@ leftPanel.Buttons.CrearSalas.MouseButton1Click:Connect(function()
 end)
 
 leftPanel.Buttons.SalasPublicas.MouseButton1Click:Connect(function()
-    refreshPublicRooms()
+    refreshRooms(false)
     roomsListModal.Open()
 end)
+
+leftPanel.Buttons.SalasPrivadas.MouseButton1Click:Connect(function()
+    refreshRooms(true)
+    roomsListModal.Open()
+end)
+
 
 createRoomModal.CancelButton.MouseButton1Click:Connect(function()
     createRoomModal.Close()
@@ -560,6 +574,7 @@ chatPanel.LeaveButton.MouseButton1Click:Connect(function()
         )
 
         refreshChat()
+        refreshOnlineUsers()
     end
 end)
 
