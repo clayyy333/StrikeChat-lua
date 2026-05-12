@@ -9,7 +9,8 @@ function ClanTableUI.Create(parent, Theme)
 
     local root = Instance.new("Frame")
     root.Name = "Root"
-    root.Size = UDim2.new(1, 0, 1, 0)
+    root.Size = UDim2.new(0, 920, 0, 560)
+    root.Position = UDim2.new(0.5, -460, 0.5, -280)
     root.BackgroundColor3 = Color3.fromRGB(10, 11, 14)
     root.BorderSizePixel = 0
     root.Parent = gui
