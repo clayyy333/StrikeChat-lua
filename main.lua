@@ -26,6 +26,8 @@ local RightPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/right_panel.lua"
 local CreateRoomModal = loadstring(game:HttpGet(BASE_RAW .. "modules/create_room_modal.lua"))()
 local RoomsListModal = loadstring(game:HttpGet(BASE_RAW .. "modules/rooms_list_modal.lua"))()
 local PasswordModal = loadstring(game:HttpGet(BASE_RAW .. "modules/password_modal.lua"))()
+local ConfirmModal = loadstring(game:HttpGet(BASE_RAW .. "modules/confirm_modal.lua"))()
+
 
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
@@ -63,6 +65,10 @@ end
 local createRoomModal = CreateRoomModal.Create(window.Gui, Theme)
 local roomsListModal = RoomsListModal.Create(window.Gui, Theme)
 local passwordModal = PasswordModal.Create(window.Gui, Theme)
+local confirmModal = ConfirmModal.Create(window.Gui, Theme)
+
+
+
 
 chatPanel.Title.Text = currentRoom.name
 chatPanel.RoomType.Text = currentRoom.type
@@ -72,6 +78,7 @@ local lastChatSignature = ""
 local avatarCache = {}
 local setRoom
 local selectedPrivateRoom = nil
+local confirmAction = nil
 
 
 
@@ -363,6 +370,77 @@ local function refreshRooms(isPrivate)
 
         button.MouseButton1Click:Connect(function()
 
+            if currentRoom.id == room.room_id then
+
+                confirmAction = function()
+
+                    confirmModal.Close()
+                    roomsListModal.Close()
+
+                end
+
+                confirmModal.Open(
+                    "Ya perteneces a esta sala",
+                    "Volver a la sala",
+                    ""
+                )
+
+                confirmModal.SecondaryButton.Visible = false
+
+                return
+            end
+            
+            if currentRoom.id ~= "global" then
+
+                selectedPrivateRoom = room
+
+                confirmAction = function()
+
+                    Api.LeaveRoom(player, currentRoom.id)
+
+                    if isPrivate then
+                        passwordModal.Open()
+                        confirmModal.Close()
+                        return
+                    end
+
+                    local result = Api.JoinRoom(
+                        player,
+                        room.room_id,
+                        ""
+                    )
+
+                    if result and result.status == "joined" then
+
+                        local joinedRoom = result.room or room
+
+                        setRoom(
+                            joinedRoom.room_id,
+                            joinedRoom.display_name,
+                            "PUBLICA"
+                        )
+
+                        roomsListModal.Close()
+
+                        refreshChat()
+                        refreshOnlineUsers()
+                    end
+
+                end
+
+
+                confirmModal.Open(
+                    "Te encuentras en una sala.\n¿Quieres moverte a esta sala?",
+                    "Entrar",
+                    "Cancelar"
+                )
+
+                confirmModal.SecondaryButton.Visible = true
+
+                return
+            end
+
+
             if isPrivate then
                 selectedPrivateRoom = room
                 passwordModal.Open()
@@ -512,6 +590,28 @@ end)
 passwordModal.CancelButton.MouseButton1Click:Connect(function()
     passwordModal.Close()
 end)
+
+confirmModal.CloseButton.MouseButton1Click:Connect(function()
+    confirmModal.Close()
+end)
+
+confirmModal.PrimaryButton.MouseButton1Click:Connect(function()
+
+    if confirmAction then
+        confirmAction()
+    end
+
+    confirmModal.Close()
+
+end)
+
+confirmModal.SecondaryButton.MouseButton1Click:Connect(function()
+
+    confirmModal.Close()
+
+end)
+
+
 
 passwordModal.EnterButton.MouseButton1Click:Connect(function()
 
