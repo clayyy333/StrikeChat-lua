@@ -171,6 +171,8 @@ function ClanTableUI.Create(parent, Theme)
 
     local clanListPadding = Instance.new("UIPadding")
     clanListPadding.PaddingTop = UDim.new(0, 6)
+    clanListPadding.PaddingLeft = UDim.new(0, 2)
+    clanListPadding.PaddingRight = UDim.new(0, 2)
     clanListPadding.Parent = clanList
 
 
@@ -204,7 +206,7 @@ function ClanTableUI.Create(parent, Theme)
         row.Name = "ClanRow"
         row.Size = UDim2.new(1, 0, 0, 42)
         row.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
-        row.Position = UDim2.new(0, 2, 0, 0)
+        
         row.BorderSizePixel = 0
         row.Text = ""
         row.Parent = clanList
