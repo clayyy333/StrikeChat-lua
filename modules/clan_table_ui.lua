@@ -123,7 +123,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local nameHeader = Instance.new("TextLabel")
     nameHeader.Size = UDim2.new(0, 150, 1, 0)
-    nameHeader.Position = UDim2.new(0, 64, 0, 0)
+    nameHeader.Position = UDim2.new(0, 68, 0, 0)
     nameHeader.BackgroundTransparency = 1
     nameHeader.Text = "CLAN/FAMILIA"
     nameHeader.TextColor3 = Theme.Colors.TextMuted
@@ -145,7 +145,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local descHeader = Instance.new("TextLabel")
     descHeader.Size = UDim2.new(1, -310, 1, 0)
-    descHeader.Position = UDim2.new(0, 310, 0, 0)
+    descHeader.Position = UDim2.new(0, 314, 0, 0)
     descHeader.BackgroundTransparency = 1
     descHeader.Text = "DESCRIPCIÓN"
     descHeader.TextColor3 = Theme.Colors.TextMuted
