@@ -316,7 +316,7 @@ function ClanTableUI.Create(parent, Theme)
     clanImage.Name = "ClanImage"
     clanImage.Size = UDim2.new(1, -32, 0, 120)
     clanImage.Position = UDim2.new(0, 16, 0, 56)
-    clanImage.BackgroundColor3 = Color3.fromRGB(28, 30, 36)
+    clanImage.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     clanImage.BorderSizePixel = 0
     clanImage.Parent = rightPanel
 
@@ -324,40 +324,70 @@ function ClanTableUI.Create(parent, Theme)
     clanImageCorner.CornerRadius = UDim.new(0, 8)
     clanImageCorner.Parent = clanImage
 
-    local clanImageStroke = Instance.new("UIStroke")
-    clanImageStroke.Color = Color3.fromRGB(55, 55, 64)
-    clanImageStroke.Thickness = 1
-    clanImageStroke.Transparency = 0.3
-    clanImageStroke.Parent = clanImage
+    
 
     local clanPoints = Instance.new("TextLabel")
     clanPoints.Size = UDim2.new(1, -32, 0, 22)
     clanPoints.Position = UDim2.new(0, 16, 0, 188)
     clanPoints.BackgroundTransparency = 1
-    clanPoints.Text = "Puntos de Familia: 15240"
+    clanPoints.Text = "Puntos de Familia"
     clanPoints.TextColor3 = Theme.Colors.Text
     clanPoints.Font = Theme.Font.Bold
     clanPoints.TextSize = 13
     clanPoints.TextXAlignment = Enum.TextXAlignment.Left
     clanPoints.Parent = rightPanel
 
+    local clanPointsValue = Instance.new("TextLabel")
+    clanPointsValue.Size = UDim2.new(0, 90, 1, 0)
+    clanPointsValue.Position = UDim2.new(1, -90, 0, 0)
+    clanPointsValue.BackgroundTransparency = 1
+    clanPointsValue.Text = "15240"
+    clanPointsValue.TextColor3 = Theme.Colors.Text
+    clanPointsValue.Font = Theme.Font.Bold
+    clanPointsValue.TextSize = 13
+    clanPointsValue.TextXAlignment = Enum.TextXAlignment.Right
+    clanPointsValue.Parent = clanPoints
+
     local clanMembers = Instance.new("TextLabel")
     clanMembers.Size = UDim2.new(1, -32, 0, 22)
     clanMembers.Position = UDim2.new(0, 16, 0, 214)
     clanMembers.BackgroundTransparency = 1
-    clanMembers.Text = "Miembros: 18"
+    clanMembers.Text = "Miembros"
     clanMembers.TextColor3 = Theme.Colors.Text
     clanMembers.Font = Theme.Font.Bold
     clanMembers.TextSize = 13
     clanMembers.TextXAlignment = Enum.TextXAlignment.Left
     clanMembers.Parent = rightPanel
 
+    local clanMembersValue = Instance.new("TextLabel")
+    clanMembersValue.Size = UDim2.new(0, 90, 1, 0)
+    clanMembersValue.Position = UDim2.new(1, -90, 0, 0)
+    clanMembersValue.BackgroundTransparency = 1
+    clanMembersValue.Text = "18"
+    clanMembersValue.TextColor3 = Theme.Colors.Text
+    clanMembersValue.Font = Theme.Font.Bold
+    clanMembersValue.TextSize = 13
+    clanMembersValue.TextXAlignment = Enum.TextXAlignment.Right
+    clanMembersValue.Parent = clanMembers
+
+    local clanDescriptionTitle = Instance.new("TextLabel")
+    clanDescriptionTitle.Size = UDim2.new(1, -32, 0, 20)
+    clanDescriptionTitle.Position = UDim2.new(0, 16, 0, 246)
+    clanDescriptionTitle.BackgroundTransparency = 1
+    clanDescriptionTitle.Text = "Descripción:"
+    clanDescriptionTitle.TextColor3 = Theme.Colors.Text
+    clanDescriptionTitle.Font = Theme.Font.Bold
+    clanDescriptionTitle.TextSize = 13
+    clanDescriptionTitle.TextXAlignment = Enum.TextXAlignment.Left
+    clanDescriptionTitle.Parent = rightPanel
+
     local clanDescription = Instance.new("TextLabel")
-    clanDescription.Size = UDim2.new(1, -32, 0, 84)
-    clanDescription.Position = UDim2.new(0, 16, 0, 248)
+    clanDescription.Size = UDim2.new(1, -32, 0, 68)
+    clanDescription.Position = UDim2.new(0, 16, 0, 270)
     clanDescription.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
     clanDescription.BorderSizePixel = 0
-    clanDescription.Text = "Clan competitivo enfocado en guerras, eventos y dominación de territorios."
+    clanDescription.Text =
+    "Clan competitivo enfocado en guerras y eventos."
     clanDescription.TextColor3 = Theme.Colors.TextMuted
     clanDescription.Font = Theme.Font.Regular
     clanDescription.TextSize = 12
@@ -369,6 +399,13 @@ function ClanTableUI.Create(parent, Theme)
     local clanDescriptionCorner = Instance.new("UICorner")
     clanDescriptionCorner.CornerRadius = UDim.new(0, 8)
     clanDescriptionCorner.Parent = clanDescription
+
+    local clanDescriptionPadding = Instance.new("UIPadding")
+    clanDescriptionPadding.PaddingTop = UDim.new(0, 8)
+    clanDescriptionPadding.PaddingLeft = UDim.new(0, 8)
+    clanDescriptionPadding.PaddingRight = UDim.new(0, 8)
+    clanDescriptionPadding.PaddingBottom = UDim.new(0, 8)
+    clanDescriptionPadding.Parent = clanDescription
 
     local joinButton = Instance.new("TextButton")
     joinButton.Name = "JoinButton"
