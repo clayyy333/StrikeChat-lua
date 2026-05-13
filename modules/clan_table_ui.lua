@@ -69,6 +69,82 @@ function ClanTableUI.Create(parent, Theme)
     leftStroke.Transparency = 0.15
     leftStroke.Parent = leftPanel
 
+    local tableHeader = Instance.new("Frame")
+    tableHeader.Name = "TableHeader"
+    tableHeader.Size = UDim2.new(1, -24, 0, 34)
+    tableHeader.Position = UDim2.new(0, 12, 0, 12)
+    tableHeader.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
+    tableHeader.BorderSizePixel = 0
+    tableHeader.Parent = leftPanel
+
+    local headerCorner = Instance.new("UICorner")
+    headerCorner.CornerRadius = UDim.new(0, 6)
+    headerCorner.Parent = tableHeader
+
+    local posHeader = Instance.new("TextLabel")
+    posHeader.Size = UDim2.new(0, 52, 1, 0)
+    posHeader.Position = UDim2.new(0, 10, 0, 0)
+    posHeader.BackgroundTransparency = 1
+    posHeader.Text = "POS"
+    posHeader.TextColor3 = Theme.Colors.TextMuted
+    posHeader.Font = Theme.Font.Bold
+    posHeader.TextSize = 11
+    posHeader.TextXAlignment = Enum.TextXAlignment.Left
+    posHeader.Parent = tableHeader
+
+    local nameHeader = Instance.new("TextLabel")
+    nameHeader.Size = UDim2.new(0, 150, 1, 0)
+    nameHeader.Position = UDim2.new(0, 64, 0, 0)
+    nameHeader.BackgroundTransparency = 1
+    nameHeader.Text = "CLAN/FAMILIA"
+    nameHeader.TextColor3 = Theme.Colors.TextMuted
+    nameHeader.Font = Theme.Font.Bold
+    nameHeader.TextSize = 11
+    nameHeader.TextXAlignment = Enum.TextXAlignment.Left
+    nameHeader.Parent = tableHeader
+
+    local pointsHeader = Instance.new("TextLabel")
+    pointsHeader.Size = UDim2.new(0, 80, 1, 0)
+    pointsHeader.Position = UDim2.new(0, 220, 0, 0)
+    pointsHeader.BackgroundTransparency = 1
+    pointsHeader.Text = "PUNTOS"
+    pointsHeader.TextColor3 = Theme.Colors.TextMuted
+    pointsHeader.Font = Theme.Font.Bold
+    pointsHeader.TextSize = 11
+    pointsHeader.TextXAlignment = Enum.TextXAlignment.Left
+    pointsHeader.Parent = tableHeader
+
+    local descHeader = Instance.new("TextLabel")
+    descHeader.Size = UDim2.new(1, -310, 1, 0)
+    descHeader.Position = UDim2.new(0, 310, 0, 0)
+    descHeader.BackgroundTransparency = 1
+    descHeader.Text = "DESCRIPCIÓN"
+    descHeader.TextColor3 = Theme.Colors.TextMuted
+    descHeader.Font = Theme.Font.Bold
+    descHeader.TextSize = 11
+    descHeader.TextXAlignment = Enum.TextXAlignment.Left
+    descHeader.Parent = tableHeader
+
+    local clanList = Instance.new("ScrollingFrame")
+    clanList.Name = "ClanList"
+    clanList.Size = UDim2.new(1, -24, 1, -62)
+    clanList.Position = UDim2.new(0, 12, 0, 54)
+    clanList.BackgroundTransparency = 1
+    clanList.BorderSizePixel = 0
+    clanList.ScrollBarThickness = 4
+    clanList.CanvasSize = UDim2.new(0, 0, 0, 0)
+    clanList.Parent = leftPanel
+
+    local clanListLayout = Instance.new("UIListLayout")
+    clanListLayout.Padding = UDim.new(0, 6)
+    clanListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    clanListLayout.Parent = clanList
+
+    local clanListPadding = Instance.new("UIPadding")
+    clanListPadding.PaddingTop = UDim.new(0, 6)
+    clanListPadding.Parent = clanList
+
+
     local rightPanel = Instance.new("Frame")
     rightPanel.Name = "RightPanel"
     rightPanel.Size = UDim2.new(0.44, -8, 1, 0)
@@ -86,6 +162,101 @@ function ClanTableUI.Create(parent, Theme)
     rightStroke.Thickness = 1
     rightStroke.Transparency = 0.15
     rightStroke.Parent = rightPanel
+
+    local function createClanRow(position, clan)
+        local row = Instance.new("TextButton")
+        row.Name = "ClanRow"
+        row.Size = UDim2.new(1, 0, 0, 42)
+        row.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
+        row.BorderSizePixel = 0
+        row.Text = ""
+        row.Parent = clanList
+
+        local rowCorner = Instance.new("UICorner")
+        rowCorner.CornerRadius = UDim.new(0, 6)
+        rowCorner.Parent = row
+
+        local rowStroke = Instance.new("UIStroke")
+        rowStroke.Color = Color3.fromRGB(55, 55, 64)
+        rowStroke.Thickness = 1
+        rowStroke.Transparency = 0.35
+        rowStroke.Parent = row
+
+        local pos = Instance.new("TextLabel")
+        pos.Size = UDim2.new(0, 52, 1, 0)
+        pos.Position = UDim2.new(0, 10, 0, 0)
+        pos.BackgroundTransparency = 1
+        pos.Text = tostring(position)
+        pos.TextColor3 = Theme.Colors.Text
+        pos.Font = Theme.Font.Bold
+        pos.TextSize = 13
+        pos.TextXAlignment = Enum.TextXAlignment.Left
+        pos.Parent = row
+
+        local name = Instance.new("TextLabel")
+        name.Size = UDim2.new(0, 150, 1, 0)
+        name.Position = UDim2.new(0, 64, 0, 0)
+        name.BackgroundTransparency = 1
+        name.Text = tostring(clan.name or "Clan")
+        name.TextColor3 = Theme.Colors.Text
+        name.Font = Theme.Font.Bold
+        name.TextSize = 13
+        name.TextXAlignment = Enum.TextXAlignment.Left
+        name.TextTruncate = Enum.TextTruncate.AtEnd
+        name.Parent = row
+
+        local points = Instance.new("TextLabel")
+        points.Size = UDim2.new(0, 80, 1, 0)
+        points.Position = UDim2.new(0, 220, 0, 0)
+        points.BackgroundTransparency = 1
+        points.Text = tostring(clan.total_points_earned or 0)
+        points.TextColor3 = Theme.Colors.TextMuted
+        points.Font = Theme.Font.Bold
+        points.TextSize = 12
+        points.TextXAlignment = Enum.TextXAlignment.Left
+        points.Parent = row
+
+        local description = Instance.new("TextLabel")
+        description.Size = UDim2.new(1, -310, 1, 0)
+        description.Position = UDim2.new(0, 310, 0, 0)
+        description.BackgroundTransparency = 1
+        description.Text = tostring(clan.description or "")
+        description.TextColor3 = Theme.Colors.TextMuted
+        description.Font = Theme.Font.Regular
+        description.TextSize = 11
+        description.TextXAlignment = Enum.TextXAlignment.Left
+        description.TextTruncate = Enum.TextTruncate.AtEnd
+        description.Parent = row
+
+        return row
+    end
+
+    createClanRow(1, {
+        name = "Evil Geniuses",
+        total_points_earned = 15240,
+        description = "Clan competitivo enfocado en guerras y eventos."
+    })
+
+    createClanRow(2, {
+        name = "Shadow Legacy",
+        total_points_earned = 12890,
+        description = "Reclutando jugadores activos diariamente."
+    })
+
+    createClanRow(3, {
+        name = "Night Hunters",
+        total_points_earned = 11020,
+        description = "Dominando la tabla desde la temporada pasada."
+    })
+
+    clanList.CanvasSize = UDim2.new(
+        0,
+        0,
+        0,
+        clanListLayout.AbsoluteContentSize.Y + 12
+    )
+
+
 
     local footer = Instance.new("Frame")
     footer.Name = "Footer"
@@ -124,6 +295,10 @@ function ClanTableUI.Create(parent, Theme)
         CloseButton = closeButton,
         LeftPanel = leftPanel,
         RightPanel = rightPanel,
+
+        LeftPanel = leftPanel,
+        RightPanel = rightPanel,
+
         Footer = footer,
 
         Destroy = function()
