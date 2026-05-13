@@ -289,7 +289,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local footer = Instance.new("Frame")
     footer.Name = "Footer"
-    footer.Size = UDim2.new(0.64, -38, 0, 28)
+    footer.Size = UDim2.new(0.64, -40, 0, 28)
     footer.Position = UDim2.new(0, 20, 1, -38)
     footer.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     footer.BorderSizePixel = 0
