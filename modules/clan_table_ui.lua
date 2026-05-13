@@ -218,6 +218,20 @@ function ClanTableUI.Create(parent, Theme)
         rowStroke.Transparency = 0.35
         rowStroke.Parent = row
 
+        row.MouseButton1Click:Connect(function()
+            for _, child in ipairs(clanList:GetChildren()) do
+                if child:IsA("TextButton") then
+                    local stroke = child:FindFirstChildOfClass("UIStroke")
+
+                    if stroke then
+                        stroke.Transparency = 0.35
+                    end
+                end
+            end
+
+            rowStroke.Transparency = 0.05
+        end)
+
         local pos = Instance.new("TextLabel")
         pos.Size = UDim2.new(0, 52, 1, 0)
         pos.Position = UDim2.new(0, 10, 0, 0)
