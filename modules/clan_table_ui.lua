@@ -330,7 +330,7 @@ function ClanTableUI.Create(parent, Theme)
     clanPoints.Size = UDim2.new(1, -32, 0, 22)
     clanPoints.Position = UDim2.new(0, 16, 0, 188)
     clanPoints.BackgroundTransparency = 1
-    clanPoints.Text = "Puntos de Familia"
+    clanPoints.Text = "Puntos de Familia:"
     clanPoints.TextColor3 = Theme.Colors.Text
     clanPoints.Font = Theme.Font.Bold
     clanPoints.TextSize = 13
@@ -339,7 +339,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local clanPointsValue = Instance.new("TextLabel")
     clanPointsValue.Size = UDim2.new(0, 90, 1, 0)
-    clanPointsValue.Position = UDim2.new(1, -90, 0, 0)
+    clanPointsValue.Position = UDim2.new(1, -110, 0, 0)
     clanPointsValue.BackgroundTransparency = 1
     clanPointsValue.Text = "15240"
     clanPointsValue.TextColor3 = Theme.Colors.Text
@@ -352,7 +352,7 @@ function ClanTableUI.Create(parent, Theme)
     clanMembers.Size = UDim2.new(1, -32, 0, 22)
     clanMembers.Position = UDim2.new(0, 16, 0, 214)
     clanMembers.BackgroundTransparency = 1
-    clanMembers.Text = "Miembros"
+    clanMembers.Text = "Miembros:"
     clanMembers.TextColor3 = Theme.Colors.Text
     clanMembers.Font = Theme.Font.Bold
     clanMembers.TextSize = 13
@@ -361,7 +361,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local clanMembersValue = Instance.new("TextLabel")
     clanMembersValue.Size = UDim2.new(0, 90, 1, 0)
-    clanMembersValue.Position = UDim2.new(1, -90, 0, 0)
+    clanMembersValue.Position = UDim2.new(1, -110, 0, 0)
     clanMembersValue.BackgroundTransparency = 1
     clanMembersValue.Text = "18"
     clanMembersValue.TextColor3 = Theme.Colors.Text
@@ -410,8 +410,8 @@ function ClanTableUI.Create(parent, Theme)
     local joinButton = Instance.new("TextButton")
     joinButton.Name = "JoinButton"
     joinButton.Size = UDim2.new(0.5, -22, 0, 34)
-    joinButton.Position = UDim2.new(0, 16, 1, -54)
-    joinButton.BackgroundColor3 = Color3.fromRGB(32, 90, 52)
+    joinButton.Position = UDim2.new(0, 16, 1, -42)
+    joinButton.BackgroundColor3 = Color3.fromRGB(88, 140, 112)
     joinButton.BorderSizePixel = 0
     joinButton.Text = "Solicitar unirse"
     joinButton.TextColor3 = Theme.Colors.Text
@@ -426,8 +426,8 @@ function ClanTableUI.Create(parent, Theme)
     local viewButton = Instance.new("TextButton")
     viewButton.Name = "ViewButton"
     viewButton.Size = UDim2.new(0.5, -22, 0, 34)
-    viewButton.Position = UDim2.new(0.5, 6, 1, -54)
-    viewButton.BackgroundColor3 = Color3.fromRGB(34, 36, 42)
+    viewButton.Position = UDim2.new(0.5, 6, 1, -42)
+    viewButton.BackgroundColor3 = Color3.fromRGB(124, 102, 168)
     viewButton.BorderSizePixel = 0
     viewButton.Text = "Ver Clan/Familia"
     viewButton.TextColor3 = Theme.Colors.Text
