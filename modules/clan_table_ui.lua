@@ -18,11 +18,22 @@ function ClanTableUI.Create(parent, Theme)
     backgroundImage.BackgroundTransparency = 1
     backgroundImage.Image = "rbxassetid://17124418086"
     backgroundImage.ScaleType = Enum.ScaleType.Crop
-    backgroundImage.ImageTransparency = 0.82
-    backgroundImage.ZIndex = 0
+    backgroundImage.ImageTransparency = 0.9
+    backgroundImage.ZIndex = -1
     backgroundImage.Parent = root
     root.BorderSizePixel = 0
     root.Parent = gui
+
+    local rootCorner = Instance.new("UICorner")
+    rootCorner.CornerRadius = UDim.new(0, 12)
+    rootCorner.Parent = root
+
+    local rootStroke = Instance.new("UIStroke")
+    rootStroke.Color = Color3.fromRGB(55, 55, 64)
+    rootStroke.Thickness = 1
+    rootStroke.Transparency = 0.2
+    rootStroke.Parent = root
+
 
     local titleContainer = Instance.new("Frame")
     titleContainer.Name = "TitleContainer"
@@ -39,7 +50,7 @@ function ClanTableUI.Create(parent, Theme)
     title.Text = "TABLA DE CLANES / FAMILIAS"
     title.TextColor3 = Theme.Colors.Text
     title.Font = Theme.Font.Bold
-    title.TextSize = 28
+    title.TextSize = 20
     title.TextXAlignment = Enum.TextXAlignment.Center
     title.Parent = titleContainer
 
@@ -69,7 +80,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local leftPanel = Instance.new("Frame")
     leftPanel.Name = "LeftPanel"
-    leftPanel.Size = UDim2.new(0.62, -8, 1, 0)
+    leftPanel.Size = UDim2.new(0.58, -10, 1, -6)
     leftPanel.Position = UDim2.new(0, 0, 0, 0)
     leftPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     leftPanel.BorderSizePixel = 0
@@ -163,8 +174,8 @@ function ClanTableUI.Create(parent, Theme)
 
     local rightPanel = Instance.new("Frame")
     rightPanel.Name = "RightPanel"
-    rightPanel.Size = UDim2.new(0.44, -8, 1, 0)
-    rightPanel.Position = UDim2.new(0.56, 8, 0, 0)
+    rightPanel.Size = UDim2.new(0.42, -10, 1, -6)
+    rightPanel.Position = UDim2.new(0.58, 10, 0, 0)
     rightPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     rightPanel.BorderSizePixel = 0
     rightPanel.Parent = mainContainer
@@ -276,8 +287,8 @@ function ClanTableUI.Create(parent, Theme)
 
     local footer = Instance.new("Frame")
     footer.Name = "Footer"
-    footer.Size = UDim2.new(1, -120, 0, 48)
-    footer.Position = UDim2.new(0, 60, 1, -60)
+    footer.Size = UDim2.new(1, -180, 0, 34)
+    footer.Position = UDim2.new(0, 90, 1, -46)
     footer.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     footer.BorderSizePixel = 0
     footer.Parent = root
