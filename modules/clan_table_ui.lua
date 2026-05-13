@@ -375,7 +375,7 @@ function ClanTableUI.Create(parent, Theme)
     clanMembersValue.TextXAlignment = Enum.TextXAlignment.Right
     clanMembersValue.Parent = clanMembers
 
-    local clanDescription = Instance.new("TextLabel")
+    local clanDescriptionTitle = Instance.new("TextLabel")
     clanDescriptionTitle.Size = UDim2.new(1, -32, 0, 20)
     clanDescriptionTitle.Position = UDim2.new(0, 16, 0, 246)
     clanDescriptionTitle.BackgroundTransparency = 1
