@@ -213,6 +213,7 @@ function ClanTableUI.Create(parent, Theme)
         rowCorner.Parent = row
 
         local rowStroke = Instance.new("UIStroke")
+        rowStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         rowStroke.Color = Color3.fromRGB(55, 55, 64)
         rowStroke.Thickness = 1
         rowStroke.Transparency = 0.35
