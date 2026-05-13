@@ -232,6 +232,18 @@ function ClanTableUI.Create(parent, Theme)
 
             rowStroke.Color = Color3.fromRGB(255, 255, 255)
             rowStroke.Transparency = 0.15
+
+            clanTitle.Text = tostring(clan.name or "Clan")
+
+            clanPointsValue.Text =
+                tostring(clan.total_points_earned or 0)
+
+            clanMembersValue.Text =
+                tostring(clan.member_count or 0)
+
+            clanDescription.Text =
+                tostring(clan.description or "")
+
         end)
 
         local pos = Instance.new("TextLabel")
@@ -280,18 +292,7 @@ function ClanTableUI.Create(parent, Theme)
         description.TextTruncate = Enum.TextTruncate.AtEnd
         description.Parent = row
 
-        row.MouseButton1Click:Connect(function()
-            clanTitle.Text = tostring(clan.name or "Clan")
-
-            clanPointsValue.Text =
-                tostring(clan.total_points_earned or 0)
-
-            clanMembersValue.Text =
-                tostring(clan.member_count or 0)
-
-            clanDescription.Text =
-                tostring(clan.description or "")
-        end)
+        
 
         return row
     end
