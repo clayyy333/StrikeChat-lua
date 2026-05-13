@@ -156,8 +156,8 @@ function ClanTableUI.Create(parent, Theme)
 
     local clanList = Instance.new("ScrollingFrame")
     clanList.Name = "ClanList"
-    clanList.Size = UDim2.new(1, -24, 1, -62)
-    clanList.Position = UDim2.new(0, 12, 0, 54)
+    clanList.Size = UDim2.new(1, -32, 1, -62)
+    clanList.Position = UDim2.new(0, 16, 0, 54)
     clanList.BackgroundTransparency = 1
     clanList.BorderSizePixel = 0
     clanList.ScrollBarThickness = 4
@@ -216,7 +216,7 @@ function ClanTableUI.Create(parent, Theme)
         rowStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         rowStroke.Color = Color3.fromRGB(55, 55, 64)
         rowStroke.Thickness = 1
-        rowStroke.Transparency = 0.35
+        rowStroke.Transparency = 1
         rowStroke.Parent = row
 
         row.MouseButton1Click:Connect(function()
@@ -226,7 +226,7 @@ function ClanTableUI.Create(parent, Theme)
 
                     if stroke then
                         stroke.Color = Color3.fromRGB(55, 55, 64)
-                        stroke.Transparency = 0.35
+                        stroke.Transparency = 1
                     end
                 end
             end
