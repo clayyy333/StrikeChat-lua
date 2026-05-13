@@ -192,6 +192,13 @@ function ClanTableUI.Create(parent, Theme)
     rightStroke.Transparency = 0.15
     rightStroke.Parent = rightPanel
 
+    local clanTitle
+    local clanPoints
+    local clanPointsValue
+    local clanMembers
+    local clanMembersValue
+    local clanDescription
+
     local function createClanRow(position, clan)
         local row = Instance.new("TextButton")
         row.Name = "ClanRow"
@@ -260,12 +267,10 @@ function ClanTableUI.Create(parent, Theme)
         row.MouseButton1Click:Connect(function()
             clanTitle.Text = tostring(clan.name or "Clan")
 
-            clanPoints.Text =
-                "Puntos de Familia: " ..
+            clanPointsValue.Text =
                 tostring(clan.total_points_earned or 0)
 
-            clanMembers.Text =
-                "Miembros: " ..
+            clanMembersValue.Text =
                 tostring(clan.member_count or 0)
 
             clanDescription.Text =
@@ -300,7 +305,7 @@ function ClanTableUI.Create(parent, Theme)
         clanListLayout.AbsoluteContentSize.Y + 12
     )
 
-    local clanTitle = Instance.new("TextLabel")
+    clanTitle = Instance.new("TextLabel")
     clanTitle.Name = "ClanTitle"
     clanTitle.Size = UDim2.new(1, -24, 0, 34)
     clanTitle.Position = UDim2.new(0, 12, 0, 12)
@@ -326,7 +331,7 @@ function ClanTableUI.Create(parent, Theme)
 
     
 
-    local clanPoints = Instance.new("TextLabel")
+    clanPoints = Instance.new("TextLabel")
     clanPoints.Size = UDim2.new(1, -32, 0, 22)
     clanPoints.Position = UDim2.new(0, 16, 0, 188)
     clanPoints.BackgroundTransparency = 1
@@ -337,7 +342,7 @@ function ClanTableUI.Create(parent, Theme)
     clanPoints.TextXAlignment = Enum.TextXAlignment.Left
     clanPoints.Parent = rightPanel
 
-    local clanPointsValue = Instance.new("TextLabel")
+    clanPointsValue = Instance.new("TextLabel")
     clanPointsValue.Size = UDim2.new(0, 90, 1, 0)
     clanPointsValue.Position = UDim2.new(1, -110, 0, 0)
     clanPointsValue.BackgroundTransparency = 1
@@ -348,7 +353,7 @@ function ClanTableUI.Create(parent, Theme)
     clanPointsValue.TextXAlignment = Enum.TextXAlignment.Right
     clanPointsValue.Parent = clanPoints
 
-    local clanMembers = Instance.new("TextLabel")
+    clanMembers = Instance.new("TextLabel")
     clanMembers.Size = UDim2.new(1, -32, 0, 22)
     clanMembers.Position = UDim2.new(0, 16, 0, 214)
     clanMembers.BackgroundTransparency = 1
@@ -359,7 +364,7 @@ function ClanTableUI.Create(parent, Theme)
     clanMembers.TextXAlignment = Enum.TextXAlignment.Left
     clanMembers.Parent = rightPanel
 
-    local clanMembersValue = Instance.new("TextLabel")
+    clanMembersValue = Instance.new("TextLabel")
     clanMembersValue.Size = UDim2.new(0, 90, 1, 0)
     clanMembersValue.Position = UDim2.new(1, -110, 0, 0)
     clanMembersValue.BackgroundTransparency = 1
@@ -370,7 +375,7 @@ function ClanTableUI.Create(parent, Theme)
     clanMembersValue.TextXAlignment = Enum.TextXAlignment.Right
     clanMembersValue.Parent = clanMembers
 
-    local clanDescriptionTitle = Instance.new("TextLabel")
+    local clanDescription = Instance.new("TextLabel")
     clanDescriptionTitle.Size = UDim2.new(1, -32, 0, 20)
     clanDescriptionTitle.Position = UDim2.new(0, 16, 0, 246)
     clanDescriptionTitle.BackgroundTransparency = 1
@@ -381,7 +386,7 @@ function ClanTableUI.Create(parent, Theme)
     clanDescriptionTitle.TextXAlignment = Enum.TextXAlignment.Left
     clanDescriptionTitle.Parent = rightPanel
 
-    local clanDescription = Instance.new("TextLabel")
+    clanDescription = Instance.new("TextLabel")
     clanDescription.Size = UDim2.new(1, -32, 0, 68)
     clanDescription.Position = UDim2.new(0, 16, 0, 270)
     clanDescription.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
