@@ -73,8 +73,8 @@ function ClanTableUI.Create(parent, Theme)
 
     local mainContainer = Instance.new("Frame")
     mainContainer.Name = "MainContainer"
-    mainContainer.Size = UDim2.new(1, -40, 1, -150)
-    mainContainer.Position = UDim2.new(0, 20, 0, 88)
+    mainContainer.Size = UDim2.new(1, -40, 1, -104)
+    mainContainer.Position = UDim2.new(0, 20, 0, 78)
     mainContainer.BackgroundTransparency = 1
     mainContainer.BorderSizePixel = 0
     mainContainer.Parent = root
@@ -175,7 +175,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local rightPanel = Instance.new("Frame")
     rightPanel.Name = "RightPanel"
-    rightPanel.Size = UDim2.new(0.36, -10, 1, -6)
+    rightPanel.Size = UDim2.new(0.36, -10, 1, 28)
     rightPanel.Position = UDim2.new(0.64, 10, 0, 0)
     rightPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     rightPanel.BorderSizePixel = 0
@@ -288,7 +288,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local footer = Instance.new("Frame")
     footer.Name = "Footer"
-    footer.Size = UDim2.new(0.64, -10, 0, 28)
+    footer.Size = UDim2.new(0.64, -18, 0, 28)
     footer.Position = UDim2.new(0, 20, 1, -38)
     footer.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     footer.BorderSizePixel = 0
