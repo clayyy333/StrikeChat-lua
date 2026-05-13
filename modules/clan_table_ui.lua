@@ -411,7 +411,7 @@ function ClanTableUI.Create(parent, Theme)
     joinButton.Name = "JoinButton"
     joinButton.Size = UDim2.new(0.5, -22, 0, 34)
     joinButton.Position = UDim2.new(0, 16, 1, -42)
-    joinButton.BackgroundColor3 = Color3.fromRGB(0, 214, 143)
+    joinButton.BackgroundColor3 = Color3.fromRGB(52, 168, 128)
     joinButton.BorderSizePixel = 0
     joinButton.Text = "Solicitar unirse"
     joinButton.TextColor3 = Theme.Colors.Text
