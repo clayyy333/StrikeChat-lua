@@ -18,7 +18,7 @@ function ClanTableUI.Create(parent, Theme)
     backgroundImage.Size = UDim2.new(1, 0, 1, 0)
     backgroundImage.Position = UDim2.new(0, 0, 0, 0)
     backgroundImage.BackgroundTransparency = 1
-    backgroundImage.Image = "rbxassetid://17124418086"
+    backgroundImage.Image = "rbxassetid://8202961731"
     backgroundImage.ScaleType = Enum.ScaleType.Crop
     backgroundImage.ImageTransparency = 0.55
     backgroundImage.ZIndex = 0
@@ -289,7 +289,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local footer = Instance.new("Frame")
     footer.Name = "Footer"
-    footer.Size = UDim2.new(0.64, -38, 0, 28)
+    footer.Size = UDim2.new(0.64, -36, 0, 28)
     footer.Position = UDim2.new(0, 20, 1, -38)
     footer.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     footer.BorderSizePixel = 0
