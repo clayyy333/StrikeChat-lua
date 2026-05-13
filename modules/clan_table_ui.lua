@@ -100,8 +100,8 @@ function ClanTableUI.Create(parent, Theme)
 
     local tableHeader = Instance.new("Frame")
     tableHeader.Name = "TableHeader"
-    tableHeader.Size = UDim2.new(1, -32, 0, 34)
-    tableHeader.Position = UDim2.new(0, 16, 0, 12)
+    tableHeader.Size = UDim2.new(1, -24, 0, 34)
+    tableHeader.Position = UDim2.new(0, 12, 0, 12)
     tableHeader.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
     tableHeader.BorderSizePixel = 0
     tableHeader.Parent = leftPanel
@@ -202,7 +202,7 @@ function ClanTableUI.Create(parent, Theme)
     local function createClanRow(position, clan)
         local row = Instance.new("TextButton")
         row.Name = "ClanRow"
-        row.Size = UDim2.new(1, 0, 0, 42)
+        row.Size = UDim2.new(1, -4, 0, 42)
         row.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
         row.BorderSizePixel = 0
         row.Text = ""
