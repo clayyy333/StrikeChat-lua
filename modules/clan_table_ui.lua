@@ -224,12 +224,14 @@ function ClanTableUI.Create(parent, Theme)
                     local stroke = child:FindFirstChildOfClass("UIStroke")
 
                     if stroke then
+                        stroke.Color = Color3.fromRGB(55, 55, 64)
                         stroke.Transparency = 0.35
                     end
                 end
             end
 
-            rowStroke.Transparency = 0.05
+            rowStroke.Color = Color3.fromRGB(255, 255, 255)
+            rowStroke.Transparency = 0.15
         end)
 
         local pos = Instance.new("TextLabel")
