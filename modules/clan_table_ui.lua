@@ -9,29 +9,45 @@ function ClanTableUI.Create(parent, Theme)
 
     local root = Instance.new("Frame")
     root.Name = "Root"
-    root.Size = UDim2.new(0, 920, 0, 560)
-    root.Position = UDim2.new(0.5, -460, 0.5, -280)
+    root.Size = UDim2.new(0, 920, 0, 520)
+    root.Position = UDim2.new(0.5, -460, 0.5, -260)
     root.BackgroundColor3 = Color3.fromRGB(10, 11, 14)
+    local backgroundImage = Instance.new("ImageLabel")
+    backgroundImage.Name = "BackgroundImage"
+    backgroundImage.Size = UDim2.new(1, 0, 1, 0)
+    backgroundImage.BackgroundTransparency = 1
+    backgroundImage.Image = "rbxassetid://17124418086"
+    backgroundImage.ScaleType = Enum.ScaleType.Crop
+    backgroundImage.ImageTransparency = 0.82
+    backgroundImage.ZIndex = 0
+    backgroundImage.Parent = root
     root.BorderSizePixel = 0
     root.Parent = gui
 
+    local titleContainer = Instance.new("Frame")
+    titleContainer.Name = "TitleContainer"
+    titleContainer.Size = UDim2.new(1, -160, 0, 54)
+    titleContainer.Position = UDim2.new(0, 80, 0, 18)
+    titleContainer.BackgroundTransparency = 1
+    titleContainer.Parent = root
+
     local title = Instance.new("TextLabel")
     title.Name = "Title"
-    title.Size = UDim2.new(1, -120, 0, 54)
-    title.Position = UDim2.new(0, 64, 0, 18)
+    title.Size = UDim2.new(1, 0, 1, 0)
+    title.Position = UDim2.new(0, 0, 0, 0)
     title.BackgroundTransparency = 1
-    title.Text = "TABLA DE CLANES"
+    title.Text = "TABLA DE CLANES / FAMILIAS"
     title.TextColor3 = Theme.Colors.Text
     title.Font = Theme.Font.Bold
     title.TextSize = 28
     title.TextXAlignment = Enum.TextXAlignment.Center
-    title.Parent = root
+    title.Parent = titleContainer
 
     local closeButton = Instance.new("TextButton")
     closeButton.Name = "CloseButton"
     closeButton.Size = UDim2.new(0, 52, 0, 52)
     closeButton.Position = UDim2.new(1, -72, 0, 18)
-    closeButton.BackgroundColor3 = Color3.fromRGB(30, 32, 38)
+    closeButton.BackgroundColor3 = Color3.fromRGB(120, 36, 36)
     closeButton.BorderSizePixel = 0
     closeButton.Text = "X"
     closeButton.TextColor3 = Theme.Colors.Text
@@ -53,7 +69,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local leftPanel = Instance.new("Frame")
     leftPanel.Name = "LeftPanel"
-    leftPanel.Size = UDim2.new(0.56, -8, 1, 0)
+    leftPanel.Size = UDim2.new(0.62, -8, 1, 0)
     leftPanel.Position = UDim2.new(0, 0, 0, 0)
     leftPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     leftPanel.BorderSizePixel = 0
@@ -260,8 +276,8 @@ function ClanTableUI.Create(parent, Theme)
 
     local footer = Instance.new("Frame")
     footer.Name = "Footer"
-    footer.Size = UDim2.new(1, -40, 0, 64)
-    footer.Position = UDim2.new(0, 20, 1, -76)
+    footer.Size = UDim2.new(1, -120, 0, 48)
+    footer.Position = UDim2.new(0, 60, 1, -60)
     footer.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     footer.BorderSizePixel = 0
     footer.Parent = root
