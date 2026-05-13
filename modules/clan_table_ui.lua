@@ -202,8 +202,9 @@ function ClanTableUI.Create(parent, Theme)
     local function createClanRow(position, clan)
         local row = Instance.new("TextButton")
         row.Name = "ClanRow"
-        row.Size = UDim2.new(1, -4, 0, 42)
+        row.Size = UDim2.new(1, 0, 0, 42)
         row.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
+        row.Position = UDim2.new(0, 2, 0, 0)
         row.BorderSizePixel = 0
         row.Text = ""
         row.Parent = clanList
