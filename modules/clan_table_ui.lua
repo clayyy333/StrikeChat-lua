@@ -16,11 +16,12 @@ function ClanTableUI.Create(parent, Theme)
     local backgroundImage = Instance.new("ImageLabel")
     backgroundImage.Name = "BackgroundImage"
     backgroundImage.Size = UDim2.new(1, 0, 1, 0)
+    backgroundImage.Position = UDim2.new(0, 0, 0, 0)
     backgroundImage.BackgroundTransparency = 1
     backgroundImage.Image = "rbxassetid://17124418086"
     backgroundImage.ScaleType = Enum.ScaleType.Crop
-    backgroundImage.ImageTransparency = 0.9
-    backgroundImage.ZIndex = -10
+    backgroundImage.ImageTransparency = 0.55
+    backgroundImage.ZIndex = 0
     backgroundImage.Parent = root
     root.BorderSizePixel = 0
     root.Parent = gui
@@ -175,7 +176,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local rightPanel = Instance.new("Frame")
     rightPanel.Name = "RightPanel"
-    rightPanel.Size = UDim2.new(0.36, -10, 1, 26)
+    rightPanel.Size = UDim2.new(0.36, -10, 1, 28)
     rightPanel.Position = UDim2.new(0.64, 10, 0, 0)
     rightPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     rightPanel.BorderSizePixel = 0
@@ -288,7 +289,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local footer = Instance.new("Frame")
     footer.Name = "Footer"
-    footer.Size = UDim2.new(0.64, -18, 0, 28)
+    footer.Size = UDim2.new(0.64, -42, 0, 28)
     footer.Position = UDim2.new(0, 20, 1, -38)
     footer.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     footer.BorderSizePixel = 0
