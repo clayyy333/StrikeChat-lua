@@ -176,7 +176,7 @@ function ClanTableUI.Create(parent, Theme)
 
     local rightPanel = Instance.new("Frame")
     rightPanel.Name = "RightPanel"
-    rightPanel.Size = UDim2.new(0.36, -10, 1, 30)
+    rightPanel.Size = UDim2.new(0.36, -10, 1, 34)
     rightPanel.Position = UDim2.new(0.64, 10, 0, 0)
     rightPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     rightPanel.BorderSizePixel = 0
