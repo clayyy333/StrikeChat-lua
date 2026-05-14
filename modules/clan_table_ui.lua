@@ -312,23 +312,6 @@ function ClanTableUI.Create(parent, Theme, clans)
         end
     end
 
-    local firstClan = clans and clans[1]
-
-    if firstClan then
-        local memberCount = #(firstClan.members or {})
-
-        clanTitle.Text = tostring(firstClan.name or "Clan")
-        clanPointsValue.Text = tostring(firstClan.total_points_earned or 0)
-        clanMembersValue.Text = tostring(memberCount)
-        clanDescription.Text = tostring(firstClan.description or "")
-    else
-        clanTitle.Text = "Sin clanes"
-        clanPointsValue.Text = "0"
-        clanMembersValue.Text = "0"
-        clanDescription.Text = ""
-    end
-
-
     clanList.CanvasSize = UDim2.new(
         0,
         0,
@@ -441,6 +424,24 @@ function ClanTableUI.Create(parent, Theme, clans)
     clanDescriptionPadding.PaddingRight = UDim.new(0, 8)
     clanDescriptionPadding.PaddingBottom = UDim.new(0, 8)
     clanDescriptionPadding.Parent = clanDescription
+
+
+    local firstClan = clans and clans[1]
+
+    if firstClan then
+        local memberCount = #(firstClan.members or {})
+
+        clanTitle.Text = tostring(firstClan.name or "Clan")
+        clanPointsValue.Text = tostring(firstClan.total_points_earned or 0)
+        clanMembersValue.Text = tostring(memberCount)
+        clanDescription.Text = tostring(firstClan.description or "")
+    else
+        clanTitle.Text = "Sin clanes"
+        clanPointsValue.Text = "0"
+        clanMembersValue.Text = "0"
+        clanDescription.Text = ""
+    end
+
 
     local joinButton = Instance.new("TextButton")
     joinButton.Name = "JoinButton"
