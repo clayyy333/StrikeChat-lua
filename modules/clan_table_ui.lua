@@ -312,6 +312,23 @@ function ClanTableUI.Create(parent, Theme, clans)
         end
     end
 
+    local firstClan = clans and clans[1]
+
+    if firstClan then
+        local memberCount = #(firstClan.members or {})
+
+        clanTitle.Text = tostring(firstClan.name or "Clan")
+        clanPointsValue.Text = tostring(firstClan.total_points_earned or 0)
+        clanMembersValue.Text = tostring(memberCount)
+        clanDescription.Text = tostring(firstClan.description or "")
+    else
+        clanTitle.Text = "Sin clanes"
+        clanPointsValue.Text = "0"
+        clanMembersValue.Text = "0"
+        clanDescription.Text = ""
+    end
+
+
     clanList.CanvasSize = UDim2.new(
         0,
         0,
@@ -324,7 +341,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     clanTitle.Size = UDim2.new(1, -24, 0, 34)
     clanTitle.Position = UDim2.new(0, 12, 0, 12)
     clanTitle.BackgroundTransparency = 1
-    clanTitle.Text = "Evil Geniuses"
+    clanTitle.Text = ""
     clanTitle.TextColor3 = Theme.Colors.Text
     clanTitle.Font = Theme.Font.Bold
     clanTitle.TextSize = 20
@@ -360,7 +377,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     clanPointsValue.Size = UDim2.new(0, 90, 1, 0)
     clanPointsValue.Position = UDim2.new(1, -110, 0, 0)
     clanPointsValue.BackgroundTransparency = 1
-    clanPointsValue.Text = "15240"
+    clanPointsValue.Text = "0"
     clanPointsValue.TextColor3 = Theme.Colors.Text
     clanPointsValue.Font = Theme.Font.Bold
     clanPointsValue.TextSize = 13
@@ -382,7 +399,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     clanMembersValue.Size = UDim2.new(0, 90, 1, 0)
     clanMembersValue.Position = UDim2.new(1, -110, 0, 0)
     clanMembersValue.BackgroundTransparency = 1
-    clanMembersValue.Text = "18"
+    clanMembersValue.Text = "0"
     clanMembersValue.TextColor3 = Theme.Colors.Text
     clanMembersValue.Font = Theme.Font.Bold
     clanMembersValue.TextSize = 13
@@ -405,8 +422,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     clanDescription.Position = UDim2.new(0, 16, 0, 270)
     clanDescription.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
     clanDescription.BorderSizePixel = 0
-    clanDescription.Text =
-    "Clan competitivo enfocado en guerras y eventos."
+    clanDescription.Text = ""
     clanDescription.TextColor3 = Theme.Colors.TextMuted
     clanDescription.Font = Theme.Font.Regular
     clanDescription.TextSize = 12
