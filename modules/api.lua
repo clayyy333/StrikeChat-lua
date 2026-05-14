@@ -168,4 +168,11 @@ function Api.LeaveAnyRoom(player)
     )
 end
 
+function Api.GetClans()
+    return Api.Request(
+        Api.BaseUrl .. "/clans",
+        "GET"
+    )
+end
+
 return Api

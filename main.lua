@@ -583,7 +583,14 @@ end)
 leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
     window.Gui.Enabled = false
 
-    local clanUI = ClanTableUI.Create(CoreGui, Theme)
+    local clansResult = Api.GetClans()
+    local clans = {}
+
+    if clansResult and clansResult.clans then
+        clans = clansResult.clans
+    end
+
+    local clanUI = ClanTableUI.Create(CoreGui, Theme, clans)
 
     clanUI.CloseButton.MouseButton1Click:Connect(function()
         clanUI.Destroy()

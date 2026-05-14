@@ -1,6 +1,6 @@
 local ClanTableUI = {}
 
-function ClanTableUI.Create(parent, Theme)
+function ClanTableUI.Create(parent, Theme, clans)
     local gui = Instance.new("ScreenGui")
     gui.Name = "ClanTableUI"
     gui.ResetOnSpawn = false
@@ -202,6 +202,11 @@ function ClanTableUI.Create(parent, Theme)
     local clanDescription
 
     local function createClanRow(position, clan)
+
+        local memberCount = #(clan.members or {})
+        local pointsValue = clan.total_points_earned or 0
+        local descriptionText = clan.description or ""
+
         local row = Instance.new("TextButton")
         row.Name = "ClanRow"
         row.Size = UDim2.new(1, 0, 0, 42)
@@ -240,13 +245,13 @@ function ClanTableUI.Create(parent, Theme)
             clanTitle.Text = tostring(clan.name or "Clan")
 
             clanPointsValue.Text =
-                tostring(clan.total_points_earned or 0)
+                tostring(pointsValue)
 
             clanMembersValue.Text =
-                tostring(clan.member_count or 0)
+                tostring(memberCount)
 
             clanDescription.Text =
-                tostring(clan.description or "")
+                tostring(descriptionText)
 
         end)
 
@@ -277,7 +282,7 @@ function ClanTableUI.Create(parent, Theme)
         points.Size = UDim2.new(0, 80, 1, 0)
         points.Position = UDim2.new(0, 220, 0, 0)
         points.BackgroundTransparency = 1
-        points.Text = tostring(clan.total_points_earned or 0)
+        points.Text = tostring(pointsValue)
         points.TextColor3 = Theme.Colors.TextMuted
         points.Font = Theme.Font.Bold
         points.TextSize = 12
@@ -288,7 +293,7 @@ function ClanTableUI.Create(parent, Theme)
         description.Size = UDim2.new(1, -310, 1, 0)
         description.Position = UDim2.new(0, 310, 0, 0)
         description.BackgroundTransparency = 1
-        description.Text = tostring(clan.description or "")
+        description.Text = tostring(descriptionText)
         description.TextColor3 = Theme.Colors.TextMuted
         description.Font = Theme.Font.Regular
         description.TextSize = 11
@@ -301,23 +306,11 @@ function ClanTableUI.Create(parent, Theme)
         return row
     end
 
-    createClanRow(1, {
-        name = "Evil Geniuses",
-        total_points_earned = 15240,
-        description = "Clan competitivo enfocado en guerras y eventos."
-    })
-
-    createClanRow(2, {
-        name = "Shadow Legacy",
-        total_points_earned = 12890,
-        description = "Reclutando jugadores activos diariamente."
-    })
-
-    createClanRow(3, {
-        name = "Night Hunters",
-        total_points_earned = 11020,
-        description = "Dominando la tabla desde la temporada pasada."
-    })
+    if clans then
+        for index, clan in ipairs(clans) do
+            createClanRow(index, clan)
+        end
+    end
 
     clanList.CanvasSize = UDim2.new(
         0,
