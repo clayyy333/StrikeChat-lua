@@ -47,6 +47,191 @@ function ShopUI.Create(parent, Theme)
     title.TextXAlignment = Enum.TextXAlignment.Center
     title.Parent = root
 
+
+    local featuredCard = Instance.new("Frame")
+    featuredCard.Name = "FeaturedCard"
+    featuredCard.Size = UDim2.new(0, 360, 0, 210)
+    featuredCard.Position = UDim2.new(0, 28, 0, 82)
+    featuredCard.BackgroundColor3 = Color3.fromRGB(48, 24, 82)
+    featuredCard.BorderSizePixel = 0
+    featuredCard.Parent = root
+
+    local featuredCorner = Instance.new("UICorner")
+    featuredCorner.CornerRadius = UDim.new(0, 14)
+    featuredCorner.Parent = featuredCard
+
+    local featuredStroke = Instance.new("UIStroke")
+    featuredStroke.Color = Color3.fromRGB(168, 6, 235)
+    featuredStroke.Thickness = 1
+    featuredStroke.Transparency = 0.15
+    featuredStroke.Parent = featuredCard
+
+    local featuredBadge = Instance.new("TextLabel")
+    featuredBadge.Name = "MonthlyBadge"
+    featuredBadge.Size = UDim2.new(0, 132, 0, 26)
+    featuredBadge.Position = UDim2.new(0, 14, 0, 12)
+    featuredBadge.BackgroundColor3 = Color3.fromRGB(245, 190, 60)
+    featuredBadge.BorderSizePixel = 0
+    featuredBadge.Text = "2 cantidad por mes"
+    featuredBadge.TextColor3 = Color3.fromRGB(20, 20, 24)
+    featuredBadge.Font = Theme.Font.Bold
+    featuredBadge.TextSize = 11
+    featuredBadge.Parent = featuredCard
+
+    local featuredBadgeCorner = Instance.new("UICorner")
+    featuredBadgeCorner.CornerRadius = UDim.new(0, 8)
+    featuredBadgeCorner.Parent = featuredBadge
+
+    local featuredTitle = Instance.new("TextLabel")
+    featuredTitle.Size = UDim2.new(1, -28, 0, 44)
+    featuredTitle.Position = UDim2.new(0, 14, 0, 54)
+    featuredTitle.BackgroundTransparency = 1
+    featuredTitle.Text = "1000 ROBUX"
+    featuredTitle.TextColor3 = Theme.Colors.Text
+    featuredTitle.Font = Theme.Font.Bold
+    featuredTitle.TextSize = 28
+    featuredTitle.TextXAlignment = Enum.TextXAlignment.Left
+    featuredTitle.Parent = featuredCard
+
+    local featuredSubtitle = Instance.new("TextLabel")
+    featuredSubtitle.Size = UDim2.new(1, -28, 0, 30)
+    featuredSubtitle.Position = UDim2.new(0, 14, 0, 100)
+    featuredSubtitle.BackgroundTransparency = 1
+    featuredSubtitle.Text = "Premio principal destacado"
+    featuredSubtitle.TextColor3 = Theme.Colors.TextMuted
+    featuredSubtitle.Font = Theme.Font.Regular
+    featuredSubtitle.TextSize = 13
+    featuredSubtitle.TextXAlignment = Enum.TextXAlignment.Left
+    featuredSubtitle.Parent = featuredCard
+
+    local featuredPrice = Instance.new("TextButton")
+    featuredPrice.Name = "FeaturedPriceButton"
+    featuredPrice.Size = UDim2.new(1, -28, 0, 42)
+    featuredPrice.Position = UDim2.new(0, 14, 1, -56)
+    featuredPrice.BackgroundColor3 = Color3.fromRGB(168, 6, 235)
+    featuredPrice.BorderSizePixel = 0
+    featuredPrice.Text = "Precio: próximamente"
+    featuredPrice.TextColor3 = Theme.Colors.Text
+    featuredPrice.Font = Theme.Font.Bold
+    featuredPrice.TextSize = 13
+    featuredPrice.Parent = featuredCard
+
+    local featuredPriceCorner = Instance.new("UICorner")
+    featuredPriceCorner.CornerRadius = UDim.new(0, 10)
+    featuredPriceCorner.Parent = featuredPrice
+
+    local itemsContainer = Instance.new("Frame")
+    itemsContainer.Name = "ItemsContainer"
+    itemsContainer.Size = UDim2.new(0, 470, 0, 360)
+    itemsContainer.Position = UDim2.new(0, 420, 0, 82)
+    itemsContainer.BackgroundTransparency = 1
+    itemsContainer.Parent = root
+
+    local itemsLayout = Instance.new("UIGridLayout")
+    itemsLayout.CellSize = UDim2.new(0, 220, 0, 110)
+    itemsLayout.CellPadding = UDim2.new(0, 14, 0, 14)
+    itemsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    itemsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    itemsLayout.Parent = itemsContainer
+
+    local function createShopItem(title, color, badgeText)
+        local item = Instance.new("Frame")
+        item.BackgroundColor3 = Color3.fromRGB(22, 24, 30)
+        item.BorderSizePixel = 0
+
+        local itemCorner = Instance.new("UICorner")
+        itemCorner.CornerRadius = UDim.new(0, 12)
+        itemCorner.Parent = item
+
+        local itemStroke = Instance.new("UIStroke")
+        itemStroke.Color = color
+        itemStroke.Thickness = 1
+        itemStroke.Transparency = 0.15
+        itemStroke.Parent = item
+
+        if badgeText then
+            local badge = Instance.new("TextLabel")
+            badge.Size = UDim2.new(0, 120, 0, 22)
+            badge.Position = UDim2.new(0, 10, 0, 10)
+            badge.BackgroundColor3 = Color3.fromRGB(245, 190, 60)
+            badge.BorderSizePixel = 0
+            badge.Text = badgeText
+            badge.TextColor3 = Color3.fromRGB(20, 20, 24)
+            badge.Font = Theme.Font.Bold
+            badge.TextSize = 10
+            badge.Parent = item
+
+            local badgeCorner = Instance.new("UICorner")
+            badgeCorner.CornerRadius = UDim.new(0, 8)
+            badgeCorner.Parent = badge
+        end
+
+        local itemTitle = Instance.new("TextLabel")
+        itemTitle.Size = UDim2.new(1, -20, 0, 36)
+        itemTitle.Position = UDim2.new(0, 10, 0, 38)
+        itemTitle.BackgroundTransparency = 1
+        itemTitle.Text = title
+        itemTitle.TextColor3 = Theme.Colors.Text
+        itemTitle.Font = Theme.Font.Bold
+        itemTitle.TextSize = 16
+        itemTitle.TextWrapped = true
+        itemTitle.Parent = item
+
+        local buyButton = Instance.new("TextButton")
+        buyButton.Size = UDim2.new(1, -20, 0, 32)
+        buyButton.Position = UDim2.new(0, 10, 1, -42)
+        buyButton.BackgroundColor3 = color
+        buyButton.BorderSizePixel = 0
+        buyButton.Text = "Precio próximamente"
+        buyButton.TextColor3 = Theme.Colors.Text
+        buyButton.Font = Theme.Font.Bold
+        buyButton.TextSize = 11
+        buyButton.Parent = item
+
+        local buyCorner = Instance.new("UICorner")
+        buyCorner.CornerRadius = UDim.new(0, 8)
+        buyCorner.Parent = buyButton
+
+        return item
+    end
+
+    local item1 = createShopItem(
+        "TICKET DE CLAN",
+        Color3.fromRGB(168, 6, 235)
+    )
+    item1.Parent = itemsContainer
+
+    local item2 = createShopItem(
+        "COLOR DE NOMBRE",
+        Color3.fromRGB(78, 158, 58)
+    )
+    item2.Parent = itemsContainer
+
+    local item3 = createShopItem(
+        "CHAT PERSONALIZADO",
+        Color3.fromRGB(66, 135, 245)
+    )
+    item3.Parent = itemsContainer
+
+    local item4 = createShopItem(
+        "COLOR DE CHAT",
+        Color3.fromRGB(255, 110, 180)
+    )
+    item4.Parent = itemsContainer
+
+    local item5 = createShopItem(
+        "DISEÑO DE FONDO",
+        Color3.fromRGB(255, 170, 70)
+    )
+    item5.Parent = itemsContainer
+
+    local item6 = createShopItem(
+        "100 ROBUX",
+        Color3.fromRGB(245, 190, 60),
+        "10 cantidad por mes"
+    )
+    item6.Parent = itemsContainer
+
     return {
         Gui = gui,
         Root = root,
