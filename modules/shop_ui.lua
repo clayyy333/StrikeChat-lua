@@ -207,6 +207,43 @@ function ShopUI.Create(parent, Theme)
     featuredBadgeCorner.CornerRadius = UDim.new(0, 8)
     featuredBadgeCorner.Parent = featuredBadge
 
+
+    local featuredRemaining = Instance.new("TextLabel")
+    featuredRemaining.Name = "RemainingLabel"
+    featuredRemaining.Size = UDim2.new(0, 100, 0, 26)
+    featuredRemaining.Position = UDim2.new(1, -114, 0, 12)
+    featuredRemaining.BackgroundTransparency = 1
+    featuredRemaining.Text = "Restante 2"
+    featuredRemaining.TextColor3 = Color3.fromRGB(255, 220, 120)
+    featuredRemaining.Font = Theme.Font.Bold
+    featuredRemaining.TextSize = 12
+    featuredRemaining.TextXAlignment = Enum.TextXAlignment.Right
+    featuredRemaining.Parent = featuredCard
+
+    task.spawn(function()
+        local fadeOut = true
+
+        while featuredRemaining.Parent do
+            if fadeOut then
+                featuredRemaining.TextTransparency += 0.03
+
+                if featuredRemaining.TextTransparency >= 0.45 then
+                    fadeOut = false
+                end
+            else
+                featuredRemaining.TextTransparency -= 0.03
+
+                if featuredRemaining.TextTransparency <= 0 then
+                    fadeOut = true
+                end
+            end
+
+            task.wait(0.05)
+        end
+    end)
+
+
+
     local featuredTitle = Instance.new("TextLabel")
     featuredTitle.Size = UDim2.new(1, -28, 0, 44)
     featuredTitle.Position = UDim2.new(0, 14, 0, 54)
