@@ -28,7 +28,7 @@ local RoomsListModal = loadstring(game:HttpGet(BASE_RAW .. "modules/rooms_list_m
 local PasswordModal = loadstring(game:HttpGet(BASE_RAW .. "modules/password_modal.lua"))()
 local ConfirmModal = loadstring(game:HttpGet(BASE_RAW .. "modules/confirm_modal.lua"))()
 local ClanTableUI = loadstring(game:HttpGet(BASE_RAW .. "modules/clan_table_ui.lua"))()
-
+local ShopUI = loadstring(game:HttpGet(BASE_RAW .. "modules/shop_ui.lua"))()
 
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
@@ -594,6 +594,18 @@ leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
 
     clanUI.CloseButton.MouseButton1Click:Connect(function()
         clanUI.Destroy()
+        window.Gui.Enabled = true
+    end)
+end)
+
+
+leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
+    window.Gui.Enabled = false
+
+    local shopUI = ShopUI.Create(CoreGui, Theme)
+
+    shopUI.CloseButton.MouseButton1Click:Connect(function()
+        shopUI.Destroy()
         window.Gui.Enabled = true
     end)
 end)
