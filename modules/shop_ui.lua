@@ -31,6 +31,55 @@ function ShopUI.Create(parent, Theme)
     gradient.Rotation = 25
     gradient.Parent = root
 
+    local starsFrame = Instance.new("Frame")
+    starsFrame.Name = "Stars"
+    starsFrame.Size = UDim2.new(1, 0, 1, 0)
+    starsFrame.BackgroundTransparency = 1
+    starsFrame.ZIndex = -1
+    starsFrame.Parent = root
+
+    math.randomseed(tick())
+
+    local STAR_COUNT = 120
+
+    for i = 1, STAR_COUNT do
+        local star = Instance.new("Frame")
+
+        local size = math.random(1, 2)
+
+        star.Size = UDim2.new(0, size, 0, size)
+
+        star.Position = UDim2.new(
+            math.random(),
+            0,
+            math.random(),
+            0
+        )
+
+        star.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        star.BorderSizePixel = 0
+        star.BackgroundTransparency = math.random(35, 80) / 100
+
+        local starCorner = Instance.new("UICorner")
+        starCorner.CornerRadius = UDim.new(1, 0)
+        starCorner.Parent = star
+
+        star.Parent = starsFrame
+
+        task.spawn(function()
+            while star.Parent do
+                task.wait(math.random(2, 6) / 10)
+
+                star.BackgroundTransparency =
+                    math.clamp(
+                        star.BackgroundTransparency +
+                        ((math.random(-10, 10)) / 100),
+                        0.20,
+                        0.85
+                    )
+            end
+        end)
+    end
 
 
     local closeButton = Instance.new("TextButton")
