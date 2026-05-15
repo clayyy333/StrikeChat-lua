@@ -11,7 +11,7 @@ function ShopUI.Create(parent, Theme)
     root.Name = "Root"
     root.Size = UDim2.new(0, 920, 0, 510)
     root.Position = UDim2.new(0.5, -460, 0.5, -238)
-    root.BackgroundColor3 = Color3.fromRGB(11, 12, 18)
+    root.BackgroundColor3 = Color3.fromRGB(40, 10, 65)
     root.BorderSizePixel = 0
     root.Parent = gui
 
@@ -21,11 +21,10 @@ function ShopUI.Create(parent, Theme)
 
     local gradient = Instance.new("UIGradient")
     gradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(8, 10, 20)),
-        ColorSequenceKeypoint.new(0.25, Color3.fromRGB(25, 8, 45)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(55, 12, 80)),
-        ColorSequenceKeypoint.new(0.75, Color3.fromRGB(15, 20, 75)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(6, 8, 18))
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(18, 8, 35)),
+        ColorSequenceKeypoint.new(0.30, Color3.fromRGB(90, 18, 130)),
+        ColorSequenceKeypoint.new(0.60, Color3.fromRGB(18, 35, 120)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(8, 8, 18))
     })
     gradient.Rotation = 25
     gradient.Parent = root
