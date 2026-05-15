@@ -9,8 +9,8 @@ function ShopUI.Create(parent, Theme)
 
     local root = Instance.new("Frame")
     root.Name = "Root"
-    root.Size = UDim2.new(0, 920, 0, 520)
-    root.Position = UDim2.new(0.5, -460, 0.5, -260)
+    root.Size = UDim2.new(0, 920, 0, 500)
+    root.Position = UDim2.new(0.5, -460, 0.5, -250)
     root.BackgroundColor3 = Color3.fromRGB(11, 12, 18)
     root.BorderSizePixel = 0
     root.Parent = gui
@@ -40,7 +40,7 @@ function ShopUI.Create(parent, Theme)
     title.Size = UDim2.new(1, -140, 0, 48)
     title.Position = UDim2.new(0, 70, 0, 16)
     title.BackgroundTransparency = 1
-    title.Text = "TIENDA StrikeChat"
+    title.Text = "TIENDA"
     title.TextColor3 = Theme.Colors.Text
     title.Font = Theme.Font.Bold
     title.TextSize = 24
