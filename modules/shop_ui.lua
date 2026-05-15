@@ -200,6 +200,23 @@ function ShopUI.Create(parent, Theme)
     local function createShopItem(title, color, badgeText)
         local item = Instance.new("Frame")
         item.BackgroundColor3 = Color3.fromRGB(22, 24, 30)
+
+        local itemGradient = Instance.new("UIGradient")
+        itemGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(
+                0,
+                color:Lerp(Color3.fromRGB(10, 10, 18), 0.35)
+            ),
+
+            ColorSequenceKeypoint.new(
+                1,
+                Color3.fromRGB(10, 10, 18)
+            )
+        })
+
+        itemGradient.Rotation = 90
+        itemGradient.Parent = item
+
         item.BorderSizePixel = 0
 
         local itemCorner = Instance.new("UICorner")
