@@ -19,6 +19,19 @@ function ShopUI.Create(parent, Theme)
     rootCorner.CornerRadius = UDim.new(0, 14)
     rootCorner.Parent = root
 
+    local gradient = Instance.new("UIGradient")
+    gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(8, 10, 20)),
+        ColorSequenceKeypoint.new(0.25, Color3.fromRGB(25, 8, 45)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(55, 12, 80)),
+        ColorSequenceKeypoint.new(0.75, Color3.fromRGB(15, 20, 75)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(6, 8, 18))
+    })
+    gradient.Rotation = 25
+    gradient.Parent = root
+
+
+
     local closeButton = Instance.new("TextButton")
     closeButton.Name = "CloseButton"
     closeButton.Size = UDim2.new(0, 40, 0, 40)
