@@ -85,20 +85,27 @@ function ShopUI.Create(parent, Theme)
     cometLayer.Name = "CometLayer"
     cometLayer.Size = UDim2.new(1, 0, 1, 0)
     cometLayer.BackgroundTransparency = 1
+    cometLayer.ClipsDescendants = true
     cometLayer.ZIndex = 1
     cometLayer.Parent = root
 
     task.spawn(function()
         while cometLayer.Parent do
-            task.wait(math.random(18, 32) / 10)
+            task.wait(math.random(20, 45) / 10)
 
             local comet = Instance.new("Frame")
-            comet.Size = UDim2.new(0, math.random(28, 46), 0, 2)
-            comet.Position = UDim2.new(math.random(5, 85) / 100, 0, -0.05, 0)
+            local size = math.random(2, 3)
+
+            comet.Size = UDim2.new(0, size, 0, size)
+            comet.Position = UDim2.new(
+                math.random(10, 90) / 100,
+                0,
+                math.random(8, 80) / 100,
+                0
+            )
             comet.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-            comet.BackgroundTransparency = 0.25
+            comet.BackgroundTransparency = 0.15
             comet.BorderSizePixel = 0
-            comet.Rotation = 25
             comet.ZIndex = 1
             comet.Parent = cometLayer
 
@@ -106,10 +113,12 @@ function ShopUI.Create(parent, Theme)
             cometCorner.CornerRadius = UDim.new(1, 0)
             cometCorner.Parent = comet
 
+            local direction = math.random(1, 2) == 1 and -1 or 1
+
             task.spawn(function()
-                for i = 1, 45 do
-                    comet.Position = comet.Position + UDim2.new(0.006, 0, 0.007, 0)
-                    comet.BackgroundTransparency = comet.BackgroundTransparency + 0.015
+                for _ = 1, 45 do
+                    comet.Position = comet.Position + UDim2.new(0.0035 * direction, 0, 0.004, 0)
+                    comet.BackgroundTransparency += 0.018
                     task.wait(0.025)
                 end
 
