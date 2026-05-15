@@ -288,40 +288,40 @@ function ShopUI.Create(parent, Theme)
         buyCorner.CornerRadius = UDim.new(0, 8)
         buyCorner.Parent = buyButton
 
-        return item
+        return item, buyButton
     end
 
-    local item1 = createShopItem(
+    local item1, item1BuyButton = createShopItem(
         "TICKET DE CLAN",
         Color3.fromRGB(168, 6, 235)
     )
     item1.Parent = itemsContainer
 
-    local item2 = createShopItem(
+    local item2, item2BuyButton = createShopItem(
         "COLOR DE NOMBRE",
         Color3.fromRGB(78, 158, 58)
     )
     item2.Parent = itemsContainer
 
-    local item3 = createShopItem(
+    local item3, item3BuyButton = createShopItem(
         "CHAT PERSONALIZADO",
         Color3.fromRGB(66, 135, 245)
     )
     item3.Parent = itemsContainer
 
-    local item4 = createShopItem(
+    local item4, item4BuyButton = createShopItem(
         "COLOR DE CHAT",
         Color3.fromRGB(255, 110, 180)
     )
     item4.Parent = itemsContainer
 
-    local item5 = createShopItem(
+    local item5, item5BuyButton = createShopItem(
         "DISEÑO DE FONDO",
         Color3.fromRGB(255, 170, 70)
     )
     item5.Parent = itemsContainer
 
-    local item6 = createShopItem(
+    local item6, item6BuyButton = createShopItem(
         "100 ROBUX",
         Color3.fromRGB(245, 190, 60),
         "10 cantidad por mes"
@@ -351,6 +351,18 @@ function ShopUI.Create(parent, Theme)
         Gui = gui,
         Root = root,
         CloseButton = closeButton,
+
+        FeaturedButton = featuredPrice,
+        ItemsContainer = itemsContainer,
+
+        ItemButtons = {
+            ClanTicket = item1BuyButton,
+            NameColor = item2BuyButton,
+            CustomChat = item3BuyButton,
+            ChatColor = item4BuyButton,
+            BackgroundDesign = item5BuyButton,
+            Robux100 = item6BuyButton
+        },
 
         Destroy = function()
             gui:Destroy()
