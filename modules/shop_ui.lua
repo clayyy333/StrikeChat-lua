@@ -425,6 +425,42 @@ function ShopUI.Create(parent, Theme)
 
     local item6Stroke = item6:FindFirstChildOfClass("UIStroke")
 
+    local item6Remaining = Instance.new("TextLabel")
+    item6Remaining.Name = "RemainingLabel"
+    item6Remaining.Size = UDim2.new(0, 92, 0, 20)
+    item6Remaining.Position = UDim2.new(1, -102, 0, 10)
+    item6Remaining.BackgroundTransparency = 1
+    item6Remaining.Text = "Restante 10"
+    item6Remaining.TextColor3 = Color3.fromRGB(255, 220, 90)
+    item6Remaining.Font = Theme.Font.Bold
+    item6Remaining.TextSize = 10
+    item6Remaining.TextXAlignment = Enum.TextXAlignment.Right
+    item6Remaining.Parent = item6
+
+    task.spawn(function()
+        local fadeOut = true
+
+        while item6Remaining.Parent do
+            if fadeOut then
+                item6Remaining.TextTransparency += 0.03
+
+                if item6Remaining.TextTransparency >= 0.45 then
+                    fadeOut = false
+                end
+            else
+                item6Remaining.TextTransparency -= 0.03
+
+                if item6Remaining.TextTransparency <= 0 then
+                    fadeOut = true
+                end
+            end
+
+            task.wait(0.05)
+        end
+    end)
+
+
+
     if item6Stroke then
         item6Stroke.Color = Color3.fromRGB(255, 220, 90)
         item6Stroke.Transparency = 0.05
@@ -437,6 +473,16 @@ function ShopUI.Create(parent, Theme)
 
         FeaturedButton = featuredPrice,
         ItemsContainer = itemsContainer,
+
+        LimitedStockLabels = {
+            Robux1000 = featuredRemaining,
+            Robux100 = item6Remaining
+        },
+
+        LimitedButtons = {
+            Robux1000 = featuredPrice,
+            Robux100 = item6BuyButton
+        },
 
         ItemButtons = {
             ClanTicket = item1BuyButton,
