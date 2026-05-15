@@ -81,6 +81,43 @@ function ShopUI.Create(parent, Theme)
         end)
     end
 
+    local cometLayer = Instance.new("Frame")
+    cometLayer.Name = "CometLayer"
+    cometLayer.Size = UDim2.new(1, 0, 1, 0)
+    cometLayer.BackgroundTransparency = 1
+    cometLayer.ZIndex = 1
+    cometLayer.Parent = root
+
+    task.spawn(function()
+        while cometLayer.Parent do
+            task.wait(math.random(18, 32) / 10)
+
+            local comet = Instance.new("Frame")
+            comet.Size = UDim2.new(0, math.random(28, 46), 0, 2)
+            comet.Position = UDim2.new(math.random(5, 85) / 100, 0, -0.05, 0)
+            comet.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            comet.BackgroundTransparency = 0.25
+            comet.BorderSizePixel = 0
+            comet.Rotation = 25
+            comet.ZIndex = 1
+            comet.Parent = cometLayer
+
+            local cometCorner = Instance.new("UICorner")
+            cometCorner.CornerRadius = UDim.new(1, 0)
+            cometCorner.Parent = comet
+
+            task.spawn(function()
+                for i = 1, 45 do
+                    comet.Position = comet.Position + UDim2.new(0.006, 0, 0.007, 0)
+                    comet.BackgroundTransparency = comet.BackgroundTransparency + 0.015
+                    task.wait(0.025)
+                end
+
+                comet:Destroy()
+            end)
+        end
+    end)
+
 
     local closeButton = Instance.new("TextButton")
     closeButton.Name = "CloseButton"
