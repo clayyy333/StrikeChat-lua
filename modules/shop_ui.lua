@@ -328,6 +328,22 @@ function ShopUI.Create(parent, Theme)
     )
     item6.Parent = itemsContainer
 
+    local item6Gradient = Instance.new("UIGradient")
+    item6Gradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 210, 80)),
+        ColorSequenceKeypoint.new(0.45, Color3.fromRGB(120, 82, 18)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 18, 8))
+    })
+    item6Gradient.Rotation = 30
+    item6Gradient.Parent = item6
+
+    local item6Stroke = item6:FindFirstChildOfClass("UIStroke")
+
+    if item6Stroke then
+        item6Stroke.Color = Color3.fromRGB(255, 220, 90)
+        item6Stroke.Transparency = 0.05
+    end
+
     return {
         Gui = gui,
         Root = root,
