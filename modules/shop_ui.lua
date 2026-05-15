@@ -129,32 +129,53 @@ function ShopUI.Create(parent, Theme)
     featuredStroke.Transparency = 0.15
     featuredStroke.Parent = featuredCard
 
-    local featuredGlow = Instance.new("UIStroke")
-    featuredGlow.Color = Color3.fromRGB(168, 6, 235)
-    featuredGlow.Thickness = 3
-    featuredGlow.Transparency = 0.65
-    featuredGlow.Parent = featuredCard
+    local borderLight = Instance.new("Frame")
+    borderLight.Name = "BorderLight"
+    borderLight.Size = UDim2.new(0, 70, 0, 3)
+    borderLight.BackgroundColor3 = Color3.fromRGB(168, 6, 235)
+    borderLight.BorderSizePixel = 0
+    borderLight.ZIndex = 5
+    borderLight.Parent = featuredCard
+
+    local borderLightCorner = Instance.new("UICorner")
+    borderLightCorner.CornerRadius = UDim.new(1, 0)
+    borderLightCorner.Parent = borderLight
 
     task.spawn(function()
-        local fadingOut = true
+        while borderLight.Parent do
 
-        while featuredGlow.Parent do
-            if fadingOut then
-                featuredGlow.Transparency += 0.03
-
-                if featuredGlow.Transparency >= 0.85 then
-                    fadingOut = false
-                end
-            else
-                featuredGlow.Transparency -= 0.03
-
-                if featuredGlow.Transparency <= 0.45 then
-                    fadingOut = true
-                end
+            -- TOP
+            for i = 0, 1, 0.02 do
+                borderLight.Position = UDim2.new(i, -35, 0, 0)
+                borderLight.Size = UDim2.new(0, 70, 0, 3)
+                task.wait()
             end
 
-            task.wait(0.05)
+            -- RIGHT
+            for i = 0, 1, 0.02 do
+                borderLight.Position = UDim2.new(1, -3, i, -35)
+                borderLight.Size = UDim2.new(0, 3, 0, 70)
+                task.wait()
+            end
+
+            -- BOTTOM
+            for i = 1, 0, -0.02 do
+                borderLight.Position = UDim2.new(i, -35, 1, -3)
+                borderLight.Size = UDim2.new(0, 70, 0, 3)
+                task.wait()
+            end
+
+            -- LEFT
+            for i = 1, 0, -0.02 do
+                borderLight.Position = UDim2.new(0, 0, i, -35)
+                borderLight.Size = UDim2.new(0, 3, 0, 70)
+                task.wait()
+            end
         end
+    end)
+
+
+
     end)
 
 
