@@ -116,6 +116,17 @@ function ShopUI.Create(parent, Theme)
     featuredCard.Size = UDim2.new(0, 360, 0, 210)
     featuredCard.Position = UDim2.new(0, 28, 0, 82)
     featuredCard.BackgroundColor3 = Color3.fromRGB(48, 24, 82)
+
+    local featuredGradient = Instance.new("UIGradient")
+    featuredGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(95, 28, 145)),
+        ColorSequenceKeypoint.new(0.55, Color3.fromRGB(48, 24, 82)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(16, 12, 28))
+    })
+    featuredGradient.Rotation = 35
+    featuredGradient.Parent = featuredCard
+
+
     featuredCard.BorderSizePixel = 0
     featuredCard.Parent = root
 
