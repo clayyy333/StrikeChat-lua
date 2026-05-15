@@ -129,6 +129,37 @@ function ShopUI.Create(parent, Theme)
     featuredStroke.Transparency = 0.15
     featuredStroke.Parent = featuredCard
 
+    local featuredGlow = Instance.new("UIStroke")
+    featuredGlow.Color = Color3.fromRGB(168, 6, 235)
+    featuredGlow.Thickness = 3
+    featuredGlow.Transparency = 0.65
+    featuredGlow.Parent = featuredCard
+
+    task.spawn(function()
+        local fadingOut = true
+
+        while featuredGlow.Parent do
+            if fadingOut then
+                featuredGlow.Transparency += 0.03
+
+                if featuredGlow.Transparency >= 0.85 then
+                    fadingOut = false
+                end
+            else
+                featuredGlow.Transparency -= 0.03
+
+                if featuredGlow.Transparency <= 0.45 then
+                    fadingOut = true
+                end
+            end
+
+            task.wait(0.05)
+        end
+    end)
+
+
+
+
     local featuredBadge = Instance.new("TextLabel")
     featuredBadge.Name = "MonthlyBadge"
     featuredBadge.Size = UDim2.new(0, 132, 0, 26)
