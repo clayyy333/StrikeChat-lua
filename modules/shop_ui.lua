@@ -205,7 +205,7 @@ function ShopUI.Create(parent, Theme)
         itemGradient.Color = ColorSequence.new({
             ColorSequenceKeypoint.new(
                 0,
-                color:Lerp(Color3.fromRGB(10, 10, 18), 0.35)
+                color:Lerp(Color3.fromRGB(25, 25, 40), 0.15)
             ),
 
             ColorSequenceKeypoint.new(
