@@ -10,7 +10,7 @@ function ShopUI.Create(parent, Theme)
     local root = Instance.new("Frame")
     root.Name = "Root"
     root.Size = UDim2.new(0, 920, 0, 510)
-    root.Position = UDim2.new(0.5, -460, 0.5, -250)
+    root.Position = UDim2.new(0.5, -460, 0.5, -238)
     root.BackgroundColor3 = Color3.fromRGB(11, 12, 18)
     root.BorderSizePixel = 0
     root.Parent = gui
