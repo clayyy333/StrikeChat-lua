@@ -21,9 +21,11 @@ function ShopUI.Create(parent, Theme)
 
     local gradient = Instance.new("UIGradient")
     gradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(18, 8, 35)),
-        ColorSequenceKeypoint.new(0.30, Color3.fromRGB(90, 18, 130)),
-        ColorSequenceKeypoint.new(0.60, Color3.fromRGB(18, 35, 120)),
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(15, 6, 30)),
+        ColorSequenceKeypoint.new(0.20, Color3.fromRGB(120, 12, 160)),
+        ColorSequenceKeypoint.new(0.40, Color3.fromRGB(255, 30, 120)),
+        ColorSequenceKeypoint.new(0.60, Color3.fromRGB(50, 70, 180)),
+        ColorSequenceKeypoint.new(0.80, Color3.fromRGB(20, 40, 100)),
         ColorSequenceKeypoint.new(1.00, Color3.fromRGB(8, 8, 18))
     })
     gradient.Rotation = 25
