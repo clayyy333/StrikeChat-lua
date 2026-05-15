@@ -9,7 +9,7 @@ function ShopUI.Create(parent, Theme)
 
     local root = Instance.new("Frame")
     root.Name = "Root"
-    root.Size = UDim2.new(0, 920, 0, 500)
+    root.Size = UDim2.new(0, 920, 0, 510)
     root.Position = UDim2.new(0.5, -460, 0.5, -250)
     root.BackgroundColor3 = Color3.fromRGB(11, 12, 18)
     root.BorderSizePixel = 0
@@ -22,7 +22,7 @@ function ShopUI.Create(parent, Theme)
     local closeButton = Instance.new("TextButton")
     closeButton.Name = "CloseButton"
     closeButton.Size = UDim2.new(0, 40, 0, 40)
-    closeButton.Position = UDim2.new(1, -58, 0, 18)
+    closeButton.Position = UDim2.new(1, -58, 0, 12)
     closeButton.BackgroundColor3 = Color3.fromRGB(120, 36, 36)
     closeButton.BorderSizePixel = 0
     closeButton.Text = "X"
@@ -38,7 +38,7 @@ function ShopUI.Create(parent, Theme)
     local title = Instance.new("TextLabel")
     title.Name = "Title"
     title.Size = UDim2.new(1, -140, 0, 48)
-    title.Position = UDim2.new(0, 70, 0, 16)
+    title.Position = UDim2.new(0, 70, 0, 10)
     title.BackgroundTransparency = 1
     title.Text = "TIENDA"
     title.TextColor3 = Theme.Colors.Text
