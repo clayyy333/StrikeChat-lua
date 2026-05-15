@@ -129,54 +129,7 @@ function ShopUI.Create(parent, Theme)
     featuredStroke.Transparency = 0.15
     featuredStroke.Parent = featuredCard
 
-    local borderLight = Instance.new("Frame")
-    borderLight.Name = "BorderLight"
-    borderLight.Size = UDim2.new(0, 70, 0, 3)
-    borderLight.BackgroundColor3 = Color3.fromRGB(168, 6, 235)
-    borderLight.BorderSizePixel = 0
-    borderLight.ZIndex = 5
-    borderLight.Parent = featuredCard
-
-    local borderLightCorner = Instance.new("UICorner")
-    borderLightCorner.CornerRadius = UDim.new(1, 0)
-    borderLightCorner.Parent = borderLight
-
-    task.spawn(function()
-        while borderLight.Parent do
-
-            -- TOP
-            for i = 0, 1, 0.02 do
-                borderLight.Position = UDim2.new(i, -35, 0, 0)
-                borderLight.Size = UDim2.new(0, 70, 0, 3)
-                task.wait()
-            end
-
-            -- RIGHT
-            for i = 0, 1, 0.02 do
-                borderLight.Position = UDim2.new(1, -3, i, -35)
-                borderLight.Size = UDim2.new(0, 3, 0, 70)
-                task.wait()
-            end
-
-            -- BOTTOM
-            for i = 1, 0, -0.02 do
-                borderLight.Position = UDim2.new(i, -35, 1, -3)
-                borderLight.Size = UDim2.new(0, 70, 0, 3)
-                task.wait()
-            end
-
-            -- LEFT
-            for i = 1, 0, -0.02 do
-                borderLight.Position = UDim2.new(0, 0, i, -35)
-                borderLight.Size = UDim2.new(0, 3, 0, 70)
-                task.wait()
-            end
-        end
-    end)
-
-
-
-    end)
+    
 
 
 
