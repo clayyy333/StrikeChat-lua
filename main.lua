@@ -49,8 +49,8 @@ local rightPanel = RightPanel.Create(window.RightPanel, Theme)
 
 local adminNotice = Instance.new("TextLabel")
 adminNotice.Name = "AdminNotice"
-adminNotice.Size = UDim2.new(1, -120, 0, 18)
-adminNotice.Position = UDim2.new(0, 60, 0, 6)
+adminNotice.Size = UDim2.new(0, 440, 0, 18)
+adminNotice.Position = UDim2.new(0.5, -220, 0, 8)
 adminNotice.BackgroundTransparency = 1
 adminNotice.Text = "ADMIN : Evento doble puntos activo"
 adminNotice.TextColor3 = Color3.fromRGB(255, 220, 90)
@@ -58,7 +58,7 @@ adminNotice.Font = Theme.Font.Bold
 adminNotice.TextSize = 11
 adminNotice.TextTransparency = 0
 adminNotice.TextXAlignment = Enum.TextXAlignment.Center
-adminNotice.Parent = window.TopBar
+adminNotice.Parent = window.Gui
 
 task.spawn(function()
     local fadeOut = true
