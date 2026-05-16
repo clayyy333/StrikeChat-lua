@@ -47,6 +47,43 @@ local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme)
 
+local adminNotice = Instance.new("TextLabel")
+adminNotice.Name = "AdminNotice"
+adminNotice.Size = UDim2.new(1, -120, 0, 18)
+adminNotice.Position = UDim2.new(0, 60, 0, 6)
+adminNotice.BackgroundTransparency = 1
+adminNotice.Text = "ADMIN : Evento doble puntos activo"
+adminNotice.TextColor3 = Color3.fromRGB(255, 220, 90)
+adminNotice.Font = Theme.Font.Bold
+adminNotice.TextSize = 11
+adminNotice.TextTransparency = 0
+adminNotice.TextXAlignment = Enum.TextXAlignment.Center
+adminNotice.Parent = window.TopBar
+
+task.spawn(function()
+    local fadeOut = true
+
+    while adminNotice.Parent do
+        if fadeOut then
+            adminNotice.TextTransparency += 0.02
+
+            if adminNotice.TextTransparency >= 0.45 then
+                fadeOut = false
+            end
+        else
+            adminNotice.TextTransparency -= 0.02
+
+            if adminNotice.TextTransparency <= 0 then
+                fadeOut = true
+            end
+        end
+
+        task.wait(0.05)
+    end
+end)
+
+
+
 if heartbeatResult.user and heartbeatResult.user.current_room_id then
     currentRoom.id = heartbeatResult.user.current_room_id
     currentRoom.name = heartbeatResult.user.current_room_name or "Sala"

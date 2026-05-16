@@ -175,4 +175,12 @@ function Api.GetClans()
     )
 end
 
+function Api.GetAdminNotices()
+    return Api.Request(
+        Api.BaseUrl .. "/admin-notices?platform=external",
+        "GET"
+    )
+end
+
+
 return Api
