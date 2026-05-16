@@ -604,14 +604,27 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
 
     local shopUI = ShopUI.Create(CoreGui, Theme)
 
-    shopUI.LimitedStockLabels.Robux1000.Text = "Restante 0"
+    local function applyLimitedStock(key, remaining)
+        local label = shopUI.LimitedStockLabels[key]
+        local button = shopUI.LimitedButtons[key]
 
-    shopUI.LimitedButtons.Robux1000.Text = "AGOTADO"
-    shopUI.LimitedButtons.Robux1000.BackgroundColor3 =
-        Color3.fromRGB(55, 55, 55)
+        if not label or not button then
+            return
+        end
 
-    shopUI.LimitedButtons.Robux1000.AutoButtonColor = false
+        label.Text = "Restante " .. tostring(remaining)
 
+        if remaining <= 0 then
+            button.Text = "AGOTADO"
+            button.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+            button.AutoButtonColor = false
+        end
+    end
+
+    applyLimitedStock("Robux1000", 2)
+    applyLimitedStock("Robux100", 10)
+
+    
 
     shopUI.CloseButton.MouseButton1Click:Connect(function()
         shopUI.Destroy()
