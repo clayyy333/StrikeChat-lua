@@ -52,7 +52,8 @@ adminNotice.Name = "AdminNotice"
 adminNotice.Size = UDim2.new(0, 360, 0, 22)
 adminNotice.Position = UDim2.new(0.5, -170, 0, 92)
 adminNotice.BackgroundTransparency = 1
-adminNotice.Text = "ADMIN : Evento doble puntos activo"
+adminNotice.Text = ""
+adminNotice.Visible = false
 adminNotice.TextColor3 = Color3.fromRGB(255, 175, 8)
 adminNotice.Font = Theme.Font.Bold
 adminNotice.TextSize = 13
@@ -117,6 +118,30 @@ local avatarCache = {}
 local setRoom
 local selectedPrivateRoom = nil
 local confirmAction = nil
+
+
+task.spawn(function()
+    while true do
+        local noticesResult = Api.GetAdminNotices()
+
+        if noticesResult
+            and noticesResult.status == "ok"
+            and noticesResult.notices
+            and #noticesResult.notices > 0
+        then
+            local firstNotice = noticesResult.notices[1]
+
+            adminNotice.Text =
+                "ADMIN : " .. tostring(firstNotice.message)
+
+            adminNotice.Visible = true
+        else
+            adminNotice.Visible = false
+        end
+
+        task.wait(15)
+    end
+end)
 
 
 
