@@ -128,10 +128,24 @@ function RewardModal.Create(parent, Theme)
     inputPadding.PaddingRight = UDim.new(0, 12)
     inputPadding.Parent = codeInput
 
+    local errorLabel = Instance.new("TextLabel")
+    errorLabel.Name = "ErrorLabel"
+    errorLabel.Size = UDim2.new(1, -36, 0, 18)
+    errorLabel.Position = UDim2.new(0, 18, 0, 236)
+    errorLabel.BackgroundTransparency = 1
+    errorLabel.Text = ""
+    errorLabel.TextColor3 = Theme.Colors.Danger
+    errorLabel.Font = Theme.Font.Bold
+    errorLabel.TextSize = 11
+    errorLabel.TextWrapped = true
+    errorLabel.TextXAlignment = Enum.TextXAlignment.Left
+    errorLabel.ZIndex = 102
+    errorLabel.Parent = modal
+
     local note = Instance.new("TextLabel")
     note.Name = "Note"
     note.Size = UDim2.new(1, -36, 0, 44)
-    note.Position = UDim2.new(0, 18, 0, 244)
+    note.Position = UDim2.new(0, 18, 0, 258)
     note.BackgroundTransparency = 1
     note.Text = "Nota: El Premio puede ser canjeado en esta ventana, en la tienda o Redes Sociales del Script"
     note.TextColor3 = Theme.Colors.TextMuted
@@ -224,6 +238,7 @@ function RewardModal.Create(parent, Theme)
         CancelButton = cancelButton,
         UserInfo = userInfo,
         SuccessText = successText,
+        ErrorLabel = errorLabel,
 
         GetCode = function()
             if codeInput.Text and codeInput.Text ~= "" then
@@ -237,7 +252,16 @@ function RewardModal.Create(parent, Theme)
             title.Text = "¡Felicidades, Canjeaste tu código con éxito!"
             successText.Text =
                 "El premio será entregado por @Intensiveee(RyanGosling), Aceptalo en amigos solo para la entrega del Premio (El Premio se tarda en entregar hasta en 24 horas)."
+            errorLabel.Text = ""
             setSuccessVisible(true)
+        end,
+
+        ShowError = function(message)
+            errorLabel.Text = message or "No se pudo canjear el codigo."
+        end,
+
+        ClearError = function()
+            errorLabel.Text = ""
         end,
 
         Open = function(code, userId, username)
@@ -249,6 +273,7 @@ function RewardModal.Create(parent, Theme)
                 "User ID Roblox: " .. tostring(userId or "") ..
                 "\nNombre de usuario: " .. tostring(username or "")
             copyButton.Text = "Copiar"
+            errorLabel.Text = ""
             setSuccessVisible(false)
             overlay.Visible = true
         end,

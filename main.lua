@@ -750,16 +750,18 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
         local code = rewardModal.GetCode()
 
         if not code or code:gsub("%s+", "") == "" then
+            rewardModal.ShowError("Introduce un codigo para canjear.")
             return
         end
 
+        rewardModal.ClearError()
         local result = Api.ClaimReward(player, code)
 
         if result and result.status == "ok" then
             refreshLimitedStock()
             rewardModal.ShowSuccess()
         else
-            showStatus(result and result.reason or "No se pudo canjear el codigo.")
+            rewardModal.ShowError(result and result.reason or "No se pudo canjear el codigo.")
         end
     end)
 
