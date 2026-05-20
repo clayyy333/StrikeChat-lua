@@ -698,6 +698,18 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
         end
     end
 
+    local function getRewardClaimErrorMessage(reason)
+        local messages = {
+            reward_code_not_found = "Codigo de premio no encontrado.",
+            reward_code_not_owned_by_user = "Este codigo pertenece a otro usuario.",
+            reward_already_claimed_or_delivered = "Este codigo ya fue canjeado o entregado.",
+            reward_code_expired = "Este codigo expiro. Genera uno nuevo desde la tienda.",
+            reward_not_claimed = "Este premio aun no fue canjeado."
+        }
+
+        return messages[reason] or "No se pudo canjear el codigo."
+    end
+
     local stock = {
         robux_1000 = 2,
         robux_100 = 10
@@ -761,7 +773,7 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
             refreshLimitedStock()
             rewardModal.ShowSuccess()
         else
-            rewardModal.ShowError(result and result.reason or "No se pudo canjear el codigo.")
+            rewardModal.ShowError(getRewardClaimErrorMessage(result and result.reason))
         end
     end)
 
