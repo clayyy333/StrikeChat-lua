@@ -30,6 +30,8 @@ local ConfirmModal = loadstring(game:HttpGet(BASE_RAW .. "modules/confirm_modal.
 local ClanTableUI = loadstring(game:HttpGet(BASE_RAW .. "modules/clan_table_ui.lua"))()
 local ShopUI = loadstring(game:HttpGet(BASE_RAW .. "modules/shop_ui.lua"))()
 local RewardModal = loadstring(game:HttpGet(BASE_RAW .. "modules/reward_modal.lua"))()
+local ProfileUI = loadstring(game:HttpGet(BASE_RAW .. "modules/profile_ui.lua"))()
+local InventoryUI = loadstring(game:HttpGet(BASE_RAW .. "modules/inventory_ui.lua"))()
 
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
@@ -658,6 +660,75 @@ leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
     clanUI.CloseButton.MouseButton1Click:Connect(function()
         clanUI.Destroy()
         window.Gui.Enabled = true
+    end)
+end)
+
+
+leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
+    window.Gui.Enabled = false
+
+    local profileResult = Api.GetMyProfile(player)
+    local profile = heartbeatResult.profile
+
+    if profileResult and profileResult.status == "ok" and profileResult.profile then
+        profile = profileResult.profile
+    end
+
+    local profileUI = ProfileUI.Create(CoreGui, Theme, profile, player)
+    local inventoryUI = InventoryUI.Create(profileUI.Gui, Theme)
+    local saveLocked = false
+
+    local function closeProfile()
+        inventoryUI.Destroy()
+        profileUI.Destroy()
+        window.Gui.Enabled = true
+    end
+
+    profileUI.CloseButton.MouseButton1Click:Connect(closeProfile)
+
+    profileUI.InventoryButton.MouseButton1Click:Connect(function()
+        inventoryUI.Open()
+    end)
+
+    profileUI.PublicProfileButton.MouseButton1Click:Connect(function()
+        local publicResult = Api.GetPublicProfile(player.UserId)
+
+        if publicResult and publicResult.status == "ok" and publicResult.profile then
+            profileUI.ShowStatus("Perfil publico cargado correctamente.", false)
+        else
+            profileUI.ShowStatus("No se pudo cargar el perfil publico.", true)
+        end
+    end)
+
+    profileUI.SaveButton.MouseButton1Click:Connect(function()
+        if saveLocked then
+            return
+        end
+
+        saveLocked = true
+        profileUI.ShowStatus("Guardando cambios...", false)
+
+        local result = Api.SaveMyProfile(
+            player,
+            profileUI.GetChanges()
+        )
+
+        if result and result.status == "ok" and result.profile then
+            profileUI.ApplyProfile(result.profile)
+            profileUI.ShowStatus("Cambios guardados.", false)
+
+            if leftPanel.DisplayName then
+                leftPanel.DisplayName.Text = tostring(result.profile.display_name or player.DisplayName)
+            end
+
+            if leftPanel.PointsValue then
+                leftPanel.PointsValue.Text = tostring(result.profile.personal_points or 0)
+            end
+        else
+            profileUI.ShowStatus(result and result.reason or "No se pudo guardar el perfil.", true)
+        end
+
+        saveLocked = false
     end)
 end)
 

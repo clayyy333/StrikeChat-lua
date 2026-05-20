@@ -193,6 +193,27 @@ function Api.GetPublicProfile(robloxUserId)
 end
 
 
+function Api.GetMyProfile(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/user-profiles/me" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
+function Api.SaveMyProfile(player, data)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/user-profiles/me/update" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        data or {}
+    )
+end
+
+
 function Api.GetMyInventory(player)
     return Api.Request(
         Api.BaseUrl ..
