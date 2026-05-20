@@ -183,4 +183,36 @@ function Api.GetAdminNotices()
 end
 
 
+function Api.GetLimitedRewardStock()
+    return Api.Request(
+        Api.BaseUrl .. "/shop/limited-stock",
+        "GET"
+    )
+end
+
+
+function Api.BuyShopItem(player, itemId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/shop/buy" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId) ..
+        "&item_id=" .. Api.Encode(itemId),
+        "POST"
+    )
+end
+
+
+function Api.ClaimReward(
+    player,
+    code
+)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/shop/redeems/claim" ..
+        "?code=" .. Api.Encode(code) ..
+        "&roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
 return Api
