@@ -666,7 +666,7 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
     window.Gui.Enabled = false
 
     local shopUI = ShopUI.Create(CoreGui, Theme)
-    local rewardModal = RewardModal.Create(CoreGui, Theme)
+    local rewardModal = RewardModal.Create(shopUI.Gui, Theme)
     local rewardPurchaseLocked = false
 
     local function applyLimitedStock(key, remaining)
