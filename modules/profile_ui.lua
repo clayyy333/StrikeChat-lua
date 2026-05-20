@@ -222,87 +222,6 @@ function ProfileUI.Create(parent, Theme, profile, player)
     status.TextTruncate = Enum.TextTruncate.AtEnd
     status.Parent = header
 
-    local publicView = makePanel("PublicView", 190)
-    publicView.Visible = false
-
-    local publicTitle = Instance.new("TextLabel")
-    publicTitle.Name = "PublicTitle"
-    publicTitle.Size = UDim2.new(1, -20, 0, 24)
-    publicTitle.Position = UDim2.new(0, 10, 0, 8)
-    publicTitle.BackgroundTransparency = 1
-    publicTitle.Text = "Vista publica"
-    publicTitle.TextColor3 = Theme.Colors.Text
-    publicTitle.Font = Theme.Font.Bold
-    publicTitle.TextSize = 14
-    publicTitle.TextXAlignment = Enum.TextXAlignment.Left
-    publicTitle.Parent = publicView
-
-    local publicName = Instance.new("TextLabel")
-    publicName.Name = "PublicName"
-    publicName.Size = UDim2.new(1, -20, 0, 26)
-    publicName.Position = UDim2.new(0, 10, 0, 36)
-    publicName.BackgroundTransparency = 1
-    publicName.Text = ""
-    publicName.TextColor3 = Theme.Colors.Text
-    publicName.Font = Theme.Font.Bold
-    publicName.TextSize = 16
-    publicName.TextXAlignment = Enum.TextXAlignment.Center
-    publicName.TextTruncate = Enum.TextTruncate.AtEnd
-    publicName.Parent = publicView
-
-    local publicUsername = Instance.new("TextLabel")
-    publicUsername.Name = "PublicUsername"
-    publicUsername.Size = UDim2.new(1, -20, 0, 18)
-    publicUsername.Position = UDim2.new(0, 10, 0, 62)
-    publicUsername.BackgroundTransparency = 1
-    publicUsername.Text = ""
-    publicUsername.TextColor3 = Theme.Colors.TextMuted
-    publicUsername.Font = Theme.Font.Regular
-    publicUsername.TextSize = 11
-    publicUsername.TextXAlignment = Enum.TextXAlignment.Center
-    publicUsername.TextTruncate = Enum.TextTruncate.AtEnd
-    publicUsername.Parent = publicView
-
-    local publicStatus = Instance.new("TextLabel")
-    publicStatus.Name = "PublicStatus"
-    publicStatus.Size = UDim2.new(1, -20, 0, 20)
-    publicStatus.Position = UDim2.new(0, 10, 0, 82)
-    publicStatus.BackgroundTransparency = 1
-    publicStatus.Text = "Jugando a Metro Life RP"
-    publicStatus.TextColor3 = Theme.Colors.Text
-    publicStatus.Font = Theme.Font.Bold
-    publicStatus.TextSize = 11
-    publicStatus.TextXAlignment = Enum.TextXAlignment.Center
-    publicStatus.Parent = publicView
-
-    local publicInfo = Instance.new("TextLabel")
-    publicInfo.Name = "PublicInfo"
-    publicInfo.Size = UDim2.new(1, -20, 0, 32)
-    publicInfo.Position = UDim2.new(0, 10, 0, 108)
-    publicInfo.BackgroundColor3 = Theme.Colors.PanelLight
-    publicInfo.BorderSizePixel = 0
-    publicInfo.Text = ""
-    publicInfo.TextColor3 = Theme.Colors.Text
-    publicInfo.Font = Theme.Font.Bold
-    publicInfo.TextSize = 12
-    publicInfo.TextXAlignment = Enum.TextXAlignment.Center
-    publicInfo.Parent = publicView
-    round(publicInfo, 8)
-
-    local publicBio = Instance.new("TextLabel")
-    publicBio.Name = "PublicBio"
-    publicBio.Size = UDim2.new(1, -20, 0, 34)
-    publicBio.Position = UDim2.new(0, 10, 0, 146)
-    publicBio.BackgroundTransparency = 1
-    publicBio.Text = ""
-    publicBio.TextColor3 = Theme.Colors.TextMuted
-    publicBio.Font = Theme.Font.Regular
-    publicBio.TextSize = 11
-    publicBio.TextWrapped = true
-    publicBio.TextXAlignment = Enum.TextXAlignment.Center
-    publicBio.TextYAlignment = Enum.TextYAlignment.Top
-    publicBio.Parent = publicView
-
     local infoBox = makePanel("InfoBox", 76)
 
     local function createInfoRow(y, labelText, valueText)
@@ -554,19 +473,6 @@ function ProfileUI.Create(parent, Theme, profile, player)
             pointsValue.Text = tostring(profile.personal_points or 0)
             clanValue.Text = tostring(profile.clan_name or "Sin clan")
             updateVisibilityButtons()
-        end,
-
-        ShowPublicProfile = function(publicProfile)
-            if not publicProfile then
-                return
-            end
-
-            publicView.Visible = true
-            publicName.Text = tostring(publicProfile.display_name or "Usuario")
-            publicUsername.Text = "@" .. tostring(publicProfile.roblox_username or player.Name)
-            publicInfo.Text = "Clan: " .. tostring(publicProfile.clan_name or "Sin clan")
-            publicBio.Text = tostring(publicProfile.bio or "Sin descripcion")
-            refreshCanvas()
         end,
 
         ShowStatus = function(message, isError)

@@ -31,6 +31,7 @@ local ClanTableUI = loadstring(game:HttpGet(BASE_RAW .. "modules/clan_table_ui.l
 local ShopUI = loadstring(game:HttpGet(BASE_RAW .. "modules/shop_ui.lua"))()
 local RewardModal = loadstring(game:HttpGet(BASE_RAW .. "modules/reward_modal.lua"))()
 local ProfileUI = loadstring(game:HttpGet(BASE_RAW .. "modules/profile_ui.lua"))()
+local PublicProfileUI = loadstring(game:HttpGet(BASE_RAW .. "modules/public_profile_ui.lua"))()
 local InventoryUI = loadstring(game:HttpGet(BASE_RAW .. "modules/inventory_ui.lua"))()
 
 if not Api.HasRequest() then
@@ -676,9 +677,15 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
 
     local profileUI = ProfileUI.Create(CoreGui, Theme, profile, player)
     local inventoryUI = InventoryUI.Create(profileUI.Gui, Theme)
+    local publicProfileUI = nil
     local saveLocked = false
 
     local function closeProfile()
+        if publicProfileUI then
+            publicProfileUI.Destroy()
+            publicProfileUI = nil
+        end
+
         inventoryUI.Destroy()
         profileUI.Destroy()
         window.Gui.Enabled = true
@@ -694,7 +701,21 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
         local publicResult = Api.GetPublicProfile(player.UserId)
 
         if publicResult and publicResult.status == "ok" and publicResult.profile then
-            profileUI.ShowPublicProfile(publicResult.profile)
+            if publicProfileUI then
+                publicProfileUI.Destroy()
+            end
+
+            publicProfileUI = PublicProfileUI.Create(
+                profileUI.Gui,
+                Theme,
+                publicResult.profile,
+                player
+            )
+
+            publicProfileUI.CloseButton.MouseButton1Click:Connect(function()
+                publicProfileUI = nil
+            end)
+
             profileUI.ShowStatus("Perfil publico cargado correctamente.", false)
         else
             profileUI.ShowStatus("No se pudo cargar el perfil publico.", true)
