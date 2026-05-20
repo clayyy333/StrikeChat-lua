@@ -466,6 +466,9 @@ function ShopUI.Create(parent, Theme)
         item6Stroke.Transparency = 0.05
     end
 
+    featuredPrice.Text = "Generar codigo de Premio"
+    item6BuyButton.Text = "Generar codigo de Premio"
+
     return {
         Gui = gui,
         Root = root,
