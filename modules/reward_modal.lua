@@ -241,11 +241,7 @@ function RewardModal.Create(parent, Theme)
         ErrorLabel = errorLabel,
 
         GetCode = function()
-            if codeInput.Text and codeInput.Text ~= "" then
-                return codeInput.Text
-            end
-
-            return currentCode
+            return codeInput.Text or ""
         end,
 
         ShowSuccess = function()
