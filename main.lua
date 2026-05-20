@@ -694,6 +694,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
         local publicResult = Api.GetPublicProfile(player.UserId)
 
         if publicResult and publicResult.status == "ok" and publicResult.profile then
+            profileUI.ShowPublicProfile(publicResult.profile)
             profileUI.ShowStatus("Perfil publico cargado correctamente.", false)
         else
             profileUI.ShowStatus("No se pudo cargar el perfil publico.", true)
@@ -708,9 +709,17 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
         saveLocked = true
         profileUI.ShowStatus("Guardando cambios...", false)
 
+        local changes = profileUI.GetChangedData()
+
+        if not next(changes) then
+            profileUI.ShowStatus("No hay cambios para guardar.", false)
+            saveLocked = false
+            return
+        end
+
         local result = Api.SaveMyProfile(
             player,
-            profileUI.GetChanges()
+            changes
         )
 
         if result and result.status == "ok" and result.profile then
