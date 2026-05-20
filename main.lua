@@ -683,8 +683,20 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
         end
     end
 
-    applyLimitedStock("Robux1000", 2)
-    applyLimitedStock("Robux100", 10)
+    local stock = {
+        robux_1000 = 2,
+        robux_100 = 10
+    }
+
+    local stockResult = Api.GetLimitedRewardStock()
+
+    if stockResult and stockResult.status == "ok" and stockResult.stock then
+        stock.robux_1000 = stockResult.stock.robux_1000 or stock.robux_1000
+        stock.robux_100 = stockResult.stock.robux_100 or stock.robux_100
+    end
+
+    applyLimitedStock("Robux1000", stock.robux_1000)
+    applyLimitedStock("Robux100", stock.robux_100)
 
     
 
