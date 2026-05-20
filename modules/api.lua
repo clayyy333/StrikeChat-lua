@@ -183,6 +183,26 @@ function Api.GetAdminNotices()
 end
 
 
+function Api.GetPublicProfile(robloxUserId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/user-profiles/public" ..
+        "?roblox_user_id=" .. Api.Encode(robloxUserId),
+        "GET"
+    )
+end
+
+
+function Api.GetMyInventory(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/inventory/my-items" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+
 function Api.GetLimitedRewardStock()
     return Api.Request(
         Api.BaseUrl .. "/shop/limited-stock",
