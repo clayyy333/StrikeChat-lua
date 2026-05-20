@@ -686,6 +686,18 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
         end
     end
 
+    local function refreshLimitedStock()
+        local latestStockResult = Api.GetLimitedRewardStock()
+
+        if latestStockResult
+            and latestStockResult.status == "ok"
+            and latestStockResult.stock
+        then
+            applyLimitedStock("Robux1000", latestStockResult.stock.robux_1000 or 0)
+            applyLimitedStock("Robux100", latestStockResult.stock.robux_100 or 0)
+        end
+    end
+
     local stock = {
         robux_1000 = 2,
         robux_100 = 10
@@ -714,10 +726,6 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
             and result.status == "ok"
             and result.reward_redeem
         then
-            if result.remaining_stock ~= nil then
-                applyLimitedStock(stockKey, result.remaining_stock)
-            end
-
             rewardModal.Open(
                 result.reward_redeem.code,
                 player.UserId,
@@ -748,6 +756,7 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
         local result = Api.ClaimReward(player, code)
 
         if result and result.status == "ok" then
+            refreshLimitedStock()
             rewardModal.ShowSuccess()
         else
             showStatus(result and result.reason or "No se pudo canjear el codigo.")
