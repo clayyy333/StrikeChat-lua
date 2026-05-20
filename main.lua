@@ -29,6 +29,7 @@ local PasswordModal = loadstring(game:HttpGet(BASE_RAW .. "modules/password_moda
 local ConfirmModal = loadstring(game:HttpGet(BASE_RAW .. "modules/confirm_modal.lua"))()
 local ClanTableUI = loadstring(game:HttpGet(BASE_RAW .. "modules/clan_table_ui.lua"))()
 local ShopUI = loadstring(game:HttpGet(BASE_RAW .. "modules/shop_ui.lua"))()
+local RewardModal = loadstring(game:HttpGet(BASE_RAW .. "modules/reward_modal.lua"))()
 
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
@@ -665,6 +666,8 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
     window.Gui.Enabled = false
 
     local shopUI = ShopUI.Create(CoreGui, Theme)
+    local rewardModal = RewardModal.Create(CoreGui, Theme)
+    local rewardPurchaseLocked = false
 
     local function applyLimitedStock(key, remaining)
         local label = shopUI.LimitedStockLabels[key]
@@ -698,9 +701,71 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
     applyLimitedStock("Robux1000", stock.robux_1000)
     applyLimitedStock("Robux100", stock.robux_100)
 
+    local function buyReward(itemId, stockKey)
+        if rewardPurchaseLocked then
+            return
+        end
+
+        rewardPurchaseLocked = true
+
+        local result = Api.BuyShopItem(player, itemId)
+
+        if result
+            and result.status == "ok"
+            and result.reward_redeem
+        then
+            if result.remaining_stock ~= nil then
+                applyLimitedStock(stockKey, result.remaining_stock)
+            end
+
+            rewardModal.Open(
+                result.reward_redeem.code,
+                player.UserId,
+                player.Name
+            )
+        else
+            showStatus(result and result.reason or "No se pudo comprar el premio.")
+        end
+
+        rewardPurchaseLocked = false
+    end
+
+    shopUI.LimitedButtons.Robux1000.MouseButton1Click:Connect(function()
+        buyReward("robux_1000", "Robux1000")
+    end)
+
+    shopUI.LimitedButtons.Robux100.MouseButton1Click:Connect(function()
+        buyReward("robux_100", "Robux100")
+    end)
+
+    rewardModal.RedeemButton.MouseButton1Click:Connect(function()
+        local code = rewardModal.GetCode()
+
+        if not code or code:gsub("%s+", "") == "" then
+            return
+        end
+
+        local result = Api.ClaimReward(player, code)
+
+        if result and result.status == "ok" then
+            rewardModal.ShowSuccess()
+        else
+            showStatus(result and result.reason or "No se pudo canjear el codigo.")
+        end
+    end)
+
+    rewardModal.CloseButton.MouseButton1Click:Connect(function()
+        rewardModal.Close()
+    end)
+
+    rewardModal.CancelButton.MouseButton1Click:Connect(function()
+        rewardModal.Close()
+    end)
+
     
 
     shopUI.CloseButton.MouseButton1Click:Connect(function()
+        rewardModal.Overlay:Destroy()
         shopUI.Destroy()
         window.Gui.Enabled = true
     end)
