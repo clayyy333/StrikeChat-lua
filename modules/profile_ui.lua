@@ -2,6 +2,7 @@ local ProfileUI = {}
 
 function ProfileUI.Create(parent, Theme, profile, player)
     local Players = game:GetService("Players")
+    local TweenService = game:GetService("TweenService")
 
     profile = profile or {}
 
@@ -36,9 +37,9 @@ function ProfileUI.Create(parent, Theme, profile, player)
     rootCorner.Parent = root
 
     local rootStroke = Instance.new("UIStroke")
-    rootStroke.Color = Color3.fromRGB(40, 80, 100)
+    rootStroke.Color = Color3.fromRGB(18, 20, 26)
     rootStroke.Thickness = 1
-    rootStroke.Transparency = 0.18
+    rootStroke.Transparency = 0.22
     rootStroke.Parent = root
 
     local rootGradient = Instance.new("UIGradient")
@@ -73,6 +74,58 @@ function ProfileUI.Create(parent, Theme, profile, player)
         pad.PaddingBottom = UDim.new(0, bottom or 0)
         pad.Parent = instance
         return pad
+    end
+
+    local function createStar(parent, xScale, yScale, size)
+        local star = Instance.new("Frame")
+        star.AnchorPoint = Vector2.new(0.5, 0.5)
+        star.Position = UDim2.new(xScale, 0, yScale, 0)
+        star.Size = UDim2.new(0, size, 0, size)
+        star.BackgroundColor3 = Color3.fromRGB(220, 245, 255)
+        star.BackgroundTransparency = 1
+        star.BorderSizePixel = 0
+        star.Parent = parent
+        round(star, size)
+
+        local glow = Instance.new("UIStroke")
+        glow.Color = Color3.fromRGB(120, 220, 255)
+        glow.Transparency = 1
+        glow.Thickness = 2
+        glow.Parent = star
+
+        task.spawn(function()
+            while star.Parent do
+                task.wait(math.random(8, 30) / 10)
+
+                if not star.Parent then
+                    break
+                end
+
+                TweenService:Create(star, TweenInfo.new(0.35), {
+                    BackgroundTransparency = 0.1
+                }):Play()
+
+                TweenService:Create(glow, TweenInfo.new(0.35), {
+                    Transparency = 0.25,
+                    Thickness = 4
+                }):Play()
+
+                task.wait(math.random(4, 10) / 10)
+
+                if not star.Parent then
+                    break
+                end
+
+                TweenService:Create(star, TweenInfo.new(0.6), {
+                    BackgroundTransparency = 1
+                }):Play()
+
+                TweenService:Create(glow, TweenInfo.new(0.6), {
+                    Transparency = 1,
+                    Thickness = 2
+                }):Play()
+            end
+        end)
     end
 
     local topBar = Instance.new("Frame")
@@ -163,6 +216,24 @@ function ProfileUI.Create(parent, Theme, profile, player)
     bannerShade.BackgroundTransparency = 0.74
     bannerShade.BorderSizePixel = 0
     bannerShade.Parent = banner
+
+    local stars = {
+        {0.10, 0.24, 2},
+        {0.18, 0.62, 3},
+        {0.26, 0.34, 2},
+        {0.35, 0.18, 3},
+        {0.44, 0.58, 2},
+        {0.53, 0.29, 3},
+        {0.62, 0.70, 2},
+        {0.70, 0.22, 2},
+        {0.78, 0.48, 3},
+        {0.88, 0.30, 2},
+        {0.93, 0.66, 3}
+    }
+
+    for _, starData in ipairs(stars) do
+        createStar(banner, starData[1], starData[2], starData[3])
+    end
 
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
