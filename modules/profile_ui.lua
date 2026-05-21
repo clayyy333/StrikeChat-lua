@@ -142,13 +142,108 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
     banner.Size = UDim2.new(1, 0, 0, 78)
-    banner.BackgroundColor3 = Color3.fromRGB(8, 12, 18)
     banner.BorderSizePixel = 0
-    banner.ClipsDescendants = true
-    banner.ZIndex = header.ZIndex + 1
     banner.Parent = header
 
-    local headerContentZ = banner.ZIndex + 1
+    banner.BackgroundColor3 = Color3.fromRGB(8, 12, 18)
+    banner.ClipsDescendants = true
+    banner.ZIndex = header.ZIndex + 1
+
+    local coverGradient = Instance.new("UIGradient")
+    coverGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(8, 12, 18)),
+        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(18, 34, 48)),
+        ColorSequenceKeypoint.new(0.62, Color3.fromRGB(38, 58, 70)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(160, 82, 42))
+    })
+    coverGradient.Rotation = 18
+    coverGradient.Parent = banner
+
+    local coverAtmosphere = Instance.new("Frame")
+    coverAtmosphere.Name = "CoverAtmosphere"
+    coverAtmosphere.Size = UDim2.new(1, 0, 1, 0)
+    coverAtmosphere.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    coverAtmosphere.BackgroundTransparency = 0.46
+    coverAtmosphere.BorderSizePixel = 0
+    coverAtmosphere.ZIndex = banner.ZIndex + 1
+    coverAtmosphere.Parent = banner
+
+    local coverHorizonGlow = Instance.new("Frame")
+    coverHorizonGlow.Name = "CoverHorizonGlow"
+    coverHorizonGlow.Size = UDim2.new(1, 0, 0, 24)
+    coverHorizonGlow.Position = UDim2.new(0, 0, 1, -29)
+    coverHorizonGlow.BackgroundColor3 = Color3.fromRGB(255, 126, 72)
+    coverHorizonGlow.BackgroundTransparency = 0.74
+    coverHorizonGlow.BorderSizePixel = 0
+    coverHorizonGlow.ZIndex = banner.ZIndex + 1
+    coverHorizonGlow.Parent = banner
+
+    local coverHorizonGradient = Instance.new("UIGradient")
+    coverHorizonGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(12, 22, 34)),
+        ColorSequenceKeypoint.new(0.45, Color3.fromRGB(255, 120, 66)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(24, 160, 170))
+    })
+    coverHorizonGradient.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0, 1),
+        NumberSequenceKeypoint.new(0.5, 0.25),
+        NumberSequenceKeypoint.new(1, 0.8)
+    })
+    coverHorizonGradient.Rotation = 0
+    coverHorizonGradient.Parent = coverHorizonGlow
+
+    local coverBlockA = Instance.new("Frame")
+    coverBlockA.Name = "CoverBlockA"
+    coverBlockA.AnchorPoint = Vector2.new(0.5, 1)
+    coverBlockA.Size = UDim2.new(0, 18, 0, 42)
+    coverBlockA.Position = UDim2.new(0.18, 0, 1, -17)
+    coverBlockA.BackgroundColor3 = Color3.fromRGB(5, 9, 14)
+    coverBlockA.BackgroundTransparency = 0.12
+    coverBlockA.BorderSizePixel = 0
+    coverBlockA.ZIndex = banner.ZIndex + 1
+    coverBlockA.Parent = banner
+
+    local coverBlockB = Instance.new("Frame")
+    coverBlockB.Name = "CoverBlockB"
+    coverBlockB.AnchorPoint = Vector2.new(0.5, 1)
+    coverBlockB.Size = UDim2.new(0, 14, 0, 31)
+    coverBlockB.Position = UDim2.new(0.75, 0, 1, -18)
+    coverBlockB.BackgroundColor3 = Color3.fromRGB(5, 9, 14)
+    coverBlockB.BackgroundTransparency = 0.14
+    coverBlockB.BorderSizePixel = 0
+    coverBlockB.ZIndex = banner.ZIndex + 1
+    coverBlockB.Parent = banner
+
+    local coverBlockC = Instance.new("Frame")
+    coverBlockC.Name = "CoverBlockC"
+    coverBlockC.AnchorPoint = Vector2.new(0.5, 1)
+    coverBlockC.Size = UDim2.new(0, 10, 0, 24)
+    coverBlockC.Position = UDim2.new(0.88, 0, 1, -18)
+    coverBlockC.BackgroundColor3 = Color3.fromRGB(5, 9, 14)
+    coverBlockC.BackgroundTransparency = 0.18
+    coverBlockC.BorderSizePixel = 0
+    coverBlockC.ZIndex = banner.ZIndex + 1
+    coverBlockC.Parent = banner
+
+    local coverLineA = Instance.new("Frame")
+    coverLineA.Name = "CoverLineA"
+    coverLineA.Size = UDim2.new(0.34, 0, 0, 1)
+    coverLineA.Position = UDim2.new(0.13, 0, 0.32, 0)
+    coverLineA.BackgroundColor3 = Color3.fromRGB(42, 220, 220)
+    coverLineA.BackgroundTransparency = 0.76
+    coverLineA.BorderSizePixel = 0
+    coverLineA.ZIndex = banner.ZIndex + 1
+    coverLineA.Parent = banner
+
+    local coverLineB = Instance.new("Frame")
+    coverLineB.Name = "CoverLineB"
+    coverLineB.Size = UDim2.new(0.30, 0, 0, 1)
+    coverLineB.Position = UDim2.new(0.52, 0, 0.66, 0)
+    coverLineB.BackgroundColor3 = Color3.fromRGB(255, 135, 80)
+    coverLineB.BackgroundTransparency = 0.78
+    coverLineB.BorderSizePixel = 0
+    coverLineB.ZIndex = banner.ZIndex + 1
+    coverLineB.Parent = banner
 
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
@@ -157,7 +252,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     infoOverlay.BackgroundColor3 = Color3.fromRGB(15, 30, 44)
     infoOverlay.BackgroundTransparency = 1
     infoOverlay.BorderSizePixel = 0
-    infoOverlay.ZIndex = headerContentZ
+    infoOverlay.ZIndex = banner.ZIndex + 2
     infoOverlay.Parent = header
     round(infoOverlay, 10)
 
@@ -167,7 +262,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     avatarFrame.Position = UDim2.new(0, 16, 0, 46)
     avatarFrame.BackgroundColor3 = Color3.fromRGB(18, 20, 26)
     avatarFrame.BorderSizePixel = 0
-    avatarFrame.ZIndex = headerContentZ
+    avatarFrame.ZIndex = banner.ZIndex + 2
     avatarFrame.Parent = header
     round(avatarFrame, 40)
     stroke(avatarFrame, Color3.fromRGB(52, 58, 70), 0.18)
