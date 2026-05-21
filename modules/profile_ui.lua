@@ -145,7 +145,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
     banner.BorderSizePixel = 0
     banner.Parent = header
 
-    banner.BackgroundColor3 = Color3.fromRGB(8, 12, 18)
+    banner.BackgroundColor3 = Color3.fromRGB(18, 25, 34)
+    banner.BackgroundTransparency = 0
     banner.ClipsDescendants = true
     banner.ZIndex = header.ZIndex + 1
 
