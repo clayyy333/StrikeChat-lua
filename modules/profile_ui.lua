@@ -109,7 +109,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 0, 128)
+    banner.Size = UDim2.new(1, 0, 0, 118)
     banner.BackgroundColor3 = Color3.fromRGB(18, 18, 34)
     banner.BorderSizePixel = 0
     banner.ClipsDescendants = true
@@ -193,7 +193,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local pointsLabel = Instance.new("TextLabel")
     pointsLabel.Name = "PointsLabel"
     pointsLabel.Size = UDim2.new(1, -48, 0, 20)
-    pointsLabel.Position = UDim2.new(0, 24, 0, 188)
+    pointsLabel.Position = UDim2.new(0, 24, 0, 178)
     pointsLabel.BackgroundTransparency = 1
     pointsLabel.Text = "Puntos de Usuario:"
     pointsLabel.TextColor3 = Theme.Colors.Text
@@ -205,7 +205,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local pointsValue = Instance.new("TextLabel")
     pointsValue.Name = "PointsValue"
     pointsValue.Size = UDim2.new(1, -48, 0, 24)
-    pointsValue.Position = UDim2.new(0, 24, 0, 208)
+    pointsValue.Position = UDim2.new(0, 24, 0, 198)
     pointsValue.BackgroundTransparency = 1
     pointsValue.Text = tostring(profile.personal_points or 0)
     pointsValue.TextColor3 = Theme.Colors.Text
@@ -218,7 +218,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local clanLabel = Instance.new("TextLabel")
     clanLabel.Name = "ClanLabel"
     clanLabel.Size = UDim2.new(1, -52, 0, 20)
-    clanLabel.Position = UDim2.new(0, 26, 0, 252)
+    clanLabel.Position = UDim2.new(0, 26, 0, 236)
     clanLabel.BackgroundTransparency = 1
     clanLabel.Text = "Clan:"
     clanLabel.TextColor3 = Theme.Colors.Text
@@ -230,7 +230,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local clanValue = Instance.new("TextLabel")
     clanValue.Name = "ClanValue"
     clanValue.Size = UDim2.new(1, -52, 0, 20)
-    clanValue.Position = UDim2.new(0, 26, 0, 272)
+    clanValue.Position = UDim2.new(0, 26, 0, 255)
     clanValue.BackgroundTransparency = 1
     clanValue.Text = tostring(profile.clan_name or "Sin clan")
     clanValue.TextColor3 = Theme.Colors.Text
@@ -243,7 +243,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local descriptionTitle = Instance.new("TextLabel")
     descriptionTitle.Name = "DescriptionTitle"
     descriptionTitle.Size = UDim2.new(1, -52, 0, 22)
-    descriptionTitle.Position = UDim2.new(0, 26, 0, 326)
+    descriptionTitle.Position = UDim2.new(0, 26, 0, 298)
     descriptionTitle.BackgroundTransparency = 1
     descriptionTitle.Text = "Descripcion:"
     descriptionTitle.TextColor3 = Theme.Colors.Text
@@ -255,7 +255,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local descriptionInput = Instance.new("TextBox")
     descriptionInput.Name = "DescriptionInput"
     descriptionInput.Size = UDim2.new(1, -64, 0, 72)
-    descriptionInput.Position = UDim2.new(0, 32, 0, 358)
+    descriptionInput.Position = UDim2.new(0, 32, 0, 326)
     descriptionInput.BackgroundColor3 = inputColor
     descriptionInput.BackgroundTransparency = 0
     descriptionInput.BorderSizePixel = 0
