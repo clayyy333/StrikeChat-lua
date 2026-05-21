@@ -85,7 +85,10 @@ function ProfileUI.Create(parent, Theme, profile, player)
         star.BackgroundTransparency = 1
         star.BorderSizePixel = 0
         star.Parent = parent
-        round(star, size)
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(1, 0)
+        corner.Parent = star
 
         local glow = Instance.new("UIStroke")
         glow.Color = Color3.fromRGB(120, 220, 255)
@@ -95,11 +98,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
         task.spawn(function()
             while star.Parent do
-                task.wait(math.random(8, 30) / 10)
-
-                if not star.Parent then
-                    break
-                end
+                local delayTime = math.random(8, 30) / 10
+                task.wait(delayTime)
 
                 TweenService:Create(star, TweenInfo.new(0.35), {
                     BackgroundTransparency = 0.1
@@ -111,10 +111,6 @@ function ProfileUI.Create(parent, Theme, profile, player)
                 }):Play()
 
                 task.wait(math.random(4, 10) / 10)
-
-                if not star.Parent then
-                    break
-                end
 
                 TweenService:Create(star, TweenInfo.new(0.6), {
                     BackgroundTransparency = 1
