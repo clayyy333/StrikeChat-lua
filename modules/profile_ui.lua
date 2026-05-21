@@ -186,7 +186,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
     infoOverlay.Size = UDim2.new(1, -112, 0, 98)
-    infoOverlay.Position = UDim2.new(0, 100, 0, 34)
+    infoOverlay.Position = UDim2.new(0, 100, 0, 37)
     infoOverlay.BackgroundColor3 = Color3.fromRGB(15, 30, 44)
     infoOverlay.BackgroundTransparency = 1
     infoOverlay.BorderSizePixel = 0
@@ -240,7 +240,20 @@ function ProfileUI.Create(parent, Theme, profile, player)
     displayInput.ClearTextOnFocus = false
     displayInput.Parent = infoOverlay
     round(displayInput, 8)
-    addPadding(displayInput, 9, 9)
+    addPadding(displayInput, 9, 26)
+
+    local editIcon = Instance.new("TextLabel")
+    editIcon.Name = "EditIcon"
+    editIcon.Size = UDim2.new(0, 18, 0, 18)
+    editIcon.Position = UDim2.new(1, -34, 0, 17)
+    editIcon.BackgroundTransparency = 1
+    editIcon.Text = utf8.char(9998)
+    editIcon.TextColor3 = Theme.Colors.TextMuted
+    editIcon.Font = Theme.Font.Bold
+    editIcon.TextSize = 12
+    editIcon.TextXAlignment = Enum.TextXAlignment.Center
+    editIcon.TextYAlignment = Enum.TextYAlignment.Center
+    editIcon.Parent = infoOverlay
 
     local username = Instance.new("TextLabel")
     username.Name = "Username"
