@@ -322,8 +322,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
         local panel = Instance.new("Frame")
         panel.Name = name
         panel.Size = UDim2.new(1, -4, 0, 40)
-        panel.BackgroundColor3 = Color3.fromRGB(22, 38, 54)
-        panel.BackgroundTransparency = 0.18
+        panel.BackgroundColor3 = Color3.fromRGB(14, 18, 24)
+        panel.BackgroundTransparency = 0.08
         panel.BorderSizePixel = 0
         panel.Parent = content
         round(panel, 8)
@@ -368,6 +368,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
     )
 
     local descriptionBox = makePanel("DescriptionBox", 72)
+    descriptionBox.BackgroundColor3 = Color3.fromRGB(14, 18, 24)
+    descriptionBox.BackgroundTransparency = 0.08
 
     local descriptionTitle = Instance.new("TextLabel")
     descriptionTitle.Size = UDim2.new(1, -18, 0, 18)
@@ -384,8 +386,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
     descriptionInput.Name = "DescriptionInput"
     descriptionInput.Size = UDim2.new(1, -18, 0, 42)
     descriptionInput.Position = UDim2.new(0, 9, 0, 22)
-    descriptionInput.BackgroundColor3 = Color3.fromRGB(15, 27, 40)
-    descriptionInput.BackgroundTransparency = 0.12
+    descriptionInput.BackgroundColor3 = Color3.fromRGB(10, 14, 20)
+    descriptionInput.BackgroundTransparency = 0.1
     descriptionInput.BorderSizePixel = 0
     descriptionInput.Text = original.bio
     descriptionInput.PlaceholderText = "Cuentales algo sobre ti..."
