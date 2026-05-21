@@ -155,12 +155,12 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local selectedVisibility = original.game_status_visibility
 
-    local header = makePanel("Header", 142)
+    local header = makePanel("Header", 150)
     header.ClipsDescendants = true
 
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 0, 90)
+    banner.Size = UDim2.new(1, 0, 0, 96)
     banner.BackgroundColor3 = Color3.fromRGB(18, 34, 50)
     banner.BorderSizePixel = 0
     banner.Parent = header
@@ -185,14 +185,13 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
-    infoOverlay.Size = UDim2.new(1, -112, 0, 98)
-    infoOverlay.Position = UDim2.new(0, 100, 0, 16)
+    infoOverlay.Size = UDim2.new(1, -112, 0, 112)
+    infoOverlay.Position = UDim2.new(0, 100, 0, 26)
     infoOverlay.BackgroundColor3 = Color3.fromRGB(15, 30, 44)
     infoOverlay.BackgroundTransparency = 0.34
     infoOverlay.BorderSizePixel = 0
     infoOverlay.Parent = header
     round(infoOverlay, 10)
-    stroke(infoOverlay, Color3.fromRGB(65, 108, 126), 0.68)
 
     local overlayGradient = Instance.new("UIGradient")
     overlayGradient.Color = ColorSequence.new({
@@ -205,7 +204,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local avatarFrame = Instance.new("Frame")
     avatarFrame.Name = "AvatarFrame"
     avatarFrame.Size = UDim2.new(0, 80, 0, 80)
-    avatarFrame.Position = UDim2.new(0, 16, 0, 36)
+    avatarFrame.Position = UDim2.new(0, 16, 0, 42)
     avatarFrame.BackgroundColor3 = Color3.fromRGB(16, 27, 39)
     avatarFrame.BorderSizePixel = 0
     avatarFrame.Parent = header
@@ -235,7 +234,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local displayInput = Instance.new("TextBox")
     displayInput.Name = "DisplayNameInput"
     displayInput.Size = UDim2.new(1, -20, 0, 30)
-    displayInput.Position = UDim2.new(0, 10, 0, 8)
+    displayInput.Position = UDim2.new(0, 10, 0, 12)
     displayInput.BackgroundColor3 = Color3.fromRGB(13, 25, 38)
     displayInput.BackgroundTransparency = 0.12
     displayInput.BorderSizePixel = 0
@@ -249,13 +248,12 @@ function ProfileUI.Create(parent, Theme, profile, player)
     displayInput.ClearTextOnFocus = false
     displayInput.Parent = infoOverlay
     round(displayInput, 8)
-    stroke(displayInput, Color3.fromRGB(57, 87, 105), 0.62)
     addPadding(displayInput, 9, 9)
 
     local username = Instance.new("TextLabel")
     username.Name = "Username"
-    username.Size = UDim2.new(0.5, -8, 0, 17)
-    username.Position = UDim2.new(0, 10, 0, 42)
+    username.Size = UDim2.new(1, -20, 0, 17)
+    username.Position = UDim2.new(0, 10, 0, 48)
     username.BackgroundTransparency = 1
     username.Text = "@" .. tostring(profile.roblox_username or player.Name)
     username.TextColor3 = Theme.Colors.TextMuted
@@ -267,8 +265,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local status = Instance.new("TextLabel")
     status.Name = "Status"
-    status.Size = UDim2.new(0.5, -12, 0, 17)
-    status.Position = UDim2.new(0.5, 2, 0, 42)
+    status.Size = UDim2.new(1, -20, 0, 17)
+    status.Position = UDim2.new(0, 10, 0, 64)
     status.BackgroundTransparency = 1
     status.Text = "Jugando a Metro Life RP"
     status.TextColor3 = Theme.Colors.Text
@@ -280,16 +278,16 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local visibilityRow = Instance.new("Frame")
     visibilityRow.Name = "VisibilityRow"
-    visibilityRow.Size = UDim2.new(1, -20, 0, 20)
-    visibilityRow.Position = UDim2.new(0, 10, 0, 64)
+    visibilityRow.Size = UDim2.new(0, 148, 0, 18)
+    visibilityRow.Position = UDim2.new(0, 10, 0, 88)
     visibilityRow.BackgroundTransparency = 1
     visibilityRow.Parent = infoOverlay
 
     local function makeVisibilityButton(name, text, xScale)
         local button = Instance.new("TextButton")
         button.Name = name
-        button.Size = UDim2.new(0.5, -4, 1, 0)
-        button.Position = UDim2.new(xScale, xScale == 0 and 0 or 4, 0, 0)
+        button.Size = UDim2.new(0, 70, 1, 0)
+        button.Position = UDim2.new(0, xScale == 0 and 0 or 78, 0, 0)
         button.BorderSizePixel = 0
         button.Text = text
         button.TextColor3 = Theme.Colors.Text
