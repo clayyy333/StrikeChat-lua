@@ -22,7 +22,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     root.Size = UDim2.new(0.60, 0, 0.72, 0)
     root.Position = UDim2.new(0.5, 0, 0.52, 0)
     root.AnchorPoint = Vector2.new(0.5, 0.5)
-    root.BackgroundColor3 = Theme.Colors.Panel
+    root.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
     root.BorderSizePixel = 0
     root.Parent = gui
 
@@ -43,8 +43,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local rootGradient = Instance.new("UIGradient")
     rootGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(15, 25, 36)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 23, 34))
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(42, 42, 42)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(42, 42, 42))
     })
     rootGradient.Rotation = 90
     rootGradient.Parent = root
@@ -118,7 +118,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
         local panel = Instance.new("Frame")
         panel.Name = name
         panel.Size = UDim2.new(1, -4, 0, height)
-        panel.BackgroundColor3 = Color3.fromRGB(18, 32, 46)
+        panel.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
         panel.BackgroundTransparency = 0.16
         panel.BorderSizePixel = 0
         panel.Parent = content
@@ -130,7 +130,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local selectedVisibility = original.game_status_visibility
 
     local header = makePanel("Header", 138)
-    header.BackgroundColor3 = Color3.fromRGB(18, 25, 34)
+    header.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
     header.BackgroundTransparency = 0.08
     header.ClipsDescendants = true
     local headerStroke = header:FindFirstChildOfClass("UIStroke")
@@ -145,16 +145,26 @@ function ProfileUI.Create(parent, Theme, profile, player)
     banner.BorderSizePixel = 0
     banner.Parent = header
 
-    banner.BackgroundColor3 = Color3.fromRGB(18, 25, 34)
+    banner.BackgroundColor3 = Color3.fromRGB(18, 18, 32)
     banner.BackgroundTransparency = 0
     banner.ClipsDescendants = true
     banner.ZIndex = header.ZIndex + 1
+
+    local bannerGradient = Instance.new("UIGradient")
+    bannerGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(10, 12, 28)),
+        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(34, 28, 78)),
+        ColorSequenceKeypoint.new(0.68, Color3.fromRGB(18, 60, 82)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(92, 42, 118))
+    })
+    bannerGradient.Rotation = 25
+    bannerGradient.Parent = banner
 
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
     infoOverlay.Size = UDim2.new(1, -112, 0, 98)
     infoOverlay.Position = UDim2.new(0, 100, 0, 35)
-    infoOverlay.BackgroundColor3 = Color3.fromRGB(15, 30, 44)
+    infoOverlay.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
     infoOverlay.BackgroundTransparency = 1
     infoOverlay.BorderSizePixel = 0
     infoOverlay.ZIndex = banner.ZIndex + 2
@@ -165,7 +175,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     avatarFrame.Name = "AvatarFrame"
     avatarFrame.Size = UDim2.new(0, 80, 0, 80)
     avatarFrame.Position = UDim2.new(0, 16, 0, 46)
-    avatarFrame.BackgroundColor3 = Color3.fromRGB(18, 20, 26)
+    avatarFrame.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
     avatarFrame.BorderSizePixel = 0
     avatarFrame.ZIndex = banner.ZIndex + 2
     avatarFrame.Parent = header
@@ -197,7 +207,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     displayInput.Name = "DisplayNameInput"
     displayInput.Size = UDim2.new(1, -20, 0, 28)
     displayInput.Position = UDim2.new(0, 10, 0, 12)
-    displayInput.BackgroundColor3 = Color3.fromRGB(13, 25, 38)
+    displayInput.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
     displayInput.BackgroundTransparency = 1
     displayInput.BorderSizePixel = 0
     displayInput.Text = original.display_name
@@ -297,7 +307,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
         local panel = Instance.new("Frame")
         panel.Name = name
         panel.Size = UDim2.new(1, -4, 0, 40)
-        panel.BackgroundColor3 = Color3.fromRGB(14, 18, 24)
+        panel.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
         panel.BackgroundTransparency = 0.08
         panel.BorderSizePixel = 0
         panel.Parent = content
@@ -343,7 +353,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     )
 
     local descriptionBox = makePanel("DescriptionBox", 72)
-    descriptionBox.BackgroundColor3 = Color3.fromRGB(14, 18, 24)
+    descriptionBox.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
     descriptionBox.BackgroundTransparency = 0.08
     local descriptionBoxStroke = descriptionBox:FindFirstChildOfClass("UIStroke")
     if descriptionBoxStroke then
@@ -366,7 +376,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     descriptionInput.Name = "DescriptionInput"
     descriptionInput.Size = UDim2.new(1, -18, 0, 42)
     descriptionInput.Position = UDim2.new(0, 9, 0, 22)
-    descriptionInput.BackgroundColor3 = Color3.fromRGB(10, 14, 20)
+    descriptionInput.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
     descriptionInput.BackgroundTransparency = 0.1
     descriptionInput.BorderSizePixel = 0
     descriptionInput.Text = original.bio
