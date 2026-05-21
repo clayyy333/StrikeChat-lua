@@ -157,6 +157,11 @@ function ProfileUI.Create(parent, Theme, profile, player)
     header.BackgroundColor3 = Color3.fromRGB(18, 25, 34)
     header.BackgroundTransparency = 0.08
     header.ClipsDescendants = true
+    local headerStroke = header:FindFirstChildOfClass("UIStroke")
+    if headerStroke then
+        headerStroke.Color = Color3.fromRGB(28, 34, 42)
+        headerStroke.Transparency = 0.38
+    end
 
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
