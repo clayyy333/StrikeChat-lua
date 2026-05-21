@@ -81,30 +81,6 @@ function ProfileUI.Create(parent, Theme, profile, player)
     topBar.BackgroundTransparency = 1
     topBar.Parent = root
 
-    local titleIcon = Instance.new("TextLabel")
-    titleIcon.Name = "TitleIcon"
-    titleIcon.Size = UDim2.new(0, 24, 0, 24)
-    titleIcon.Position = UDim2.new(0, 14, 0, 8)
-    titleIcon.BackgroundColor3 = Color3.fromRGB(16, 176, 205)
-    titleIcon.BackgroundTransparency = 0.72
-    titleIcon.BorderSizePixel = 0
-    titleIcon.Text = ""
-    titleIcon.Parent = topBar
-    round(titleIcon, 10)
-
-    local title = Instance.new("TextLabel")
-    title.Name = "Title"
-    title.Size = UDim2.new(1, -86, 1, 0)
-    title.Position = UDim2.new(0, 46, 0, 0)
-    title.BackgroundTransparency = 1
-    title.Text = "MI PERFIL (PRIVADO)"
-    title.TextColor3 = Theme.Colors.Text
-    title.Font = Theme.Font.Bold
-    title.TextSize = 15
-    title.TextXAlignment = Enum.TextXAlignment.Left
-    title.TextTruncate = Enum.TextTruncate.AtEnd
-    title.Parent = topBar
-
     local closeButton = Instance.new("TextButton")
     closeButton.Name = "CloseButton"
     closeButton.Size = UDim2.new(0, 30, 0, 26)
