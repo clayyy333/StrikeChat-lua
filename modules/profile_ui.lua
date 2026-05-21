@@ -143,10 +143,10 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
     banner.Size = UDim2.new(1, 0, 0, 78)
-    banner.BackgroundColor3 = Color3.fromRGB(18, 34, 50)
     banner.BorderSizePixel = 0
     banner.Parent = header
 
+    -- Blade Runner 2049 inspired futuristic banner
     banner.BackgroundColor3 = Color3.fromRGB(8, 12, 18)
     banner.ClipsDescendants = true
 
@@ -191,6 +191,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     horizonGradient.Rotation = 0
     horizonGradient.Parent = horizonGlow
 
+    -- distant skyline blocks
     for i = 1, 14 do
         local building = Instance.new("Frame")
         building.Name = "DistantBuilding"
@@ -204,6 +205,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
         building.Parent = banner
     end
 
+    -- subtle neon scan lines
     for i = 1, 5 do
         local line = Instance.new("Frame")
         line.Name = "NeonScanLine"
@@ -218,6 +220,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
         line.Parent = banner
     end
 
+    -- animated stars / city lights
     local function createNeonStar(xScale, yScale, size, color)
         local star = Instance.new("Frame")
         star.Name = "NeonStar"
@@ -280,6 +283,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
         )
     end
 
+    -- subtle rain/light streaks
     for i = 1, 10 do
         local streak = Instance.new("Frame")
         streak.Name = "RainLightStreak"
