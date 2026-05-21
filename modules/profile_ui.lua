@@ -2,7 +2,6 @@ local ProfileUI = {}
 
 function ProfileUI.Create(parent, Theme, profile, player)
     local Players = game:GetService("Players")
-    local TweenService = game:GetService("TweenService")
 
     profile = profile or {}
 
@@ -146,157 +145,94 @@ function ProfileUI.Create(parent, Theme, profile, player)
     banner.BorderSizePixel = 0
     banner.Parent = header
 
-    -- Blade Runner 2049 inspired futuristic banner
     banner.BackgroundColor3 = Color3.fromRGB(8, 12, 18)
     banner.ClipsDescendants = true
+    banner.ZIndex = header.ZIndex + 1
 
-    local baseGradient = Instance.new("UIGradient")
-    baseGradient.Color = ColorSequence.new({
+    local coverGradient = Instance.new("UIGradient")
+    coverGradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0.00, Color3.fromRGB(8, 12, 18)),
         ColorSequenceKeypoint.new(0.35, Color3.fromRGB(18, 34, 48)),
         ColorSequenceKeypoint.new(0.62, Color3.fromRGB(38, 58, 70)),
         ColorSequenceKeypoint.new(1.00, Color3.fromRGB(160, 82, 42))
     })
-    baseGradient.Rotation = 18
-    baseGradient.Parent = banner
+    coverGradient.Rotation = 18
+    coverGradient.Parent = banner
 
-    local darkOverlay = Instance.new("Frame")
-    darkOverlay.Name = "BladeRunnerDarkOverlay"
-    darkOverlay.Size = UDim2.new(1, 0, 1, 0)
-    darkOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    darkOverlay.BackgroundTransparency = 0.42
-    darkOverlay.BorderSizePixel = 0
-    darkOverlay.Parent = banner
+    local coverShade = Instance.new("Frame")
+    coverShade.Name = "CoverShade"
+    coverShade.Size = UDim2.new(1, 0, 1, 0)
+    coverShade.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    coverShade.BackgroundTransparency = 0.42
+    coverShade.BorderSizePixel = 0
+    coverShade.ZIndex = banner.ZIndex + 1
+    coverShade.Parent = banner
 
-    local horizonGlow = Instance.new("Frame")
-    horizonGlow.Name = "HorizonGlow"
-    horizonGlow.Size = UDim2.new(1, 0, 0, 26)
-    horizonGlow.Position = UDim2.new(0, 0, 1, -30)
-    horizonGlow.BackgroundColor3 = Color3.fromRGB(255, 126, 72)
-    horizonGlow.BackgroundTransparency = 0.72
-    horizonGlow.BorderSizePixel = 0
-    horizonGlow.Parent = banner
+    local coverHorizon = Instance.new("Frame")
+    coverHorizon.Name = "CoverHorizon"
+    coverHorizon.Size = UDim2.new(1, 0, 0, 26)
+    coverHorizon.Position = UDim2.new(0, 0, 1, -30)
+    coverHorizon.BackgroundColor3 = Color3.fromRGB(255, 126, 72)
+    coverHorizon.BackgroundTransparency = 0.72
+    coverHorizon.BorderSizePixel = 0
+    coverHorizon.ZIndex = banner.ZIndex + 1
+    coverHorizon.Parent = banner
 
-    local horizonGradient = Instance.new("UIGradient")
-    horizonGradient.Color = ColorSequence.new({
+    local coverHorizonGradient = Instance.new("UIGradient")
+    coverHorizonGradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromRGB(12, 22, 34)),
         ColorSequenceKeypoint.new(0.45, Color3.fromRGB(255, 120, 66)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(24, 160, 170))
     })
-    horizonGradient.Transparency = NumberSequence.new({
+    coverHorizonGradient.Transparency = NumberSequence.new({
         NumberSequenceKeypoint.new(0, 1),
         NumberSequenceKeypoint.new(0.5, 0.25),
         NumberSequenceKeypoint.new(1, 0.8)
     })
-    horizonGradient.Rotation = 0
-    horizonGradient.Parent = horizonGlow
+    coverHorizonGradient.Rotation = 0
+    coverHorizonGradient.Parent = coverHorizon
 
-    -- distant skyline blocks
-    for i = 1, 14 do
-        local building = Instance.new("Frame")
-        building.Name = "DistantBuilding"
-        building.AnchorPoint = Vector2.new(0.5, 1)
-        building.Size = UDim2.new(0, math.random(10, 24), 0, math.random(18, 48))
-        building.Position = UDim2.new(math.random(4, 96) / 100, 0, 1, -16)
-        building.BackgroundColor3 = Color3.fromRGB(5, 9, 14)
-        building.BackgroundTransparency = math.random(5, 18) / 100
-        building.BorderSizePixel = 0
-        building.ZIndex = banner.ZIndex + 1
-        building.Parent = banner
-    end
+    local coverBlockA = Instance.new("Frame")
+    coverBlockA.Name = "CoverBlockA"
+    coverBlockA.AnchorPoint = Vector2.new(0.5, 1)
+    coverBlockA.Size = UDim2.new(0, 22, 0, 46)
+    coverBlockA.Position = UDim2.new(0.18, 0, 1, -16)
+    coverBlockA.BackgroundColor3 = Color3.fromRGB(5, 9, 14)
+    coverBlockA.BackgroundTransparency = 0.1
+    coverBlockA.BorderSizePixel = 0
+    coverBlockA.ZIndex = banner.ZIndex + 1
+    coverBlockA.Parent = banner
 
-    -- subtle neon scan lines
-    for i = 1, 5 do
-        local line = Instance.new("Frame")
-        line.Name = "NeonScanLine"
-        line.Size = UDim2.new(math.random(25, 60) / 100, 0, 0, 1)
-        line.Position = UDim2.new(math.random(0, 55) / 100, 0, math.random(18, 82) / 100, 0)
-        line.BackgroundColor3 = math.random(1, 2) == 1
-            and Color3.fromRGB(42, 220, 220)
-            or Color3.fromRGB(255, 135, 80)
-        line.BackgroundTransparency = 0.72
-        line.BorderSizePixel = 0
-        line.ZIndex = banner.ZIndex + 2
-        line.Parent = banner
-    end
+    local coverBlockB = Instance.new("Frame")
+    coverBlockB.Name = "CoverBlockB"
+    coverBlockB.AnchorPoint = Vector2.new(0.5, 1)
+    coverBlockB.Size = UDim2.new(0, 16, 0, 34)
+    coverBlockB.Position = UDim2.new(0.74, 0, 1, -17)
+    coverBlockB.BackgroundColor3 = Color3.fromRGB(5, 9, 14)
+    coverBlockB.BackgroundTransparency = 0.14
+    coverBlockB.BorderSizePixel = 0
+    coverBlockB.ZIndex = banner.ZIndex + 1
+    coverBlockB.Parent = banner
 
-    -- animated stars / city lights
-    local function createNeonStar(xScale, yScale, size, color)
-        local star = Instance.new("Frame")
-        star.Name = "NeonStar"
-        star.AnchorPoint = Vector2.new(0.5, 0.5)
-        star.Position = UDim2.new(xScale, 0, yScale, 0)
-        star.Size = UDim2.new(0, size, 0, size)
-        star.BackgroundColor3 = color
-        star.BackgroundTransparency = 1
-        star.BorderSizePixel = 0
-        star.ZIndex = banner.ZIndex + 3
-        star.Parent = banner
+    local coverLineA = Instance.new("Frame")
+    coverLineA.Name = "CoverLineA"
+    coverLineA.Size = UDim2.new(0.42, 0, 0, 1)
+    coverLineA.Position = UDim2.new(0.12, 0, 0.34, 0)
+    coverLineA.BackgroundColor3 = Color3.fromRGB(42, 220, 220)
+    coverLineA.BackgroundTransparency = 0.72
+    coverLineA.BorderSizePixel = 0
+    coverLineA.ZIndex = banner.ZIndex + 1
+    coverLineA.Parent = banner
 
-        local corner = Instance.new("UICorner")
-        corner.CornerRadius = UDim.new(1, 0)
-        corner.Parent = star
-
-        local glow = Instance.new("UIStroke")
-        glow.Color = color
-        glow.Thickness = 2
-        glow.Transparency = 1
-        glow.Parent = star
-
-        task.spawn(function()
-            while star.Parent do
-                task.wait(math.random(8, 32) / 10)
-
-                TweenService:Create(star, TweenInfo.new(0.28), {
-                    BackgroundTransparency = 0.08
-                }):Play()
-
-                TweenService:Create(glow, TweenInfo.new(0.28), {
-                    Transparency = 0.18,
-                    Thickness = 4
-                }):Play()
-
-                task.wait(math.random(3, 8) / 10)
-
-                TweenService:Create(star, TweenInfo.new(0.55), {
-                    BackgroundTransparency = 1
-                }):Play()
-
-                TweenService:Create(glow, TweenInfo.new(0.55), {
-                    Transparency = 1,
-                    Thickness = 2
-                }):Play()
-            end
-        end)
-    end
-
-    for i = 1, 18 do
-        local color = math.random(1, 2) == 1
-            and Color3.fromRGB(120, 235, 255)
-            or Color3.fromRGB(255, 166, 96)
-
-        createNeonStar(
-            math.random(5, 95) / 100,
-            math.random(10, 78) / 100,
-            math.random(2, 4),
-            color
-        )
-    end
-
-    -- subtle rain/light streaks
-    for i = 1, 10 do
-        local streak = Instance.new("Frame")
-        streak.Name = "RainLightStreak"
-        streak.AnchorPoint = Vector2.new(0.5, 0.5)
-        streak.Size = UDim2.new(0, 1, 0, math.random(10, 22))
-        streak.Position = UDim2.new(math.random(4, 96) / 100, 0, math.random(0, 100) / 100, 0)
-        streak.Rotation = 18
-        streak.BackgroundColor3 = Color3.fromRGB(150, 230, 255)
-        streak.BackgroundTransparency = 0.82
-        streak.BorderSizePixel = 0
-        streak.ZIndex = banner.ZIndex + 2
-        streak.Parent = banner
-    end
+    local coverLineB = Instance.new("Frame")
+    coverLineB.Name = "CoverLineB"
+    coverLineB.Size = UDim2.new(0.36, 0, 0, 1)
+    coverLineB.Position = UDim2.new(0.48, 0, 0.68, 0)
+    coverLineB.BackgroundColor3 = Color3.fromRGB(255, 135, 80)
+    coverLineB.BackgroundTransparency = 0.74
+    coverLineB.BorderSizePixel = 0
+    coverLineB.ZIndex = banner.ZIndex + 1
+    coverLineB.Parent = banner
 
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
@@ -305,6 +241,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     infoOverlay.BackgroundColor3 = Color3.fromRGB(15, 30, 44)
     infoOverlay.BackgroundTransparency = 1
     infoOverlay.BorderSizePixel = 0
+    infoOverlay.ZIndex = banner.ZIndex + 2
     infoOverlay.Parent = header
     round(infoOverlay, 10)
 
@@ -314,6 +251,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     avatarFrame.Position = UDim2.new(0, 16, 0, 46)
     avatarFrame.BackgroundColor3 = Color3.fromRGB(18, 20, 26)
     avatarFrame.BorderSizePixel = 0
+    avatarFrame.ZIndex = banner.ZIndex + 2
     avatarFrame.Parent = header
     round(avatarFrame, 40)
     stroke(avatarFrame, Color3.fromRGB(52, 58, 70), 0.18)
@@ -323,6 +261,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     avatarImage.Size = UDim2.new(1, -6, 1, -6)
     avatarImage.Position = UDim2.new(0, 3, 0, 3)
     avatarImage.BackgroundTransparency = 1
+    avatarImage.ZIndex = avatarFrame.ZIndex + 1
     avatarImage.Parent = avatarFrame
     round(avatarImage, 38)
 
@@ -353,6 +292,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     displayInput.TextSize = 13
     displayInput.TextXAlignment = Enum.TextXAlignment.Left
     displayInput.ClearTextOnFocus = false
+    displayInput.ZIndex = infoOverlay.ZIndex + 1
     displayInput.Parent = infoOverlay
     round(displayInput, 8)
     addPadding(displayInput, 9, 9)
@@ -368,6 +308,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     username.TextSize = 11
     username.TextXAlignment = Enum.TextXAlignment.Left
     username.TextTruncate = Enum.TextTruncate.AtEnd
+    username.ZIndex = infoOverlay.ZIndex + 1
     username.Parent = infoOverlay
 
     local status = Instance.new("TextLabel")
@@ -381,6 +322,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     status.TextSize = 11
     status.TextXAlignment = Enum.TextXAlignment.Left
     status.TextTruncate = Enum.TextTruncate.AtEnd
+    status.ZIndex = infoOverlay.ZIndex + 1
     status.Parent = infoOverlay
 
     local visibilityRow = Instance.new("Frame")
@@ -388,6 +330,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     visibilityRow.Size = UDim2.new(0, 148, 0, 18)
     visibilityRow.Position = UDim2.new(0, 10, 0, 80)
     visibilityRow.BackgroundTransparency = 1
+    visibilityRow.ZIndex = infoOverlay.ZIndex + 1
     visibilityRow.Parent = infoOverlay
 
     local function makeVisibilityButton(name, text, xScale)
@@ -400,6 +343,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
         button.TextColor3 = Theme.Colors.Text
         button.Font = Theme.Font.Bold
         button.TextSize = 10
+        button.ZIndex = visibilityRow.ZIndex + 1
         button.Parent = visibilityRow
         round(button, 7)
         stroke(button, Color3.fromRGB(58, 110, 128), 0.6)
