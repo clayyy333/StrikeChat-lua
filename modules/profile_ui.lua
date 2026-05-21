@@ -186,7 +186,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
     infoOverlay.Size = UDim2.new(1, -112, 0, 98)
-    infoOverlay.Position = UDim2.new(0, 100, 0, 28)
+    infoOverlay.Position = UDim2.new(0, 100, 0, 34)
     infoOverlay.BackgroundColor3 = Color3.fromRGB(15, 30, 44)
     infoOverlay.BackgroundTransparency = 1
     infoOverlay.BorderSizePixel = 0
