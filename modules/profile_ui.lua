@@ -327,7 +327,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
         panel.BorderSizePixel = 0
         panel.Parent = content
         round(panel, 8)
-        stroke(panel, Color3.fromRGB(56, 87, 105), 0.62)
+        stroke(panel, Color3.fromRGB(28, 34, 42), 0.38)
 
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(1, -18, 0, 18)
@@ -370,6 +370,11 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local descriptionBox = makePanel("DescriptionBox", 72)
     descriptionBox.BackgroundColor3 = Color3.fromRGB(14, 18, 24)
     descriptionBox.BackgroundTransparency = 0.08
+    local descriptionBoxStroke = descriptionBox:FindFirstChildOfClass("UIStroke")
+    if descriptionBoxStroke then
+        descriptionBoxStroke.Color = Color3.fromRGB(28, 34, 42)
+        descriptionBoxStroke.Transparency = 0.38
+    end
 
     local descriptionTitle = Instance.new("TextLabel")
     descriptionTitle.Size = UDim2.new(1, -18, 0, 18)
@@ -402,7 +407,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     descriptionInput.MultiLine = true
     descriptionInput.Parent = descriptionBox
     round(descriptionInput, 8)
-    stroke(descriptionInput, Color3.fromRGB(56, 87, 105), 0.64)
+    stroke(descriptionInput, Color3.fromRGB(26, 31, 38), 0.42)
     addPadding(descriptionInput, 8, 8, 6, 6)
 
     descriptionInput:GetPropertyChangedSignal("Text"):Connect(function()
