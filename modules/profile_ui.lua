@@ -19,7 +19,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local root = Instance.new("Frame")
     root.Name = "Root"
-    root.Size = UDim2.new(0.68, 0, 0.72, 0)
+    root.Size = UDim2.new(0.60, 0, 0.72, 0)
     root.Position = UDim2.new(0.5, 0, 0.52, 0)
     root.AnchorPoint = Vector2.new(0.5, 0.5)
     root.BackgroundColor3 = Theme.Colors.Panel
@@ -28,7 +28,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local rootSize = Instance.new("UISizeConstraint")
     rootSize.MinSize = Vector2.new(300, 440)
-    rootSize.MaxSize = Vector2.new(470, 520)
+    rootSize.MaxSize = Vector2.new(420, 520)
     rootSize.Parent = root
 
     local rootCorner = Instance.new("UICorner")
