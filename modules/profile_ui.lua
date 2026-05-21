@@ -139,7 +139,16 @@ function ProfileUI.Create(parent, Theme, profile, player)
         headerStroke.Transparency = 0.38
     end
 
-    local headerContentZ = header.ZIndex + 1
+    local banner = Instance.new("Frame")
+    banner.Name = "Banner"
+    banner.Size = UDim2.new(1, 0, 0, 78)
+    banner.BackgroundColor3 = Color3.fromRGB(8, 12, 18)
+    banner.BorderSizePixel = 0
+    banner.ClipsDescendants = true
+    banner.ZIndex = header.ZIndex + 1
+    banner.Parent = header
+
+    local headerContentZ = banner.ZIndex + 1
 
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
