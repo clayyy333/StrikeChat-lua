@@ -160,8 +160,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 0, 118)
-    banner.Position = UDim2.new(0, 0, 0, -6)
+    banner.Size = UDim2.new(1, 0, 0, 78)
     banner.BackgroundColor3 = Color3.fromRGB(18, 34, 50)
     banner.BorderSizePixel = 0
     banner.Parent = header
@@ -170,7 +169,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     bannerGradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 54, 76)),
         ColorSequenceKeypoint.new(0.44, Color3.fromRGB(30, 76, 96)),
-        ColorSequenceKeypoint.new(0.72, Color3.fromRGB(26, 46, 74)),
+        ColorSequenceKeypoint.new(0.58, Color3.fromRGB(26, 46, 74)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(18, 24, 42))
     })
     bannerGradient.Rotation = 20
@@ -187,7 +186,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
     infoOverlay.Size = UDim2.new(1, -112, 0, 98)
-    infoOverlay.Position = UDim2.new(0, 100, 0, 22)
+    infoOverlay.Position = UDim2.new(0, 100, 0, 28)
     infoOverlay.BackgroundColor3 = Color3.fromRGB(15, 30, 44)
     infoOverlay.BackgroundTransparency = 1
     infoOverlay.BorderSizePixel = 0
@@ -227,7 +226,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local displayInput = Instance.new("TextBox")
     displayInput.Name = "DisplayNameInput"
     displayInput.Size = UDim2.new(1, -20, 0, 28)
-    displayInput.Position = UDim2.new(0, 10, 0, 16)
+    displayInput.Position = UDim2.new(0, 10, 0, 12)
     displayInput.BackgroundColor3 = Color3.fromRGB(13, 25, 38)
     displayInput.BackgroundTransparency = 1
     displayInput.BorderSizePixel = 0
@@ -246,7 +245,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local username = Instance.new("TextLabel")
     username.Name = "Username"
     username.Size = UDim2.new(1, -20, 0, 17)
-    username.Position = UDim2.new(0, 10, 0, 47)
+    username.Position = UDim2.new(0, 10, 0, 44)
     username.BackgroundTransparency = 1
     username.Text = "@" .. tostring(profile.roblox_username or player.Name)
     username.TextColor3 = Theme.Colors.TextMuted
@@ -259,7 +258,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local status = Instance.new("TextLabel")
     status.Name = "Status"
     status.Size = UDim2.new(1, -20, 0, 17)
-    status.Position = UDim2.new(0, 10, 0, 62)
+    status.Position = UDim2.new(0, 10, 0, 60)
     status.BackgroundTransparency = 1
     status.Text = "Jugando a Metro Life RP"
     status.TextColor3 = Theme.Colors.Text
@@ -272,7 +271,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local visibilityRow = Instance.new("Frame")
     visibilityRow.Name = "VisibilityRow"
     visibilityRow.Size = UDim2.new(0, 148, 0, 18)
-    visibilityRow.Position = UDim2.new(0, 10, 0, 84)
+    visibilityRow.Position = UDim2.new(0, 10, 0, 80)
     visibilityRow.BackgroundTransparency = 1
     visibilityRow.Parent = infoOverlay
 
