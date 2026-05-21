@@ -19,7 +19,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local root = Instance.new("Frame")
     root.Name = "Root"
-    root.Size = UDim2.new(0.68, 0, 0.68, 0)
+    root.Size = UDim2.new(0.66, 0, 0.66, 0)
     root.Position = UDim2.new(0.5, 0, 0.52, 0)
     root.AnchorPoint = Vector2.new(0.5, 0.5)
     root.BackgroundColor3 = Theme.Colors.Panel
@@ -27,8 +27,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
     root.Parent = gui
 
     local rootSize = Instance.new("UISizeConstraint")
-    rootSize.MinSize = Vector2.new(300, 390)
-    rootSize.MaxSize = Vector2.new(480, 510)
+    rootSize.MinSize = Vector2.new(300, 400)
+    rootSize.MaxSize = Vector2.new(470, 492)
     rootSize.Parent = root
 
     local rootCorner = Instance.new("UICorner")
@@ -125,19 +125,19 @@ function ProfileUI.Create(parent, Theme, profile, player)
     content.Position = UDim2.new(0, 11, 0, 42)
     content.BackgroundTransparency = 1
     content.BorderSizePixel = 0
-    content.ScrollBarThickness = 2
+    content.ScrollBarThickness = 0
     content.CanvasSize = UDim2.new(0, 0, 0, 0)
     content.Parent = root
 
     local layout = Instance.new("UIListLayout")
-    layout.Padding = UDim.new(0, 6)
+    layout.Padding = UDim.new(0, 5)
     layout.SortOrder = Enum.SortOrder.LayoutOrder
     layout.Parent = content
 
     local padding = Instance.new("UIPadding")
     padding.PaddingLeft = UDim.new(0, 2)
     padding.PaddingRight = UDim.new(0, 2)
-    padding.PaddingBottom = UDim.new(0, 10)
+    padding.PaddingBottom = UDim.new(0, 6)
     padding.Parent = content
 
     local function makePanel(name, height)
@@ -155,12 +155,12 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local selectedVisibility = original.game_status_visibility
 
-    local header = makePanel("Header", 150)
+    local header = makePanel("Header", 136)
     header.ClipsDescendants = true
 
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 0, 96)
+    banner.Size = UDim2.new(1, 0, 0, 92)
     banner.BackgroundColor3 = Color3.fromRGB(18, 34, 50)
     banner.BorderSizePixel = 0
     banner.Parent = header
@@ -185,26 +185,18 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
-    infoOverlay.Size = UDim2.new(1, -112, 0, 112)
-    infoOverlay.Position = UDim2.new(0, 100, 0, 26)
+    infoOverlay.Size = UDim2.new(1, -112, 0, 102)
+    infoOverlay.Position = UDim2.new(0, 100, 0, 24)
     infoOverlay.BackgroundColor3 = Color3.fromRGB(15, 30, 44)
-    infoOverlay.BackgroundTransparency = 0.34
+    infoOverlay.BackgroundTransparency = 1
     infoOverlay.BorderSizePixel = 0
     infoOverlay.Parent = header
     round(infoOverlay, 10)
 
-    local overlayGradient = Instance.new("UIGradient")
-    overlayGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 39, 56)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(13, 24, 36))
-    })
-    overlayGradient.Rotation = 0
-    overlayGradient.Parent = infoOverlay
-
     local avatarFrame = Instance.new("Frame")
     avatarFrame.Name = "AvatarFrame"
     avatarFrame.Size = UDim2.new(0, 80, 0, 80)
-    avatarFrame.Position = UDim2.new(0, 16, 0, 42)
+    avatarFrame.Position = UDim2.new(0, 16, 0, 40)
     avatarFrame.BackgroundColor3 = Color3.fromRGB(16, 27, 39)
     avatarFrame.BorderSizePixel = 0
     avatarFrame.Parent = header
@@ -233,10 +225,10 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local displayInput = Instance.new("TextBox")
     displayInput.Name = "DisplayNameInput"
-    displayInput.Size = UDim2.new(1, -20, 0, 30)
-    displayInput.Position = UDim2.new(0, 10, 0, 12)
+    displayInput.Size = UDim2.new(1, -20, 0, 28)
+    displayInput.Position = UDim2.new(0, 10, 0, 10)
     displayInput.BackgroundColor3 = Color3.fromRGB(13, 25, 38)
-    displayInput.BackgroundTransparency = 0.12
+    displayInput.BackgroundTransparency = 1
     displayInput.BorderSizePixel = 0
     displayInput.Text = original.display_name
     displayInput.PlaceholderText = "Display Name"
@@ -253,7 +245,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local username = Instance.new("TextLabel")
     username.Name = "Username"
     username.Size = UDim2.new(1, -20, 0, 17)
-    username.Position = UDim2.new(0, 10, 0, 48)
+    username.Position = UDim2.new(0, 10, 0, 42)
     username.BackgroundTransparency = 1
     username.Text = "@" .. tostring(profile.roblox_username or player.Name)
     username.TextColor3 = Theme.Colors.TextMuted
@@ -266,7 +258,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local status = Instance.new("TextLabel")
     status.Name = "Status"
     status.Size = UDim2.new(1, -20, 0, 17)
-    status.Position = UDim2.new(0, 10, 0, 64)
+    status.Position = UDim2.new(0, 10, 0, 58)
     status.BackgroundTransparency = 1
     status.Text = "Jugando a Metro Life RP"
     status.TextColor3 = Theme.Colors.Text
@@ -279,7 +271,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local visibilityRow = Instance.new("Frame")
     visibilityRow.Name = "VisibilityRow"
     visibilityRow.Size = UDim2.new(0, 148, 0, 18)
-    visibilityRow.Position = UDim2.new(0, 10, 0, 88)
+    visibilityRow.Position = UDim2.new(0, 10, 0, 80)
     visibilityRow.BackgroundTransparency = 1
     visibilityRow.Parent = infoOverlay
 
@@ -329,7 +321,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local function createStatPanel(name, labelText, valueText)
         local panel = Instance.new("Frame")
         panel.Name = name
-        panel.Size = UDim2.new(1, -4, 0, 46)
+        panel.Size = UDim2.new(1, -4, 0, 42)
         panel.BackgroundColor3 = Color3.fromRGB(22, 38, 54)
         panel.BackgroundTransparency = 0.18
         panel.BorderSizePixel = 0
@@ -339,7 +331,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
         local label = Instance.new("TextLabel")
         label.Size = UDim2.new(1, -18, 0, 18)
-        label.Position = UDim2.new(0, 9, 0, 5)
+        label.Position = UDim2.new(0, 9, 0, 4)
         label.BackgroundTransparency = 1
         label.Text = labelText
         label.TextColor3 = Theme.Colors.TextMuted
@@ -350,7 +342,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
         local value = Instance.new("TextLabel")
         value.Size = UDim2.new(1, -18, 0, 18)
-        value.Position = UDim2.new(0, 9, 0, 23)
+        value.Position = UDim2.new(0, 9, 0, 21)
         value.BackgroundTransparency = 1
         value.Text = valueText
         value.TextColor3 = Theme.Colors.Text
@@ -375,11 +367,11 @@ function ProfileUI.Create(parent, Theme, profile, player)
         tostring(profile.personal_points or 0)
     )
 
-    local descriptionBox = makePanel("DescriptionBox", 88)
+    local descriptionBox = makePanel("DescriptionBox", 78)
 
     local descriptionTitle = Instance.new("TextLabel")
     descriptionTitle.Size = UDim2.new(1, -18, 0, 18)
-    descriptionTitle.Position = UDim2.new(0, 9, 0, 5)
+    descriptionTitle.Position = UDim2.new(0, 9, 0, 4)
     descriptionTitle.BackgroundTransparency = 1
     descriptionTitle.Text = "Descripcion"
     descriptionTitle.TextColor3 = Theme.Colors.Text
@@ -390,8 +382,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local descriptionInput = Instance.new("TextBox")
     descriptionInput.Name = "DescriptionInput"
-    descriptionInput.Size = UDim2.new(1, -18, 0, 56)
-    descriptionInput.Position = UDim2.new(0, 9, 0, 24)
+    descriptionInput.Size = UDim2.new(1, -18, 0, 48)
+    descriptionInput.Position = UDim2.new(0, 9, 0, 22)
     descriptionInput.BackgroundColor3 = Color3.fromRGB(15, 27, 40)
     descriptionInput.BackgroundTransparency = 0.12
     descriptionInput.BorderSizePixel = 0
@@ -419,7 +411,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local inventoryButton = Instance.new("TextButton")
     inventoryButton.Name = "InventoryButton"
-    inventoryButton.Size = UDim2.new(1, -4, 0, 34)
+    inventoryButton.Size = UDim2.new(1, -4, 0, 32)
     inventoryButton.BackgroundColor3 = Color3.fromRGB(17, 88, 108)
     inventoryButton.BackgroundTransparency = 0.12
     inventoryButton.BorderSizePixel = 0
@@ -433,7 +425,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local statusLabel = Instance.new("TextLabel")
     statusLabel.Name = "StatusLabel"
-    statusLabel.Size = UDim2.new(1, -4, 0, 16)
+    statusLabel.Size = UDim2.new(1, -4, 0, 14)
     statusLabel.BackgroundTransparency = 1
     statusLabel.Text = ""
     statusLabel.TextColor3 = Theme.Colors.TextMuted
@@ -445,7 +437,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local actions = Instance.new("Frame")
     actions.Name = "Actions"
-    actions.Size = UDim2.new(1, -4, 0, 34)
+    actions.Size = UDim2.new(1, -4, 0, 32)
     actions.BackgroundTransparency = 1
     actions.Parent = content
 
