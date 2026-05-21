@@ -19,7 +19,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local root = Instance.new("Frame")
     root.Name = "Root"
-    root.Size = UDim2.new(0.66, 0, 0.66, 0)
+    root.Size = UDim2.new(0.68, 0, 0.72, 0)
     root.Position = UDim2.new(0.5, 0, 0.52, 0)
     root.AnchorPoint = Vector2.new(0.5, 0.5)
     root.BackgroundColor3 = Theme.Colors.Panel
@@ -27,8 +27,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
     root.Parent = gui
 
     local rootSize = Instance.new("UISizeConstraint")
-    rootSize.MinSize = Vector2.new(300, 400)
-    rootSize.MaxSize = Vector2.new(470, 492)
+    rootSize.MinSize = Vector2.new(300, 440)
+    rootSize.MaxSize = Vector2.new(470, 520)
     rootSize.Parent = root
 
     local rootCorner = Instance.new("UICorner")
@@ -119,14 +119,12 @@ function ProfileUI.Create(parent, Theme, profile, player)
     closeButton.Parent = topBar
     round(closeButton, 8)
 
-    local content = Instance.new("ScrollingFrame")
+    local content = Instance.new("Frame")
     content.Name = "Content"
     content.Size = UDim2.new(1, -22, 1, -48)
     content.Position = UDim2.new(0, 11, 0, 42)
     content.BackgroundTransparency = 1
     content.BorderSizePixel = 0
-    content.ScrollBarThickness = 0
-    content.CanvasSize = UDim2.new(0, 0, 0, 0)
     content.Parent = root
 
     local layout = Instance.new("UIListLayout")
@@ -155,14 +153,14 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local selectedVisibility = original.game_status_visibility
 
-    local header = makePanel("Header", 146)
+    local header = makePanel("Header", 138)
     header.BackgroundColor3 = Color3.fromRGB(18, 25, 34)
     header.BackgroundTransparency = 0.08
     header.ClipsDescendants = true
 
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 0, 82)
+    banner.Size = UDim2.new(1, 0, 0, 78)
     banner.BackgroundColor3 = Color3.fromRGB(18, 34, 50)
     banner.BorderSizePixel = 0
     banner.Parent = header
@@ -187,8 +185,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local infoOverlay = Instance.new("Frame")
     infoOverlay.Name = "InfoOverlay"
-    infoOverlay.Size = UDim2.new(1, -112, 0, 102)
-    infoOverlay.Position = UDim2.new(0, 100, 0, 24)
+    infoOverlay.Size = UDim2.new(1, -112, 0, 98)
+    infoOverlay.Position = UDim2.new(0, 100, 0, 22)
     infoOverlay.BackgroundColor3 = Color3.fromRGB(15, 30, 44)
     infoOverlay.BackgroundTransparency = 1
     infoOverlay.BorderSizePixel = 0
@@ -198,7 +196,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local avatarFrame = Instance.new("Frame")
     avatarFrame.Name = "AvatarFrame"
     avatarFrame.Size = UDim2.new(0, 80, 0, 80)
-    avatarFrame.Position = UDim2.new(0, 16, 0, 48)
+    avatarFrame.Position = UDim2.new(0, 16, 0, 46)
     avatarFrame.BackgroundColor3 = Color3.fromRGB(18, 20, 26)
     avatarFrame.BorderSizePixel = 0
     avatarFrame.Parent = header
@@ -228,7 +226,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local displayInput = Instance.new("TextBox")
     displayInput.Name = "DisplayNameInput"
     displayInput.Size = UDim2.new(1, -20, 0, 28)
-    displayInput.Position = UDim2.new(0, 10, 0, 18)
+    displayInput.Position = UDim2.new(0, 10, 0, 16)
     displayInput.BackgroundColor3 = Color3.fromRGB(13, 25, 38)
     displayInput.BackgroundTransparency = 1
     displayInput.BorderSizePixel = 0
@@ -247,7 +245,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local username = Instance.new("TextLabel")
     username.Name = "Username"
     username.Size = UDim2.new(1, -20, 0, 17)
-    username.Position = UDim2.new(0, 10, 0, 50)
+    username.Position = UDim2.new(0, 10, 0, 47)
     username.BackgroundTransparency = 1
     username.Text = "@" .. tostring(profile.roblox_username or player.Name)
     username.TextColor3 = Theme.Colors.TextMuted
@@ -260,7 +258,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local status = Instance.new("TextLabel")
     status.Name = "Status"
     status.Size = UDim2.new(1, -20, 0, 17)
-    status.Position = UDim2.new(0, 10, 0, 66)
+    status.Position = UDim2.new(0, 10, 0, 62)
     status.BackgroundTransparency = 1
     status.Text = "Jugando a Metro Life RP"
     status.TextColor3 = Theme.Colors.Text
@@ -273,7 +271,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local visibilityRow = Instance.new("Frame")
     visibilityRow.Name = "VisibilityRow"
     visibilityRow.Size = UDim2.new(0, 148, 0, 18)
-    visibilityRow.Position = UDim2.new(0, 10, 0, 92)
+    visibilityRow.Position = UDim2.new(0, 10, 0, 84)
     visibilityRow.BackgroundTransparency = 1
     visibilityRow.Parent = infoOverlay
 
@@ -323,7 +321,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local function createStatPanel(name, labelText, valueText)
         local panel = Instance.new("Frame")
         panel.Name = name
-        panel.Size = UDim2.new(1, -4, 0, 42)
+        panel.Size = UDim2.new(1, -4, 0, 40)
         panel.BackgroundColor3 = Color3.fromRGB(22, 38, 54)
         panel.BackgroundTransparency = 0.18
         panel.BorderSizePixel = 0
@@ -344,7 +342,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
         local value = Instance.new("TextLabel")
         value.Size = UDim2.new(1, -18, 0, 18)
-        value.Position = UDim2.new(0, 9, 0, 21)
+        value.Position = UDim2.new(0, 9, 0, 20)
         value.BackgroundTransparency = 1
         value.Text = valueText
         value.TextColor3 = Theme.Colors.Text
@@ -369,7 +367,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
         tostring(profile.personal_points or 0)
     )
 
-    local descriptionBox = makePanel("DescriptionBox", 78)
+    local descriptionBox = makePanel("DescriptionBox", 72)
 
     local descriptionTitle = Instance.new("TextLabel")
     descriptionTitle.Size = UDim2.new(1, -18, 0, 18)
@@ -384,7 +382,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local descriptionInput = Instance.new("TextBox")
     descriptionInput.Name = "DescriptionInput"
-    descriptionInput.Size = UDim2.new(1, -18, 0, 48)
+    descriptionInput.Size = UDim2.new(1, -18, 0, 42)
     descriptionInput.Position = UDim2.new(0, 9, 0, 22)
     descriptionInput.BackgroundColor3 = Color3.fromRGB(15, 27, 40)
     descriptionInput.BackgroundTransparency = 0.12
@@ -413,7 +411,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local inventoryButton = Instance.new("TextButton")
     inventoryButton.Name = "InventoryButton"
-    inventoryButton.Size = UDim2.new(1, -4, 0, 32)
+    inventoryButton.Size = UDim2.new(1, -4, 0, 30)
     inventoryButton.BackgroundColor3 = Color3.fromRGB(17, 88, 108)
     inventoryButton.BackgroundTransparency = 0.12
     inventoryButton.BorderSizePixel = 0
@@ -427,19 +425,19 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local statusLabel = Instance.new("TextLabel")
     statusLabel.Name = "StatusLabel"
-    statusLabel.Size = UDim2.new(1, -4, 0, 14)
+    statusLabel.Size = UDim2.new(1, -4, 0, 12)
     statusLabel.BackgroundTransparency = 1
     statusLabel.Text = ""
     statusLabel.TextColor3 = Theme.Colors.TextMuted
     statusLabel.Font = Theme.Font.Bold
-    statusLabel.TextSize = 11
+    statusLabel.TextSize = 10
     statusLabel.TextWrapped = true
     statusLabel.TextXAlignment = Enum.TextXAlignment.Center
     statusLabel.Parent = content
 
     local actions = Instance.new("Frame")
     actions.Name = "Actions"
-    actions.Size = UDim2.new(1, -4, 0, 32)
+    actions.Size = UDim2.new(1, -4, 0, 30)
     actions.BackgroundTransparency = 1
     actions.Parent = content
 
@@ -473,14 +471,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     stroke(publicProfileButton, Color3.fromRGB(43, 64, 84), 0.22)
 
     local function refreshCanvas()
-        task.defer(function()
-            content.CanvasSize = UDim2.new(
-                0,
-                0,
-                0,
-                layout.AbsoluteContentSize.Y + 16
-            )
-        end)
+        return
     end
 
     refreshCanvas()
