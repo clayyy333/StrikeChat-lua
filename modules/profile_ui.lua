@@ -25,7 +25,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local root = Instance.new("Frame")
     root.Name = "Root"
     root.Size = UDim2.new(0.78, 0, 0.72, 0)
-    root.Position = UDim2.new(0.5, 0, 0.49, 0)
+    root.Position = UDim2.new(0.5, 0, 0.52, 0)
     root.AnchorPoint = Vector2.new(0.5, 0.5)
     root.BackgroundColor3 = modalColor
     root.BorderSizePixel = 0
@@ -109,7 +109,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 0, 112)
+    banner.Size = UDim2.new(1, 0, 0, 128)
     banner.BackgroundColor3 = Color3.fromRGB(18, 18, 34)
     banner.BorderSizePixel = 0
     banner.ClipsDescendants = true
@@ -413,37 +413,37 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local actions = Instance.new("Frame")
     actions.Name = "Actions"
-    actions.Size = UDim2.new(1, 0, 0, 40)
-    actions.Position = UDim2.new(0, 0, 1, -62)
+    actions.Size = UDim2.new(1, 0, 0, 34)
+    actions.Position = UDim2.new(0, 0, 1, -56)
     actions.BackgroundTransparency = 1
     actions.Parent = rightPanel
 
     local saveButton = Instance.new("TextButton")
     saveButton.Name = "SaveButton"
-    saveButton.Size = UDim2.new(0.5, -12, 1, 0)
-    saveButton.Position = UDim2.new(0, 20, 0, 0)
+    saveButton.Size = UDim2.new(0.43, -6, 1, 0)
+    saveButton.Position = UDim2.new(0.05, 0, 0, 0)
     saveButton.BackgroundColor3 = Color3.fromRGB(66, 102, 76)
     saveButton.BackgroundTransparency = 0.06
     saveButton.BorderSizePixel = 0
     saveButton.Text = "Guardar Cambios"
     saveButton.TextColor3 = Theme.Colors.Text
     saveButton.Font = Theme.Font.Bold
-    saveButton.TextSize = 14
+    saveButton.TextSize = 12
     saveButton.Parent = actions
     round(saveButton, 8)
     stroke(saveButton, Color3.fromRGB(98, 142, 108), 0.36)
 
     local publicProfileButton = Instance.new("TextButton")
     publicProfileButton.Name = "PublicProfileButton"
-    publicProfileButton.Size = UDim2.new(0.5, -12, 1, 0)
-    publicProfileButton.Position = UDim2.new(0.5, 4, 0, 0)
+    publicProfileButton.Size = UDim2.new(0.43, -6, 1, 0)
+    publicProfileButton.Position = UDim2.new(0.52, 0, 0, 0)
     publicProfileButton.BackgroundColor3 = Color3.fromRGB(66, 68, 78)
     publicProfileButton.BackgroundTransparency = 0.06
     publicProfileButton.BorderSizePixel = 0
     publicProfileButton.Text = "Ver Perfil Publico"
     publicProfileButton.TextColor3 = Theme.Colors.Text
     publicProfileButton.Font = Theme.Font.Bold
-    publicProfileButton.TextSize = 14
+    publicProfileButton.TextSize = 12
     publicProfileButton.Parent = actions
     round(publicProfileButton, 8)
     stroke(publicProfileButton, Color3.fromRGB(96, 98, 110), 0.38)
