@@ -160,7 +160,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 0, 78)
+    banner.Size = UDim2.new(1, 0, 0, 118)
+    banner.Position = UDim2.new(0, 0, 0, -6)
     banner.BackgroundColor3 = Color3.fromRGB(18, 34, 50)
     banner.BorderSizePixel = 0
     banner.Parent = header
