@@ -361,7 +361,7 @@ function ShopUI.Create(parent, Theme)
         buyButton.Position = UDim2.new(0, 10, 1, -42)
         buyButton.BackgroundColor3 = color
         buyButton.BorderSizePixel = 0
-        buyButton.Text = "Precio próximamente"
+        buyButton.Text = "Comprar"
         buyButton.TextColor3 = Theme.Colors.Text
         buyButton.Font = Theme.Font.Bold
         buyButton.TextSize = 11

@@ -67,7 +67,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
         local value = tostring(assetId):gsub("^%s+", ""):gsub("%s+$", "")
 
-        if value == "" or value == "0" or value == "none" then
+        if value == "" or value == "0" or value == "none" or value == "strikechat_space" then
             return nil
         end
 

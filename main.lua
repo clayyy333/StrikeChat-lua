@@ -703,6 +703,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
     local inventoryUI = InventoryUI.Create(profileUI.Gui, Theme)
     local publicProfileUI = nil
     local saveLocked = false
+    local inventoryLocked = false
 
     local function closeProfile()
         if publicProfileUI then
@@ -717,8 +718,132 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
 
     profileUI.CloseButton.MouseButton1Click:Connect(closeProfile)
 
+    local function getInventoryErrorMessage(reason)
+        local messages = {
+            profile_not_found = "No se encontro tu perfil.",
+            item_not_owned = "Este item no esta en tu inventario.",
+            item_not_found = "Este item ya no esta disponible.",
+            item_not_usable = "Este item aun no se puede usar desde inventario."
+        }
+
+        return messages[reason] or "No se pudo usar el item."
+    end
+
+    local function getClanCreateErrorMessage(reason)
+        local messages = {
+            profile_not_found = "No se encontro tu perfil.",
+            user_already_in_clan = "Ya perteneces a un clan.",
+            clan_ticket_required = "Necesitas un ticket de clan en tu inventario.",
+            clan_name_too_short = "El nombre del clan debe tener minimo 3 caracteres.",
+            clan_name_too_long = "El nombre del clan es demasiado largo.",
+            clan_name_invalid_characters = "El nombre solo puede usar letras, numeros y espacios.",
+            clan_tag_too_short = "El tag debe tener minimo 2 caracteres.",
+            clan_tag_too_long = "El tag es demasiado largo.",
+            clan_tag_invalid_characters = "El tag solo puede usar letras y numeros.",
+            clan_color_not_allowed = "Ese color de clan no esta permitido.",
+            clan_tag_style_not_allowed = "Ese estilo de tag no esta permitido.",
+            clan_name_already_taken = "Ese nombre de clan ya esta en uso.",
+            clan_tag_already_taken = "Ese tag de clan ya esta en uso."
+        }
+
+        return messages[reason] or "No se pudo crear el clan."
+    end
+
+    local function refreshInventory()
+        local inventoryResult = Api.GetMyInventory(player)
+
+        if inventoryResult and inventoryResult.status == "ok" then
+            inventoryUI.Render(inventoryResult.items or {}, function(itemId)
+                if inventoryLocked then
+                    return
+                end
+
+                inventoryLocked = true
+                inventoryUI.ShowStatus("Aplicando item...", false)
+
+                local useResult = Api.UseInventoryItem(player, itemId)
+
+                if useResult and useResult.status == "ok" then
+                    if useResult.action == "create_clan" then
+                        inventoryUI.ShowClanForm()
+                        inventoryLocked = false
+                        return
+                    end
+
+                    if useResult.profile then
+                        profileUI.ApplyProfile(useResult.profile)
+                    end
+
+                    refreshInventory()
+                    inventoryUI.ShowStatus("Item aplicado correctamente.", false)
+                else
+                    inventoryUI.ShowStatus(
+                        getInventoryErrorMessage(useResult and useResult.reason),
+                        true
+                    )
+                end
+
+                inventoryLocked = false
+            end)
+            inventoryUI.ShowStatus("", false)
+        else
+            inventoryUI.RenderEmpty("No se pudo cargar tu inventario.")
+            inventoryUI.ShowStatus("No se pudo cargar tu inventario.", true)
+        end
+    end
+
     profileUI.InventoryButton.MouseButton1Click:Connect(function()
         inventoryUI.Open()
+        inventoryUI.ShowList()
+        inventoryUI.ShowStatus("Cargando inventario...", false)
+        refreshInventory()
+    end)
+
+    inventoryUI.CreateClanButton.MouseButton1Click:Connect(function()
+        if inventoryLocked then
+            return
+        end
+
+        local clanData = inventoryUI.GetClanFormData()
+
+        if not clanData.name or clanData.name:gsub("%s+", "") == "" then
+            inventoryUI.ShowStatus("Ingresa el nombre del clan.", true)
+            return
+        end
+
+        if not clanData.tag or clanData.tag:gsub("%s+", "") == "" then
+            inventoryUI.ShowStatus("Ingresa el tag del clan.", true)
+            return
+        end
+
+        inventoryLocked = true
+        inventoryUI.ShowStatus("Creando clan...", false)
+
+        local clanResult = Api.CreateClan(
+            player,
+            clanData.name,
+            clanData.tag,
+            clanData.color,
+            clanData.tag_style
+        )
+
+        if clanResult and clanResult.status == "created" then
+            if clanResult.profile then
+                profileUI.ApplyProfile(clanResult.profile)
+            end
+
+            inventoryUI.ShowList()
+            refreshInventory()
+            inventoryUI.ShowStatus("Clan creado correctamente.", false)
+            refreshOnlineUsers()
+        else
+            inventoryUI.ShowStatus(
+                getClanCreateErrorMessage(clanResult and clanResult.reason),
+                true
+            )
+        end
+
+        inventoryLocked = false
     end)
 
     profileUI.PublicProfileButton.MouseButton1Click:Connect(function()
@@ -793,6 +918,7 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
     local shopUI = ShopUI.Create(CoreGui, Theme)
     local rewardModal = RewardModal.Create(shopUI.Gui, Theme)
     local rewardPurchaseLocked = false
+    local shopPurchaseLocked = false
 
     local function applyLimitedStock(key, remaining)
         local label = shopUI.LimitedStockLabels[key]
@@ -835,6 +961,18 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
         return messages[reason] or "No se pudo canjear el codigo."
     end
 
+    local function getShopBuyErrorMessage(reason)
+        local messages = {
+            profile_not_found = "No se encontro tu perfil.",
+            item_not_found = "Este item no existe.",
+            item_not_purchasable = "Este item no se puede comprar.",
+            item_already_owned = "Ya tienes este item en tu inventario.",
+            insufficient_points = "No tienes puntos suficientes."
+        }
+
+        return messages[reason] or "No se pudo comprar el item."
+    end
+
     local stock = {
         robux_1000 = 2,
         robux_100 = 10
@@ -875,12 +1013,74 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
         rewardPurchaseLocked = false
     end
 
+    local function buyInventoryItem(itemId, button)
+        if shopPurchaseLocked then
+            return
+        end
+
+        shopPurchaseLocked = true
+
+        local originalText = button and button.Text
+
+        if button then
+            button.Text = "Comprando..."
+        end
+
+        local result = Api.BuyShopItem(player, itemId)
+
+        if result and result.status == "ok" and result.inventory_item then
+            if button then
+                button.Text = "COMPRADO"
+                button.AutoButtonColor = false
+                button.Active = false
+            end
+
+            if result.profile then
+                if leftPanel.PointsValue then
+                    leftPanel.PointsValue.Text = tostring(result.profile.personal_points or 0)
+                end
+            end
+        else
+            if button and result and result.reason == "item_already_owned" then
+                button.Text = "YA LO TIENES"
+                button.AutoButtonColor = false
+                button.Active = false
+            elseif button then
+                button.Text = originalText or "Comprar"
+            end
+
+            showStatus(getShopBuyErrorMessage(result and result.reason))
+        end
+
+        shopPurchaseLocked = false
+    end
+
     shopUI.LimitedButtons.Robux1000.MouseButton1Click:Connect(function()
         buyReward("robux_1000", "Robux1000")
     end)
 
     shopUI.LimitedButtons.Robux100.MouseButton1Click:Connect(function()
         buyReward("robux_100", "Robux100")
+    end)
+
+    shopUI.ItemButtons.ClanTicket.MouseButton1Click:Connect(function()
+        buyInventoryItem("clan_ticket", shopUI.ItemButtons.ClanTicket)
+    end)
+
+    shopUI.ItemButtons.NameColor.MouseButton1Click:Connect(function()
+        buyInventoryItem("username_color_purple", shopUI.ItemButtons.NameColor)
+    end)
+
+    shopUI.ItemButtons.CustomChat.MouseButton1Click:Connect(function()
+        buyInventoryItem("chat_style_bubble", shopUI.ItemButtons.CustomChat)
+    end)
+
+    shopUI.ItemButtons.ChatColor.MouseButton1Click:Connect(function()
+        buyInventoryItem("chat_color_pink", shopUI.ItemButtons.ChatColor)
+    end)
+
+    shopUI.ItemButtons.BackgroundDesign.MouseButton1Click:Connect(function()
+        buyInventoryItem("profile_banner_space", shopUI.ItemButtons.BackgroundDesign)
     end)
 
     rewardModal.RedeemButton.MouseButton1Click:Connect(function()

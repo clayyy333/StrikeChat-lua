@@ -185,6 +185,21 @@ function Api.GetClans()
     )
 end
 
+function Api.CreateClan(player, name, tag, color, tagStyle)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/clans/create" ..
+        "?owner_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            name = name,
+            tag = tag,
+            color = color,
+            tag_style = tagStyle
+        }
+    )
+end
+
 function Api.GetAdminNotices()
     return Api.Request(
         Api.BaseUrl .. "/admin-notices?platform=external",
@@ -230,6 +245,17 @@ function Api.GetMyInventory(player)
         "/inventory/my-items" ..
         "?roblox_user_id=" .. Api.Encode(player.UserId),
         "GET"
+    )
+end
+
+
+function Api.UseInventoryItem(player, itemId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/inventory/use-item" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId) ..
+        "&item_id=" .. Api.Encode(itemId),
+        "POST"
     )
 end
 

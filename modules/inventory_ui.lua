@@ -1,5 +1,31 @@
 local InventoryUI = {}
 
+local CATEGORY_LABELS = {
+    username_color = "Color de nombre",
+    chat_color = "Color de chat",
+    chat_style = "Estilo de chat",
+    profile_banner = "Fondo de perfil",
+    clan = "Clan"
+}
+
+local CATEGORY_COLORS = {
+    username_color = Color3.fromRGB(78, 158, 58),
+    chat_color = Color3.fromRGB(255, 110, 180),
+    chat_style = Color3.fromRGB(66, 135, 245),
+    profile_banner = Color3.fromRGB(255, 170, 70),
+    clan = Color3.fromRGB(168, 6, 235)
+}
+
+local COLOR_OPTIONS = { "purple", "blue", "pink", "green", "yellow" }
+local STYLE_OPTIONS = { "bracket", "plain" }
+
+local function getInventoryEntryData(entry)
+    local item = entry.item or entry
+    local inventoryItem = entry.inventory_item or entry
+
+    return item, inventoryItem
+end
+
 function InventoryUI.Create(parent, Theme)
     local overlay = Instance.new("Frame")
     overlay.Name = "InventoryOverlay"
@@ -12,7 +38,7 @@ function InventoryUI.Create(parent, Theme)
 
     local modal = Instance.new("Frame")
     modal.Name = "Modal"
-    modal.Size = UDim2.new(0.82, 0, 0, 230)
+    modal.Size = UDim2.new(0.86, 0, 0, 330)
     modal.Position = UDim2.new(0.5, 0, 0.5, 0)
     modal.AnchorPoint = Vector2.new(0.5, 0.5)
     modal.BackgroundColor3 = Theme.Colors.Panel
@@ -21,8 +47,8 @@ function InventoryUI.Create(parent, Theme)
     modal.Parent = overlay
 
     local sizeConstraint = Instance.new("UISizeConstraint")
-    sizeConstraint.MinSize = Vector2.new(300, 210)
-    sizeConstraint.MaxSize = Vector2.new(430, 260)
+    sizeConstraint.MinSize = Vector2.new(320, 270)
+    sizeConstraint.MaxSize = Vector2.new(520, 380)
     sizeConstraint.Parent = modal
 
     local modalCorner = Instance.new("UICorner")
@@ -31,7 +57,7 @@ function InventoryUI.Create(parent, Theme)
 
     local title = Instance.new("TextLabel")
     title.Name = "Title"
-    title.Size = UDim2.new(1, -58, 0, 34)
+    title.Size = UDim2.new(1, -64, 0, 30)
     title.Position = UDim2.new(0, 16, 0, 12)
     title.BackgroundTransparency = 1
     title.Text = "Mis Items"
@@ -41,6 +67,19 @@ function InventoryUI.Create(parent, Theme)
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.ZIndex = 82
     title.Parent = modal
+
+    local statusLabel = Instance.new("TextLabel")
+    statusLabel.Name = "StatusLabel"
+    statusLabel.Size = UDim2.new(1, -64, 0, 18)
+    statusLabel.Position = UDim2.new(0, 16, 0, 39)
+    statusLabel.BackgroundTransparency = 1
+    statusLabel.Text = ""
+    statusLabel.TextColor3 = Theme.Colors.TextMuted
+    statusLabel.Font = Theme.Font.Regular
+    statusLabel.TextSize = 11
+    statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+    statusLabel.ZIndex = 82
+    statusLabel.Parent = modal
 
     local closeButton = Instance.new("TextButton")
     closeButton.Name = "CloseButton"
@@ -59,41 +98,368 @@ function InventoryUI.Create(parent, Theme)
     closeCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
     closeCorner.Parent = closeButton
 
-    local body = Instance.new("Frame")
-    body.Name = "Body"
-    body.Size = UDim2.new(1, -32, 1, -72)
-    body.Position = UDim2.new(0, 16, 0, 56)
-    body.BackgroundColor3 = Theme.Colors.Background
-    body.BorderSizePixel = 0
-    body.ZIndex = 82
-    body.Parent = modal
+    local list = Instance.new("ScrollingFrame")
+    list.Name = "ItemsList"
+    list.Size = UDim2.new(1, -32, 1, -76)
+    list.Position = UDim2.new(0, 16, 0, 62)
+    list.BackgroundColor3 = Theme.Colors.Background
+    list.BorderSizePixel = 0
+    list.ScrollBarThickness = 4
+    list.ScrollBarImageColor3 = Theme.Colors.Accent
+    list.CanvasSize = UDim2.new(0, 0, 0, 0)
+    list.ZIndex = 82
+    list.Parent = modal
 
-    local bodyCorner = Instance.new("UICorner")
-    bodyCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
-    bodyCorner.Parent = body
+    local listCorner = Instance.new("UICorner")
+    listCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    listCorner.Parent = list
 
-    local message = Instance.new("TextLabel")
-    message.Name = "Message"
-    message.Size = UDim2.new(1, -28, 1, -24)
-    message.Position = UDim2.new(0, 14, 0, 12)
-    message.BackgroundTransparency = 1
-    message.Text = "La base del inventario esta separada del perfil. El listado real se implementara en el siguiente paso."
-    message.TextColor3 = Theme.Colors.TextMuted
-    message.Font = Theme.Font.Regular
-    message.TextSize = 12
-    message.TextWrapped = true
-    message.TextXAlignment = Enum.TextXAlignment.Center
-    message.TextYAlignment = Enum.TextYAlignment.Center
-    message.ZIndex = 83
-    message.Parent = body
+    local padding = Instance.new("UIPadding")
+    padding.PaddingTop = UDim.new(0, 10)
+    padding.PaddingBottom = UDim.new(0, 10)
+    padding.PaddingLeft = UDim.new(0, 10)
+    padding.PaddingRight = UDim.new(0, 10)
+    padding.Parent = list
+
+    local layout = Instance.new("UIListLayout")
+    layout.Padding = UDim.new(0, 8)
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
+    layout.Parent = list
+
+    local clanForm = Instance.new("Frame")
+    clanForm.Name = "ClanCreateForm"
+    clanForm.Size = UDim2.new(1, -32, 1, -76)
+    clanForm.Position = UDim2.new(0, 16, 0, 62)
+    clanForm.BackgroundColor3 = Theme.Colors.Background
+    clanForm.BorderSizePixel = 0
+    clanForm.Visible = false
+    clanForm.ZIndex = 86
+    clanForm.Parent = modal
+
+    local clanFormCorner = Instance.new("UICorner")
+    clanFormCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    clanFormCorner.Parent = clanForm
+
+    local formPadding = Instance.new("UIPadding")
+    formPadding.PaddingTop = UDim.new(0, 12)
+    formPadding.PaddingLeft = UDim.new(0, 12)
+    formPadding.PaddingRight = UDim.new(0, 12)
+    formPadding.Parent = clanForm
+
+    local formTitle = Instance.new("TextLabel")
+    formTitle.Name = "FormTitle"
+    formTitle.Size = UDim2.new(1, -8, 0, 24)
+    formTitle.BackgroundTransparency = 1
+    formTitle.Text = "Crear Clan"
+    formTitle.TextColor3 = Theme.Colors.Text
+    formTitle.Font = Theme.Font.Bold
+    formTitle.TextSize = 15
+    formTitle.TextXAlignment = Enum.TextXAlignment.Left
+    formTitle.ZIndex = 87
+    formTitle.Parent = clanForm
+
+    local function createInput(name, placeholder, y)
+        local input = Instance.new("TextBox")
+        input.Name = name
+        input.Size = UDim2.new(1, -8, 0, 34)
+        input.Position = UDim2.new(0, 0, 0, y)
+        input.BackgroundColor3 = Theme.Colors.PanelLight
+        input.BorderSizePixel = 0
+        input.PlaceholderText = placeholder
+        input.Text = ""
+        input.TextColor3 = Theme.Colors.Text
+        input.PlaceholderColor3 = Theme.Colors.TextMuted
+        input.Font = Theme.Font.Regular
+        input.TextSize = 12
+        input.TextXAlignment = Enum.TextXAlignment.Left
+        input.ClearTextOnFocus = false
+        input.ZIndex = 87
+        input.Parent = clanForm
+
+        local inputCorner = Instance.new("UICorner")
+        inputCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+        inputCorner.Parent = input
+
+        local inputPadding = Instance.new("UIPadding")
+        inputPadding.PaddingLeft = UDim.new(0, 10)
+        inputPadding.PaddingRight = UDim.new(0, 10)
+        inputPadding.Parent = input
+
+        return input
+    end
+
+    local clanNameInput = createInput("ClanNameInput", "Nombre del clan", 34)
+    local clanTagInput = createInput("ClanTagInput", "Tag corto, ejemplo SC", 76)
+
+    local selectedColorIndex = 1
+    local selectedStyleIndex = 1
+
+    local colorButton = Instance.new("TextButton")
+    colorButton.Name = "ColorButton"
+    colorButton.Size = UDim2.new(0.5, -8, 0, 32)
+    colorButton.Position = UDim2.new(0, 0, 0, 120)
+    colorButton.BackgroundColor3 = Color3.fromRGB(105, 65, 185)
+    colorButton.BorderSizePixel = 0
+    colorButton.Text = "Color: purple"
+    colorButton.TextColor3 = Theme.Colors.Text
+    colorButton.Font = Theme.Font.Bold
+    colorButton.TextSize = 11
+    colorButton.ZIndex = 87
+    colorButton.Parent = clanForm
+
+    local colorCorner = Instance.new("UICorner")
+    colorCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    colorCorner.Parent = colorButton
+
+    local styleButton = Instance.new("TextButton")
+    styleButton.Name = "StyleButton"
+    styleButton.Size = UDim2.new(0.5, -8, 0, 32)
+    styleButton.Position = UDim2.new(0.5, 8, 0, 120)
+    styleButton.BackgroundColor3 = Theme.Colors.PanelLight
+    styleButton.BorderSizePixel = 0
+    styleButton.Text = "Estilo: bracket"
+    styleButton.TextColor3 = Theme.Colors.Text
+    styleButton.Font = Theme.Font.Bold
+    styleButton.TextSize = 11
+    styleButton.ZIndex = 87
+    styleButton.Parent = clanForm
+
+    local styleCorner = Instance.new("UICorner")
+    styleCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    styleCorner.Parent = styleButton
+
+    local cancelClanButton = Instance.new("TextButton")
+    cancelClanButton.Name = "CancelClanButton"
+    cancelClanButton.Size = UDim2.new(0.5, -8, 0, 34)
+    cancelClanButton.Position = UDim2.new(0, 0, 1, -46)
+    cancelClanButton.BackgroundColor3 = Theme.Colors.PanelLight
+    cancelClanButton.BorderSizePixel = 0
+    cancelClanButton.Text = "Cancelar"
+    cancelClanButton.TextColor3 = Theme.Colors.TextMuted
+    cancelClanButton.Font = Theme.Font.Bold
+    cancelClanButton.TextSize = 12
+    cancelClanButton.ZIndex = 87
+    cancelClanButton.Parent = clanForm
+
+    local cancelCorner = Instance.new("UICorner")
+    cancelCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    cancelCorner.Parent = cancelClanButton
+
+    local createClanButton = Instance.new("TextButton")
+    createClanButton.Name = "CreateClanButton"
+    createClanButton.Size = UDim2.new(0.5, -8, 0, 34)
+    createClanButton.Position = UDim2.new(0.5, 8, 1, -46)
+    createClanButton.BackgroundColor3 = CATEGORY_COLORS.clan
+    createClanButton.BorderSizePixel = 0
+    createClanButton.Text = "Crear"
+    createClanButton.TextColor3 = Theme.Colors.Text
+    createClanButton.Font = Theme.Font.Bold
+    createClanButton.TextSize = 12
+    createClanButton.ZIndex = 87
+    createClanButton.Parent = clanForm
+
+    local createCorner = Instance.new("UICorner")
+    createCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    createCorner.Parent = createClanButton
+
+    local function clearList()
+        for _, child in ipairs(list:GetChildren()) do
+            if child:IsA("Frame") or child:IsA("TextLabel") then
+                child:Destroy()
+            end
+        end
+    end
+
+    local function setStatus(message, isError)
+        statusLabel.Text = message or ""
+        statusLabel.TextColor3 = isError and Color3.fromRGB(255, 120, 120) or Theme.Colors.TextMuted
+    end
+
+    local function showList()
+        clanForm.Visible = false
+        list.Visible = true
+    end
+
+    local function showClanForm()
+        list.Visible = false
+        clanForm.Visible = true
+        setStatus("Completa los datos para crear tu clan.", false)
+    end
+
+    local function renderEmpty(message)
+        clearList()
+
+        local empty = Instance.new("TextLabel")
+        empty.Name = "Empty"
+        empty.Size = UDim2.new(1, -10, 0, 118)
+        empty.BackgroundTransparency = 1
+        empty.Text = message or "Todavia no tienes items comprados."
+        empty.TextColor3 = Theme.Colors.TextMuted
+        empty.Font = Theme.Font.Regular
+        empty.TextSize = 12
+        empty.TextWrapped = true
+        empty.TextXAlignment = Enum.TextXAlignment.Center
+        empty.TextYAlignment = Enum.TextYAlignment.Center
+        empty.ZIndex = 83
+        empty.Parent = list
+    end
+
+    local function renderItem(entry, onUse)
+        local item = getInventoryEntryData(entry)
+        local accent = CATEGORY_COLORS[item.category] or Theme.Colors.Accent
+
+        local row = Instance.new("Frame")
+        row.Name = "InventoryItem"
+        row.Size = UDim2.new(1, -4, 0, 74)
+        row.BackgroundColor3 = Theme.Colors.PanelLight
+        row.BackgroundTransparency = 0.08
+        row.BorderSizePixel = 0
+        row.ZIndex = 83
+        row.Parent = list
+
+        local rowCorner = Instance.new("UICorner")
+        rowCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+        rowCorner.Parent = row
+
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = accent
+        stroke.Thickness = 1
+        stroke.Transparency = entry.is_equipped and 0.05 or 0.45
+        stroke.Parent = row
+
+        local name = Instance.new("TextLabel")
+        name.Name = "Name"
+        name.Size = UDim2.new(1, -126, 0, 22)
+        name.Position = UDim2.new(0, 12, 0, 9)
+        name.BackgroundTransparency = 1
+        name.Text = tostring(item.name or item.item_id or "Item")
+        name.TextColor3 = Theme.Colors.Text
+        name.Font = Theme.Font.Bold
+        name.TextSize = 13
+        name.TextXAlignment = Enum.TextXAlignment.Left
+        name.TextTruncate = Enum.TextTruncate.AtEnd
+        name.ZIndex = 84
+        name.Parent = row
+
+        local category = Instance.new("TextLabel")
+        category.Name = "Category"
+        category.Size = UDim2.new(1, -126, 0, 18)
+        category.Position = UDim2.new(0, 12, 0, 31)
+        category.BackgroundTransparency = 1
+        category.Text = CATEGORY_LABELS[item.category] or tostring(item.category or "Item")
+        category.TextColor3 = accent
+        category.Font = Theme.Font.Bold
+        category.TextSize = 11
+        category.TextXAlignment = Enum.TextXAlignment.Left
+        category.TextTruncate = Enum.TextTruncate.AtEnd
+        category.ZIndex = 84
+        category.Parent = row
+
+        local description = Instance.new("TextLabel")
+        description.Name = "Description"
+        description.Size = UDim2.new(1, -126, 0, 18)
+        description.Position = UDim2.new(0, 12, 0, 50)
+        description.BackgroundTransparency = 1
+        description.Text = tostring(item.description or "")
+        description.TextColor3 = Theme.Colors.TextMuted
+        description.Font = Theme.Font.Regular
+        description.TextSize = 10
+        description.TextXAlignment = Enum.TextXAlignment.Left
+        description.TextTruncate = Enum.TextTruncate.AtEnd
+        description.ZIndex = 84
+        description.Parent = row
+
+        local useButton = Instance.new("TextButton")
+        useButton.Name = "UseButton"
+        useButton.Size = UDim2.new(0, 88, 0, 32)
+        useButton.Position = UDim2.new(1, -100, 0.5, -16)
+        useButton.BackgroundColor3 = entry.is_equipped and Color3.fromRGB(60, 65, 75) or accent
+        useButton.BorderSizePixel = 0
+        useButton.Text = entry.is_equipped and "En uso" or "Usar"
+        useButton.TextColor3 = Theme.Colors.Text
+        useButton.Font = Theme.Font.Bold
+        useButton.TextSize = 11
+        useButton.AutoButtonColor = entry.can_use and not entry.is_equipped
+        useButton.Active = entry.can_use and not entry.is_equipped
+        useButton.ZIndex = 84
+        useButton.Parent = row
+
+        local useCorner = Instance.new("UICorner")
+        useCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+        useCorner.Parent = useButton
+
+        if not entry.can_use then
+            useButton.Text = "Guardado"
+            useButton.BackgroundColor3 = Color3.fromRGB(55, 58, 66)
+            useButton.TextColor3 = Theme.Colors.TextMuted
+        elseif item.item_id == "clan_ticket" and not entry.is_equipped then
+            useButton.Text = "Crear"
+        end
+
+        useButton.MouseButton1Click:Connect(function()
+            if entry.can_use and not entry.is_equipped and onUse then
+                onUse(item.item_id)
+            end
+        end)
+    end
+
+    local function render(items, onUse)
+        clearList()
+
+        if not items or #items == 0 then
+            renderEmpty("Todavia no tienes items comprados.")
+            return
+        end
+
+        for _, entry in ipairs(items) do
+            renderItem(entry, onUse)
+        end
+
+        task.wait()
+
+        list.CanvasSize = UDim2.new(
+            0,
+            0,
+            0,
+            layout.AbsoluteContentSize.Y + 22
+        )
+    end
 
     closeButton.MouseButton1Click:Connect(function()
         overlay.Visible = false
     end)
 
+    colorButton.MouseButton1Click:Connect(function()
+        selectedColorIndex = selectedColorIndex + 1
+
+        if selectedColorIndex > #COLOR_OPTIONS then
+            selectedColorIndex = 1
+        end
+
+        colorButton.Text = "Color: " .. COLOR_OPTIONS[selectedColorIndex]
+    end)
+
+    styleButton.MouseButton1Click:Connect(function()
+        selectedStyleIndex = selectedStyleIndex + 1
+
+        if selectedStyleIndex > #STYLE_OPTIONS then
+            selectedStyleIndex = 1
+        end
+
+        styleButton.Text = "Estilo: " .. STYLE_OPTIONS[selectedStyleIndex]
+    end)
+
+    cancelClanButton.MouseButton1Click:Connect(function()
+        showList()
+        setStatus("", false)
+    end)
+
+    renderEmpty("Abre el inventario para cargar tus items.")
+
     return {
         Overlay = overlay,
         CloseButton = closeButton,
+        StatusLabel = statusLabel,
 
         Open = function()
             overlay.Visible = true
@@ -101,6 +467,22 @@ function InventoryUI.Create(parent, Theme)
 
         Close = function()
             overlay.Visible = false
+        end,
+
+        Render = render,
+        RenderEmpty = renderEmpty,
+        ShowStatus = setStatus,
+        ShowClanForm = showClanForm,
+        ShowList = showList,
+        CreateClanButton = createClanButton,
+
+        GetClanFormData = function()
+            return {
+                name = clanNameInput.Text or "",
+                tag = clanTagInput.Text or "",
+                color = COLOR_OPTIONS[selectedColorIndex],
+                tag_style = STYLE_OPTIONS[selectedStyleIndex]
+            }
         end,
 
         Destroy = function()
