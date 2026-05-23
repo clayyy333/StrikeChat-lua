@@ -138,12 +138,12 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     createCardShadow(
         "PublicProfileCardShadowRight",
         UDim2.new(0, 34, 1, -64),
-        UDim2.new(1, -48, 0, 46),
+        UDim2.new(1, -43, 0, 46),
         0,
         NumberSequence.new({
-            NumberSequenceKeypoint.new(0.00, 0.82),
-            NumberSequenceKeypoint.new(0.38, 0.64),
-            NumberSequenceKeypoint.new(1.00, 0.56)
+            NumberSequenceKeypoint.new(0.00, 0.52),
+            NumberSequenceKeypoint.new(0.28, 0.68),
+            NumberSequenceKeypoint.new(1.00, 1.00)
         })
     )
 
@@ -189,6 +189,94 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     })
     bannerGradient.Rotation = 25
     bannerGradient.Parent = banner
+
+    local bannerStars = Instance.new("Frame")
+    bannerStars.Name = "BannerStars"
+    bannerStars.Size = UDim2.new(1, 0, 1, 0)
+    bannerStars.BackgroundTransparency = 1
+    bannerStars.BorderSizePixel = 0
+    bannerStars.ClipsDescendants = true
+    bannerStars.ZIndex = 93
+    bannerStars.Parent = banner
+
+    for _ = 1, 34 do
+        local point = Instance.new("Frame")
+        local size = math.random(1, 2)
+
+        point.Size = UDim2.new(0, size, 0, size)
+        point.Position = UDim2.new(
+            math.random(4, 96) / 100,
+            0,
+            math.random(8, 84) / 100,
+            0
+        )
+        point.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        point.BackgroundTransparency = math.random(38, 76) / 100
+        point.BorderSizePixel = 0
+        point.ZIndex = 93
+        point.Parent = bannerStars
+        round(point, 8)
+
+        task.spawn(function()
+            while point.Parent do
+                task.wait(math.random(8, 18) / 10)
+
+                point.BackgroundTransparency = math.clamp(
+                    point.BackgroundTransparency + (math.random(-8, 8) / 100),
+                    0.24,
+                    0.82
+                )
+            end
+        end)
+    end
+
+    local bannerComets = Instance.new("Frame")
+    bannerComets.Name = "BannerComets"
+    bannerComets.Size = UDim2.new(1, 0, 1, 0)
+    bannerComets.BackgroundTransparency = 1
+    bannerComets.BorderSizePixel = 0
+    bannerComets.ClipsDescendants = true
+    bannerComets.ZIndex = 93
+    bannerComets.Parent = banner
+
+    task.spawn(function()
+        while bannerComets.Parent do
+            task.wait(math.random(26, 48) / 10)
+
+            local comet = Instance.new("Frame")
+            local size = math.random(2, 3)
+
+            comet.Size = UDim2.new(0, size, 0, size)
+            comet.Position = UDim2.new(
+                math.random(14, 82) / 100,
+                0,
+                math.random(8, 54) / 100,
+                0
+            )
+            comet.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            comet.BackgroundTransparency = 0.18
+            comet.BorderSizePixel = 0
+            comet.ZIndex = 93
+            comet.Parent = bannerComets
+            round(comet, 8)
+
+            local direction = math.random(1, 2) == 1 and -1 or 1
+
+            task.spawn(function()
+                for _ = 1, 28 do
+                    if not comet.Parent then
+                        return
+                    end
+
+                    comet.Position = comet.Position + UDim2.new(0.004 * direction, 0, 0.005, 0)
+                    comet.BackgroundTransparency += 0.026
+                    task.wait(0.03)
+                end
+
+                comet:Destroy()
+            end)
+        end
+    end)
 
     local bannerImage = Instance.new("ImageLabel")
     bannerImage.Name = "BannerImage"
