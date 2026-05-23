@@ -164,6 +164,30 @@ function ProfileUI.Create(parent, Theme, profile, player)
         })
     )
 
+    createPanelShadow(
+        "PrivateProfilePanelShadowTopSoft",
+        UDim2.new(0.45, -44, 0, 18),
+        UDim2.new(0, 22, 0, -12),
+        90,
+        NumberSequence.new({
+            NumberSequenceKeypoint.new(0.00, 1.00),
+            NumberSequenceKeypoint.new(0.48, 0.86),
+            NumberSequenceKeypoint.new(1.00, 1.00)
+        })
+    )
+
+    createPanelShadow(
+        "PrivateProfilePanelShadowBottomSoft",
+        UDim2.new(0.45, -44, 0, 20),
+        UDim2.new(0, 22, 1, -8),
+        90,
+        NumberSequence.new({
+            NumberSequenceKeypoint.new(0.00, 1.00),
+            NumberSequenceKeypoint.new(0.52, 0.86),
+            NumberSequenceKeypoint.new(1.00, 1.00)
+        })
+    )
+
     local leftPanel = Instance.new("Frame")
     leftPanel.Name = "PrivateProfilePanel"
     leftPanel.Size = UDim2.new(0.45, -10, 1, 0)
