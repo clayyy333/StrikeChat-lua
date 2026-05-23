@@ -2,6 +2,7 @@ local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
+local TextService = game:GetService("TextService")
 
 local player = Players.LocalPlayer
 local running = true
@@ -265,7 +266,7 @@ local function renderMessages(messages)
 
             local nameLabel = Instance.new("TextLabel")
             nameLabel.Name = "Name"
-            nameLabel.Size = UDim2.new(0.65, 0, 0, 18)
+            nameLabel.Size = UDim2.new(0, 0, 0, 18)
             nameLabel.Position = UDim2.new(0, 44, 0, 0)
             nameLabel.BackgroundTransparency = 1
             nameLabel.Text = tostring(name)
@@ -280,7 +281,7 @@ local function renderMessages(messages)
 
             if msg.clan_tag then
                 if msg.clan_tag_style == "plain" then
-                    clanText = tostring(msg.clan_tag)
+                    clanText = "_" .. tostring(msg.clan_tag)
                 else
                     clanText = "[" .. tostring(msg.clan_tag) .. "]"
                 end
@@ -288,8 +289,8 @@ local function renderMessages(messages)
 
             local clanLabel = Instance.new("TextLabel")
             clanLabel.Name = "ClanTag"
-            clanLabel.Size = UDim2.new(0.3, 0, 0, 18)
-            clanLabel.Position = UDim2.new(0.65, 44, 0, 0)
+            clanLabel.Size = UDim2.new(0, 0, 0, 18)
+            clanLabel.Position = UDim2.new(0, 44, 0, 0)
             clanLabel.BackgroundTransparency = 1
             clanLabel.Text = clanText
             clanLabel.TextColor3 = getClanColor(msg.clan_color)
@@ -298,6 +299,34 @@ local function renderMessages(messages)
             clanLabel.TextXAlignment = Enum.TextXAlignment.Left
             clanLabel.TextTruncate = Enum.TextTruncate.AtEnd
             clanLabel.Parent = container
+
+            local headerWidth =
+                math.max(container.AbsoluteSize.X - 52, 180)
+            local spacing = 0
+            local tagWidth = 0
+
+            if clanText ~= "" then
+                tagWidth = TextService:GetTextSize(
+                    clanText,
+                    clanLabel.TextSize,
+                    clanLabel.Font,
+                    Vector2.new(headerWidth, 18)
+                ).X + 4
+            end
+
+            local maxNameWidth = math.max(headerWidth - tagWidth - spacing, 60)
+            local measuredNameWidth = TextService:GetTextSize(
+                tostring(name),
+                nameLabel.TextSize,
+                nameLabel.Font,
+                Vector2.new(maxNameWidth, 18)
+            ).X + 2
+            local nameWidth = math.min(measuredNameWidth, maxNameWidth)
+
+            nameLabel.Size = UDim2.new(0, nameWidth, 0, 18)
+            clanLabel.Visible = clanText ~= ""
+            clanLabel.Size = UDim2.new(0, math.max(tagWidth, 20), 0, 18)
+            clanLabel.Position = UDim2.new(0, 44 + nameWidth + spacing, 0, 0)
 
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
