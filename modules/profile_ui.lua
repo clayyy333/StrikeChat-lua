@@ -118,7 +118,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local selectedVisibility = original.game_status_visibility
 
-    local function createPanelShadow(name, size, position, rotation, transparency, radius)
+    local function createPanelShadow(name, size, position, rotation, transparency)
         local shadow = Instance.new("Frame")
         shadow.Name = name
         shadow.Size = size
@@ -126,9 +126,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
         shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         shadow.BackgroundTransparency = 0
         shadow.BorderSizePixel = 0
-        shadow.ClipsDescendants = true
         shadow.Parent = content
-        round(shadow, radius or 18)
 
         local shadowGradient = Instance.new("UIGradient")
         shadowGradient.Color = ColorSequence.new({
@@ -144,54 +142,26 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     createPanelShadow(
         "PrivateProfilePanelShadowLeft",
-        UDim2.new(0, 28, 1, -20),
-        UDim2.new(0, -24, 0, 10),
+        UDim2.new(0, 28, 1, -8),
+        UDim2.new(0, -24, 0, 4),
         0,
         NumberSequence.new({
             NumberSequenceKeypoint.new(0.00, 1.00),
             NumberSequenceKeypoint.new(0.72, 0.68),
             NumberSequenceKeypoint.new(1.00, 0.52)
-        }),
-        18
+        })
     )
 
     createPanelShadow(
         "PrivateProfilePanelShadowRight",
-        UDim2.new(0, 34, 1, -20),
-        UDim2.new(0.45, -16, 0, 10),
+        UDim2.new(0, 34, 1, -8),
+        UDim2.new(0.45, -16, 0, 4),
         0,
         NumberSequence.new({
             NumberSequenceKeypoint.new(0.00, 0.52),
             NumberSequenceKeypoint.new(0.28, 0.68),
             NumberSequenceKeypoint.new(1.00, 1.00)
-        }),
-        18
-    )
-
-    createPanelShadow(
-        "PrivateProfilePanelShadowTop",
-        UDim2.new(0.45, 28, 0, 24),
-        UDim2.new(0, -14, 0, -14),
-        90,
-        NumberSequence.new({
-            NumberSequenceKeypoint.new(0.00, 1.00),
-            NumberSequenceKeypoint.new(0.72, 0.70),
-            NumberSequenceKeypoint.new(1.00, 0.54)
-        }),
-        18
-    )
-
-    createPanelShadow(
-        "PrivateProfilePanelShadowBottom",
-        UDim2.new(0.45, 28, 0, 26),
-        UDim2.new(0, -14, 1, -12),
-        90,
-        NumberSequence.new({
-            NumberSequenceKeypoint.new(0.00, 0.54),
-            NumberSequenceKeypoint.new(0.28, 0.70),
-            NumberSequenceKeypoint.new(1.00, 1.00)
-        }),
-        18
+        })
     )
 
     local leftPanel = Instance.new("Frame")
