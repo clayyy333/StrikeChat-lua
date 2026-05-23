@@ -348,11 +348,32 @@ local function renderMessages(messages)
                 cloudBubble.ImageTransparency = 0
                 cloudBubble.ZIndex = 1
                 cloudBubble.Parent = container
+
+                local cloudLeftBoost = Instance.new("Frame")
+                cloudLeftBoost.Name = "CuteCloudLeftBoost"
+                cloudLeftBoost.Size = UDim2.new(0, 96, 0, 132)
+                cloudLeftBoost.Position = UDim2.new(0, -12, 0, -37)
+                cloudLeftBoost.BackgroundTransparency = 1
+                cloudLeftBoost.ClipsDescendants = true
+                cloudLeftBoost.ZIndex = 1
+                cloudLeftBoost.Parent = container
+
+                local cloudLeftImage = Instance.new("ImageLabel")
+                cloudLeftImage.Name = "Image"
+                cloudLeftImage.Size = UDim2.new(0, 140, 0, 132)
+                cloudLeftImage.Position = UDim2.new(0, 0, 0, 0)
+                cloudLeftImage.BackgroundTransparency = 1
+                cloudLeftImage.Image = CUTE_CLOUD_IMAGE
+                cloudLeftImage.ScaleType = Enum.ScaleType.Slice
+                cloudLeftImage.SliceCenter = CUTE_CLOUD_SLICE_CENTER
+                cloudLeftImage.ImageTransparency = 0
+                cloudLeftImage.ZIndex = 1
+                cloudLeftImage.Parent = cloudLeftBoost
             end
 
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
-            messageText.Size = UDim2.new(1, -50, 0, 34)
+            messageText.Size = hasCuteCloudStyle and UDim2.new(1, -99, 0, 34) or UDim2.new(1, -50, 0, 34)
             messageText.Position = UDim2.new(0, 44, 0, 20)
             messageText.BackgroundTransparency = 1
             messageText.Text = tostring(msg.message)
