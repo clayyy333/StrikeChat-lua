@@ -63,6 +63,28 @@ function ProfileUI.Create(parent, Theme, profile, player)
         return pad
     end
 
+    local function getAssetImage(assetId)
+        if assetId == nil then
+            return nil
+        end
+
+        local value = tostring(assetId):gsub("^%s+", ""):gsub("%s+$", "")
+
+        if value == "" or value == "0" or value == "none" then
+            return nil
+        end
+
+        if value:match("^rbxassetid://") or value:match("^rbxasset://") or value:match("^http") then
+            return value
+        end
+
+        if value:match("^%d+$") then
+            return "rbxassetid://" .. value
+        end
+
+        return value
+    end
+
     round(root, Theme.Radius.Main)
     stroke(root, Color3.fromRGB(96, 98, 110), 0.48)
 
@@ -134,6 +156,30 @@ function ProfileUI.Create(parent, Theme, profile, player)
     })
     bannerGradient.Rotation = 24
     bannerGradient.Parent = banner
+
+    local bannerImage = Instance.new("ImageLabel")
+    bannerImage.Name = "BannerImage"
+    bannerImage.Size = UDim2.new(1, 0, 1, 0)
+    bannerImage.BackgroundTransparency = 1
+    bannerImage.BorderSizePixel = 0
+    bannerImage.ScaleType = Enum.ScaleType.Crop
+    bannerImage.Visible = false
+    bannerImage.Parent = banner
+    round(bannerImage, 14)
+
+    local function applyBannerImage(bannerId)
+        local image = getAssetImage(bannerId)
+
+        if image then
+            bannerImage.Image = image
+            bannerImage.Visible = true
+        else
+            bannerImage.Image = ""
+            bannerImage.Visible = false
+        end
+    end
+
+    applyBannerImage(profile.profile_banner_id)
 
     local avatarFrame = Instance.new("Frame")
     avatarFrame.Name = "AvatarFrame"
@@ -532,6 +578,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
             selectedVisibility = original.game_status_visibility
             pointsValue.Text = tostring(profile.personal_points or 0)
             clanValue.Text = tostring(profile.clan_name or "Sin clan")
+            applyBannerImage(profile.profile_banner_id)
             updateVisibilityButtons()
             refreshCanvas()
         end,

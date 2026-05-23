@@ -60,6 +60,28 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
         return pad
     end
 
+    local function getAssetImage(assetId)
+        if assetId == nil then
+            return nil
+        end
+
+        local value = tostring(assetId):gsub("^%s+", ""):gsub("%s+$", "")
+
+        if value == "" or value == "0" or value == "none" then
+            return nil
+        end
+
+        if value:match("^rbxassetid://") or value:match("^rbxasset://") or value:match("^http") then
+            return value
+        end
+
+        if value:match("^%d+$") then
+            return "rbxassetid://" .. value
+        end
+
+        return value
+    end
+
     round(modal, Theme.Radius.Main)
     stroke(modal, Color3.fromRGB(96, 98, 110), 0.48)
 
@@ -118,6 +140,25 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     })
     bannerGradient.Rotation = 20
     bannerGradient.Parent = banner
+
+    local bannerImage = Instance.new("ImageLabel")
+    bannerImage.Name = "BannerImage"
+    bannerImage.Size = UDim2.new(1, 0, 1, 0)
+    bannerImage.BackgroundTransparency = 1
+    bannerImage.BorderSizePixel = 0
+    bannerImage.ScaleType = Enum.ScaleType.Crop
+    bannerImage.ZIndex = 94
+    bannerImage.Parent = banner
+    round(bannerImage, 14)
+
+    local bannerAsset = getAssetImage(profile.profile_banner_id)
+
+    if bannerAsset then
+        bannerImage.Image = bannerAsset
+        bannerImage.Visible = true
+    else
+        bannerImage.Visible = false
+    end
 
     local activityText = tostring(profile.activity_text or "")
 
