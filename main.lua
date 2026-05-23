@@ -339,8 +339,8 @@ local function renderMessages(messages)
             if hasCuteCloudStyle then
                 local cloudBubble = Instance.new("ImageLabel")
                 cloudBubble.Name = "CuteCloudBubble"
-                cloudBubble.Size = UDim2.new(1, 0, 0, 76)
-                cloudBubble.Position = UDim2.new(0, 0, 0, -9)
+                cloudBubble.Size = UDim2.new(1, 0, 0, 92)
+                cloudBubble.Position = UDim2.new(0, 0, 0, -17)
                 cloudBubble.BackgroundTransparency = 1
                 cloudBubble.Image = CUTE_CLOUD_IMAGE
                 cloudBubble.ScaleType = Enum.ScaleType.Slice
