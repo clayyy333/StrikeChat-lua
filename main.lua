@@ -148,6 +148,9 @@ local setRoom
 local selectedPrivateRoom = nil
 local confirmAction = nil
 
+local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
+local CUTE_CLOUD_SLICE_CENTER = Rect.new(64, 48, 360, 150)
+
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
     red = Color3.fromRGB(235, 74, 74),
@@ -328,10 +331,30 @@ local function renderMessages(messages)
             clanLabel.Size = UDim2.new(0, math.max(tagWidth, 20), 0, 18)
             clanLabel.Position = UDim2.new(0, 44 + nameWidth + spacing, 0, 0)
 
+            local hasCuteCloudStyle = msg.chat_style == "cloud"
+
+            if hasCuteCloudStyle then
+                local cloudBubble = Instance.new("ImageLabel")
+                cloudBubble.Name = "CuteCloudBubble"
+                cloudBubble.Size = UDim2.new(1, -52, 0, 38)
+                cloudBubble.Position = UDim2.new(0, 40, 0, 18)
+                cloudBubble.BackgroundTransparency = 1
+                cloudBubble.Image = CUTE_CLOUD_IMAGE
+                cloudBubble.ScaleType = Enum.ScaleType.Slice
+                cloudBubble.SliceCenter = CUTE_CLOUD_SLICE_CENTER
+                cloudBubble.ImageTransparency = 0
+                cloudBubble.ZIndex = 1
+                cloudBubble.Parent = container
+            end
+
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
-            messageText.Size = UDim2.new(1, -50, 0, 34)
-            messageText.Position = UDim2.new(0, 44, 0, 20)
+            messageText.Size = hasCuteCloudStyle
+                and UDim2.new(1, -96, 0, 28)
+                or UDim2.new(1, -50, 0, 34)
+            messageText.Position = hasCuteCloudStyle
+                and UDim2.new(0, 54, 0, 25)
+                or UDim2.new(0, 44, 0, 20)
             messageText.BackgroundTransparency = 1
             messageText.Text = tostring(msg.message)
             messageText.TextColor3 = Theme.Colors.Text
@@ -340,6 +363,7 @@ local function renderMessages(messages)
             messageText.TextXAlignment = Enum.TextXAlignment.Left
             messageText.TextYAlignment = Enum.TextYAlignment.Top
             messageText.TextWrapped = true
+            messageText.ZIndex = hasCuteCloudStyle and 2 or 1
             messageText.Parent = container
         end
     end
@@ -822,6 +846,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
                         profileUI.ApplyProfile(useResult.profile)
                     end
 
+                    inventoryUI.ShowList()
                     refreshInventory()
                     inventoryUI.ShowStatus("Item aplicado correctamente.", false)
                 else
@@ -1120,7 +1145,7 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
     end)
 
     shopUI.ItemButtons.CustomChat.MouseButton1Click:Connect(function()
-        buyInventoryItem("chat_style_bubble", shopUI.ItemButtons.CustomChat)
+        buyInventoryItem("chat_style_cloud", shopUI.ItemButtons.CustomChat)
     end)
 
     shopUI.ItemButtons.ChatColor.MouseButton1Click:Connect(function()

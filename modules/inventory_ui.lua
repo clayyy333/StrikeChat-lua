@@ -29,6 +29,15 @@ local STYLE_OPTIONS = {
     { value = "plain", label = "Tag Normal = TAG" }
 }
 
+local CHAT_STYLE_NAMES = {
+    bubble = "Burbuja",
+    cloud = "Cute Cloud",
+    dog = "Perrito",
+    cat = "Gatito",
+    rainbow = "Arcoiris",
+    hacker = "Hacker"
+}
+
 local function getInventoryEntryData(entry)
     local item = entry.item or entry
     local inventoryItem = entry.inventory_item or entry
@@ -280,6 +289,103 @@ function InventoryUI.Create(parent, Theme)
     createCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
     createCorner.Parent = createClanButton
 
+    local chatStyleForm = Instance.new("Frame")
+    chatStyleForm.Name = "ChatStyleForm"
+    chatStyleForm.Size = UDim2.new(1, -32, 1, -76)
+    chatStyleForm.Position = UDim2.new(0, 16, 0, 62)
+    chatStyleForm.BackgroundColor3 = Theme.Colors.Background
+    chatStyleForm.BorderSizePixel = 0
+    chatStyleForm.Visible = false
+    chatStyleForm.ZIndex = 86
+    chatStyleForm.Parent = modal
+
+    local chatStyleCorner = Instance.new("UICorner")
+    chatStyleCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    chatStyleCorner.Parent = chatStyleForm
+
+    local chatStylePadding = Instance.new("UIPadding")
+    chatStylePadding.PaddingTop = UDim.new(0, 12)
+    chatStylePadding.PaddingLeft = UDim.new(0, 12)
+    chatStylePadding.PaddingRight = UDim.new(0, 12)
+    chatStylePadding.Parent = chatStyleForm
+
+    local chatStyleTitle = Instance.new("TextLabel")
+    chatStyleTitle.Name = "ChatStyleTitle"
+    chatStyleTitle.Size = UDim2.new(1, -8, 0, 24)
+    chatStyleTitle.BackgroundTransparency = 1
+    chatStyleTitle.Text = "Chat Personalizado"
+    chatStyleTitle.TextColor3 = Theme.Colors.Text
+    chatStyleTitle.Font = Theme.Font.Bold
+    chatStyleTitle.TextSize = 15
+    chatStyleTitle.TextXAlignment = Enum.TextXAlignment.Left
+    chatStyleTitle.ZIndex = 87
+    chatStyleTitle.Parent = chatStyleForm
+
+    local chatStyleHint = Instance.new("TextLabel")
+    chatStyleHint.Name = "ChatStyleHint"
+    chatStyleHint.Size = UDim2.new(1, -8, 0, 34)
+    chatStyleHint.Position = UDim2.new(0, 0, 0, 26)
+    chatStyleHint.BackgroundTransparency = 1
+    chatStyleHint.Text = "Elige el estilo que quieres usar en tus mensajes."
+    chatStyleHint.TextColor3 = Theme.Colors.TextMuted
+    chatStyleHint.Font = Theme.Font.Regular
+    chatStyleHint.TextSize = 12
+    chatStyleHint.TextWrapped = true
+    chatStyleHint.TextXAlignment = Enum.TextXAlignment.Left
+    chatStyleHint.ZIndex = 87
+    chatStyleHint.Parent = chatStyleForm
+
+    local chatStyleOptions = Instance.new("Frame")
+    chatStyleOptions.Name = "ChatStyleOptions"
+    chatStyleOptions.Size = UDim2.new(1, -8, 1, -126)
+    chatStyleOptions.Position = UDim2.new(0, 0, 0, 68)
+    chatStyleOptions.BackgroundTransparency = 1
+    chatStyleOptions.ZIndex = 87
+    chatStyleOptions.Parent = chatStyleForm
+
+    local chatStyleOptionsLayout = Instance.new("UIListLayout")
+    chatStyleOptionsLayout.Padding = UDim.new(0, 8)
+    chatStyleOptionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    chatStyleOptionsLayout.Parent = chatStyleOptions
+
+    local cancelChatStyleButton = Instance.new("TextButton")
+    cancelChatStyleButton.Name = "CancelChatStyleButton"
+    cancelChatStyleButton.Size = UDim2.new(0.5, -8, 0, 34)
+    cancelChatStyleButton.Position = UDim2.new(0, 0, 1, -46)
+    cancelChatStyleButton.BackgroundColor3 = Theme.Colors.PanelLight
+    cancelChatStyleButton.BorderSizePixel = 0
+    cancelChatStyleButton.Text = "Cancelar"
+    cancelChatStyleButton.TextColor3 = Theme.Colors.TextMuted
+    cancelChatStyleButton.Font = Theme.Font.Bold
+    cancelChatStyleButton.TextSize = 12
+    cancelChatStyleButton.ZIndex = 87
+    cancelChatStyleButton.Parent = chatStyleForm
+
+    local cancelChatStyleCorner = Instance.new("UICorner")
+    cancelChatStyleCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    cancelChatStyleCorner.Parent = cancelChatStyleButton
+
+    local applyChatStyleButton = Instance.new("TextButton")
+    applyChatStyleButton.Name = "ApplyChatStyleButton"
+    applyChatStyleButton.Size = UDim2.new(0.5, -8, 0, 34)
+    applyChatStyleButton.Position = UDim2.new(0.5, 8, 1, -46)
+    applyChatStyleButton.BackgroundColor3 = CATEGORY_COLORS.chat_style
+    applyChatStyleButton.BorderSizePixel = 0
+    applyChatStyleButton.Text = "Usar"
+    applyChatStyleButton.TextColor3 = Theme.Colors.Text
+    applyChatStyleButton.Font = Theme.Font.Bold
+    applyChatStyleButton.TextSize = 12
+    applyChatStyleButton.ZIndex = 87
+    applyChatStyleButton.Parent = chatStyleForm
+
+    local applyChatStyleCorner = Instance.new("UICorner")
+    applyChatStyleCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    applyChatStyleCorner.Parent = applyChatStyleButton
+
+    local selectedChatStyleItemId = nil
+    local selectedChatStyleRows = {}
+    local chatStyleUseCallback = nil
+
     local function clearList()
         for _, child in ipairs(list:GetChildren()) do
             if child:IsA("Frame") or child:IsA("TextLabel") then
@@ -295,13 +401,95 @@ function InventoryUI.Create(parent, Theme)
 
     local function showList()
         clanForm.Visible = false
+        chatStyleForm.Visible = false
         list.Visible = true
     end
 
     local function showClanForm()
         list.Visible = false
+        chatStyleForm.Visible = false
         clanForm.Visible = true
         setStatus("Completa los datos para crear tu clan.", false)
+    end
+
+    local function clearChatStyleOptions()
+        for _, child in ipairs(chatStyleOptions:GetChildren()) do
+            if child:IsA("TextButton") or child:IsA("TextLabel") then
+                child:Destroy()
+            end
+        end
+
+        selectedChatStyleRows = {}
+    end
+
+    local function setSelectedChatStyle(itemId)
+        selectedChatStyleItemId = itemId
+
+        for rowItemId, row in pairs(selectedChatStyleRows) do
+            row.BackgroundColor3 = rowItemId == itemId and CATEGORY_COLORS.chat_style or Theme.Colors.PanelLight
+        end
+    end
+
+    local function showChatStyleForm(items, onUse)
+        list.Visible = false
+        clanForm.Visible = false
+        chatStyleForm.Visible = true
+        chatStyleUseCallback = onUse
+        selectedChatStyleItemId = nil
+
+        clearChatStyleOptions()
+
+        local firstAvailableItemId = nil
+
+        for _, entry in ipairs(items or {}) do
+            local item = getInventoryEntryData(entry)
+
+            if item.category == "chat_style" then
+                local styleValue = tostring(item.value or item.item_id or "")
+                local label = CHAT_STYLE_NAMES[styleValue] or tostring(item.name or "Estilo")
+
+                local option = Instance.new("TextButton")
+                option.Name = "ChatStyleOption"
+                option.Size = UDim2.new(1, 0, 0, 38)
+                option.BackgroundColor3 = Theme.Colors.PanelLight
+                option.BorderSizePixel = 0
+                option.Text = label .. (entry.is_equipped and "  En uso" or "")
+                option.TextColor3 = Theme.Colors.Text
+                option.Font = Theme.Font.Bold
+                option.TextSize = 12
+                option.TextXAlignment = Enum.TextXAlignment.Left
+                option.ZIndex = 88
+                option.Parent = chatStyleOptions
+
+                local optionCorner = Instance.new("UICorner")
+                optionCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+                optionCorner.Parent = option
+
+                local optionPadding = Instance.new("UIPadding")
+                optionPadding.PaddingLeft = UDim.new(0, 12)
+                optionPadding.PaddingRight = UDim.new(0, 12)
+                optionPadding.Parent = option
+
+                selectedChatStyleRows[item.item_id] = option
+
+                if not firstAvailableItemId and not entry.is_equipped then
+                    firstAvailableItemId = item.item_id
+                end
+
+                option.MouseButton1Click:Connect(function()
+                    if not entry.is_equipped then
+                        setSelectedChatStyle(item.item_id)
+                    end
+                end)
+            end
+        end
+
+        if firstAvailableItemId then
+            setSelectedChatStyle(firstAvailableItemId)
+            setStatus("Selecciona el estilo de chat que quieres usar.", false)
+        else
+            setStatus("No tienes estilos de chat disponibles para aplicar.", true)
+        end
     end
 
     local function renderEmpty(message)
@@ -322,7 +510,7 @@ function InventoryUI.Create(parent, Theme)
         empty.Parent = list
     end
 
-    local function renderItem(entry, onUse)
+    local function renderItem(entry, onUse, items)
         local item = getInventoryEntryData(entry)
         local accent = CATEGORY_COLORS[item.category] or Theme.Colors.Accent
 
@@ -412,11 +600,17 @@ function InventoryUI.Create(parent, Theme)
             useButton.TextColor3 = Theme.Colors.TextMuted
         elseif item.item_id == "clan_ticket" and not entry.is_equipped then
             useButton.Text = "Crear"
+        elseif item.category == "chat_style" and not entry.is_equipped then
+            useButton.Text = "Elegir"
         end
 
         useButton.MouseButton1Click:Connect(function()
             if entry.can_use and not entry.is_equipped and onUse then
-                onUse(item.item_id)
+                if item.category == "chat_style" then
+                    showChatStyleForm(items, onUse)
+                else
+                    onUse(item.item_id)
+                end
             end
         end)
     end
@@ -430,7 +624,7 @@ function InventoryUI.Create(parent, Theme)
         end
 
         for _, entry in ipairs(items) do
-            renderItem(entry, onUse)
+            renderItem(entry, onUse, items)
         end
 
         task.wait()
@@ -475,6 +669,19 @@ function InventoryUI.Create(parent, Theme)
         setStatus("", false)
     end)
 
+    cancelChatStyleButton.MouseButton1Click:Connect(function()
+        showList()
+        setStatus("", false)
+    end)
+
+    applyChatStyleButton.MouseButton1Click:Connect(function()
+        if selectedChatStyleItemId and chatStyleUseCallback then
+            chatStyleUseCallback(selectedChatStyleItemId)
+        else
+            setStatus("Selecciona un estilo de chat.", true)
+        end
+    end)
+
     renderEmpty("Abre el inventario para cargar tus items.")
 
     return {
@@ -494,6 +701,7 @@ function InventoryUI.Create(parent, Theme)
         RenderEmpty = renderEmpty,
         ShowStatus = setStatus,
         ShowClanForm = showClanForm,
+        ShowChatStyleForm = showChatStyleForm,
         ShowList = showList,
         CreateClanButton = createClanButton,
 
