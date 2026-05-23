@@ -5,7 +5,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     profile = profile or {}
 
-    local modalColor = Color3.fromRGB(50, 51, 57)
+    local modalColor = Color3.fromRGB(48, 49, 55)
     local panelColor = Color3.fromRGB(57, 58, 65)
     local inputColor = Color3.fromRGB(48, 49, 55)
     local borderColor = Color3.fromRGB(74, 76, 86)
@@ -289,8 +289,8 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local actions = Instance.new("Frame")
     actions.Name = "Actions"
-    actions.Size = UDim2.new(0, 150, 0, 32)
-    actions.Position = UDim2.new(0.5, -75, 1, -42)
+    actions.Size = UDim2.new(0, 176, 0, 32)
+    actions.Position = UDim2.new(0.5, -88, 1, -36)
     actions.BackgroundTransparency = 1
     actions.ZIndex = 95
     actions.Parent = card
@@ -312,15 +312,15 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local addButton = Instance.new("TextButton")
     addButton.Name = "AddButton"
-    addButton.Size = UDim2.new(0, 34, 0, 30)
+    addButton.Size = UDim2.new(0, 74, 0, 30)
     addButton.Position = UDim2.new(0, 102, 0, 0)
     addButton.BackgroundColor3 = Color3.fromRGB(66, 68, 78)
     addButton.BackgroundTransparency = 0.04
     addButton.BorderSizePixel = 0
-    addButton.Text = "+"
+    addButton.Text = "Agregar"
     addButton.TextColor3 = Theme.Colors.Text
     addButton.Font = Theme.Font.Bold
-    addButton.TextSize = 18
+    addButton.TextSize = 12
     addButton.ZIndex = 96
     addButton.Parent = actions
     round(addButton, 8)
