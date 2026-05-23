@@ -339,7 +339,7 @@ local function renderMessages(messages)
             if hasCuteCloudStyle then
                 local cloudBubble = Instance.new("ImageLabel")
                 cloudBubble.Name = "CuteCloudBubble"
-                cloudBubble.Size = UDim2.new(1, -6, 0, 58)
+                cloudBubble.Size = UDim2.new(1, 0, 0, 58)
                 cloudBubble.Position = UDim2.new(0, 0, 0, 0)
                 cloudBubble.BackgroundTransparency = 1
                 cloudBubble.Image = CUTE_CLOUD_IMAGE
@@ -352,12 +352,8 @@ local function renderMessages(messages)
 
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
-            messageText.Size = hasCuteCloudStyle
-                and UDim2.new(1, -118, 0, 24)
-                or UDim2.new(1, -50, 0, 34)
-            messageText.Position = hasCuteCloudStyle
-                and UDim2.new(0, 58, 0, 29)
-                or UDim2.new(0, 44, 0, 20)
+            messageText.Size = UDim2.new(1, -50, 0, 34)
+            messageText.Position = UDim2.new(0, 44, 0, 20)
             messageText.BackgroundTransparency = 1
             messageText.Text = tostring(msg.message)
             messageText.TextColor3 = Theme.Colors.Text
