@@ -107,13 +107,22 @@ function ProfileUI.Create(parent, Theme, profile, player)
     round(leftPanel, 14)
     stroke(leftPanel, Color3.fromRGB(82, 84, 94), 0.52)
 
+    local bannerClip = Instance.new("Frame")
+    bannerClip.Name = "BannerClip"
+    bannerClip.Size = UDim2.new(1, 0, 0, 118)
+    bannerClip.BackgroundTransparency = 1
+    bannerClip.BorderSizePixel = 0
+    bannerClip.ClipsDescendants = true
+    bannerClip.Parent = leftPanel
+
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 0, 118)
+    banner.Size = UDim2.new(1, 0, 0, 132)
     banner.BackgroundColor3 = Color3.fromRGB(18, 18, 34)
     banner.BorderSizePixel = 0
     banner.ClipsDescendants = true
-    banner.Parent = leftPanel
+    banner.Parent = bannerClip
+    round(banner, 14)
 
     local bannerGradient = Instance.new("UIGradient")
     bannerGradient.Color = ColorSequence.new({

@@ -90,14 +90,24 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     round(card, 14)
     stroke(card, Color3.fromRGB(82, 84, 94), 0.52)
 
+    local bannerClip = Instance.new("Frame")
+    bannerClip.Name = "BannerClip"
+    bannerClip.Size = UDim2.new(1, 0, 0, 118)
+    bannerClip.BackgroundTransparency = 1
+    bannerClip.BorderSizePixel = 0
+    bannerClip.ClipsDescendants = true
+    bannerClip.ZIndex = 93
+    bannerClip.Parent = card
+
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 0, 118)
+    banner.Size = UDim2.new(1, 0, 0, 132)
     banner.BackgroundColor3 = Color3.fromRGB(14, 15, 22)
     banner.BorderSizePixel = 0
     banner.ClipsDescendants = true
     banner.ZIndex = 93
-    banner.Parent = card
+    banner.Parent = bannerClip
+    round(banner, 14)
 
     local bannerGradient = Instance.new("UIGradient")
     bannerGradient.Color = ColorSequence.new({
@@ -124,7 +134,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
         local activityLabel = Instance.new("TextLabel")
         activityLabel.Name = "ActivityText"
         activityLabel.Size = UDim2.new(1, -150, 0, 18)
-        activityLabel.Position = UDim2.new(0, 124, 1, -34)
+        activityLabel.Position = UDim2.new(0, 124, 0, 84)
         activityLabel.BackgroundTransparency = 1
         activityLabel.Text = activityText
         activityLabel.TextColor3 = Theme.Colors.Text
