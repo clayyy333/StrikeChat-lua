@@ -119,15 +119,6 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     bannerGradient.Rotation = 20
     bannerGradient.Parent = banner
 
-    local bannerShade = Instance.new("Frame")
-    bannerShade.Name = "BannerShade"
-    bannerShade.Size = UDim2.new(1, 0, 1, 0)
-    bannerShade.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    bannerShade.BackgroundTransparency = 0.68
-    bannerShade.BorderSizePixel = 0
-    bannerShade.ZIndex = 94
-    bannerShade.Parent = banner
-
     local activityText = tostring(profile.activity_text or "")
 
     if activityText ~= "" then
