@@ -166,8 +166,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     createPanelShadow(
         "PrivateProfilePanelShadowTop",
-        UDim2.new(0.45, 18, 0, 26),
-        UDim2.new(0, -9, 0, -22),
+        UDim2.new(0.45, 48, 0, 30),
+        UDim2.new(0, -24, 0, -24),
         90,
         NumberSequence.new({
             NumberSequenceKeypoint.new(0.00, 1.00),
@@ -178,8 +178,8 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     createPanelShadow(
         "PrivateProfilePanelShadowBottom",
-        UDim2.new(0.45, 18, 0, 30),
-        UDim2.new(0, -9, 1, -8),
+        UDim2.new(0.45, 48, 0, 34),
+        UDim2.new(0, -24, 1, -10),
         90,
         NumberSequence.new({
             NumberSequenceKeypoint.new(0.00, 0.54),
