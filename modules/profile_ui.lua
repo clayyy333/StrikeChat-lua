@@ -118,31 +118,31 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local selectedVisibility = original.game_status_visibility
 
-    local leftPanelGlow = Instance.new("Frame")
-    leftPanelGlow.Name = "PrivateProfilePanelGlow"
-    leftPanelGlow.Size = UDim2.new(0.45, -2, 1, 8)
-    leftPanelGlow.Position = UDim2.new(0, -4, 0, -4)
-    leftPanelGlow.BackgroundColor3 = Color3.fromRGB(150, 22, 190)
-    leftPanelGlow.BackgroundTransparency = 0.28
-    leftPanelGlow.BorderSizePixel = 0
-    leftPanelGlow.Parent = content
-    round(leftPanelGlow, 18)
+    local leftPanelShadow = Instance.new("Frame")
+    leftPanelShadow.Name = "PrivateProfilePanelShadow"
+    leftPanelShadow.Size = UDim2.new(0.45, 12, 1, 22)
+    leftPanelShadow.Position = UDim2.new(0, -11, 0, -9)
+    leftPanelShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    leftPanelShadow.BackgroundTransparency = 0.56
+    leftPanelShadow.BorderSizePixel = 0
+    leftPanelShadow.Parent = content
+    round(leftPanelShadow, 22)
 
-    local leftPanelGlowGradient = Instance.new("UIGradient")
-    leftPanelGlowGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 56, 145)),
-        ColorSequenceKeypoint.new(0.32, Color3.fromRGB(170, 44, 198)),
-        ColorSequenceKeypoint.new(0.68, Color3.fromRGB(92, 28, 150)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(32, 10, 56))
+    local leftPanelShadowGradient = Instance.new("UIGradient")
+    leftPanelShadowGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 0, 0)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
     })
-    leftPanelGlowGradient.Rotation = 25
-    leftPanelGlowGradient.Parent = leftPanelGlow
-
-    local leftPanelGlowStroke = Instance.new("UIStroke")
-    leftPanelGlowStroke.Color = Color3.fromRGB(255, 80, 170)
-    leftPanelGlowStroke.Thickness = 1
-    leftPanelGlowStroke.Transparency = 0.35
-    leftPanelGlowStroke.Parent = leftPanelGlow
+    leftPanelShadowGradient.Transparency = NumberSequence.new({
+        NumberSequenceKeypoint.new(0.00, 0.86),
+        NumberSequenceKeypoint.new(0.18, 0.50),
+        NumberSequenceKeypoint.new(0.50, 0.38),
+        NumberSequenceKeypoint.new(0.82, 0.50),
+        NumberSequenceKeypoint.new(1.00, 0.86)
+    })
+    leftPanelShadowGradient.Rotation = 25
+    leftPanelShadowGradient.Parent = leftPanelShadow
 
     local leftPanel = Instance.new("Frame")
     leftPanel.Name = "PrivateProfilePanel"
