@@ -118,31 +118,75 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local selectedVisibility = original.game_status_visibility
 
-    local leftPanelShadow = Instance.new("Frame")
-    leftPanelShadow.Name = "PrivateProfilePanelShadow"
-    leftPanelShadow.Size = UDim2.new(0.45, 12, 1, 22)
-    leftPanelShadow.Position = UDim2.new(0, -11, 0, -9)
-    leftPanelShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    leftPanelShadow.BackgroundTransparency = 0.56
-    leftPanelShadow.BorderSizePixel = 0
-    leftPanelShadow.Parent = content
-    round(leftPanelShadow, 22)
+    local function createPanelShadow(name, size, position, rotation, transparency)
+        local shadow = Instance.new("Frame")
+        shadow.Name = name
+        shadow.Size = size
+        shadow.Position = position
+        shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        shadow.BackgroundTransparency = 0
+        shadow.BorderSizePixel = 0
+        shadow.Parent = content
 
-    local leftPanelShadowGradient = Instance.new("UIGradient")
-    leftPanelShadowGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
-        ColorSequenceKeypoint.new(0.50, Color3.fromRGB(0, 0, 0)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
-    })
-    leftPanelShadowGradient.Transparency = NumberSequence.new({
-        NumberSequenceKeypoint.new(0.00, 0.86),
-        NumberSequenceKeypoint.new(0.18, 0.50),
-        NumberSequenceKeypoint.new(0.50, 0.38),
-        NumberSequenceKeypoint.new(0.82, 0.50),
-        NumberSequenceKeypoint.new(1.00, 0.86)
-    })
-    leftPanelShadowGradient.Rotation = 25
-    leftPanelShadowGradient.Parent = leftPanelShadow
+        local shadowGradient = Instance.new("UIGradient")
+        shadowGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
+        })
+        shadowGradient.Transparency = transparency
+        shadowGradient.Rotation = rotation
+        shadowGradient.Parent = shadow
+
+        return shadow
+    end
+
+    createPanelShadow(
+        "PrivateProfilePanelShadowLeft",
+        UDim2.new(0, 28, 1, -8),
+        UDim2.new(0, -24, 0, 4),
+        0,
+        NumberSequence.new({
+            NumberSequenceKeypoint.new(0.00, 1.00),
+            NumberSequenceKeypoint.new(0.72, 0.68),
+            NumberSequenceKeypoint.new(1.00, 0.52)
+        })
+    )
+
+    createPanelShadow(
+        "PrivateProfilePanelShadowRight",
+        UDim2.new(0, 34, 1, -8),
+        UDim2.new(0.45, -16, 0, 4),
+        0,
+        NumberSequence.new({
+            NumberSequenceKeypoint.new(0.00, 0.52),
+            NumberSequenceKeypoint.new(0.28, 0.68),
+            NumberSequenceKeypoint.new(1.00, 1.00)
+        })
+    )
+
+    createPanelShadow(
+        "PrivateProfilePanelShadowTop",
+        UDim2.new(0.45, 18, 0, 26),
+        UDim2.new(0, -9, 0, -22),
+        90,
+        NumberSequence.new({
+            NumberSequenceKeypoint.new(0.00, 1.00),
+            NumberSequenceKeypoint.new(0.72, 0.70),
+            NumberSequenceKeypoint.new(1.00, 0.54)
+        })
+    )
+
+    createPanelShadow(
+        "PrivateProfilePanelShadowBottom",
+        UDim2.new(0.45, 18, 0, 30),
+        UDim2.new(0, -9, 1, -8),
+        90,
+        NumberSequence.new({
+            NumberSequenceKeypoint.new(0.00, 0.54),
+            NumberSequenceKeypoint.new(0.28, 0.70),
+            NumberSequenceKeypoint.new(1.00, 1.00)
+        })
+    )
 
     local leftPanel = Instance.new("Frame")
     leftPanel.Name = "PrivateProfilePanel"
