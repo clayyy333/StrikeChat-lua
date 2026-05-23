@@ -356,7 +356,7 @@ local function renderMessages(messages)
             messageText.Position = UDim2.new(0, 44, 0, 20)
             messageText.BackgroundTransparency = 1
             messageText.Text = tostring(msg.message)
-            messageText.TextColor3 = Theme.Colors.Text
+            messageText.TextColor3 = hasCuteCloudStyle and Color3.fromRGB(20, 20, 20) or Theme.Colors.Text
             messageText.Font = Theme.Font.Regular
             messageText.TextSize = 13
             messageText.TextXAlignment = Enum.TextXAlignment.Left
