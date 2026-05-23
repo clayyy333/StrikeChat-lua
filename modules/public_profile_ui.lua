@@ -138,12 +138,12 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     createCardShadow(
         "PublicProfileCardShadowRight",
         UDim2.new(0, 34, 1, -64),
-        UDim2.new(1, -43, 0, 46),
+        UDim2.new(1, -48, 0, 46),
         0,
         NumberSequence.new({
-            NumberSequenceKeypoint.new(0.00, 0.52),
-            NumberSequenceKeypoint.new(0.28, 0.68),
-            NumberSequenceKeypoint.new(1.00, 1.00)
+            NumberSequenceKeypoint.new(0.00, 0.82),
+            NumberSequenceKeypoint.new(0.38, 0.64),
+            NumberSequenceKeypoint.new(1.00, 0.56)
         })
     )
 
@@ -171,7 +171,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
     banner.Size = UDim2.new(1, 0, 0, 132)
-    banner.BackgroundColor3 = Color3.fromRGB(14, 15, 22)
+    banner.BackgroundColor3 = Color3.fromRGB(58, 16, 90)
     banner.BorderSizePixel = 0
     banner.ClipsDescendants = true
     banner.ZIndex = 93
@@ -180,12 +180,14 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local bannerGradient = Instance.new("UIGradient")
     bannerGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(12, 13, 20)),
-        ColorSequenceKeypoint.new(0.42, Color3.fromRGB(18, 19, 28)),
-        ColorSequenceKeypoint.new(0.72, Color3.fromRGB(24, 25, 34)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(46, 47, 54))
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(32, 10, 56)),
+        ColorSequenceKeypoint.new(0.18, Color3.fromRGB(150, 22, 190)),
+        ColorSequenceKeypoint.new(0.38, Color3.fromRGB(255, 56, 145)),
+        ColorSequenceKeypoint.new(0.58, Color3.fromRGB(170, 44, 198)),
+        ColorSequenceKeypoint.new(0.78, Color3.fromRGB(92, 28, 150)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(28, 12, 52))
     })
-    bannerGradient.Rotation = 20
+    bannerGradient.Rotation = 25
     bannerGradient.Parent = banner
 
     local bannerImage = Instance.new("ImageLabel")
