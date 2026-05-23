@@ -149,7 +149,7 @@ local selectedPrivateRoom = nil
 local confirmAction = nil
 
 local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
-local CUTE_CLOUD_SLICE_CENTER = Rect.new(64, 48, 360, 150)
+local CUTE_CLOUD_SLICE_CENTER = Rect.new(96, 72, 280, 132)
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -259,6 +259,7 @@ local function renderMessages(messages)
             avatar.Position = UDim2.new(0, 0, 0, 4)
             avatar.BackgroundTransparency = 1
             avatar.Image = getAvatarImage(msg.roblox_user_id)
+            avatar.ZIndex = 3
             avatar.Parent = container
 
             local avatarCorner = Instance.new("UICorner")
@@ -278,6 +279,7 @@ local function renderMessages(messages)
             nameLabel.TextSize = 12
             nameLabel.TextXAlignment = Enum.TextXAlignment.Left
             nameLabel.TextTruncate = Enum.TextTruncate.AtEnd
+            nameLabel.ZIndex = 3
             nameLabel.Parent = container
 
             local clanText = ""
@@ -301,6 +303,7 @@ local function renderMessages(messages)
             clanLabel.TextSize = 11
             clanLabel.TextXAlignment = Enum.TextXAlignment.Left
             clanLabel.TextTruncate = Enum.TextTruncate.AtEnd
+            clanLabel.ZIndex = 3
             clanLabel.Parent = container
 
             local headerWidth =
@@ -336,8 +339,8 @@ local function renderMessages(messages)
             if hasCuteCloudStyle then
                 local cloudBubble = Instance.new("ImageLabel")
                 cloudBubble.Name = "CuteCloudBubble"
-                cloudBubble.Size = UDim2.new(1, -52, 0, 38)
-                cloudBubble.Position = UDim2.new(0, 40, 0, 18)
+                cloudBubble.Size = UDim2.new(1, -6, 0, 58)
+                cloudBubble.Position = UDim2.new(0, 0, 0, 0)
                 cloudBubble.BackgroundTransparency = 1
                 cloudBubble.Image = CUTE_CLOUD_IMAGE
                 cloudBubble.ScaleType = Enum.ScaleType.Slice
@@ -350,10 +353,10 @@ local function renderMessages(messages)
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
             messageText.Size = hasCuteCloudStyle
-                and UDim2.new(1, -96, 0, 28)
+                and UDim2.new(1, -118, 0, 24)
                 or UDim2.new(1, -50, 0, 34)
             messageText.Position = hasCuteCloudStyle
-                and UDim2.new(0, 54, 0, 25)
+                and UDim2.new(0, 58, 0, 29)
                 or UDim2.new(0, 44, 0, 20)
             messageText.BackgroundTransparency = 1
             messageText.Text = tostring(msg.message)
@@ -363,7 +366,7 @@ local function renderMessages(messages)
             messageText.TextXAlignment = Enum.TextXAlignment.Left
             messageText.TextYAlignment = Enum.TextYAlignment.Top
             messageText.TextWrapped = true
-            messageText.ZIndex = hasCuteCloudStyle and 2 or 1
+            messageText.ZIndex = hasCuteCloudStyle and 4 or 1
             messageText.Parent = container
         end
     end
