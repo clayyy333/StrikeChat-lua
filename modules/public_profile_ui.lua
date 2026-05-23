@@ -142,7 +142,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
         0,
         NumberSequence.new({
             NumberSequenceKeypoint.new(0.00, 0.52),
-            NumberSequenceKeypoint.new(0.28, 0.68),
+            NumberSequenceKeypoint.new(0.34, 0.64),
             NumberSequenceKeypoint.new(1.00, 1.00)
         })
     )
