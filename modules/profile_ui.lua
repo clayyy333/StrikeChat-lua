@@ -140,7 +140,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
     banner.Size = UDim2.new(1, 0, 0, 132)
-    banner.BackgroundColor3 = Color3.fromRGB(64, 118, 176)
+    banner.BackgroundColor3 = Color3.fromRGB(30, 46, 76)
     banner.BorderSizePixel = 0
     banner.ClipsDescendants = true
     banner.Parent = bannerClip
@@ -148,12 +148,12 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local bannerGradient = Instance.new("UIGradient")
     bannerGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(62, 170, 236)),
-        ColorSequenceKeypoint.new(0.20, Color3.fromRGB(84, 224, 216)),
-        ColorSequenceKeypoint.new(0.42, Color3.fromRGB(160, 116, 244)),
-        ColorSequenceKeypoint.new(0.62, Color3.fromRGB(255, 112, 196)),
-        ColorSequenceKeypoint.new(0.82, Color3.fromRGB(255, 196, 108)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(118, 224, 178))
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(18, 32, 64)),
+        ColorSequenceKeypoint.new(0.22, Color3.fromRGB(34, 122, 164)),
+        ColorSequenceKeypoint.new(0.44, Color3.fromRGB(78, 68, 154)),
+        ColorSequenceKeypoint.new(0.64, Color3.fromRGB(164, 64, 138)),
+        ColorSequenceKeypoint.new(0.82, Color3.fromRGB(42, 158, 152)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(42, 56, 96))
     })
     bannerGradient.Rotation = 24
     bannerGradient.Parent = banner
