@@ -1,6 +1,43 @@
 local RightPanel = {}
 
 function RightPanel.Create(parent, Theme)
+    local clanColorMap = {
+        white = Color3.fromRGB(245, 245, 245),
+        red = Color3.fromRGB(235, 74, 74),
+        green = Color3.fromRGB(78, 190, 92),
+        blue = Color3.fromRGB(74, 142, 245),
+        yellow = Color3.fromRGB(245, 205, 70),
+        orange = Color3.fromRGB(255, 156, 64),
+        pink = Color3.fromRGB(255, 110, 180),
+        purple = Color3.fromRGB(168, 6, 235),
+        black = Color3.fromRGB(32, 32, 36),
+        cyan = Color3.fromRGB(64, 210, 230)
+    }
+
+    local function getClanColor(colorName)
+        local key = tostring(colorName or ""):lower()
+
+        return clanColorMap[key] or Theme.Colors.TextMuted
+    end
+
+    local function colorToHex(color)
+        return string.format(
+            "#%02X%02X%02X",
+            math.floor(color.R * 255 + 0.5),
+            math.floor(color.G * 255 + 0.5),
+            math.floor(color.B * 255 + 0.5)
+        )
+    end
+
+    local function escapeRichText(text)
+        return tostring(text or "")
+            :gsub("&", "&amp;")
+            :gsub("<", "&lt;")
+            :gsub(">", "&gt;")
+            :gsub('"', "&quot;")
+            :gsub("'", "&apos;")
+    end
+
     local title = Instance.new("TextLabel")
     title.Name = "OnlineTitle"
     title.Size = UDim2.new(1, -24, 0, 36)
@@ -108,10 +145,21 @@ function RightPanel.Create(parent, Theme)
         local clanText = ""
 
         if user.clan_tag then
-            clanText = "[" .. tostring(user.clan_tag) .. "]"
+            if user.clan_tag_style == "plain" then
+                clanText = "_" .. tostring(user.clan_tag)
+            else
+                clanText = "[" .. tostring(user.clan_tag) .. "]"
+            end
         end
 
-        name.Text = displayName .. clanText
+        name.RichText = true
+        name.Text =
+            escapeRichText(displayName) ..
+            '<font color="' ..
+            colorToHex(getClanColor(user.clan_color)) ..
+            '">' ..
+            escapeRichText(clanText) ..
+            "</font>"
         name.TextColor3 = Theme.Colors.Text
         name.Font = Theme.Font.Bold
         name.TextSize = 12
