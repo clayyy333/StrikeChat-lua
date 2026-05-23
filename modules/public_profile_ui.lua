@@ -20,7 +20,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local modal = Instance.new("Frame")
     modal.Name = "Modal"
-    modal.Size = UDim2.new(0.68, 0, 0.76, 0)
+    modal.Size = UDim2.new(0.78, 0, 0.72, 0)
     modal.Position = UDim2.new(0.5, 0, 0.52, 0)
     modal.AnchorPoint = Vector2.new(0.5, 0.5)
     modal.BackgroundColor3 = modalColor
@@ -30,8 +30,8 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     modal.Parent = overlay
 
     local sizeConstraint = Instance.new("UISizeConstraint")
-    sizeConstraint.MinSize = Vector2.new(430, 440)
-    sizeConstraint.MaxSize = Vector2.new(560, 540)
+    sizeConstraint.MinSize = Vector2.new(620, 470)
+    sizeConstraint.MaxSize = Vector2.new(760, 540)
     sizeConstraint.Parent = modal
 
     local function round(instance, radius)
@@ -80,8 +80,8 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local card = Instance.new("Frame")
     card.Name = "PublicProfileCard"
-    card.Size = UDim2.new(1, -82, 1, -74)
-    card.Position = UDim2.new(0.5, 0, 0.54, 0)
+    card.Size = UDim2.new(0, 430, 1, -44)
+    card.Position = UDim2.new(0.5, 0, 0.52, 0)
     card.AnchorPoint = Vector2.new(0.5, 0.5)
     card.BackgroundColor3 = panelColor
     card.BorderSizePixel = 0
@@ -93,7 +93,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 0, 146)
+    banner.Size = UDim2.new(1, 0, 0, 118)
     banner.BackgroundColor3 = Color3.fromRGB(18, 18, 34)
     banner.BorderSizePixel = 0
     banner.ClipsDescendants = true
@@ -125,8 +125,8 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     if activityText ~= "" then
         local activityLabel = Instance.new("TextLabel")
         activityLabel.Name = "ActivityText"
-        activityLabel.Size = UDim2.new(0.48, -18, 0, 24)
-        activityLabel.Position = UDim2.new(0.52, 0, 1, -42)
+        activityLabel.Size = UDim2.new(0.52, -22, 0, 24)
+        activityLabel.Position = UDim2.new(0.48, 0, 1, -38)
         activityLabel.BackgroundTransparency = 1
         activityLabel.Text = activityText
         activityLabel.TextColor3 = Theme.Colors.Text
@@ -140,8 +140,8 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local body = Instance.new("Frame")
     body.Name = "Body"
-    body.Size = UDim2.new(1, 0, 1, -146)
-    body.Position = UDim2.new(0, 0, 0, 146)
+    body.Size = UDim2.new(1, 0, 1, -118)
+    body.Position = UDim2.new(0, 0, 0, 118)
     body.BackgroundColor3 = panelColor
     body.BorderSizePixel = 0
     body.ZIndex = 93
@@ -149,13 +149,13 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local avatarFrame = Instance.new("Frame")
     avatarFrame.Name = "AvatarFrame"
-    avatarFrame.Size = UDim2.new(0, 106, 0, 106)
-    avatarFrame.Position = UDim2.new(0, 32, 0, -58)
+    avatarFrame.Size = UDim2.new(0, 98, 0, 98)
+    avatarFrame.Position = UDim2.new(0, 32, 0, -50)
     avatarFrame.BackgroundColor3 = Color3.fromRGB(31, 32, 38)
     avatarFrame.BorderSizePixel = 0
     avatarFrame.ZIndex = 97
     avatarFrame.Parent = body
-    round(avatarFrame, 53)
+    round(avatarFrame, 49)
     stroke(avatarFrame, Color3.fromRGB(128, 130, 148), 0.08)
 
     local avatarImage = Instance.new("ImageLabel")
@@ -165,7 +165,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     avatarImage.BackgroundTransparency = 1
     avatarImage.ZIndex = 98
     avatarImage.Parent = avatarFrame
-    round(avatarImage, 49)
+    round(avatarImage, 45)
 
     local userId = tonumber(profile.roblox_user_id) or player.UserId
     local ok, image = pcall(function()
@@ -181,12 +181,12 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     end
 
     local identityX = 0
-    local identityOffset = 160
+    local identityOffset = 154
 
     local displayName = Instance.new("TextLabel")
     displayName.Name = "DisplayName"
-    displayName.Size = UDim2.new(1, -190, 0, 32)
-    displayName.Position = UDim2.new(identityX, identityOffset, 0, 18)
+    displayName.Size = UDim2.new(1, -182, 0, 30)
+    displayName.Position = UDim2.new(identityX, identityOffset, 0, 16)
     displayName.BackgroundTransparency = 1
     displayName.Text = tostring(profile.display_name or "Usuario")
     displayName.TextColor3 = Theme.Colors.Text
@@ -199,8 +199,8 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local username = Instance.new("TextLabel")
     username.Name = "Username"
-    username.Size = UDim2.new(1, -190, 0, 20)
-    username.Position = UDim2.new(identityX, identityOffset, 0, 50)
+    username.Size = UDim2.new(1, -182, 0, 18)
+    username.Position = UDim2.new(identityX, identityOffset, 0, 47)
     username.BackgroundTransparency = 1
     username.Text = "@" .. tostring(profile.roblox_username or player.Name)
     username.TextColor3 = Theme.Colors.TextMuted
@@ -214,7 +214,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     local pointsLabel = Instance.new("TextLabel")
     pointsLabel.Name = "PointsLabel"
     pointsLabel.Size = UDim2.new(1, -52, 0, 22)
-    pointsLabel.Position = UDim2.new(0, 26, 0, 86)
+    pointsLabel.Position = UDim2.new(0, 26, 0, 78)
     pointsLabel.BackgroundTransparency = 1
     pointsLabel.Text = "Puntos de Usuario:"
     pointsLabel.TextColor3 = Theme.Colors.Text
@@ -227,7 +227,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     local pointsValue = Instance.new("TextLabel")
     pointsValue.Name = "PointsValue"
     pointsValue.Size = UDim2.new(1, -52, 0, 24)
-    pointsValue.Position = UDim2.new(0, 26, 0, 112)
+    pointsValue.Position = UDim2.new(0, 26, 0, 102)
     pointsValue.BackgroundTransparency = 1
     pointsValue.Text = tostring(profile.personal_points or 0)
     pointsValue.TextColor3 = Theme.Colors.Text
@@ -241,7 +241,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     local clanLabel = Instance.new("TextLabel")
     clanLabel.Name = "ClanLabel"
     clanLabel.Size = UDim2.new(1, -76, 0, 20)
-    clanLabel.Position = UDim2.new(0, 40, 0, 152)
+    clanLabel.Position = UDim2.new(0, 40, 0, 138)
     clanLabel.BackgroundTransparency = 1
     clanLabel.Text = "Clan:"
     clanLabel.TextColor3 = Theme.Colors.Text
@@ -254,7 +254,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     local clanValue = Instance.new("TextLabel")
     clanValue.Name = "ClanValue"
     clanValue.Size = UDim2.new(1, -76, 0, 20)
-    clanValue.Position = UDim2.new(0, 40, 0, 174)
+    clanValue.Position = UDim2.new(0, 40, 0, 158)
     clanValue.BackgroundTransparency = 1
     clanValue.Text = tostring(profile.clan_name or "Sin clan")
     clanValue.TextColor3 = Theme.Colors.Text
@@ -268,7 +268,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     local descriptionTitle = Instance.new("TextLabel")
     descriptionTitle.Name = "DescriptionTitle"
     descriptionTitle.Size = UDim2.new(1, -76, 0, 20)
-    descriptionTitle.Position = UDim2.new(0, 40, 0, 208)
+    descriptionTitle.Position = UDim2.new(0, 40, 0, 180)
     descriptionTitle.BackgroundTransparency = 1
     descriptionTitle.Text = "Descripcion:"
     descriptionTitle.TextColor3 = Theme.Colors.Text
@@ -280,8 +280,8 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local descriptionBox = Instance.new("TextLabel")
     descriptionBox.Name = "DescriptionBox"
-    descriptionBox.Size = UDim2.new(1, -92, 0, 74)
-    descriptionBox.Position = UDim2.new(0, 46, 0, 236)
+    descriptionBox.Size = UDim2.new(1, -92, 0, 50)
+    descriptionBox.Position = UDim2.new(0, 46, 0, 204)
     descriptionBox.BackgroundColor3 = inputColor
     descriptionBox.BackgroundTransparency = 0
     descriptionBox.BorderSizePixel = 0
@@ -301,7 +301,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     local actions = Instance.new("Frame")
     actions.Name = "Actions"
     actions.Size = UDim2.new(0, 150, 0, 32)
-    actions.Position = UDim2.new(0.5, -75, 1, -44)
+    actions.Position = UDim2.new(0.5, -75, 1, -38)
     actions.BackgroundTransparency = 1
     actions.ZIndex = 95
     actions.Parent = body
