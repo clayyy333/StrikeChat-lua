@@ -353,19 +353,11 @@ function ProfileUI.Create(parent, Theme, profile, player)
         round(button, 8)
         stroke(button, Color3.fromRGB(86, 88, 100), 0.5)
 
-        local indicator = Instance.new("Frame")
-        indicator.Name = "Indicator"
-        indicator.Size = UDim2.new(0, 7, 0, 7)
-        indicator.Position = UDim2.new(1, -14, 0.5, -3)
-        indicator.BorderSizePixel = 0
-        indicator.Parent = button
-        round(indicator, 4)
-
-        return button, indicator
+        return button
     end
 
-    local publicButton, publicIndicator = makeVisibilityButton("PublicButton", "Publico", 0)
-    local privateButton, privateIndicator = makeVisibilityButton("PrivateButton", "Privado", 100)
+    local publicButton = makeVisibilityButton("PublicButton", "Publico", 0)
+    local privateButton = makeVisibilityButton("PrivateButton", "Privado", 100)
 
     local divider = Instance.new("Frame")
     divider.Name = "Divider"
@@ -457,20 +449,10 @@ function ProfileUI.Create(parent, Theme, profile, player)
         publicButton.BackgroundTransparency =
             selectedVisibility == "public" and 0.02 or 0.16
 
-        publicIndicator.BackgroundColor3 =
-            selectedVisibility == "public" and Color3.fromRGB(235, 237, 245) or Color3.fromRGB(116, 118, 130)
-        publicIndicator.BackgroundTransparency =
-            selectedVisibility == "public" and 0 or 0.45
-
         privateButton.BackgroundColor3 =
             selectedVisibility == "private" and Color3.fromRGB(76, 78, 90) or Color3.fromRGB(56, 57, 64)
         privateButton.BackgroundTransparency =
             selectedVisibility == "private" and 0.02 or 0.16
-
-        privateIndicator.BackgroundColor3 =
-            selectedVisibility == "private" and Color3.fromRGB(235, 237, 245) or Color3.fromRGB(116, 118, 130)
-        privateIndicator.BackgroundTransparency =
-            selectedVisibility == "private" and 0 or 0.45
     end
 
     publicButton.MouseButton1Click:Connect(function()
