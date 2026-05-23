@@ -100,6 +100,53 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     closeButton.Parent = modal
     round(closeButton, 10)
 
+    local function createCardShadow(name, size, position, rotation, transparency)
+        local shadow = Instance.new("Frame")
+        shadow.Name = name
+        shadow.Size = size
+        shadow.Position = position
+        shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        shadow.BackgroundTransparency = 0
+        shadow.BorderSizePixel = 0
+        shadow.ZIndex = 91
+        shadow.Parent = modal
+
+        local shadowGradient = Instance.new("UIGradient")
+        shadowGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
+            ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
+        })
+        shadowGradient.Transparency = transparency
+        shadowGradient.Rotation = rotation
+        shadowGradient.Parent = shadow
+
+        return shadow
+    end
+
+    createCardShadow(
+        "PublicProfileCardShadowLeft",
+        UDim2.new(0, 28, 1, -64),
+        UDim2.new(0, 3, 0, 46),
+        0,
+        NumberSequence.new({
+            NumberSequenceKeypoint.new(0.00, 1.00),
+            NumberSequenceKeypoint.new(0.72, 0.68),
+            NumberSequenceKeypoint.new(1.00, 0.52)
+        })
+    )
+
+    createCardShadow(
+        "PublicProfileCardShadowRight",
+        UDim2.new(0, 34, 1, -64),
+        UDim2.new(1, -43, 0, 46),
+        0,
+        NumberSequence.new({
+            NumberSequenceKeypoint.new(0.00, 0.52),
+            NumberSequenceKeypoint.new(0.28, 0.68),
+            NumberSequenceKeypoint.new(1.00, 1.00)
+        })
+    )
+
     local card = Instance.new("Frame")
     card.Name = "PublicProfileCard"
     card.Size = UDim2.new(1, -54, 1, -56)
