@@ -1,6 +1,7 @@
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
+local MarketplaceService = game:GetService("MarketplaceService")
 
 local player = Players.LocalPlayer
 local running = true
@@ -34,12 +35,35 @@ local ProfileUI = loadstring(game:HttpGet(BASE_RAW .. "modules/profile_ui.lua"))
 local PublicProfileUI = loadstring(game:HttpGet(BASE_RAW .. "modules/public_profile_ui.lua"))()
 local InventoryUI = loadstring(game:HttpGet(BASE_RAW .. "modules/inventory_ui.lua"))()
 
+local function getCurrentGameActivity()
+    local placeName = nil
+
+    local success, info = pcall(function()
+        return MarketplaceService:GetProductInfo(game.PlaceId)
+    end)
+
+    if success and info and info.Name then
+        placeName = tostring(info.Name)
+    end
+
+    if not placeName or placeName:gsub("%s+", "") == "" then
+        placeName = tostring(game.Name or "Roblox")
+    end
+
+    return {
+        place_id = game.PlaceId,
+        place_name = placeName
+    }
+end
+
+local currentGameActivity = getCurrentGameActivity()
+
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
     return
 end
 
-local heartbeatResult = Api.Heartbeat(player)
+local heartbeatResult = Api.Heartbeat(player, currentGameActivity)
 
 if not heartbeatResult or heartbeatResult.status ~= "ok" then
     warn("No se pudo conectar con StrikeChat API")
@@ -1057,7 +1081,7 @@ end)
 
 task.spawn(function()
     while running do
-        Api.Heartbeat(player)
+        Api.Heartbeat(player, currentGameActivity)
         task.wait(HEARTBEAT_INTERVAL)
     end
 end)

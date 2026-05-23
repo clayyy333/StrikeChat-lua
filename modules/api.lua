@@ -57,13 +57,23 @@ function Api.Request(url, method, body)
     return Api.Decode(response.Body)
 end
 
-function Api.Heartbeat(player)
+function Api.Heartbeat(player, activity)
     local url =
         Api.BaseUrl ..
         "/online-users/heartbeat" ..
         "?roblox_user_id=" .. Api.Encode(player.UserId) ..
         "&roblox_username=" .. Api.Encode(player.Name) ..
         "&roblox_display_name=" .. Api.Encode(player.DisplayName)
+
+    if activity then
+        if activity.place_id then
+            url = url .. "&place_id=" .. Api.Encode(activity.place_id)
+        end
+
+        if activity.place_name and tostring(activity.place_name) ~= "" then
+            url = url .. "&place_name=" .. Api.Encode(activity.place_name)
+        end
+    end
 
     return Api.Request(url, "POST")
 end

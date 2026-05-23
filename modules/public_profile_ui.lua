@@ -5,27 +5,33 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     profile = profile or {}
 
+    local modalColor = Color3.fromRGB(50, 51, 57)
+    local panelColor = Color3.fromRGB(57, 58, 65)
+    local inputColor = Color3.fromRGB(48, 49, 55)
+    local borderColor = Color3.fromRGB(80, 82, 92)
+
     local overlay = Instance.new("Frame")
     overlay.Name = "PublicProfileOverlay"
     overlay.Size = UDim2.new(1, 0, 1, 0)
     overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    overlay.BackgroundTransparency = 0.38
+    overlay.BackgroundTransparency = 0.42
     overlay.ZIndex = 90
     overlay.Parent = parent
 
     local modal = Instance.new("Frame")
     modal.Name = "Modal"
-    modal.Size = UDim2.new(0.84, 0, 0.76, 0)
+    modal.Size = UDim2.new(0.68, 0, 0.76, 0)
     modal.Position = UDim2.new(0.5, 0, 0.52, 0)
     modal.AnchorPoint = Vector2.new(0.5, 0.5)
-    modal.BackgroundColor3 = Color3.fromRGB(16, 16, 30)
+    modal.BackgroundColor3 = modalColor
     modal.BorderSizePixel = 0
+    modal.ClipsDescendants = true
     modal.ZIndex = 91
     modal.Parent = overlay
 
     local sizeConstraint = Instance.new("UISizeConstraint")
-    sizeConstraint.MinSize = Vector2.new(310, 430)
-    sizeConstraint.MaxSize = Vector2.new(470, 590)
+    sizeConstraint.MinSize = Vector2.new(430, 440)
+    sizeConstraint.MaxSize = Vector2.new(560, 540)
     sizeConstraint.Parent = modal
 
     local function round(instance, radius)
@@ -37,143 +43,129 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local function stroke(instance, color, transparency)
         local uiStroke = Instance.new("UIStroke")
-        uiStroke.Color = color or Theme.Colors.Border
+        uiStroke.Color = color or borderColor
         uiStroke.Thickness = 1
-        uiStroke.Transparency = transparency or 0.25
+        uiStroke.Transparency = transparency or 0.35
         uiStroke.Parent = instance
         return uiStroke
     end
 
+    local function addPadding(instance, left, right, top, bottom)
+        local pad = Instance.new("UIPadding")
+        pad.PaddingLeft = UDim.new(0, left or 10)
+        pad.PaddingRight = UDim.new(0, right or 10)
+        pad.PaddingTop = UDim.new(0, top or 0)
+        pad.PaddingBottom = UDim.new(0, bottom or 0)
+        pad.Parent = instance
+        return pad
+    end
+
     round(modal, Theme.Radius.Main)
-    stroke(modal, Color3.fromRGB(75, 50, 126), 0.18)
-
-    local modalGradient = Instance.new("UIGradient")
-    modalGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(17, 16, 34)),
-        ColorSequenceKeypoint.new(0.55, Color3.fromRGB(15, 17, 31)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(13, 14, 26))
-    })
-    modalGradient.Rotation = 90
-    modalGradient.Parent = modal
-
-    local titleIcon = Instance.new("TextLabel")
-    titleIcon.Name = "TitleIcon"
-    titleIcon.Size = UDim2.new(0, 30, 0, 30)
-    titleIcon.Position = UDim2.new(0, 16, 0, 12)
-    titleIcon.BackgroundColor3 = Color3.fromRGB(128, 76, 242)
-    titleIcon.BackgroundTransparency = 0.35
-    titleIcon.BorderSizePixel = 0
-    titleIcon.Text = ""
-    titleIcon.ZIndex = 92
-    titleIcon.Parent = modal
-    round(titleIcon, 10)
-
-    local title = Instance.new("TextLabel")
-    title.Name = "Title"
-    title.Size = UDim2.new(1, -98, 0, 38)
-    title.Position = UDim2.new(0, 54, 0, 8)
-    title.BackgroundTransparency = 1
-    title.Text = "PERFIL PUBLICO"
-    title.TextColor3 = Theme.Colors.Text
-    title.Font = Theme.Font.Bold
-    title.TextSize = 16
-    title.TextXAlignment = Enum.TextXAlignment.Left
-    title.TextTruncate = Enum.TextTruncate.AtEnd
-    title.ZIndex = 92
-    title.Parent = modal
+    stroke(modal, Color3.fromRGB(96, 98, 110), 0.48)
 
     local closeButton = Instance.new("TextButton")
     closeButton.Name = "CloseButton"
-    closeButton.Size = UDim2.new(0, 34, 0, 28)
-    closeButton.Position = UDim2.new(1, -48, 0, 12)
-    closeButton.BackgroundTransparency = 1
+    closeButton.Size = UDim2.new(0, 28, 0, 24)
+    closeButton.Position = UDim2.new(1, -38, 0, 10)
+    closeButton.BackgroundColor3 = Color3.fromRGB(65, 66, 74)
+    closeButton.BackgroundTransparency = 0.12
     closeButton.BorderSizePixel = 0
-    closeButton.Text = "..."
-    closeButton.TextColor3 = Theme.Colors.TextMuted
+    closeButton.Text = "X"
+    closeButton.TextColor3 = Theme.Colors.Text
     closeButton.Font = Theme.Font.Bold
-    closeButton.TextSize = 18
-    closeButton.ZIndex = 92
+    closeButton.TextSize = 12
+    closeButton.ZIndex = 96
     closeButton.Parent = modal
+    round(closeButton, 10)
 
-    local content = Instance.new("ScrollingFrame")
-    content.Name = "Content"
-    content.Size = UDim2.new(1, -24, 1, -62)
-    content.Position = UDim2.new(0, 12, 0, 52)
-    content.BackgroundTransparency = 1
-    content.BorderSizePixel = 0
-    content.ScrollBarThickness = 4
-    content.CanvasSize = UDim2.new(0, 0, 0, 0)
-    content.ZIndex = 92
-    content.Parent = modal
-
-    local layout = Instance.new("UIListLayout")
-    layout.Padding = UDim.new(0, 8)
-    layout.SortOrder = Enum.SortOrder.LayoutOrder
-    layout.Parent = content
-
-    local padding = Instance.new("UIPadding")
-    padding.PaddingLeft = UDim.new(0, 2)
-    padding.PaddingRight = UDim.new(0, 2)
-    padding.PaddingBottom = UDim.new(0, 10)
-    padding.Parent = content
-
-    local header = Instance.new("Frame")
-    header.Name = "Header"
-    header.Size = UDim2.new(1, -4, 0, 190)
-    header.BackgroundColor3 = Color3.fromRGB(17, 17, 31)
-    header.BorderSizePixel = 0
-    header.ClipsDescendants = true
-    header.ZIndex = 93
-    header.Parent = content
-    round(header, 12)
-    stroke(header, Color3.fromRGB(78, 54, 132), 0.25)
+    local card = Instance.new("Frame")
+    card.Name = "PublicProfileCard"
+    card.Size = UDim2.new(1, -82, 1, -74)
+    card.Position = UDim2.new(0.5, 0, 0.54, 0)
+    card.AnchorPoint = Vector2.new(0.5, 0.5)
+    card.BackgroundColor3 = panelColor
+    card.BorderSizePixel = 0
+    card.ClipsDescendants = true
+    card.ZIndex = 92
+    card.Parent = modal
+    round(card, 14)
+    stroke(card, Color3.fromRGB(82, 84, 94), 0.36)
 
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
-    banner.Size = UDim2.new(1, 0, 1, 0)
-    banner.BackgroundColor3 = Color3.fromRGB(17, 18, 31)
+    banner.Size = UDim2.new(1, 0, 0, 146)
+    banner.BackgroundColor3 = Color3.fromRGB(18, 18, 34)
     banner.BorderSizePixel = 0
-    banner.ZIndex = 94
-    banner.Parent = header
+    banner.ClipsDescendants = true
+    banner.ZIndex = 93
+    banner.Parent = card
 
     local bannerGradient = Instance.new("UIGradient")
     bannerGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(15, 29, 58)),
-        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(88, 42, 121)),
-        ColorSequenceKeypoint.new(0.68, Color3.fromRGB(34, 31, 56)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(11, 12, 24))
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(12, 13, 28)),
+        ColorSequenceKeypoint.new(0.28, Color3.fromRGB(24, 19, 58)),
+        ColorSequenceKeypoint.new(0.55, Color3.fromRGB(18, 22, 48)),
+        ColorSequenceKeypoint.new(0.78, Color3.fromRGB(31, 34, 50)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(47, 48, 56))
     })
-    bannerGradient.Rotation = 18
+    bannerGradient.Rotation = 20
     bannerGradient.Parent = banner
 
-    local shade = Instance.new("Frame")
-    shade.Name = "Shade"
-    shade.Size = UDim2.new(1, 0, 1, 0)
-    shade.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    shade.BackgroundTransparency = 0.42
-    shade.BorderSizePixel = 0
-    shade.ZIndex = 95
-    shade.Parent = header
+    local bannerShade = Instance.new("Frame")
+    bannerShade.Name = "BannerShade"
+    bannerShade.Size = UDim2.new(1, 0, 1, 0)
+    bannerShade.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    bannerShade.BackgroundTransparency = 0.55
+    bannerShade.BorderSizePixel = 0
+    bannerShade.ZIndex = 94
+    bannerShade.Parent = banner
+
+    local activityText = tostring(profile.activity_text or "")
+
+    if activityText ~= "" then
+        local activityLabel = Instance.new("TextLabel")
+        activityLabel.Name = "ActivityText"
+        activityLabel.Size = UDim2.new(0.48, -18, 0, 24)
+        activityLabel.Position = UDim2.new(0.52, 0, 1, -42)
+        activityLabel.BackgroundTransparency = 1
+        activityLabel.Text = activityText
+        activityLabel.TextColor3 = Theme.Colors.Text
+        activityLabel.Font = Theme.Font.Bold
+        activityLabel.TextSize = 13
+        activityLabel.TextXAlignment = Enum.TextXAlignment.Right
+        activityLabel.TextTruncate = Enum.TextTruncate.AtEnd
+        activityLabel.ZIndex = 96
+        activityLabel.Parent = banner
+    end
+
+    local body = Instance.new("Frame")
+    body.Name = "Body"
+    body.Size = UDim2.new(1, 0, 1, -146)
+    body.Position = UDim2.new(0, 0, 0, 146)
+    body.BackgroundColor3 = panelColor
+    body.BorderSizePixel = 0
+    body.ZIndex = 93
+    body.Parent = card
 
     local avatarFrame = Instance.new("Frame")
     avatarFrame.Name = "AvatarFrame"
-    avatarFrame.Size = UDim2.new(0, 118, 0, 118)
-    avatarFrame.Position = UDim2.new(0, 24, 0, 32)
-    avatarFrame.BackgroundColor3 = Color3.fromRGB(20, 15, 34)
+    avatarFrame.Size = UDim2.new(0, 106, 0, 106)
+    avatarFrame.Position = UDim2.new(0, 32, 0, -58)
+    avatarFrame.BackgroundColor3 = Color3.fromRGB(31, 32, 38)
     avatarFrame.BorderSizePixel = 0
-    avatarFrame.ZIndex = 96
-    avatarFrame.Parent = header
-    round(avatarFrame, 59)
-    stroke(avatarFrame, Color3.fromRGB(152, 74, 255), 0.04)
+    avatarFrame.ZIndex = 97
+    avatarFrame.Parent = body
+    round(avatarFrame, 53)
+    stroke(avatarFrame, Color3.fromRGB(128, 130, 148), 0.08)
 
     local avatarImage = Instance.new("ImageLabel")
     avatarImage.Name = "AvatarImage"
     avatarImage.Size = UDim2.new(1, -8, 1, -8)
     avatarImage.Position = UDim2.new(0, 4, 0, 4)
     avatarImage.BackgroundTransparency = 1
-    avatarImage.ZIndex = 97
+    avatarImage.ZIndex = 98
     avatarImage.Parent = avatarFrame
-    round(avatarImage, 55)
+    round(avatarImage, 49)
 
     local userId = tonumber(profile.roblox_user_id) or player.UserId
     local ok, image = pcall(function()
@@ -188,183 +180,161 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
         avatarImage.Image = image
     end
 
-    local identityBox = Instance.new("Frame")
-    identityBox.Name = "IdentityBox"
-    identityBox.Size = UDim2.new(1, -174, 0, 92)
-    identityBox.Position = UDim2.new(0, 154, 0, 48)
-    identityBox.BackgroundColor3 = Color3.fromRGB(8, 9, 18)
-    identityBox.BackgroundTransparency = 0.28
-    identityBox.BorderSizePixel = 0
-    identityBox.ZIndex = 96
-    identityBox.Parent = header
-    round(identityBox, 12)
-    stroke(identityBox, Color3.fromRGB(78, 54, 132), 0.48)
+    local identityX = 0
+    local identityOffset = 160
 
     local displayName = Instance.new("TextLabel")
     displayName.Name = "DisplayName"
-    displayName.Size = UDim2.new(1, -18, 0, 30)
-    displayName.Position = UDim2.new(0, 9, 0, 8)
+    displayName.Size = UDim2.new(1, -190, 0, 32)
+    displayName.Position = UDim2.new(identityX, identityOffset, 0, 18)
     displayName.BackgroundTransparency = 1
     displayName.Text = tostring(profile.display_name or "Usuario")
     displayName.TextColor3 = Theme.Colors.Text
     displayName.Font = Theme.Font.Bold
-    displayName.TextSize = 22
+    displayName.TextSize = 24
     displayName.TextXAlignment = Enum.TextXAlignment.Left
     displayName.TextTruncate = Enum.TextTruncate.AtEnd
-    displayName.ZIndex = 97
-    displayName.Parent = identityBox
+    displayName.ZIndex = 95
+    displayName.Parent = body
 
     local username = Instance.new("TextLabel")
     username.Name = "Username"
-    username.Size = UDim2.new(1, -18, 0, 20)
-    username.Position = UDim2.new(0, 9, 0, 39)
+    username.Size = UDim2.new(1, -190, 0, 20)
+    username.Position = UDim2.new(identityX, identityOffset, 0, 50)
     username.BackgroundTransparency = 1
     username.Text = "@" .. tostring(profile.roblox_username or player.Name)
     username.TextColor3 = Theme.Colors.TextMuted
-    username.Font = Theme.Font.Regular
-    username.TextSize = 13
+    username.Font = Theme.Font.Bold
+    username.TextSize = 12
     username.TextXAlignment = Enum.TextXAlignment.Left
     username.TextTruncate = Enum.TextTruncate.AtEnd
-    username.ZIndex = 97
-    username.Parent = identityBox
+    username.ZIndex = 95
+    username.Parent = body
 
-    local status = Instance.new("TextLabel")
-    status.Name = "Status"
-    status.Size = UDim2.new(1, -18, 0, 24)
-    status.Position = UDim2.new(0, 9, 0, 61)
-    status.BackgroundColor3 = Color3.fromRGB(14, 17, 29)
-    status.BackgroundTransparency = 0.08
-    status.BorderSizePixel = 0
-    status.Text = "Jugando a Metro Life RP"
-    status.TextColor3 = Theme.Colors.Text
-    status.Font = Theme.Font.Bold
-    status.TextSize = 12
-    status.TextXAlignment = Enum.TextXAlignment.Center
-    status.TextTruncate = Enum.TextTruncate.AtEnd
-    status.ZIndex = 97
-    status.Parent = identityBox
-    round(status, 7)
-    stroke(status, Color3.fromRGB(82, 70, 128), 0.48)
+    local pointsLabel = Instance.new("TextLabel")
+    pointsLabel.Name = "PointsLabel"
+    pointsLabel.Size = UDim2.new(1, -52, 0, 22)
+    pointsLabel.Position = UDim2.new(0, 26, 0, 86)
+    pointsLabel.BackgroundTransparency = 1
+    pointsLabel.Text = "Puntos de Usuario:"
+    pointsLabel.TextColor3 = Theme.Colors.Text
+    pointsLabel.Font = Theme.Font.Bold
+    pointsLabel.TextSize = 14
+    pointsLabel.TextXAlignment = Enum.TextXAlignment.Center
+    pointsLabel.ZIndex = 95
+    pointsLabel.Parent = body
 
-    local function makeInfoRow(name, labelText, valueText, height)
-        local row = Instance.new("Frame")
-        row.Name = name
-        row.Size = UDim2.new(1, -4, 0, height or 56)
-        row.BackgroundColor3 = Color3.fromRGB(18, 18, 34)
-        row.BackgroundTransparency = 0.08
-        row.BorderSizePixel = 0
-        row.ZIndex = 93
-        row.Parent = content
-        round(row, 10)
-        stroke(row, Color3.fromRGB(70, 53, 119), 0.36)
+    local pointsValue = Instance.new("TextLabel")
+    pointsValue.Name = "PointsValue"
+    pointsValue.Size = UDim2.new(1, -52, 0, 24)
+    pointsValue.Position = UDim2.new(0, 26, 0, 112)
+    pointsValue.BackgroundTransparency = 1
+    pointsValue.Text = tostring(profile.personal_points or 0)
+    pointsValue.TextColor3 = Theme.Colors.Text
+    pointsValue.Font = Theme.Font.Bold
+    pointsValue.TextSize = 18
+    pointsValue.TextXAlignment = Enum.TextXAlignment.Center
+    pointsValue.TextTruncate = Enum.TextTruncate.AtEnd
+    pointsValue.ZIndex = 95
+    pointsValue.Parent = body
 
-        local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(1, -22, 0, 24)
-        label.Position = UDim2.new(0, 11, 0, 8)
-        label.BackgroundTransparency = 1
-        label.Text = labelText
-        label.TextColor3 = Theme.Colors.Text
-        label.Font = Theme.Font.Bold
-        label.TextSize = 13
-        label.TextXAlignment = Enum.TextXAlignment.Left
-        label.ZIndex = 94
-        label.Parent = row
+    local clanLabel = Instance.new("TextLabel")
+    clanLabel.Name = "ClanLabel"
+    clanLabel.Size = UDim2.new(1, -76, 0, 20)
+    clanLabel.Position = UDim2.new(0, 40, 0, 152)
+    clanLabel.BackgroundTransparency = 1
+    clanLabel.Text = "Clan:"
+    clanLabel.TextColor3 = Theme.Colors.Text
+    clanLabel.Font = Theme.Font.Bold
+    clanLabel.TextSize = 13
+    clanLabel.TextXAlignment = Enum.TextXAlignment.Left
+    clanLabel.ZIndex = 95
+    clanLabel.Parent = body
 
-        local value = Instance.new("TextLabel")
-        value.Size = UDim2.new(1, -22, 0, 22)
-        value.Position = UDim2.new(0, 11, 0, 30)
-        value.BackgroundTransparency = 1
-        value.Text = valueText
-        value.TextColor3 = Theme.Colors.TextMuted
-        value.Font = Theme.Font.Bold
-        value.TextSize = 12
-        value.TextXAlignment = Enum.TextXAlignment.Right
-        value.TextTruncate = Enum.TextTruncate.AtEnd
-        value.ZIndex = 94
-        value.Parent = row
+    local clanValue = Instance.new("TextLabel")
+    clanValue.Name = "ClanValue"
+    clanValue.Size = UDim2.new(1, -76, 0, 20)
+    clanValue.Position = UDim2.new(0, 40, 0, 174)
+    clanValue.BackgroundTransparency = 1
+    clanValue.Text = tostring(profile.clan_name or "Sin clan")
+    clanValue.TextColor3 = Theme.Colors.Text
+    clanValue.Font = Theme.Font.Regular
+    clanValue.TextSize = 13
+    clanValue.TextXAlignment = Enum.TextXAlignment.Left
+    clanValue.TextTruncate = Enum.TextTruncate.AtEnd
+    clanValue.ZIndex = 95
+    clanValue.Parent = body
 
-        return row, value
-    end
+    local descriptionTitle = Instance.new("TextLabel")
+    descriptionTitle.Name = "DescriptionTitle"
+    descriptionTitle.Size = UDim2.new(1, -76, 0, 20)
+    descriptionTitle.Position = UDim2.new(0, 40, 0, 208)
+    descriptionTitle.BackgroundTransparency = 1
+    descriptionTitle.Text = "Descripcion:"
+    descriptionTitle.TextColor3 = Theme.Colors.Text
+    descriptionTitle.Font = Theme.Font.Bold
+    descriptionTitle.TextSize = 13
+    descriptionTitle.TextXAlignment = Enum.TextXAlignment.Left
+    descriptionTitle.ZIndex = 95
+    descriptionTitle.Parent = body
 
-    makeInfoRow(
-        "ClanRow",
-        "Nombre de Clan",
-        tostring(profile.clan_name or "-")
-    )
-
-    makeInfoRow(
-        "PointsRow",
-        "Puntos de Usuario",
-        "-"
-    )
-
-    local bioRow, bioValue = makeInfoRow(
-        "BioRow",
-        "Descripcion",
-        tostring(profile.bio or "Sin descripcion"),
-        78
-    )
-
-    bioValue.Size = UDim2.new(1, -22, 0, 38)
-    bioValue.TextWrapped = true
-    bioValue.TextXAlignment = Enum.TextXAlignment.Left
-    bioValue.TextYAlignment = Enum.TextYAlignment.Top
+    local descriptionBox = Instance.new("TextLabel")
+    descriptionBox.Name = "DescriptionBox"
+    descriptionBox.Size = UDim2.new(1, -92, 0, 74)
+    descriptionBox.Position = UDim2.new(0, 46, 0, 236)
+    descriptionBox.BackgroundColor3 = inputColor
+    descriptionBox.BackgroundTransparency = 0
+    descriptionBox.BorderSizePixel = 0
+    descriptionBox.Text = tostring(profile.bio or "Cuentales algo sobre ti...")
+    descriptionBox.TextColor3 = profile.bio and Theme.Colors.Text or Theme.Colors.TextMuted
+    descriptionBox.Font = Theme.Font.Regular
+    descriptionBox.TextSize = 12
+    descriptionBox.TextWrapped = true
+    descriptionBox.TextXAlignment = Enum.TextXAlignment.Left
+    descriptionBox.TextYAlignment = Enum.TextYAlignment.Top
+    descriptionBox.ZIndex = 95
+    descriptionBox.Parent = body
+    round(descriptionBox, 8)
+    stroke(descriptionBox, Color3.fromRGB(43, 44, 50), 0.62)
+    addPadding(descriptionBox, 12, 12, 10, 10)
 
     local actions = Instance.new("Frame")
     actions.Name = "Actions"
-    actions.Size = UDim2.new(1, -4, 0, 60)
-    actions.BackgroundColor3 = Color3.fromRGB(17, 17, 31)
-    actions.BackgroundTransparency = 0.18
-    actions.BorderSizePixel = 0
-    actions.ZIndex = 93
-    actions.Parent = content
-    round(actions, 10)
-    stroke(actions, Color3.fromRGB(55, 43, 97), 0.52)
-
-    local addButton = Instance.new("TextButton")
-    addButton.Name = "AddButton"
-    addButton.Size = UDim2.new(0.5, -8, 0, 38)
-    addButton.Position = UDim2.new(0, 10, 0, 11)
-    addButton.BackgroundColor3 = Color3.fromRGB(78, 36, 146)
-    addButton.BackgroundTransparency = 0.03
-    addButton.BorderSizePixel = 0
-    addButton.Text = "Agregar"
-    addButton.TextColor3 = Theme.Colors.Text
-    addButton.Font = Theme.Font.Bold
-    addButton.TextSize = 13
-    addButton.ZIndex = 94
-    addButton.Parent = actions
-    round(addButton, 8)
-    stroke(addButton, Color3.fromRGB(151, 80, 255), 0.12)
+    actions.Size = UDim2.new(0, 150, 0, 32)
+    actions.Position = UDim2.new(0.5, -75, 1, -44)
+    actions.BackgroundTransparency = 1
+    actions.ZIndex = 95
+    actions.Parent = body
 
     local messageButton = Instance.new("TextButton")
     messageButton.Name = "MessageButton"
-    messageButton.Size = UDim2.new(0.5, -8, 0, 38)
-    messageButton.Position = UDim2.new(0.5, -2, 0, 11)
-    messageButton.BackgroundColor3 = Color3.fromRGB(27, 29, 48)
+    messageButton.Size = UDim2.new(0, 94, 0, 30)
+    messageButton.Position = UDim2.new(0, 0, 0, 0)
+    messageButton.BackgroundColor3 = Color3.fromRGB(82, 92, 232)
     messageButton.BackgroundTransparency = 0.02
     messageButton.BorderSizePixel = 0
-    messageButton.Text = "Enviar Mensaje"
+    messageButton.Text = "Mensaje"
     messageButton.TextColor3 = Theme.Colors.Text
     messageButton.Font = Theme.Font.Bold
-    messageButton.TextSize = 13
-    messageButton.ZIndex = 94
+    messageButton.TextSize = 12
+    messageButton.ZIndex = 96
     messageButton.Parent = actions
     round(messageButton, 8)
-    stroke(messageButton, Color3.fromRGB(55, 53, 84), 0.2)
 
-    local function refreshCanvas()
-        task.defer(function()
-            content.CanvasSize = UDim2.new(
-                0,
-                0,
-                0,
-                layout.AbsoluteContentSize.Y + 16
-            )
-        end)
-    end
-
-    refreshCanvas()
+    local addButton = Instance.new("TextButton")
+    addButton.Name = "AddButton"
+    addButton.Size = UDim2.new(0, 34, 0, 30)
+    addButton.Position = UDim2.new(0, 102, 0, 0)
+    addButton.BackgroundColor3 = Color3.fromRGB(66, 68, 78)
+    addButton.BackgroundTransparency = 0.04
+    addButton.BorderSizePixel = 0
+    addButton.Text = "+"
+    addButton.TextColor3 = Theme.Colors.Text
+    addButton.Font = Theme.Font.Bold
+    addButton.TextSize = 18
+    addButton.ZIndex = 96
+    addButton.Parent = actions
+    round(addButton, 8)
 
     closeButton.MouseButton1Click:Connect(function()
         overlay:Destroy()
