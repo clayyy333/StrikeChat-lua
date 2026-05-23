@@ -151,9 +151,9 @@ function ProfileUI.Create(parent, Theme, profile, player)
         ColorSequenceKeypoint.new(0.00, Color3.fromRGB(32, 10, 56)),
         ColorSequenceKeypoint.new(0.18, Color3.fromRGB(150, 22, 190)),
         ColorSequenceKeypoint.new(0.38, Color3.fromRGB(255, 56, 145)),
-        ColorSequenceKeypoint.new(0.58, Color3.fromRGB(76, 96, 220)),
-        ColorSequenceKeypoint.new(0.78, Color3.fromRGB(34, 62, 140)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(14, 12, 32))
+        ColorSequenceKeypoint.new(0.58, Color3.fromRGB(170, 44, 198)),
+        ColorSequenceKeypoint.new(0.78, Color3.fromRGB(92, 28, 150)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(28, 12, 52))
     })
     bannerGradient.Rotation = 25
     bannerGradient.Parent = banner
