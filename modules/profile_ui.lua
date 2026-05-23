@@ -331,29 +331,32 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local visibilityRow = Instance.new("Frame")
     visibilityRow.Name = "VisibilityRow"
-    visibilityRow.Size = UDim2.new(0, 260, 0, 34)
-    visibilityRow.Position = UDim2.new(0, 100, 0, 10)
+    visibilityRow.Size = UDim2.new(0, 200, 0, 30)
+    visibilityRow.Position = UDim2.new(0, 112, 0, 12)
     visibilityRow.BackgroundTransparency = 1
     visibilityRow.Parent = tabRow
 
     local function makeVisibilityButton(name, text, x)
         local button = Instance.new("TextButton")
         button.Name = name
-        button.Size = UDim2.new(0, 106, 1, 0)
+        button.Size = UDim2.new(0, 88, 0, 28)
         button.Position = UDim2.new(0, x, 0, 0)
-        button.BackgroundTransparency = 1
+        button.BackgroundColor3 = Color3.fromRGB(61, 62, 70)
+        button.BackgroundTransparency = 0.08
         button.BorderSizePixel = 0
         button.Text = text
         button.TextColor3 = Theme.Colors.Text
         button.Font = Theme.Font.Bold
-        button.TextSize = 14
-        button.TextXAlignment = Enum.TextXAlignment.Left
+        button.TextSize = 12
+        button.TextXAlignment = Enum.TextXAlignment.Center
         button.Parent = visibilityRow
+        round(button, 8)
+        stroke(button, Color3.fromRGB(86, 88, 100), 0.5)
 
         local indicator = Instance.new("Frame")
         indicator.Name = "Indicator"
-        indicator.Size = UDim2.new(0, 8, 0, 8)
-        indicator.Position = UDim2.new(1, -18, 0.5, -4)
+        indicator.Size = UDim2.new(0, 7, 0, 7)
+        indicator.Position = UDim2.new(1, -14, 0.5, -3)
         indicator.BorderSizePixel = 0
         indicator.Parent = button
         round(indicator, 4)
@@ -362,7 +365,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     end
 
     local publicButton, publicIndicator = makeVisibilityButton("PublicButton", "Publico", 0)
-    local privateButton, privateIndicator = makeVisibilityButton("PrivateButton", "Privado", 152)
+    local privateButton, privateIndicator = makeVisibilityButton("PrivateButton", "Privado", 100)
 
     local divider = Instance.new("Frame")
     divider.Name = "Divider"
@@ -449,10 +452,20 @@ function ProfileUI.Create(parent, Theme, profile, player)
     stroke(publicProfileButton, Color3.fromRGB(96, 98, 110), 0.38)
 
     local function updateVisibilityButtons()
+        publicButton.BackgroundColor3 =
+            selectedVisibility == "public" and Color3.fromRGB(76, 78, 90) or Color3.fromRGB(56, 57, 64)
+        publicButton.BackgroundTransparency =
+            selectedVisibility == "public" and 0.02 or 0.16
+
         publicIndicator.BackgroundColor3 =
             selectedVisibility == "public" and Color3.fromRGB(235, 237, 245) or Color3.fromRGB(116, 118, 130)
         publicIndicator.BackgroundTransparency =
             selectedVisibility == "public" and 0 or 0.45
+
+        privateButton.BackgroundColor3 =
+            selectedVisibility == "private" and Color3.fromRGB(76, 78, 90) or Color3.fromRGB(56, 57, 64)
+        privateButton.BackgroundTransparency =
+            selectedVisibility == "private" and 0.02 or 0.16
 
         privateIndicator.BackgroundColor3 =
             selectedVisibility == "private" and Color3.fromRGB(235, 237, 245) or Color3.fromRGB(116, 118, 130)
