@@ -16,8 +16,18 @@ local CATEGORY_COLORS = {
     clan = Color3.fromRGB(168, 6, 235)
 }
 
-local COLOR_OPTIONS = { "purple", "blue", "pink", "green", "yellow" }
-local STYLE_OPTIONS = { "bracket", "plain" }
+local COLOR_OPTIONS = {
+    { value = "purple", label = "Morado", color = Color3.fromRGB(168, 6, 235) },
+    { value = "blue", label = "Azul", color = Color3.fromRGB(66, 135, 245) },
+    { value = "pink", label = "Rosado", color = Color3.fromRGB(255, 110, 180) },
+    { value = "green", label = "Verde", color = Color3.fromRGB(78, 158, 58) },
+    { value = "yellow", label = "Amarillo", color = Color3.fromRGB(245, 190, 60) }
+}
+
+local STYLE_OPTIONS = {
+    { value = "bracket", label = "Tag Profesional = [TAG]" },
+    { value = "plain", label = "Tag Normal = TAG" }
+}
 
 local function getInventoryEntryData(entry)
     local item = entry.item or entry
@@ -194,13 +204,21 @@ function InventoryUI.Create(parent, Theme)
     local selectedColorIndex = 1
     local selectedStyleIndex = 1
 
+    local function getSelectedColorOption()
+        return COLOR_OPTIONS[selectedColorIndex]
+    end
+
+    local function getSelectedStyleOption()
+        return STYLE_OPTIONS[selectedStyleIndex]
+    end
+
     local colorButton = Instance.new("TextButton")
     colorButton.Name = "ColorButton"
     colorButton.Size = UDim2.new(0.5, -8, 0, 32)
     colorButton.Position = UDim2.new(0, 0, 0, 120)
-    colorButton.BackgroundColor3 = Color3.fromRGB(105, 65, 185)
+    colorButton.BackgroundColor3 = getSelectedColorOption().color
     colorButton.BorderSizePixel = 0
-    colorButton.Text = "Color: purple"
+    colorButton.Text = "Color: " .. getSelectedColorOption().label
     colorButton.TextColor3 = Theme.Colors.Text
     colorButton.Font = Theme.Font.Bold
     colorButton.TextSize = 11
@@ -217,7 +235,7 @@ function InventoryUI.Create(parent, Theme)
     styleButton.Position = UDim2.new(0.5, 8, 0, 120)
     styleButton.BackgroundColor3 = Theme.Colors.PanelLight
     styleButton.BorderSizePixel = 0
-    styleButton.Text = "Estilo: bracket"
+    styleButton.Text = getSelectedStyleOption().label
     styleButton.TextColor3 = Theme.Colors.Text
     styleButton.Font = Theme.Font.Bold
     styleButton.TextSize = 11
@@ -436,7 +454,10 @@ function InventoryUI.Create(parent, Theme)
             selectedColorIndex = 1
         end
 
-        colorButton.Text = "Color: " .. COLOR_OPTIONS[selectedColorIndex]
+        local option = getSelectedColorOption()
+
+        colorButton.Text = "Color: " .. option.label
+        colorButton.BackgroundColor3 = option.color
     end)
 
     styleButton.MouseButton1Click:Connect(function()
@@ -446,7 +467,7 @@ function InventoryUI.Create(parent, Theme)
             selectedStyleIndex = 1
         end
 
-        styleButton.Text = "Estilo: " .. STYLE_OPTIONS[selectedStyleIndex]
+        styleButton.Text = getSelectedStyleOption().label
     end)
 
     cancelClanButton.MouseButton1Click:Connect(function()
@@ -480,8 +501,8 @@ function InventoryUI.Create(parent, Theme)
             return {
                 name = clanNameInput.Text or "",
                 tag = clanTagInput.Text or "",
-                color = COLOR_OPTIONS[selectedColorIndex],
-                tag_style = STYLE_OPTIONS[selectedStyleIndex]
+                color = getSelectedColorOption().value,
+                tag_style = getSelectedStyleOption().value
             }
         end,
 

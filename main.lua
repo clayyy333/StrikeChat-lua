@@ -147,6 +147,25 @@ local setRoom
 local selectedPrivateRoom = nil
 local confirmAction = nil
 
+local clanColorMap = {
+    white = Color3.fromRGB(245, 245, 245),
+    red = Color3.fromRGB(235, 74, 74),
+    green = Color3.fromRGB(78, 190, 92),
+    blue = Color3.fromRGB(74, 142, 245),
+    yellow = Color3.fromRGB(245, 205, 70),
+    orange = Color3.fromRGB(255, 156, 64),
+    pink = Color3.fromRGB(255, 110, 180),
+    purple = Color3.fromRGB(168, 6, 235),
+    black = Color3.fromRGB(32, 32, 36),
+    cyan = Color3.fromRGB(64, 210, 230)
+}
+
+local function getClanColor(colorName)
+    local key = tostring(colorName or ""):lower()
+
+    return clanColorMap[key] or Theme.Colors.TextMuted
+end
+
 
 task.spawn(function()
     while true do
@@ -273,7 +292,7 @@ local function renderMessages(messages)
             clanLabel.Position = UDim2.new(0.65, 44, 0, 0)
             clanLabel.BackgroundTransparency = 1
             clanLabel.Text = clanText
-            clanLabel.TextColor3 = Theme.Colors.TextMuted
+            clanLabel.TextColor3 = getClanColor(msg.clan_color)
             clanLabel.Font = Theme.Font.Bold
             clanLabel.TextSize = 11
             clanLabel.TextXAlignment = Enum.TextXAlignment.Left
