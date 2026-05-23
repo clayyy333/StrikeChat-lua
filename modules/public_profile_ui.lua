@@ -138,7 +138,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     createCardShadow(
         "PublicProfileCardShadowRight",
         UDim2.new(0, 38, 1, -64),
-        UDim2.new(1, -45, 0, 46),
+        UDim2.new(1, -41, 0, 46),
         0,
         NumberSequence.new({
             NumberSequenceKeypoint.new(0.00, 0.52),
