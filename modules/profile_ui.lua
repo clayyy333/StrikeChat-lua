@@ -148,12 +148,12 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
     local bannerGradient = Instance.new("UIGradient")
     bannerGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(18, 8, 34)),
-        ColorSequenceKeypoint.new(0.18, Color3.fromRGB(96, 20, 142)),
-        ColorSequenceKeypoint.new(0.38, Color3.fromRGB(220, 42, 128)),
-        ColorSequenceKeypoint.new(0.58, Color3.fromRGB(70, 84, 190)),
-        ColorSequenceKeypoint.new(0.78, Color3.fromRGB(24, 58, 132)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(10, 10, 24))
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(15, 6, 30)),
+        ColorSequenceKeypoint.new(0.20, Color3.fromRGB(120, 12, 160)),
+        ColorSequenceKeypoint.new(0.40, Color3.fromRGB(255, 30, 120)),
+        ColorSequenceKeypoint.new(0.60, Color3.fromRGB(50, 70, 180)),
+        ColorSequenceKeypoint.new(0.80, Color3.fromRGB(20, 40, 100)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(8, 8, 18))
     })
     bannerGradient.Rotation = 25
     bannerGradient.Parent = banner
