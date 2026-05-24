@@ -151,6 +151,7 @@ local confirmAction = nil
 local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
 local CUTE_CLOUD_SLICE_CENTER = Rect.new(96, 72, 280, 132)
 local GATODARK_CHAT_IMAGE = "rbxassetid://85612888160213"
+local GATODARK_CHAT_SLICE_CENTER = Rect.new(96, 72, 280, 132)
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -359,7 +360,8 @@ local function renderMessages(messages)
                 gatoDarkBubble.Position = UDim2.new(0, 40, 0, 16)
                 gatoDarkBubble.BackgroundTransparency = 1
                 gatoDarkBubble.Image = GATODARK_CHAT_IMAGE
-                gatoDarkBubble.ScaleType = Enum.ScaleType.Stretch
+                gatoDarkBubble.ScaleType = Enum.ScaleType.Slice
+                gatoDarkBubble.SliceCenter = GATODARK_CHAT_SLICE_CENTER
                 gatoDarkBubble.ImageTransparency = 0
                 gatoDarkBubble.ZIndex = 1
                 gatoDarkBubble.Parent = container
