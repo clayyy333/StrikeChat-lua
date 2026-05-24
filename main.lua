@@ -398,30 +398,31 @@ local function renderMessages(messages)
                 gatoDarkStroke.Transparency = 0.2
                 gatoDarkStroke.Parent = gatoDarkBubble
 
-                local gatoDarkFallbackAccent = Instance.new("Frame")
-                gatoDarkFallbackAccent.Name = "GatoDarkFallbackAccent"
-                gatoDarkFallbackAccent.Size = UDim2.new(0, 78, 0, 42)
-                gatoDarkFallbackAccent.Position = UDim2.new(1, -118, 0, 14)
-                gatoDarkFallbackAccent.BackgroundColor3 = Color3.fromRGB(90, 12, 18)
-                gatoDarkFallbackAccent.BackgroundTransparency = 0.15
-                gatoDarkFallbackAccent.BorderSizePixel = 0
-                gatoDarkFallbackAccent.ZIndex = 2
-                gatoDarkFallbackAccent.Parent = container
+                local gatoDarkAccentMask = Instance.new("Frame")
+                gatoDarkAccentMask.Name = "GatoDarkAccentMask"
+                gatoDarkAccentMask.Size = UDim2.new(0, 86, 0, 42)
+                gatoDarkAccentMask.Position = UDim2.new(1, -126, 0, 14)
+                gatoDarkAccentMask.BackgroundColor3 = Color3.fromRGB(90, 12, 18)
+                gatoDarkAccentMask.BackgroundTransparency = 0.15
+                gatoDarkAccentMask.BorderSizePixel = 0
+                gatoDarkAccentMask.ClipsDescendants = true
+                gatoDarkAccentMask.ZIndex = 2
+                gatoDarkAccentMask.Parent = container
 
-                local gatoDarkFallbackCorner = Instance.new("UICorner")
-                gatoDarkFallbackCorner.CornerRadius = UDim.new(0, 12)
-                gatoDarkFallbackCorner.Parent = gatoDarkFallbackAccent
+                local gatoDarkAccentCorner = Instance.new("UICorner")
+                gatoDarkAccentCorner.CornerRadius = UDim.new(0, 12)
+                gatoDarkAccentCorner.Parent = gatoDarkAccentMask
 
                 local gatoDarkAccent = Instance.new("ImageLabel")
                 gatoDarkAccent.Name = "GatoDarkAccent"
-                gatoDarkAccent.Size = UDim2.new(0, 96, 0, 50)
-                gatoDarkAccent.Position = UDim2.new(1, -124, 0, 4)
+                gatoDarkAccent.Size = UDim2.new(0, 118, 0, 58)
+                gatoDarkAccent.Position = UDim2.new(0, -18, 0, -8)
                 gatoDarkAccent.BackgroundTransparency = 1
                 gatoDarkAccent.Image = GATODARK_CHAT_IMAGE
                 gatoDarkAccent.ScaleType = Enum.ScaleType.Fit
                 gatoDarkAccent.ImageTransparency = 0
                 gatoDarkAccent.ZIndex = 3
-                gatoDarkAccent.Parent = container
+                gatoDarkAccent.Parent = gatoDarkAccentMask
             end
 
             local messageText = Instance.new("TextLabel")
