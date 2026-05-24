@@ -408,8 +408,8 @@ local function renderMessages(messages)
                 gatoDarkShadow.Name = "GatoDarkShadow"
                 gatoDarkShadow.Size = UDim2.new(1, 0, 0, containerHeight)
                 gatoDarkShadow.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkShadow.BackgroundColor3 = Color3.fromRGB(78, 8, 18)
-                gatoDarkShadow.BackgroundTransparency = 0.76
+                gatoDarkShadow.BackgroundColor3 = Theme.Colors.Panel
+                gatoDarkShadow.BackgroundTransparency = 0.88
                 gatoDarkShadow.BorderSizePixel = 0
                 gatoDarkShadow.ZIndex = 1
                 gatoDarkShadow.Parent = container
@@ -422,8 +422,8 @@ local function renderMessages(messages)
                 gatoDarkBubble.Name = "GatoDarkBubble"
                 gatoDarkBubble.Size = UDim2.new(1, 0, 0, containerHeight)
                 gatoDarkBubble.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkBubble.BackgroundColor3 = Color3.fromRGB(14, 7, 10)
-                gatoDarkBubble.BackgroundTransparency = 0.03
+                gatoDarkBubble.BackgroundColor3 = Theme.Colors.Panel
+                gatoDarkBubble.BackgroundTransparency = 0.02
                 gatoDarkBubble.BorderSizePixel = 0
                 gatoDarkBubble.ZIndex = 2
                 gatoDarkBubble.Parent = container
@@ -431,12 +431,12 @@ local function renderMessages(messages)
                 local gatoDarkGradient = Instance.new("UIGradient")
                 gatoDarkGradient.Rotation = 25
                 gatoDarkGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(8, 7, 12)),
-                    ColorSequenceKeypoint.new(0.18, Color3.fromRGB(48, 10, 22)),
-                    ColorSequenceKeypoint.new(0.38, Color3.fromRGB(128, 22, 36)),
-                    ColorSequenceKeypoint.new(0.58, Color3.fromRGB(62, 18, 38)),
-                    ColorSequenceKeypoint.new(0.78, Color3.fromRGB(20, 30, 54)),
-                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(7, 8, 14))
+                    ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
+                    ColorSequenceKeypoint.new(0.18, Color3.fromRGB(48, 32, 46)),
+                    ColorSequenceKeypoint.new(0.38, Color3.fromRGB(116, 34, 48)),
+                    ColorSequenceKeypoint.new(0.58, Color3.fromRGB(82, 32, 54)),
+                    ColorSequenceKeypoint.new(0.78, Color3.fromRGB(38, 38, 62)),
+                    ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
                 })
                 gatoDarkGradient.Parent = gatoDarkBubble
 
@@ -444,16 +444,10 @@ local function renderMessages(messages)
                 gatoDarkCorner.CornerRadius = UDim.new(0, 12)
                 gatoDarkCorner.Parent = gatoDarkBubble
 
-                local gatoDarkStroke = Instance.new("UIStroke")
-                gatoDarkStroke.Color = Color3.fromRGB(132, 28, 38)
-                gatoDarkStroke.Thickness = 1
-                gatoDarkStroke.Transparency = 0.38
-                gatoDarkStroke.Parent = gatoDarkBubble
-
                 local gatoDarkAccent = Instance.new("ImageLabel")
                 gatoDarkAccent.Name = "GatoDarkAccent"
                 gatoDarkAccent.Size = UDim2.new(0, 190, 0, 82)
-                gatoDarkAccent.Position = UDim2.new(1, -190, 0, -5)
+                gatoDarkAccent.Position = UDim2.new(1, -190, 0, -16)
                 gatoDarkAccent.BackgroundTransparency = 1
                 gatoDarkAccent.Image = GATODARK_CHAT_IMAGE
                 gatoDarkAccent.ScaleType = Enum.ScaleType.Fit
