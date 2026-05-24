@@ -343,7 +343,9 @@ local function renderMessages(messages)
                 chatStyle == "gato_dark" or
                 chatStyle == "chat_style_gatodark"
             local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
-            local messageRightPadding = hasGatoDarkStyle and 190 or 50
+            local gatoRightPadding = 190
+            local gatoMinHeight = 64
+            local messageRightPadding = hasGatoDarkStyle and gatoRightPadding or 50
 
             if hasCuteCloudStyle then
                 messageRightPadding = 152
@@ -361,6 +363,10 @@ local function renderMessages(messages)
             )
             local messageHeight = math.max(34, math.ceil(measuredMessage.Y) + 2)
             local containerHeight = math.max(58, 20 + messageHeight + 6)
+
+            if hasGatoDarkStyle then
+                containerHeight = math.max(gatoMinHeight, 24 + messageHeight + 10)
+            end
 
             container.Size = UDim2.new(1, -8, 0, containerHeight)
 
@@ -398,39 +404,53 @@ local function renderMessages(messages)
             end
 
             if hasGatoDarkStyle then
+                local gatoDarkShadow = Instance.new("Frame")
+                gatoDarkShadow.Name = "GatoDarkShadow"
+                gatoDarkShadow.Size = UDim2.new(1, -44, 0, containerHeight - 8)
+                gatoDarkShadow.Position = UDim2.new(0, 36, 0, 8)
+                gatoDarkShadow.BackgroundColor3 = Color3.fromRGB(80, 12, 16)
+                gatoDarkShadow.BackgroundTransparency = 0.72
+                gatoDarkShadow.BorderSizePixel = 0
+                gatoDarkShadow.ZIndex = 1
+                gatoDarkShadow.Parent = container
+
+                local gatoDarkShadowCorner = Instance.new("UICorner")
+                gatoDarkShadowCorner.CornerRadius = UDim.new(0, 16)
+                gatoDarkShadowCorner.Parent = gatoDarkShadow
+
                 local gatoDarkBubble = Instance.new("Frame")
                 gatoDarkBubble.Name = "GatoDarkBubble"
-                gatoDarkBubble.Size = UDim2.new(1, 0, 0, containerHeight)
-                gatoDarkBubble.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkBubble.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
-                gatoDarkBubble.BackgroundTransparency = 0.06
+                gatoDarkBubble.Size = UDim2.new(1, -52, 0, containerHeight - 12)
+                gatoDarkBubble.Position = UDim2.new(0, 40, 0, 10)
+                gatoDarkBubble.BackgroundColor3 = Color3.fromRGB(10, 8, 10)
+                gatoDarkBubble.BackgroundTransparency = 0.04
                 gatoDarkBubble.BorderSizePixel = 0
-                gatoDarkBubble.ZIndex = 1
+                gatoDarkBubble.ZIndex = 2
                 gatoDarkBubble.Parent = container
 
                 local gatoDarkGradient = Instance.new("UIGradient")
                 gatoDarkGradient.Rotation = 0
                 gatoDarkGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0, Color3.fromRGB(16, 16, 22)),
-                    ColorSequenceKeypoint.new(0.68, Color3.fromRGB(24, 18, 24)),
-                    ColorSequenceKeypoint.new(1, Color3.fromRGB(84, 12, 18))
+                    ColorSequenceKeypoint.new(0, Color3.fromRGB(10, 8, 10)),
+                    ColorSequenceKeypoint.new(0.55, Color3.fromRGB(24, 13, 15)),
+                    ColorSequenceKeypoint.new(1, Color3.fromRGB(58, 13, 16))
                 })
                 gatoDarkGradient.Parent = gatoDarkBubble
 
                 local gatoDarkCorner = Instance.new("UICorner")
-                gatoDarkCorner.CornerRadius = UDim.new(0, 12)
+                gatoDarkCorner.CornerRadius = UDim.new(0, 13)
                 gatoDarkCorner.Parent = gatoDarkBubble
 
                 local gatoDarkStroke = Instance.new("UIStroke")
-                gatoDarkStroke.Color = Color3.fromRGB(145, 28, 38)
+                gatoDarkStroke.Color = Color3.fromRGB(120, 24, 30)
                 gatoDarkStroke.Thickness = 1
-                gatoDarkStroke.Transparency = 0.35
+                gatoDarkStroke.Transparency = 0.42
                 gatoDarkStroke.Parent = gatoDarkBubble
 
                 local gatoDarkAccent = Instance.new("ImageLabel")
                 gatoDarkAccent.Name = "GatoDarkAccent"
                 gatoDarkAccent.Size = UDim2.new(0, 170, 0, 72)
-                gatoDarkAccent.Position = UDim2.new(1, -170, 0, -2)
+                gatoDarkAccent.Position = UDim2.new(1, -178, 0, 2)
                 gatoDarkAccent.BackgroundTransparency = 1
                 gatoDarkAccent.Image = GATODARK_CHAT_IMAGE
                 gatoDarkAccent.ScaleType = Enum.ScaleType.Fit
@@ -444,11 +464,15 @@ local function renderMessages(messages)
             if hasCuteCloudStyle then
                 messageText.Size = UDim2.new(1, -152, 0, messageHeight)
             elseif hasGatoDarkStyle then
-                messageText.Size = UDim2.new(1, -190, 0, messageHeight)
+                messageText.Size = UDim2.new(1, -gatoRightPadding, 0, messageHeight)
             else
                 messageText.Size = UDim2.new(1, -50, 0, messageHeight)
             end
-            messageText.Position = UDim2.new(0, 44, 0, 20)
+            if hasGatoDarkStyle then
+                messageText.Position = UDim2.new(0, 58, 0, 22)
+            else
+                messageText.Position = UDim2.new(0, 44, 0, 20)
+            end
             messageText.BackgroundTransparency = 1
             messageText.Text = tostring(msg.message)
             if hasCuteCloudStyle then
