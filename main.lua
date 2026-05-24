@@ -400,12 +400,12 @@ local function renderMessages(messages)
 
                 local gatoDarkAccentMask = Instance.new("Frame")
                 gatoDarkAccentMask.Name = "GatoDarkAccentMask"
-                gatoDarkAccentMask.Size = UDim2.new(0, 118, 0, 58)
-                gatoDarkAccentMask.Position = UDim2.new(1, -118, 0, 0)
+                gatoDarkAccentMask.Size = UDim2.new(0, 150, 0, 58)
+                gatoDarkAccentMask.Position = UDim2.new(1, -150, 0, 0)
                 gatoDarkAccentMask.BackgroundTransparency = 1
                 gatoDarkAccentMask.BorderSizePixel = 0
                 gatoDarkAccentMask.ClipsDescendants = true
-                gatoDarkAccentMask.ZIndex = 2
+                gatoDarkAccentMask.ZIndex = 4
                 gatoDarkAccentMask.Parent = container
 
                 local gatoDarkAccentCorner = Instance.new("UICorner")
@@ -414,13 +414,13 @@ local function renderMessages(messages)
 
                 local gatoDarkAccent = Instance.new("ImageLabel")
                 gatoDarkAccent.Name = "GatoDarkAccent"
-                gatoDarkAccent.Size = UDim2.new(0, 156, 0, 76)
-                gatoDarkAccent.Position = UDim2.new(0, -28, 0, -10)
+                gatoDarkAccent.Size = UDim2.new(0, 260, 0, 76)
+                gatoDarkAccent.Position = UDim2.new(1, -260, 0, -10)
                 gatoDarkAccent.BackgroundTransparency = 1
                 gatoDarkAccent.Image = GATODARK_CHAT_IMAGE
                 gatoDarkAccent.ScaleType = Enum.ScaleType.Fit
                 gatoDarkAccent.ImageTransparency = 0
-                gatoDarkAccent.ZIndex = 3
+                gatoDarkAccent.ZIndex = 5
                 gatoDarkAccent.Parent = gatoDarkAccentMask
             end
 
