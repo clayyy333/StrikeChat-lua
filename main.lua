@@ -380,8 +380,8 @@ local function renderMessages(messages)
             if hasGatoDarkStyle then
                 local gatoDarkBubble = Instance.new("Frame")
                 gatoDarkBubble.Name = "GatoDarkBubble"
-                gatoDarkBubble.Size = UDim2.new(1, -72, 0, 42)
-                gatoDarkBubble.Position = UDim2.new(0, 40, 0, 14)
+                gatoDarkBubble.Size = UDim2.new(1, 0, 0, 58)
+                gatoDarkBubble.Position = UDim2.new(0, 0, 0, 0)
                 gatoDarkBubble.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
                 gatoDarkBubble.BackgroundTransparency = 0.08
                 gatoDarkBubble.BorderSizePixel = 0
@@ -400,10 +400,9 @@ local function renderMessages(messages)
 
                 local gatoDarkAccentMask = Instance.new("Frame")
                 gatoDarkAccentMask.Name = "GatoDarkAccentMask"
-                gatoDarkAccentMask.Size = UDim2.new(0, 86, 0, 42)
-                gatoDarkAccentMask.Position = UDim2.new(1, -126, 0, 14)
-                gatoDarkAccentMask.BackgroundColor3 = Color3.fromRGB(90, 12, 18)
-                gatoDarkAccentMask.BackgroundTransparency = 0.15
+                gatoDarkAccentMask.Size = UDim2.new(0, 118, 0, 58)
+                gatoDarkAccentMask.Position = UDim2.new(1, -118, 0, 0)
+                gatoDarkAccentMask.BackgroundTransparency = 1
                 gatoDarkAccentMask.BorderSizePixel = 0
                 gatoDarkAccentMask.ClipsDescendants = true
                 gatoDarkAccentMask.ZIndex = 2
@@ -415,8 +414,8 @@ local function renderMessages(messages)
 
                 local gatoDarkAccent = Instance.new("ImageLabel")
                 gatoDarkAccent.Name = "GatoDarkAccent"
-                gatoDarkAccent.Size = UDim2.new(0, 118, 0, 58)
-                gatoDarkAccent.Position = UDim2.new(0, -18, 0, -8)
+                gatoDarkAccent.Size = UDim2.new(0, 156, 0, 76)
+                gatoDarkAccent.Position = UDim2.new(0, -28, 0, -10)
                 gatoDarkAccent.BackgroundTransparency = 1
                 gatoDarkAccent.Image = GATODARK_CHAT_IMAGE
                 gatoDarkAccent.ScaleType = Enum.ScaleType.Fit
