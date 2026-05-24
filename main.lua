@@ -334,8 +334,14 @@ local function renderMessages(messages)
             clanLabel.Size = UDim2.new(0, math.max(tagWidth, 20), 0, 18)
             clanLabel.Position = UDim2.new(0, 44 + nameWidth + spacing, 0, 0)
 
-            local hasCuteCloudStyle = msg.chat_style == "cloud"
-            local hasGatoDarkStyle = msg.chat_style == "gatodark"
+            local chatStyle = tostring(msg.chat_style or ""):lower()
+            local hasCuteCloudStyle =
+                chatStyle == "cloud" or
+                chatStyle == "chat_style_cloud"
+            local hasGatoDarkStyle =
+                chatStyle == "gatodark" or
+                chatStyle == "gato_dark" or
+                chatStyle == "chat_style_gatodark"
             local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
 
             if hasCuteCloudStyle then
@@ -372,16 +378,50 @@ local function renderMessages(messages)
             end
 
             if hasGatoDarkStyle then
-                local gatoDarkBackground = Instance.new("ImageLabel")
-                gatoDarkBackground.Name = "GatoDarkFullBackground"
-                gatoDarkBackground.Size = UDim2.new(1, 0, 0, 58)
-                gatoDarkBackground.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkBackground.BackgroundTransparency = 1
-                gatoDarkBackground.Image = GATODARK_CHAT_IMAGE
-                gatoDarkBackground.ScaleType = Enum.ScaleType.Crop
-                gatoDarkBackground.ImageTransparency = 0
-                gatoDarkBackground.ZIndex = 1
-                gatoDarkBackground.Parent = container
+                local gatoDarkBubble = Instance.new("Frame")
+                gatoDarkBubble.Name = "GatoDarkBubble"
+                gatoDarkBubble.Size = UDim2.new(1, -72, 0, 42)
+                gatoDarkBubble.Position = UDim2.new(0, 40, 0, 14)
+                gatoDarkBubble.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+                gatoDarkBubble.BackgroundTransparency = 0.08
+                gatoDarkBubble.BorderSizePixel = 0
+                gatoDarkBubble.ZIndex = 1
+                gatoDarkBubble.Parent = container
+
+                local gatoDarkCorner = Instance.new("UICorner")
+                gatoDarkCorner.CornerRadius = UDim.new(0, 12)
+                gatoDarkCorner.Parent = gatoDarkBubble
+
+                local gatoDarkStroke = Instance.new("UIStroke")
+                gatoDarkStroke.Color = Color3.fromRGB(170, 35, 45)
+                gatoDarkStroke.Thickness = 1
+                gatoDarkStroke.Transparency = 0.2
+                gatoDarkStroke.Parent = gatoDarkBubble
+
+                local gatoDarkFallbackAccent = Instance.new("Frame")
+                gatoDarkFallbackAccent.Name = "GatoDarkFallbackAccent"
+                gatoDarkFallbackAccent.Size = UDim2.new(0, 78, 0, 42)
+                gatoDarkFallbackAccent.Position = UDim2.new(1, -118, 0, 14)
+                gatoDarkFallbackAccent.BackgroundColor3 = Color3.fromRGB(90, 12, 18)
+                gatoDarkFallbackAccent.BackgroundTransparency = 0.15
+                gatoDarkFallbackAccent.BorderSizePixel = 0
+                gatoDarkFallbackAccent.ZIndex = 2
+                gatoDarkFallbackAccent.Parent = container
+
+                local gatoDarkFallbackCorner = Instance.new("UICorner")
+                gatoDarkFallbackCorner.CornerRadius = UDim.new(0, 12)
+                gatoDarkFallbackCorner.Parent = gatoDarkFallbackAccent
+
+                local gatoDarkAccent = Instance.new("ImageLabel")
+                gatoDarkAccent.Name = "GatoDarkAccent"
+                gatoDarkAccent.Size = UDim2.new(0, 96, 0, 50)
+                gatoDarkAccent.Position = UDim2.new(1, -124, 0, 4)
+                gatoDarkAccent.BackgroundTransparency = 1
+                gatoDarkAccent.Image = GATODARK_CHAT_IMAGE
+                gatoDarkAccent.ScaleType = Enum.ScaleType.Fit
+                gatoDarkAccent.ImageTransparency = 0
+                gatoDarkAccent.ZIndex = 3
+                gatoDarkAccent.Parent = container
             end
 
             local messageText = Instance.new("TextLabel")
