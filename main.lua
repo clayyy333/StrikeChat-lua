@@ -339,8 +339,8 @@ local function renderMessages(messages)
             if hasCuteCloudStyle then
                 local cloudBubble = Instance.new("ImageLabel")
                 cloudBubble.Name = "CuteCloudBubble"
-                cloudBubble.Size = UDim2.new(1, 24, 0, 116)
-                cloudBubble.Position = UDim2.new(0, -12, 0, -29)
+                cloudBubble.Size = UDim2.new(1, 24, 0, 104)
+                cloudBubble.Position = UDim2.new(0, -12, 0, -23)
                 cloudBubble.BackgroundTransparency = 1
                 cloudBubble.Image = CUTE_CLOUD_IMAGE
                 cloudBubble.ScaleType = Enum.ScaleType.Slice
@@ -349,26 +349,6 @@ local function renderMessages(messages)
                 cloudBubble.ZIndex = 1
                 cloudBubble.Parent = container
 
-                local cloudLeftBoost = Instance.new("Frame")
-                cloudLeftBoost.Name = "CuteCloudLeftBoost"
-                cloudLeftBoost.Size = UDim2.new(0, 96, 0, 132)
-                cloudLeftBoost.Position = UDim2.new(0, -12, 0, -37)
-                cloudLeftBoost.BackgroundTransparency = 1
-                cloudLeftBoost.ClipsDescendants = true
-                cloudLeftBoost.ZIndex = 1
-                cloudLeftBoost.Parent = container
-
-                local cloudLeftImage = Instance.new("ImageLabel")
-                cloudLeftImage.Name = "Image"
-                cloudLeftImage.Size = UDim2.new(0, 140, 0, 132)
-                cloudLeftImage.Position = UDim2.new(0, 0, 0, 0)
-                cloudLeftImage.BackgroundTransparency = 1
-                cloudLeftImage.Image = CUTE_CLOUD_IMAGE
-                cloudLeftImage.ScaleType = Enum.ScaleType.Slice
-                cloudLeftImage.SliceCenter = CUTE_CLOUD_SLICE_CENTER
-                cloudLeftImage.ImageTransparency = 0
-                cloudLeftImage.ZIndex = 1
-                cloudLeftImage.Parent = cloudLeftBoost
             end
 
             local messageText = Instance.new("TextLabel")
