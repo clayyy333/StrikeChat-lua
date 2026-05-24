@@ -404,52 +404,88 @@ local function renderMessages(messages)
             end
 
             if hasGatoDarkStyle then
-                local gatoDarkShadow = Instance.new("Frame")
-                gatoDarkShadow.Name = "GatoDarkShadow"
-                gatoDarkShadow.Size = UDim2.new(1, 0, 0, containerHeight)
-                gatoDarkShadow.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkShadow.BackgroundColor3 = Color3.fromRGB(88, 24, 42)
-                gatoDarkShadow.BackgroundTransparency = 0.9
-                gatoDarkShadow.BorderSizePixel = 0
-                gatoDarkShadow.ZIndex = 1
-                gatoDarkShadow.Parent = container
-
-                local gatoDarkShadowCorner = Instance.new("UICorner")
-                gatoDarkShadowCorner.CornerRadius = UDim.new(0, 14)
-                gatoDarkShadowCorner.Parent = gatoDarkShadow
-
                 local gatoDarkBubble = Instance.new("Frame")
                 gatoDarkBubble.Name = "GatoDarkBubble"
                 gatoDarkBubble.Size = UDim2.new(1, 0, 0, containerHeight)
                 gatoDarkBubble.Position = UDim2.new(0, 0, 0, 0)
                 gatoDarkBubble.BackgroundColor3 = Theme.Colors.Panel
-                gatoDarkBubble.BackgroundTransparency = 0.08
+                gatoDarkBubble.BackgroundTransparency = 0
                 gatoDarkBubble.BorderSizePixel = 0
+                gatoDarkBubble.ClipsDescendants = true
                 gatoDarkBubble.ZIndex = 2
                 gatoDarkBubble.Parent = container
 
                 local gatoDarkGradient = Instance.new("UIGradient")
-                gatoDarkGradient.Rotation = 25
+                gatoDarkGradient.Rotation = 0
                 gatoDarkGradient.Color = ColorSequence.new({
                     ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
-                    ColorSequenceKeypoint.new(0.16, Color3.fromRGB(54, 42, 62)),
-                    ColorSequenceKeypoint.new(0.36, Color3.fromRGB(142, 48, 70)),
-                    ColorSequenceKeypoint.new(0.58, Color3.fromRGB(98, 42, 70)),
-                    ColorSequenceKeypoint.new(0.80, Color3.fromRGB(48, 48, 78)),
+                    ColorSequenceKeypoint.new(0.24, Color3.fromRGB(62, 45, 68)),
+                    ColorSequenceKeypoint.new(0.48, Color3.fromRGB(142, 52, 74)),
+                    ColorSequenceKeypoint.new(0.68, Color3.fromRGB(72, 58, 92)),
                     ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
                 })
                 gatoDarkGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0.00, 0.48),
-                    NumberSequenceKeypoint.new(0.18, 0.18),
-                    NumberSequenceKeypoint.new(0.50, 0.02),
-                    NumberSequenceKeypoint.new(0.82, 0.18),
-                    NumberSequenceKeypoint.new(1.00, 0.48)
+                    NumberSequenceKeypoint.new(0.00, 1.00),
+                    NumberSequenceKeypoint.new(0.22, 0.42),
+                    NumberSequenceKeypoint.new(0.48, 0.10),
+                    NumberSequenceKeypoint.new(0.74, 0.48),
+                    NumberSequenceKeypoint.new(1.00, 1.00)
                 })
                 gatoDarkGradient.Parent = gatoDarkBubble
 
                 local gatoDarkCorner = Instance.new("UICorner")
                 gatoDarkCorner.CornerRadius = UDim.new(0, 12)
                 gatoDarkCorner.Parent = gatoDarkBubble
+
+                local gatoDarkEdgeLeft = Instance.new("Frame")
+                gatoDarkEdgeLeft.Name = "GatoDarkEdgeLeft"
+                gatoDarkEdgeLeft.Size = UDim2.new(0, 90, 1, 0)
+                gatoDarkEdgeLeft.Position = UDim2.new(0, 0, 0, 0)
+                gatoDarkEdgeLeft.BackgroundColor3 = Color3.fromRGB(118, 44, 70)
+                gatoDarkEdgeLeft.BackgroundTransparency = 0.18
+                gatoDarkEdgeLeft.BorderSizePixel = 0
+                gatoDarkEdgeLeft.ZIndex = 2
+                gatoDarkEdgeLeft.Parent = gatoDarkBubble
+
+                local gatoDarkEdgeLeftGradient = Instance.new("UIGradient")
+                gatoDarkEdgeLeftGradient.Rotation = 0
+                gatoDarkEdgeLeftGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
+                    ColorSequenceKeypoint.new(0.46, Color3.fromRGB(132, 52, 82)),
+                    ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
+                })
+                gatoDarkEdgeLeftGradient.Transparency = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0.00, 1.00),
+                    NumberSequenceKeypoint.new(0.34, 0.62),
+                    NumberSequenceKeypoint.new(1.00, 1.00)
+                })
+                gatoDarkEdgeLeftGradient.Parent = gatoDarkEdgeLeft
+
+                local gatoDarkEdgeRight = Instance.new("Frame")
+                gatoDarkEdgeRight.Name = "GatoDarkEdgeRight"
+                gatoDarkEdgeRight.Size = UDim2.new(0, 170, 1, 0)
+                gatoDarkEdgeRight.Position = UDim2.new(1, -170, 0, 0)
+                gatoDarkEdgeRight.BackgroundColor3 = Color3.fromRGB(144, 54, 68)
+                gatoDarkEdgeRight.BackgroundTransparency = 0.1
+                gatoDarkEdgeRight.BorderSizePixel = 0
+                gatoDarkEdgeRight.ZIndex = 2
+                gatoDarkEdgeRight.Parent = gatoDarkBubble
+
+                local gatoDarkEdgeRightGradient = Instance.new("UIGradient")
+                gatoDarkEdgeRightGradient.Rotation = 0
+                gatoDarkEdgeRightGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
+                    ColorSequenceKeypoint.new(0.42, Color3.fromRGB(176, 62, 72)),
+                    ColorSequenceKeypoint.new(0.72, Color3.fromRGB(84, 58, 100)),
+                    ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
+                })
+                gatoDarkEdgeRightGradient.Transparency = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0.00, 1.00),
+                    NumberSequenceKeypoint.new(0.28, 0.54),
+                    NumberSequenceKeypoint.new(0.58, 0.18),
+                    NumberSequenceKeypoint.new(1.00, 1.00)
+                })
+                gatoDarkEdgeRightGradient.Parent = gatoDarkEdgeRight
 
                 local gatoDarkAccent = Instance.new("ImageLabel")
                 gatoDarkAccent.Name = "GatoDarkAccent"
