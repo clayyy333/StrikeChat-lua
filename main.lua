@@ -343,11 +343,31 @@ local function renderMessages(messages)
                 chatStyle == "gato_dark" or
                 chatStyle == "chat_style_gatodark"
             local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
+            local messageRightPadding = hasGatoDarkStyle and 214 or 50
+
+            if hasCuteCloudStyle then
+                messageRightPadding = 152
+            end
+
+            local messageMeasureWidth = math.max(
+                chatPanel.MessagesBox.AbsoluteSize.X - 44 - messageRightPadding - 8,
+                80
+            )
+            local measuredMessage = TextService:GetTextSize(
+                tostring(msg.message),
+                13,
+                Theme.Font.Regular,
+                Vector2.new(messageMeasureWidth, math.huge)
+            )
+            local messageHeight = math.max(34, math.ceil(measuredMessage.Y) + 2)
+            local containerHeight = math.max(58, 20 + messageHeight + 6)
+
+            container.Size = UDim2.new(1, -8, 0, containerHeight)
 
             if hasCuteCloudStyle then
                 local premiumBubble = Instance.new("Frame")
                 premiumBubble.Name = "PremiumChatBubble"
-                premiumBubble.Size = UDim2.new(1, -72, 0, 42)
+                premiumBubble.Size = UDim2.new(1, -72, 0, containerHeight - 16)
                 premiumBubble.Position = UDim2.new(0, 40, 0, 14)
                 premiumBubble.BackgroundColor3 = Color3.fromRGB(242, 247, 255)
                 premiumBubble.BackgroundTransparency = 0.04
@@ -378,11 +398,9 @@ local function renderMessages(messages)
             end
 
             if hasGatoDarkStyle then
-                container.Size = UDim2.new(1, -8, 0, 72)
-
                 local gatoDarkBubble = Instance.new("Frame")
                 gatoDarkBubble.Name = "GatoDarkBubble"
-                gatoDarkBubble.Size = UDim2.new(1, 0, 0, 72)
+                gatoDarkBubble.Size = UDim2.new(1, 0, 0, containerHeight)
                 gatoDarkBubble.Position = UDim2.new(0, 0, 0, 0)
                 gatoDarkBubble.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
                 gatoDarkBubble.BackgroundTransparency = 0.08
@@ -415,11 +433,11 @@ local function renderMessages(messages)
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
             if hasCuteCloudStyle then
-                messageText.Size = UDim2.new(1, -152, 0, 34)
+                messageText.Size = UDim2.new(1, -152, 0, messageHeight)
             elseif hasGatoDarkStyle then
-                messageText.Size = UDim2.new(1, -214, 0, 48)
+                messageText.Size = UDim2.new(1, -214, 0, messageHeight)
             else
-                messageText.Size = UDim2.new(1, -50, 0, 34)
+                messageText.Size = UDim2.new(1, -50, 0, messageHeight)
             end
             messageText.Position = UDim2.new(0, 44, 0, 20)
             messageText.BackgroundTransparency = 1
