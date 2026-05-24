@@ -378,9 +378,11 @@ local function renderMessages(messages)
             end
 
             if hasGatoDarkStyle then
+                container.Size = UDim2.new(1, -8, 0, 72)
+
                 local gatoDarkBubble = Instance.new("Frame")
                 gatoDarkBubble.Name = "GatoDarkBubble"
-                gatoDarkBubble.Size = UDim2.new(1, 0, 0, 58)
+                gatoDarkBubble.Size = UDim2.new(1, 0, 0, 72)
                 gatoDarkBubble.Position = UDim2.new(0, 0, 0, 0)
                 gatoDarkBubble.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
                 gatoDarkBubble.BackgroundTransparency = 0.08
@@ -400,8 +402,8 @@ local function renderMessages(messages)
 
                 local gatoDarkAccent = Instance.new("ImageLabel")
                 gatoDarkAccent.Name = "GatoDarkAccent"
-                gatoDarkAccent.Size = UDim2.new(0, 138, 0, 58)
-                gatoDarkAccent.Position = UDim2.new(1, -138, 0, 0)
+                gatoDarkAccent.Size = UDim2.new(0, 190, 0, 82)
+                gatoDarkAccent.Position = UDim2.new(1, -190, 0, -5)
                 gatoDarkAccent.BackgroundTransparency = 1
                 gatoDarkAccent.Image = GATODARK_CHAT_IMAGE
                 gatoDarkAccent.ScaleType = Enum.ScaleType.Fit
@@ -415,7 +417,7 @@ local function renderMessages(messages)
             if hasCuteCloudStyle then
                 messageText.Size = UDim2.new(1, -152, 0, 34)
             elseif hasGatoDarkStyle then
-                messageText.Size = UDim2.new(1, -152, 0, 34)
+                messageText.Size = UDim2.new(1, -214, 0, 48)
             else
                 messageText.Size = UDim2.new(1, -50, 0, 34)
             end
