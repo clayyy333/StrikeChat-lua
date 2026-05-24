@@ -282,11 +282,17 @@ function ShopUI.Create(parent, Theme)
     featuredPriceCorner.CornerRadius = UDim.new(0, 10)
     featuredPriceCorner.Parent = featuredPrice
 
-    local itemsContainer = Instance.new("Frame")
+    local itemsContainer = Instance.new("ScrollingFrame")
     itemsContainer.Name = "ItemsContainer"
     itemsContainer.Size = UDim2.new(0, 470, 0, 360)
     itemsContainer.Position = UDim2.new(0, 420, 0, 82)
     itemsContainer.BackgroundTransparency = 1
+    itemsContainer.BorderSizePixel = 0
+    itemsContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
+    itemsContainer.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    itemsContainer.ScrollingDirection = Enum.ScrollingDirection.Y
+    itemsContainer.ScrollBarThickness = 4
+    itemsContainer.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
     itemsContainer.Parent = root
 
     local itemsLayout = Instance.new("UIGridLayout")
@@ -411,6 +417,13 @@ function ShopUI.Create(parent, Theme)
     )
     item6.Parent = itemsContainer
 
+    local item7, item7BuyButton = createShopItem(
+        "GATODARK",
+        Color3.fromRGB(30, 30, 38),
+        "Nuevo estilo"
+    )
+    item7.Parent = itemsContainer
+
     local item6Gradient = Instance.new("UIGradient")
 
 
@@ -493,7 +506,8 @@ function ShopUI.Create(parent, Theme)
             CustomChat = item3BuyButton,
             ChatColor = item4BuyButton,
             BackgroundDesign = item5BuyButton,
-            Robux100 = item6BuyButton
+            Robux100 = item6BuyButton,
+            GatoDark = item7BuyButton
         },
 
         Destroy = function()

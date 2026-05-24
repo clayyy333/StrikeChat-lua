@@ -150,6 +150,7 @@ local confirmAction = nil
 
 local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
 local CUTE_CLOUD_SLICE_CENTER = Rect.new(96, 72, 280, 132)
+local GATODARK_CHAT_IMAGE = "rbxassetid://85612888160213"
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -335,6 +336,7 @@ local function renderMessages(messages)
             clanLabel.Position = UDim2.new(0, 44 + nameWidth + spacing, 0, 0)
 
             local hasCuteCloudStyle = msg.chat_style == "cloud"
+            local hasGatoDarkStyle = msg.chat_style == "gatodark"
 
             if hasCuteCloudStyle then
                 local cloudBubble = Instance.new("ImageLabel")
@@ -350,19 +352,44 @@ local function renderMessages(messages)
                 cloudBubble.Parent = container
             end
 
+            if hasGatoDarkStyle then
+                local gatoDarkBubble = Instance.new("ImageLabel")
+                gatoDarkBubble.Name = "GatoDarkBubble"
+                gatoDarkBubble.Size = UDim2.new(1, -44, 0, 58)
+                gatoDarkBubble.Position = UDim2.new(0, 38, 0, 0)
+                gatoDarkBubble.BackgroundTransparency = 1
+                gatoDarkBubble.Image = GATODARK_CHAT_IMAGE
+                gatoDarkBubble.ScaleType = Enum.ScaleType.Fit
+                gatoDarkBubble.ImageTransparency = 0
+                gatoDarkBubble.ZIndex = 1
+                gatoDarkBubble.Parent = container
+            end
+
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
-            messageText.Size = hasCuteCloudStyle and UDim2.new(1, -99, 0, 34) or UDim2.new(1, -50, 0, 34)
+            if hasCuteCloudStyle then
+                messageText.Size = UDim2.new(1, -99, 0, 34)
+            elseif hasGatoDarkStyle then
+                messageText.Size = UDim2.new(1, -116, 0, 34)
+            else
+                messageText.Size = UDim2.new(1, -50, 0, 34)
+            end
             messageText.Position = UDim2.new(0, 44, 0, 20)
             messageText.BackgroundTransparency = 1
             messageText.Text = tostring(msg.message)
-            messageText.TextColor3 = hasCuteCloudStyle and Color3.fromRGB(20, 20, 20) or Theme.Colors.Text
+            if hasCuteCloudStyle then
+                messageText.TextColor3 = Color3.fromRGB(20, 20, 20)
+            elseif hasGatoDarkStyle then
+                messageText.TextColor3 = Color3.fromRGB(235, 245, 255)
+            else
+                messageText.TextColor3 = Theme.Colors.Text
+            end
             messageText.Font = Theme.Font.Regular
             messageText.TextSize = 13
             messageText.TextXAlignment = Enum.TextXAlignment.Left
             messageText.TextYAlignment = Enum.TextYAlignment.Top
             messageText.TextWrapped = true
-            messageText.ZIndex = hasCuteCloudStyle and 4 or 1
+            messageText.ZIndex = (hasCuteCloudStyle or hasGatoDarkStyle) and 4 or 1
             messageText.Parent = container
         end
     end
@@ -1145,6 +1172,10 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
 
     shopUI.ItemButtons.CustomChat.MouseButton1Click:Connect(function()
         buyInventoryItem("chat_style_cloud", shopUI.ItemButtons.CustomChat)
+    end)
+
+    shopUI.ItemButtons.GatoDark.MouseButton1Click:Connect(function()
+        buyInventoryItem("chat_style_gatodark", shopUI.ItemButtons.GatoDark)
     end)
 
     shopUI.ItemButtons.ChatColor.MouseButton1Click:Connect(function()
