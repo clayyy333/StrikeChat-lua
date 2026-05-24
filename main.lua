@@ -149,9 +149,7 @@ local selectedPrivateRoom = nil
 local confirmAction = nil
 
 local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
-local CUTE_CLOUD_SLICE_CENTER = Rect.new(96, 72, 280, 132)
 local GATODARK_CHAT_IMAGE = "rbxassetid://85612888160213"
-local GATODARK_CHAT_SLICE_CENTER = Rect.new(96, 72, 280, 132)
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -338,41 +336,51 @@ local function renderMessages(messages)
 
             local hasCuteCloudStyle = msg.chat_style == "cloud"
             local hasGatoDarkStyle = msg.chat_style == "gatodark"
+            local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
 
-            if hasCuteCloudStyle then
-                local cloudBubble = Instance.new("ImageLabel")
-                cloudBubble.Name = "CuteCloudBubble"
-                cloudBubble.Size = UDim2.new(1, 24, 0, 104)
-                cloudBubble.Position = UDim2.new(0, -12, 0, -23)
-                cloudBubble.BackgroundTransparency = 1
-                cloudBubble.Image = CUTE_CLOUD_IMAGE
-                cloudBubble.ScaleType = Enum.ScaleType.Slice
-                cloudBubble.SliceCenter = CUTE_CLOUD_SLICE_CENTER
-                cloudBubble.ImageTransparency = 0
-                cloudBubble.ZIndex = 1
-                cloudBubble.Parent = container
-            end
+            if hasPremiumChatStyle then
+                local premiumBubble = Instance.new("Frame")
+                premiumBubble.Name = "PremiumChatBubble"
+                premiumBubble.Size = UDim2.new(1, -72, 0, 42)
+                premiumBubble.Position = UDim2.new(0, 40, 0, 14)
+                premiumBubble.BackgroundColor3 = hasCuteCloudStyle
+                    and Color3.fromRGB(242, 247, 255)
+                    or Color3.fromRGB(18, 18, 24)
+                premiumBubble.BackgroundTransparency = hasCuteCloudStyle and 0.04 or 0.1
+                premiumBubble.BorderSizePixel = 0
+                premiumBubble.ZIndex = 1
+                premiumBubble.Parent = container
 
-            if hasGatoDarkStyle then
-                local gatoDarkBubble = Instance.new("ImageLabel")
-                gatoDarkBubble.Name = "GatoDarkBubble"
-                gatoDarkBubble.Size = UDim2.new(1, -112, 0, 40)
-                gatoDarkBubble.Position = UDim2.new(0, 40, 0, 16)
-                gatoDarkBubble.BackgroundTransparency = 1
-                gatoDarkBubble.Image = GATODARK_CHAT_IMAGE
-                gatoDarkBubble.ScaleType = Enum.ScaleType.Slice
-                gatoDarkBubble.SliceCenter = GATODARK_CHAT_SLICE_CENTER
-                gatoDarkBubble.ImageTransparency = 0
-                gatoDarkBubble.ZIndex = 1
-                gatoDarkBubble.Parent = container
+                local premiumCorner = Instance.new("UICorner")
+                premiumCorner.CornerRadius = UDim.new(0, 12)
+                premiumCorner.Parent = premiumBubble
+
+                local premiumStroke = Instance.new("UIStroke")
+                premiumStroke.Color = hasCuteCloudStyle
+                    and Color3.fromRGB(205, 228, 255)
+                    or Color3.fromRGB(170, 35, 45)
+                premiumStroke.Thickness = 1
+                premiumStroke.Transparency = 0.25
+                premiumStroke.Parent = premiumBubble
+
+                local premiumAccent = Instance.new("ImageLabel")
+                premiumAccent.Name = hasCuteCloudStyle and "CuteCloudAccent" or "GatoDarkAccent"
+                premiumAccent.Size = UDim2.new(0, 96, 0, 50)
+                premiumAccent.Position = UDim2.new(1, -104, 0, 4)
+                premiumAccent.BackgroundTransparency = 1
+                premiumAccent.Image = hasCuteCloudStyle and CUTE_CLOUD_IMAGE or GATODARK_CHAT_IMAGE
+                premiumAccent.ScaleType = Enum.ScaleType.Fit
+                premiumAccent.ImageTransparency = 0
+                premiumAccent.ZIndex = 2
+                premiumAccent.Parent = container
             end
 
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
             if hasCuteCloudStyle then
-                messageText.Size = UDim2.new(1, -99, 0, 34)
+                messageText.Size = UDim2.new(1, -152, 0, 34)
             elseif hasGatoDarkStyle then
-                messageText.Size = UDim2.new(1, -116, 0, 34)
+                messageText.Size = UDim2.new(1, -152, 0, 34)
             else
                 messageText.Size = UDim2.new(1, -50, 0, 34)
             end
@@ -391,7 +399,7 @@ local function renderMessages(messages)
             messageText.TextXAlignment = Enum.TextXAlignment.Left
             messageText.TextYAlignment = Enum.TextYAlignment.Top
             messageText.TextWrapped = true
-            messageText.ZIndex = (hasCuteCloudStyle or hasGatoDarkStyle) and 4 or 1
+            messageText.ZIndex = hasPremiumChatStyle and 4 or 1
             messageText.Parent = container
         end
     end
