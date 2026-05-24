@@ -149,7 +149,7 @@ local selectedPrivateRoom = nil
 local confirmAction = nil
 
 local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
-local GATODARK_CHAT_IMAGE = "rbxassetid://85612888160213"
+local GATODARK_CHAT_IMAGE = "rbxassetid://127028607584333"
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -338,15 +338,13 @@ local function renderMessages(messages)
             local hasGatoDarkStyle = msg.chat_style == "gatodark"
             local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
 
-            if hasPremiumChatStyle then
+            if hasCuteCloudStyle then
                 local premiumBubble = Instance.new("Frame")
                 premiumBubble.Name = "PremiumChatBubble"
                 premiumBubble.Size = UDim2.new(1, -72, 0, 42)
                 premiumBubble.Position = UDim2.new(0, 40, 0, 14)
-                premiumBubble.BackgroundColor3 = hasCuteCloudStyle
-                    and Color3.fromRGB(242, 247, 255)
-                    or Color3.fromRGB(18, 18, 24)
-                premiumBubble.BackgroundTransparency = hasCuteCloudStyle and 0.04 or 0.1
+                premiumBubble.BackgroundColor3 = Color3.fromRGB(242, 247, 255)
+                premiumBubble.BackgroundTransparency = 0.04
                 premiumBubble.BorderSizePixel = 0
                 premiumBubble.ZIndex = 1
                 premiumBubble.Parent = container
@@ -356,23 +354,34 @@ local function renderMessages(messages)
                 premiumCorner.Parent = premiumBubble
 
                 local premiumStroke = Instance.new("UIStroke")
-                premiumStroke.Color = hasCuteCloudStyle
-                    and Color3.fromRGB(205, 228, 255)
-                    or Color3.fromRGB(170, 35, 45)
+                premiumStroke.Color = Color3.fromRGB(205, 228, 255)
                 premiumStroke.Thickness = 1
                 premiumStroke.Transparency = 0.25
                 premiumStroke.Parent = premiumBubble
 
                 local premiumAccent = Instance.new("ImageLabel")
-                premiumAccent.Name = hasCuteCloudStyle and "CuteCloudAccent" or "GatoDarkAccent"
+                premiumAccent.Name = "CuteCloudAccent"
                 premiumAccent.Size = UDim2.new(0, 96, 0, 50)
                 premiumAccent.Position = UDim2.new(1, -104, 0, 4)
                 premiumAccent.BackgroundTransparency = 1
-                premiumAccent.Image = hasCuteCloudStyle and CUTE_CLOUD_IMAGE or GATODARK_CHAT_IMAGE
+                premiumAccent.Image = CUTE_CLOUD_IMAGE
                 premiumAccent.ScaleType = Enum.ScaleType.Fit
                 premiumAccent.ImageTransparency = 0
                 premiumAccent.ZIndex = 2
                 premiumAccent.Parent = container
+            end
+
+            if hasGatoDarkStyle then
+                local gatoDarkBackground = Instance.new("ImageLabel")
+                gatoDarkBackground.Name = "GatoDarkFullBackground"
+                gatoDarkBackground.Size = UDim2.new(1, 0, 0, 58)
+                gatoDarkBackground.Position = UDim2.new(0, 0, 0, 0)
+                gatoDarkBackground.BackgroundTransparency = 1
+                gatoDarkBackground.Image = GATODARK_CHAT_IMAGE
+                gatoDarkBackground.ScaleType = Enum.ScaleType.Crop
+                gatoDarkBackground.ImageTransparency = 0
+                gatoDarkBackground.ZIndex = 1
+                gatoDarkBackground.Parent = container
             end
 
             local messageText = Instance.new("TextLabel")
