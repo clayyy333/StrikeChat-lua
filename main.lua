@@ -355,11 +355,11 @@ local function renderMessages(messages)
             if hasGatoDarkStyle then
                 local gatoDarkBubble = Instance.new("ImageLabel")
                 gatoDarkBubble.Name = "GatoDarkBubble"
-                gatoDarkBubble.Size = UDim2.new(1, -72, 0, 42)
-                gatoDarkBubble.Position = UDim2.new(0, 38, 0, 14)
+                gatoDarkBubble.Size = UDim2.new(1, -112, 0, 40)
+                gatoDarkBubble.Position = UDim2.new(0, 40, 0, 16)
                 gatoDarkBubble.BackgroundTransparency = 1
                 gatoDarkBubble.Image = GATODARK_CHAT_IMAGE
-                gatoDarkBubble.ScaleType = Enum.ScaleType.Crop
+                gatoDarkBubble.ScaleType = Enum.ScaleType.Stretch
                 gatoDarkBubble.ImageTransparency = 0
                 gatoDarkBubble.ZIndex = 1
                 gatoDarkBubble.Parent = container
