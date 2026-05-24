@@ -148,7 +148,8 @@ local setRoom
 local selectedPrivateRoom = nil
 local confirmAction = nil
 
-local CUTE_CLOUD_IMAGE = "rbxassetid://88343602049097"
+local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
+local CUTE_CLOUD_SLICE_CENTER = Rect.new(96, 72, 280, 132)
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -336,15 +337,14 @@ local function renderMessages(messages)
             local hasCuteCloudStyle = msg.chat_style == "cloud"
 
             if hasCuteCloudStyle then
-                container.Size = UDim2.new(1, -8, 0, 64)
-
                 local cloudBubble = Instance.new("ImageLabel")
                 cloudBubble.Name = "CuteCloudBubble"
-                cloudBubble.Size = UDim2.new(1, 0, 0, 64)
-                cloudBubble.Position = UDim2.new(0, 0, 0, 0)
+                cloudBubble.Size = UDim2.new(1, 24, 0, 104)
+                cloudBubble.Position = UDim2.new(0, -12, 0, -23)
                 cloudBubble.BackgroundTransparency = 1
                 cloudBubble.Image = CUTE_CLOUD_IMAGE
-                cloudBubble.ScaleType = Enum.ScaleType.Fit
+                cloudBubble.ScaleType = Enum.ScaleType.Slice
+                cloudBubble.SliceCenter = CUTE_CLOUD_SLICE_CENTER
                 cloudBubble.ImageTransparency = 0
                 cloudBubble.ZIndex = 1
                 cloudBubble.Parent = container
@@ -352,7 +352,7 @@ local function renderMessages(messages)
 
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
-            messageText.Size = hasCuteCloudStyle and UDim2.new(1, -130, 0, 34) or UDim2.new(1, -50, 0, 34)
+            messageText.Size = hasCuteCloudStyle and UDim2.new(1, -99, 0, 34) or UDim2.new(1, -50, 0, 34)
             messageText.Position = UDim2.new(0, 44, 0, 20)
             messageText.BackgroundTransparency = 1
             messageText.Text = tostring(msg.message)
