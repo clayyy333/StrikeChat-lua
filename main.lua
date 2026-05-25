@@ -491,8 +491,8 @@ local function renderMessages(messages)
                 gatoDarkEdgeTop.Name = "GatoDarkEdgeTop"
                 gatoDarkEdgeTop.Size = UDim2.new(1, 0, 0, 22)
                 gatoDarkEdgeTop.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkEdgeTop.BackgroundColor3 = Color3.fromRGB(118, 50, 82)
-                gatoDarkEdgeTop.BackgroundTransparency = 0.24
+                gatoDarkEdgeTop.BackgroundColor3 = Color3.fromRGB(132, 52, 82)
+                gatoDarkEdgeTop.BackgroundTransparency = 0.16
                 gatoDarkEdgeTop.BorderSizePixel = 0
                 gatoDarkEdgeTop.ZIndex = 2
                 gatoDarkEdgeTop.Parent = gatoDarkBubble
@@ -500,13 +500,12 @@ local function renderMessages(messages)
                 local gatoDarkEdgeTopGradient = Instance.new("UIGradient")
                 gatoDarkEdgeTopGradient.Rotation = 90
                 gatoDarkEdgeTopGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
-                    ColorSequenceKeypoint.new(0.48, Color3.fromRGB(132, 54, 88)),
-                    ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
+                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(132, 52, 82)),
+                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(132, 52, 82))
                 })
                 gatoDarkEdgeTopGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0.00, 1.00),
-                    NumberSequenceKeypoint.new(0.38, 0.52),
+                    NumberSequenceKeypoint.new(0.00, 0.52),
+                    NumberSequenceKeypoint.new(0.72, 0.76),
                     NumberSequenceKeypoint.new(1.00, 1.00)
                 })
                 gatoDarkEdgeTopGradient.Parent = gatoDarkEdgeTop
@@ -515,8 +514,8 @@ local function renderMessages(messages)
                 gatoDarkEdgeBottom.Name = "GatoDarkEdgeBottom"
                 gatoDarkEdgeBottom.Size = UDim2.new(1, 0, 0, 24)
                 gatoDarkEdgeBottom.Position = UDim2.new(0, 0, 1, -24)
-                gatoDarkEdgeBottom.BackgroundColor3 = Color3.fromRGB(82, 58, 100)
-                gatoDarkEdgeBottom.BackgroundTransparency = 0.28
+                gatoDarkEdgeBottom.BackgroundColor3 = Color3.fromRGB(84, 58, 100)
+                gatoDarkEdgeBottom.BackgroundTransparency = 0.18
                 gatoDarkEdgeBottom.BorderSizePixel = 0
                 gatoDarkEdgeBottom.ZIndex = 2
                 gatoDarkEdgeBottom.Parent = gatoDarkBubble
@@ -524,16 +523,13 @@ local function renderMessages(messages)
                 local gatoDarkEdgeBottomGradient = Instance.new("UIGradient")
                 gatoDarkEdgeBottomGradient.Rotation = 90
                 gatoDarkEdgeBottomGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
-                    ColorSequenceKeypoint.new(0.42, Color3.fromRGB(100, 58, 104)),
-                    ColorSequenceKeypoint.new(0.74, Color3.fromRGB(132, 48, 70)),
-                    ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
+                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(84, 58, 100)),
+                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(132, 48, 70))
                 })
                 gatoDarkEdgeBottomGradient.Transparency = NumberSequence.new({
                     NumberSequenceKeypoint.new(0.00, 1.00),
-                    NumberSequenceKeypoint.new(0.36, 0.62),
-                    NumberSequenceKeypoint.new(0.68, 0.38),
-                    NumberSequenceKeypoint.new(1.00, 1.00)
+                    NumberSequenceKeypoint.new(0.28, 0.76),
+                    NumberSequenceKeypoint.new(1.00, 0.52)
                 })
                 gatoDarkEdgeBottomGradient.Parent = gatoDarkEdgeBottom
 
