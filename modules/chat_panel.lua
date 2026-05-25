@@ -59,7 +59,7 @@ function ChatPanel.Create(parent, Theme)
     boxCorner.Parent = messagesBox
 
     local layout = Instance.new("UIListLayout")
-    layout.Padding = UDim.new(0, 6)
+    layout.Padding = UDim.new(0, 0)
     layout.SortOrder = Enum.SortOrder.LayoutOrder
     layout.Parent = messagesBox
 
