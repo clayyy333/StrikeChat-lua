@@ -1147,10 +1147,6 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
         buyInventoryItem("username_color_purple", shopUI.ItemButtons.NameColor)
     end)
 
-    shopUI.ItemButtons.CustomChat.MouseButton1Click:Connect(function()
-        buyInventoryItem("chat_style_cloud", shopUI.ItemButtons.CustomChat)
-    end)
-
     shopUI.ItemButtons.ChatColor.MouseButton1Click:Connect(function()
         buyInventoryItem("chat_color_pink", shopUI.ItemButtons.ChatColor)
     end)
