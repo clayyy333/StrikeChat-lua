@@ -3,6 +3,7 @@ local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local TextService = game:GetService("TextService")
+local ContentProvider = game:GetService("ContentProvider")
 
 local player = Players.LocalPlayer
 local running = true
@@ -150,6 +151,7 @@ local confirmAction = nil
 
 local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
 local GATODARK_CHAT_IMAGE = "rbxassetid://132548267990360"
+local GATODARK_CHAT_THUMBNAIL_IMAGE = "rbxthumb://type=Asset&id=132548267990360&w=420&h=420"
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -168,6 +170,26 @@ local function getClanColor(colorName)
     local key = tostring(colorName or ""):lower()
 
     return clanColorMap[key] or Theme.Colors.TextMuted
+end
+
+local function applyImageWithFallback(imageLabel, primaryImage, fallbackImage)
+    imageLabel.Image = primaryImage
+
+    task.spawn(function()
+        pcall(function()
+            ContentProvider:PreloadAsync({ imageLabel })
+        end)
+
+        task.wait(1.5)
+
+        if imageLabel.Parent and not imageLabel.IsLoaded then
+            imageLabel.Image = fallbackImage
+
+            pcall(function()
+                ContentProvider:PreloadAsync({ imageLabel })
+            end)
+        end
+    end)
 end
 
 
@@ -269,10 +291,15 @@ local function renderMessages(messages)
                 gatoDarkBackground.Size = UDim2.new(1, 0, 1, 0)
                 gatoDarkBackground.Position = UDim2.new(0, 0, 0, 0)
                 gatoDarkBackground.BackgroundTransparency = 1
-                gatoDarkBackground.Image = GATODARK_CHAT_IMAGE
                 gatoDarkBackground.ScaleType = Enum.ScaleType.Stretch
                 gatoDarkBackground.ZIndex = 1
                 gatoDarkBackground.Parent = container
+
+                applyImageWithFallback(
+                    gatoDarkBackground,
+                    GATODARK_CHAT_IMAGE,
+                    GATODARK_CHAT_THUMBNAIL_IMAGE
+                )
             end
 
             local avatar = Instance.new("ImageLabel")
