@@ -3,7 +3,6 @@ local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local TextService = game:GetService("TextService")
-local ContentProvider = game:GetService("ContentProvider")
 
 local player = Players.LocalPlayer
 local running = true
@@ -149,10 +148,6 @@ local setRoom
 local selectedPrivateRoom = nil
 local confirmAction = nil
 
-local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
-local GATODARK_CHAT_IMAGE = "rbxassetid://132548267990360"
-local GATODARK_CHAT_THUMBNAIL_IMAGE = "rbxthumb://type=Asset&id=132548267990360&w=420&h=420"
-
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
     red = Color3.fromRGB(235, 74, 74),
@@ -170,26 +165,6 @@ local function getClanColor(colorName)
     local key = tostring(colorName or ""):lower()
 
     return clanColorMap[key] or Theme.Colors.TextMuted
-end
-
-local function applyImageWithFallback(imageLabel, primaryImage, fallbackImage)
-    imageLabel.Image = primaryImage
-
-    task.spawn(function()
-        pcall(function()
-            ContentProvider:PreloadAsync({ imageLabel })
-        end)
-
-        task.wait(1.5)
-
-        if imageLabel.Parent and not imageLabel.IsLoaded then
-            imageLabel.Image = fallbackImage
-
-            pcall(function()
-                ContentProvider:PreloadAsync({ imageLabel })
-            end)
-        end
-    end)
 end
 
 
@@ -276,31 +251,9 @@ local function renderMessages(messages)
             container.Parent = chatPanel.MessagesBox
 
             local chatStyle = tostring(msg.chat_style or ""):lower()
-            local hasCuteCloudStyle =
-                chatStyle == "cloud" or
-                chatStyle == "chat_style_cloud"
-            local hasGatoDarkStyle =
-                chatStyle == "gatodark" or
-                chatStyle == "gato_dark" or
-                chatStyle == "chat_style_gatodark"
+            local hasCuteCloudStyle = false
+            local hasGatoDarkStyle = false
             local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
-
-            if hasGatoDarkStyle then
-                local gatoDarkBackground = Instance.new("ImageLabel")
-                gatoDarkBackground.Name = "GatoDarkBackground"
-                gatoDarkBackground.Size = UDim2.new(1, 0, 1, 0)
-                gatoDarkBackground.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkBackground.BackgroundTransparency = 1
-                gatoDarkBackground.ScaleType = Enum.ScaleType.Stretch
-                gatoDarkBackground.ZIndex = 1
-                gatoDarkBackground.Parent = container
-
-                applyImageWithFallback(
-                    gatoDarkBackground,
-                    GATODARK_CHAT_IMAGE,
-                    GATODARK_CHAT_THUMBNAIL_IMAGE
-                )
-            end
 
             local avatar = Instance.new("ImageLabel")
             avatar.Name = "Avatar"
@@ -383,15 +336,8 @@ local function renderMessages(messages)
             clanLabel.Size = UDim2.new(0, math.max(tagWidth, 20), 0, 18)
             clanLabel.Position = UDim2.new(0, 44 + nameWidth + spacing, 0, 0)
 
-            local gatoTextLeftOffset = 58
-            local gatoRightPadding = 190
-            local gatoMinHeight = 72
-            local messageRightPadding = hasGatoDarkStyle and gatoRightPadding or 50
-            local messageLeftOffset = hasGatoDarkStyle and gatoTextLeftOffset or 44
-
-            if hasCuteCloudStyle then
-                messageRightPadding = 152
-            end
+            local messageRightPadding = 50
+            local messageLeftOffset = 44
 
             local messageMeasureWidth = math.max(
                 chatPanel.MessagesBox.AbsoluteSize.X - messageLeftOffset - messageRightPadding - 8,
@@ -406,78 +352,21 @@ local function renderMessages(messages)
             local messageHeight = math.max(34, math.ceil(measuredMessage.Y) + 2)
             local containerHeight = math.max(58, 20 + messageHeight + 6)
 
-            if hasGatoDarkStyle then
-                containerHeight = math.max(gatoMinHeight, 24 + messageHeight + 10)
-            end
-
             container.Size = UDim2.new(1, -8, 0, containerHeight)
-
-            if hasCuteCloudStyle then
-                local premiumBubble = Instance.new("Frame")
-                premiumBubble.Name = "PremiumChatBubble"
-                premiumBubble.Size = UDim2.new(1, -72, 0, containerHeight - 16)
-                premiumBubble.Position = UDim2.new(0, 40, 0, 14)
-                premiumBubble.BackgroundColor3 = Color3.fromRGB(242, 247, 255)
-                premiumBubble.BackgroundTransparency = 0.04
-                premiumBubble.BorderSizePixel = 0
-                premiumBubble.ZIndex = 1
-                premiumBubble.Parent = container
-
-                local premiumCorner = Instance.new("UICorner")
-                premiumCorner.CornerRadius = UDim.new(0, 12)
-                premiumCorner.Parent = premiumBubble
-
-                local premiumStroke = Instance.new("UIStroke")
-                premiumStroke.Color = Color3.fromRGB(205, 228, 255)
-                premiumStroke.Thickness = 1
-                premiumStroke.Transparency = 0.25
-                premiumStroke.Parent = premiumBubble
-
-                local premiumAccent = Instance.new("ImageLabel")
-                premiumAccent.Name = "CuteCloudAccent"
-                premiumAccent.Size = UDim2.new(0, 96, 0, 50)
-                premiumAccent.Position = UDim2.new(1, -104, 0, 4)
-                premiumAccent.BackgroundTransparency = 1
-                premiumAccent.Image = CUTE_CLOUD_IMAGE
-                premiumAccent.ScaleType = Enum.ScaleType.Fit
-                premiumAccent.ImageTransparency = 0
-                premiumAccent.ZIndex = 2
-                premiumAccent.Parent = container
-            end
 
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
-            if hasCuteCloudStyle then
-                messageText.Size = UDim2.new(1, -152, 0, messageHeight)
-            elseif hasGatoDarkStyle then
-                messageText.Size = UDim2.new(1, -(gatoTextLeftOffset + gatoRightPadding), 0, messageHeight)
-            else
-                messageText.Size = UDim2.new(1, -50, 0, messageHeight)
-            end
-            if hasGatoDarkStyle then
-                messageText.Position = UDim2.new(0, gatoTextLeftOffset, 0, 22)
-            else
-                messageText.Position = UDim2.new(0, 44, 0, 20)
-            end
+            messageText.Size = UDim2.new(1, -50, 0, messageHeight)
+            messageText.Position = UDim2.new(0, 44, 0, 20)
             messageText.BackgroundTransparency = 1
             messageText.Text = tostring(msg.message)
-            if hasCuteCloudStyle then
-                messageText.TextColor3 = Color3.fromRGB(20, 20, 20)
-            elseif hasGatoDarkStyle then
-                messageText.TextColor3 = Color3.fromRGB(238, 238, 245)
-            else
-                messageText.TextColor3 = Theme.Colors.Text
-            end
+            messageText.TextColor3 = Theme.Colors.Text
             messageText.Font = Theme.Font.Regular
             messageText.TextSize = 13
             messageText.TextXAlignment = Enum.TextXAlignment.Left
             messageText.TextYAlignment = Enum.TextYAlignment.Top
             messageText.TextWrapped = true
-            if hasGatoDarkStyle then
-                messageText.ZIndex = 4
-            else
-                messageText.ZIndex = hasPremiumChatStyle and 5 or 1
-            end
+            messageText.ZIndex = hasPremiumChatStyle and 5 or 1
             messageText.Parent = container
         end
     end
@@ -1260,10 +1149,6 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
 
     shopUI.ItemButtons.CustomChat.MouseButton1Click:Connect(function()
         buyInventoryItem("chat_style_cloud", shopUI.ItemButtons.CustomChat)
-    end)
-
-    shopUI.ItemButtons.GatoDark.MouseButton1Click:Connect(function()
-        buyInventoryItem("chat_style_gatodark", shopUI.ItemButtons.GatoDark)
     end)
 
     shopUI.ItemButtons.ChatColor.MouseButton1Click:Connect(function()

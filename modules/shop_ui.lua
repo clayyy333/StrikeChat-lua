@@ -417,13 +417,6 @@ function ShopUI.Create(parent, Theme)
     )
     item6.Parent = itemsContainer
 
-    local item7, item7BuyButton = createShopItem(
-        "GATODARK",
-        Color3.fromRGB(30, 30, 38),
-        "Nuevo estilo"
-    )
-    item7.Parent = itemsContainer
-
     local item6Gradient = Instance.new("UIGradient")
 
 
@@ -506,8 +499,7 @@ function ShopUI.Create(parent, Theme)
             CustomChat = item3BuyButton,
             ChatColor = item4BuyButton,
             BackgroundDesign = item5BuyButton,
-            Robux100 = item6BuyButton,
-            GatoDark = item7BuyButton
+            Robux100 = item6BuyButton
         },
 
         Destroy = function()
