@@ -149,7 +149,7 @@ local selectedPrivateRoom = nil
 local confirmAction = nil
 
 local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
-local GATODARK_CHAT_IMAGE = "rbxassetid://127028607584333"
+local GATODARK_CHAT_IMAGE = "rbxassetid://123392779777722"
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -343,16 +343,18 @@ local function renderMessages(messages)
                 chatStyle == "gato_dark" or
                 chatStyle == "chat_style_gatodark"
             local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
-            local gatoRightPadding = 214
-            local gatoMinHeight = 64
+            local gatoTextLeftOffset = 58
+            local gatoRightPadding = 190
+            local gatoMinHeight = 72
             local messageRightPadding = hasGatoDarkStyle and gatoRightPadding or 50
+            local messageLeftOffset = hasGatoDarkStyle and gatoTextLeftOffset or 44
 
             if hasCuteCloudStyle then
                 messageRightPadding = 152
             end
 
             local messageMeasureWidth = math.max(
-                chatPanel.MessagesBox.AbsoluteSize.X - 44 - messageRightPadding - 8,
+                chatPanel.MessagesBox.AbsoluteSize.X - messageLeftOffset - messageRightPadding - 8,
                 80
             )
             local measuredMessage = TextService:GetTextSize(
@@ -404,141 +406,15 @@ local function renderMessages(messages)
             end
 
             if hasGatoDarkStyle then
-                local gatoDarkBubble = Instance.new("Frame")
-                gatoDarkBubble.Name = "GatoDarkBubble"
-                gatoDarkBubble.Size = UDim2.new(1, 0, 0, containerHeight)
-                gatoDarkBubble.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkBubble.BackgroundColor3 = Theme.Colors.Panel
-                gatoDarkBubble.BackgroundTransparency = 0
-                gatoDarkBubble.BorderSizePixel = 0
-                gatoDarkBubble.ClipsDescendants = true
-                gatoDarkBubble.ZIndex = 2
-                gatoDarkBubble.Parent = container
-
-                local gatoDarkGradient = Instance.new("UIGradient")
-                gatoDarkGradient.Rotation = 0
-                gatoDarkGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
-                    ColorSequenceKeypoint.new(0.24, Color3.fromRGB(62, 45, 68)),
-                    ColorSequenceKeypoint.new(0.48, Color3.fromRGB(142, 52, 74)),
-                    ColorSequenceKeypoint.new(0.68, Color3.fromRGB(72, 58, 92)),
-                    ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
-                })
-                gatoDarkGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0.00, 1.00),
-                    NumberSequenceKeypoint.new(0.22, 0.42),
-                    NumberSequenceKeypoint.new(0.48, 0.10),
-                    NumberSequenceKeypoint.new(0.74, 0.48),
-                    NumberSequenceKeypoint.new(1.00, 1.00)
-                })
-                gatoDarkGradient.Parent = gatoDarkBubble
-
-                local gatoDarkCorner = Instance.new("UICorner")
-                gatoDarkCorner.CornerRadius = UDim.new(0, 12)
-                gatoDarkCorner.Parent = gatoDarkBubble
-
-                local gatoDarkEdgeLeft = Instance.new("Frame")
-                gatoDarkEdgeLeft.Name = "GatoDarkEdgeLeft"
-                gatoDarkEdgeLeft.Size = UDim2.new(0, 28, 1, -8)
-                gatoDarkEdgeLeft.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkEdgeLeft.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                gatoDarkEdgeLeft.BackgroundTransparency = 0
-                gatoDarkEdgeLeft.BorderSizePixel = 0
-                gatoDarkEdgeLeft.ZIndex = 2
-                gatoDarkEdgeLeft.Parent = gatoDarkBubble
-
-                local gatoDarkEdgeLeftGradient = Instance.new("UIGradient")
-                gatoDarkEdgeLeftGradient.Rotation = 0
-                gatoDarkEdgeLeftGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
-                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
-                })
-                gatoDarkEdgeLeftGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0.00, 1.00),
-                    NumberSequenceKeypoint.new(0.72, 0.68),
-                    NumberSequenceKeypoint.new(1.00, 0.52)
-                })
-                gatoDarkEdgeLeftGradient.Parent = gatoDarkEdgeLeft
-
-                local gatoDarkEdgeRight = Instance.new("Frame")
-                gatoDarkEdgeRight.Name = "GatoDarkEdgeRight"
-                gatoDarkEdgeRight.Size = UDim2.new(0, 34, 1, -8)
-                gatoDarkEdgeRight.Position = UDim2.new(1, -34, 0, 0)
-                gatoDarkEdgeRight.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                gatoDarkEdgeRight.BackgroundTransparency = 0
-                gatoDarkEdgeRight.BorderSizePixel = 0
-                gatoDarkEdgeRight.ZIndex = 2
-                gatoDarkEdgeRight.Parent = gatoDarkBubble
-
-                local gatoDarkEdgeRightGradient = Instance.new("UIGradient")
-                gatoDarkEdgeRightGradient.Rotation = 0
-                gatoDarkEdgeRightGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
-                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
-                })
-                gatoDarkEdgeRightGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0.00, 0.52),
-                    NumberSequenceKeypoint.new(0.28, 0.68),
-                    NumberSequenceKeypoint.new(1.00, 1.00)
-                })
-                gatoDarkEdgeRightGradient.Parent = gatoDarkEdgeRight
-
-                local gatoDarkEdgeTop = Instance.new("Frame")
-                gatoDarkEdgeTop.Name = "GatoDarkEdgeTop"
-                gatoDarkEdgeTop.Size = UDim2.new(1, -8, 0, 24)
-                gatoDarkEdgeTop.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkEdgeTop.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                gatoDarkEdgeTop.BackgroundTransparency = 0
-                gatoDarkEdgeTop.BorderSizePixel = 0
-                gatoDarkEdgeTop.ZIndex = 2
-                gatoDarkEdgeTop.Parent = gatoDarkBubble
-
-                local gatoDarkEdgeTopGradient = Instance.new("UIGradient")
-                gatoDarkEdgeTopGradient.Rotation = 90
-                gatoDarkEdgeTopGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
-                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
-                })
-                gatoDarkEdgeTopGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0.00, 0.52),
-                    NumberSequenceKeypoint.new(0.28, 0.68),
-                    NumberSequenceKeypoint.new(1.00, 1.00)
-                })
-                gatoDarkEdgeTopGradient.Parent = gatoDarkEdgeTop
-
-                local gatoDarkEdgeBottom = Instance.new("Frame")
-                gatoDarkEdgeBottom.Name = "GatoDarkEdgeBottom"
-                gatoDarkEdgeBottom.Size = UDim2.new(1, -8, 0, 28)
-                gatoDarkEdgeBottom.Position = UDim2.new(0, 0, 1, -24)
-                gatoDarkEdgeBottom.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                gatoDarkEdgeBottom.BackgroundTransparency = 0
-                gatoDarkEdgeBottom.BorderSizePixel = 0
-                gatoDarkEdgeBottom.ZIndex = 2
-                gatoDarkEdgeBottom.Parent = gatoDarkBubble
-
-                local gatoDarkEdgeBottomGradient = Instance.new("UIGradient")
-                gatoDarkEdgeBottomGradient.Rotation = 90
-                gatoDarkEdgeBottomGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(0, 0, 0)),
-                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(0, 0, 0))
-                })
-                gatoDarkEdgeBottomGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0.00, 1.00),
-                    NumberSequenceKeypoint.new(0.72, 0.68),
-                    NumberSequenceKeypoint.new(1.00, 0.52)
-                })
-                gatoDarkEdgeBottomGradient.Parent = gatoDarkEdgeBottom
-
-                local gatoDarkAccent = Instance.new("ImageLabel")
-                gatoDarkAccent.Name = "GatoDarkAccent"
-                gatoDarkAccent.Size = UDim2.new(0, 190, 0, 82)
-                gatoDarkAccent.Position = UDim2.new(1, -176, 0, -24)
-                gatoDarkAccent.BackgroundTransparency = 1
-                gatoDarkAccent.Image = GATODARK_CHAT_IMAGE
-                gatoDarkAccent.ScaleType = Enum.ScaleType.Fit
-                gatoDarkAccent.ImageTransparency = 0.08
-                gatoDarkAccent.ZIndex = 3
-                gatoDarkAccent.Parent = container
+                local gatoDarkBackground = Instance.new("ImageLabel")
+                gatoDarkBackground.Name = "GatoDarkBackground"
+                gatoDarkBackground.Size = UDim2.new(1, 0, 1, 0)
+                gatoDarkBackground.Position = UDim2.new(0, 0, 0, 0)
+                gatoDarkBackground.BackgroundTransparency = 1
+                gatoDarkBackground.Image = GATODARK_CHAT_IMAGE
+                gatoDarkBackground.ScaleType = Enum.ScaleType.Stretch
+                gatoDarkBackground.ZIndex = 1
+                gatoDarkBackground.Parent = container
             end
 
             local messageText = Instance.new("TextLabel")
@@ -546,12 +422,12 @@ local function renderMessages(messages)
             if hasCuteCloudStyle then
                 messageText.Size = UDim2.new(1, -152, 0, messageHeight)
             elseif hasGatoDarkStyle then
-                messageText.Size = UDim2.new(1, -gatoRightPadding, 0, messageHeight)
+                messageText.Size = UDim2.new(1, -(gatoTextLeftOffset + gatoRightPadding), 0, messageHeight)
             else
                 messageText.Size = UDim2.new(1, -50, 0, messageHeight)
             end
             if hasGatoDarkStyle then
-                messageText.Position = UDim2.new(0, 44, 0, 20)
+                messageText.Position = UDim2.new(0, gatoTextLeftOffset, 0, 22)
             else
                 messageText.Position = UDim2.new(0, 44, 0, 20)
             end
