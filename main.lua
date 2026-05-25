@@ -149,7 +149,7 @@ local selectedPrivateRoom = nil
 local confirmAction = nil
 
 local CUTE_CLOUD_IMAGE = "rbxassetid://104316530590118"
-local GATODARK_CHAT_IMAGE = "rbxassetid://123392779777722"
+local GATODARK_CHAT_IMAGE = "rbxassetid://132548267990360"
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -253,13 +253,35 @@ local function renderMessages(messages)
             container.BorderSizePixel = 0
             container.Parent = chatPanel.MessagesBox
 
+            local chatStyle = tostring(msg.chat_style or ""):lower()
+            local hasCuteCloudStyle =
+                chatStyle == "cloud" or
+                chatStyle == "chat_style_cloud"
+            local hasGatoDarkStyle =
+                chatStyle == "gatodark" or
+                chatStyle == "gato_dark" or
+                chatStyle == "chat_style_gatodark"
+            local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
+
+            if hasGatoDarkStyle then
+                local gatoDarkBackground = Instance.new("ImageLabel")
+                gatoDarkBackground.Name = "GatoDarkBackground"
+                gatoDarkBackground.Size = UDim2.new(1, 0, 1, 0)
+                gatoDarkBackground.Position = UDim2.new(0, 0, 0, 0)
+                gatoDarkBackground.BackgroundTransparency = 1
+                gatoDarkBackground.Image = GATODARK_CHAT_IMAGE
+                gatoDarkBackground.ScaleType = Enum.ScaleType.Stretch
+                gatoDarkBackground.ZIndex = 1
+                gatoDarkBackground.Parent = container
+            end
+
             local avatar = Instance.new("ImageLabel")
             avatar.Name = "Avatar"
             avatar.Size = UDim2.new(0, 34, 0, 34)
             avatar.Position = UDim2.new(0, 0, 0, 4)
             avatar.BackgroundTransparency = 1
             avatar.Image = getAvatarImage(msg.roblox_user_id)
-            avatar.ZIndex = 3
+            avatar.ZIndex = hasGatoDarkStyle and 4 or 3
             avatar.Parent = container
 
             local avatarCorner = Instance.new("UICorner")
@@ -279,7 +301,7 @@ local function renderMessages(messages)
             nameLabel.TextSize = 12
             nameLabel.TextXAlignment = Enum.TextXAlignment.Left
             nameLabel.TextTruncate = Enum.TextTruncate.AtEnd
-            nameLabel.ZIndex = 3
+            nameLabel.ZIndex = hasGatoDarkStyle and 4 or 3
             nameLabel.Parent = container
 
             local clanText = ""
@@ -303,7 +325,7 @@ local function renderMessages(messages)
             clanLabel.TextSize = 11
             clanLabel.TextXAlignment = Enum.TextXAlignment.Left
             clanLabel.TextTruncate = Enum.TextTruncate.AtEnd
-            clanLabel.ZIndex = 3
+            clanLabel.ZIndex = hasGatoDarkStyle and 4 or 3
             clanLabel.Parent = container
 
             local headerWidth =
@@ -334,15 +356,6 @@ local function renderMessages(messages)
             clanLabel.Size = UDim2.new(0, math.max(tagWidth, 20), 0, 18)
             clanLabel.Position = UDim2.new(0, 44 + nameWidth + spacing, 0, 0)
 
-            local chatStyle = tostring(msg.chat_style or ""):lower()
-            local hasCuteCloudStyle =
-                chatStyle == "cloud" or
-                chatStyle == "chat_style_cloud"
-            local hasGatoDarkStyle =
-                chatStyle == "gatodark" or
-                chatStyle == "gato_dark" or
-                chatStyle == "chat_style_gatodark"
-            local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
             local gatoTextLeftOffset = 58
             local gatoRightPadding = 190
             local gatoMinHeight = 72
@@ -405,18 +418,6 @@ local function renderMessages(messages)
                 premiumAccent.Parent = container
             end
 
-            if hasGatoDarkStyle then
-                local gatoDarkBackground = Instance.new("ImageLabel")
-                gatoDarkBackground.Name = "GatoDarkBackground"
-                gatoDarkBackground.Size = UDim2.new(1, 0, 1, 0)
-                gatoDarkBackground.Position = UDim2.new(0, 0, 0, 0)
-                gatoDarkBackground.BackgroundTransparency = 1
-                gatoDarkBackground.Image = GATODARK_CHAT_IMAGE
-                gatoDarkBackground.ScaleType = Enum.ScaleType.Stretch
-                gatoDarkBackground.ZIndex = 1
-                gatoDarkBackground.Parent = container
-            end
-
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"
             if hasCuteCloudStyle then
@@ -445,7 +446,11 @@ local function renderMessages(messages)
             messageText.TextXAlignment = Enum.TextXAlignment.Left
             messageText.TextYAlignment = Enum.TextYAlignment.Top
             messageText.TextWrapped = true
-            messageText.ZIndex = hasPremiumChatStyle and 5 or 1
+            if hasGatoDarkStyle then
+                messageText.ZIndex = 4
+            else
+                messageText.ZIndex = hasPremiumChatStyle and 5 or 1
+            end
             messageText.Parent = container
         end
     end
