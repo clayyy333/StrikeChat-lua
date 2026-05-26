@@ -390,7 +390,8 @@ local function renderMessages(messages)
                     ColorSequenceKeypoint.new(0.52, Color3.fromRGB(255, 223, 247)),
                     ColorSequenceKeypoint.new(0.72, Color3.fromRGB(216, 199, 255)),
                     ColorSequenceKeypoint.new(0.88, Color3.fromRGB(184, 244, 255)),
-                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(184, 244, 255))
+                    ColorSequenceKeypoint.new(0.96, Color3.fromRGB(105, 134, 148)),
+                    ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
                 })
                 cuteCloudGradient.Transparency = NumberSequence.new({
                     NumberSequenceKeypoint.new(0.00, 0.70),
@@ -398,8 +399,8 @@ local function renderMessages(messages)
                     NumberSequenceKeypoint.new(0.08, 0.14),
                     NumberSequenceKeypoint.new(0.50, 0.04),
                     NumberSequenceKeypoint.new(0.92, 0.18),
-                    NumberSequenceKeypoint.new(0.97, 0.52),
-                    NumberSequenceKeypoint.new(1.00, 0.86)
+                    NumberSequenceKeypoint.new(0.97, 0.36),
+                    NumberSequenceKeypoint.new(1.00, 0.18)
                 })
                 cuteCloudGradient.Rotation = 0
                 cuteCloudGradient.Parent = cuteCloudBackground
