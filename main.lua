@@ -357,8 +357,11 @@ local function renderMessages(messages)
                 Theme.Font.Regular,
                 Vector2.new(messageMeasureWidth, math.huge)
             )
-            local messageHeight = math.max(34, math.ceil(measuredMessage.Y) + 2)
-            local containerHeight = math.max(58, 20 + messageHeight + 6)
+            local minMessageHeight = hasCuteCloudStyle and 20 or 34
+            local minContainerHeight = hasCuteCloudStyle and 46 or 58
+            local bottomPadding = hasCuteCloudStyle and 2 or 6
+            local messageHeight = math.max(minMessageHeight, math.ceil(measuredMessage.Y) + 2)
+            local containerHeight = math.max(minContainerHeight, 20 + messageHeight + bottomPadding)
 
             container.Size = UDim2.new(1, -8, 0, containerHeight)
             container.ZIndex = hasPremiumChatStyle and 4 or 1
@@ -366,8 +369,8 @@ local function renderMessages(messages)
             if hasCuteCloudStyle then
                 local cuteCloudBackground = Instance.new("Frame")
                 cuteCloudBackground.Name = "CuteCloudBackground"
-                cuteCloudBackground.Size = UDim2.new(1, 0, 0, containerHeight)
-                cuteCloudBackground.Position = UDim2.new(0, 0, 0, 0)
+                cuteCloudBackground.Size = UDim2.new(1, -2, 0, containerHeight - 2)
+                cuteCloudBackground.Position = UDim2.new(0, 1, 0, 0)
                 cuteCloudBackground.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 cuteCloudBackground.BackgroundTransparency = 0.07
                 cuteCloudBackground.BorderSizePixel = 0
@@ -398,8 +401,8 @@ local function renderMessages(messages)
 
                 local cuteCloudStars = Instance.new("Frame")
                 cuteCloudStars.Name = "CuteCloudStars"
-                cuteCloudStars.Size = UDim2.new(1, 0, 0, containerHeight)
-                cuteCloudStars.Position = UDim2.new(0, 0, 0, 0)
+                cuteCloudStars.Size = UDim2.new(1, -2, 0, containerHeight - 2)
+                cuteCloudStars.Position = UDim2.new(0, 1, 0, 0)
                 cuteCloudStars.BackgroundTransparency = 1
                 cuteCloudStars.BorderSizePixel = 0
                 cuteCloudStars.ZIndex = 2
@@ -411,9 +414,9 @@ local function renderMessages(messages)
                     Color3.fromRGB(255, 223, 247)
                 }
 
-                for i = 1, 6 do
+                for i = 1, 5 do
                     local star = Instance.new("Frame")
-                    local size = math.random(2, 4)
+                    local size = math.random(7, 10)
 
                     star.Name = "CuteCloudStar"
                     star.Size = UDim2.new(0, size, 0, size)
@@ -423,43 +426,61 @@ local function renderMessages(messages)
                         math.random(12, 82) / 100,
                         0
                     )
-                    star.BackgroundColor3 = starColors[((i - 1) % #starColors) + 1]
-                    star.BackgroundTransparency = math.random(18, 42) / 100
+                    star.BackgroundTransparency = 1
                     star.BorderSizePixel = 0
                     star.ZIndex = 2
                     star.Parent = cuteCloudStars
 
-                    local starCorner = Instance.new("UICorner")
-                    starCorner.CornerRadius = UDim.new(1, 0)
-                    starCorner.Parent = star
+                    local starColor = starColors[((i - 1) % #starColors) + 1]
+                    local starParts = {}
 
-                    local starStroke = Instance.new("UIStroke")
-                    starStroke.Color = Color3.fromRGB(120, 236, 255)
-                    starStroke.Transparency = math.random(42, 70) / 100
-                    starStroke.Thickness = 1
-                    starStroke.Parent = star
+                    for _, rotation in ipairs({ 0, 90, 45, -45 }) do
+                        local isMainRay = rotation == 0 or rotation == 90
+                        local partLength = isMainRay and size or math.floor(size * 0.72)
+                        local partTransparency = isMainRay and 0.18 or 0.36
+
+                        local part = Instance.new("Frame")
+                        part.Name = "StarPart"
+                        part.AnchorPoint = Vector2.new(0.5, 0.5)
+                        part.Size = UDim2.new(0, partLength, 0, 2)
+                        part.Position = UDim2.new(0.5, 0, 0.5, 0)
+                        part.BackgroundColor3 = starColor
+                        part.BackgroundTransparency = partTransparency
+                        part.BorderSizePixel = 0
+                        part.Rotation = rotation
+                        part.ZIndex = 2
+                        part.Parent = star
+
+                        local partCorner = Instance.new("UICorner")
+                        partCorner.CornerRadius = UDim.new(1, 0)
+                        partCorner.Parent = part
+
+                        table.insert(starParts, part)
+                    end
 
                     task.spawn(function()
                         while star.Parent do
                             local duration = math.random(15, 30) / 10
                             local targetTransparency = math.random(15, 55) / 100
-                            local targetStrokeTransparency = math.random(35, 75) / 100
                             local tweenInfo = TweenInfo.new(
                                 duration,
                                 Enum.EasingStyle.Sine,
                                 Enum.EasingDirection.InOut
                             )
 
-                            local starTween = TweenService:Create(star, tweenInfo, {
-                                BackgroundTransparency = targetTransparency
-                            })
-                            local strokeTween = TweenService:Create(starStroke, tweenInfo, {
-                                Transparency = targetStrokeTransparency
-                            })
+                            for _, part in ipairs(starParts) do
+                                local isDiagonal = part.Rotation == 45 or part.Rotation == -45
 
-                            starTween:Play()
-                            strokeTween:Play()
-                            starTween.Completed:Wait()
+                                TweenService:Create(part, tweenInfo, {
+                                    BackgroundTransparency = math.clamp(
+                                        targetTransparency + (isDiagonal and 0.16 or 0),
+                                        0.15,
+                                        0.58
+                                    )
+                                }):Play()
+                            end
+
+                            task.wait(duration)
                         end
                     end)
                 end
