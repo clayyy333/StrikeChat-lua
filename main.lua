@@ -369,77 +369,44 @@ local function renderMessages(messages)
             if hasCuteCloudStyle then
                 local cuteCloudBackground = Instance.new("Frame")
                 cuteCloudBackground.Name = "CuteCloudBackground"
-                cuteCloudBackground.Size = UDim2.new(1, -68, 0, containerHeight - 2)
-                cuteCloudBackground.Position = UDim2.new(0, 34, 0, 0)
+                cuteCloudBackground.Size = UDim2.new(1, -2, 0, containerHeight - 2)
+                cuteCloudBackground.Position = UDim2.new(0, 1, 0, 0)
                 cuteCloudBackground.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                cuteCloudBackground.BackgroundTransparency = 0.07
+                cuteCloudBackground.BackgroundTransparency = 0
                 cuteCloudBackground.BorderSizePixel = 0
                 cuteCloudBackground.ZIndex = 2
                 cuteCloudBackground.Parent = container
 
                 local cuteCloudCorner = Instance.new("UICorner")
-                cuteCloudCorner.CornerRadius = UDim.new(0, 0)
+                cuteCloudCorner.CornerRadius = UDim.new(0, 14)
                 cuteCloudCorner.Parent = cuteCloudBackground
 
                 local cuteCloudGradient = Instance.new("UIGradient")
                 cuteCloudGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
-                    ColorSequenceKeypoint.new(0.20, Color3.fromRGB(238, 247, 255)),
-                    ColorSequenceKeypoint.new(0.42, Color3.fromRGB(217, 232, 255)),
-                    ColorSequenceKeypoint.new(0.65, Color3.fromRGB(216, 199, 255)),
-                    ColorSequenceKeypoint.new(0.85, Color3.fromRGB(255, 223, 247)),
+                    ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
+                    ColorSequenceKeypoint.new(0.16, Color3.fromRGB(210, 230, 255)),
+                    ColorSequenceKeypoint.new(0.34, Color3.fromRGB(238, 247, 255)),
+                    ColorSequenceKeypoint.new(0.52, Color3.fromRGB(255, 223, 247)),
+                    ColorSequenceKeypoint.new(0.72, Color3.fromRGB(216, 199, 255)),
+                    ColorSequenceKeypoint.new(0.88, Color3.fromRGB(184, 244, 255)),
                     ColorSequenceKeypoint.new(1.00, Color3.fromRGB(184, 244, 255))
                 })
-                cuteCloudGradient.Rotation = 18
+                cuteCloudGradient.Transparency = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0.00, 1.00),
+                    NumberSequenceKeypoint.new(0.10, 0.74),
+                    NumberSequenceKeypoint.new(0.22, 0.22),
+                    NumberSequenceKeypoint.new(0.50, 0.05),
+                    NumberSequenceKeypoint.new(0.78, 0.22),
+                    NumberSequenceKeypoint.new(0.90, 0.74),
+                    NumberSequenceKeypoint.new(1.00, 1.00)
+                })
+                cuteCloudGradient.Rotation = 0
                 cuteCloudGradient.Parent = cuteCloudBackground
-
-                local function createCuteCloudSideFade(name, position, color, transparency)
-                    local fade = Instance.new("Frame")
-                    fade.Name = name
-                    fade.Size = UDim2.new(0, 44, 0, containerHeight - 2)
-                    fade.Position = position
-                    fade.BackgroundColor3 = color
-                    fade.BackgroundTransparency = 0
-                    fade.BorderSizePixel = 0
-                    fade.ZIndex = 3
-                    fade.Parent = container
-
-                    local fadeGradient = Instance.new("UIGradient")
-                    fadeGradient.Color = ColorSequence.new({
-                        ColorSequenceKeypoint.new(0.00, color),
-                        ColorSequenceKeypoint.new(1.00, color)
-                    })
-                    fadeGradient.Transparency = transparency
-                    fadeGradient.Rotation = 0
-                    fadeGradient.Parent = fade
-                end
-
-                createCuteCloudSideFade(
-                    "CuteCloudLeftFade",
-                    UDim2.new(0, 3, 0, 0),
-                    Color3.fromRGB(255, 255, 255),
-                    NumberSequence.new({
-                        NumberSequenceKeypoint.new(0.00, 1.00),
-                        NumberSequenceKeypoint.new(0.58, 0.50),
-                        NumberSequenceKeypoint.new(1.00, 0.07)
-                    })
-                )
-
-                createCuteCloudSideFade(
-                    "CuteCloudRightFade",
-                    UDim2.new(1, -47, 0, 0),
-                    Color3.fromRGB(184, 244, 255),
-                    NumberSequence.new({
-                        NumberSequenceKeypoint.new(0.00, 0.07),
-                        NumberSequenceKeypoint.new(0.42, 0.50),
-                        NumberSequenceKeypoint.new(1.00, 1.00)
-                    })
-                )
 
                 local cuteCloudStars = Instance.new("Frame")
                 cuteCloudStars.Name = "CuteCloudStars"
-                cuteCloudStars.Size = UDim2.new(1, -6, 0, containerHeight - 2)
-                cuteCloudStars.Position = UDim2.new(0, 3, 0, 0)
+                cuteCloudStars.Size = UDim2.new(1, -2, 0, containerHeight - 2)
+                cuteCloudStars.Position = UDim2.new(0, 1, 0, 0)
                 cuteCloudStars.BackgroundTransparency = 1
                 cuteCloudStars.BorderSizePixel = 0
                 cuteCloudStars.ZIndex = 4
