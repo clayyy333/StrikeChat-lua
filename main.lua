@@ -393,12 +393,11 @@ local function renderMessages(messages)
                 })
                 cuteCloudGradient.Transparency = NumberSequence.new({
                     NumberSequenceKeypoint.new(0.00, 1.00),
-                    NumberSequenceKeypoint.new(0.24, 1.00),
-                    NumberSequenceKeypoint.new(0.30, 0.48),
-                    NumberSequenceKeypoint.new(0.38, 0.06),
-                    NumberSequenceKeypoint.new(0.62, 0.06),
-                    NumberSequenceKeypoint.new(0.70, 0.48),
-                    NumberSequenceKeypoint.new(0.76, 1.00),
+                    NumberSequenceKeypoint.new(0.14, 1.00),
+                    NumberSequenceKeypoint.new(0.26, 0.22),
+                    NumberSequenceKeypoint.new(0.50, 0.05),
+                    NumberSequenceKeypoint.new(0.74, 0.22),
+                    NumberSequenceKeypoint.new(0.86, 1.00),
                     NumberSequenceKeypoint.new(1.00, 1.00)
                 })
                 cuteCloudGradient.Rotation = 0
