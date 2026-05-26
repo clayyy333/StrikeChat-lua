@@ -397,9 +397,9 @@ local function renderMessages(messages)
                     NumberSequenceKeypoint.new(0.03, 0.42),
                     NumberSequenceKeypoint.new(0.08, 0.14),
                     NumberSequenceKeypoint.new(0.50, 0.04),
-                    NumberSequenceKeypoint.new(0.92, 0.14),
-                    NumberSequenceKeypoint.new(0.97, 0.42),
-                    NumberSequenceKeypoint.new(1.00, 0.70)
+                    NumberSequenceKeypoint.new(0.92, 0.18),
+                    NumberSequenceKeypoint.new(0.97, 0.52),
+                    NumberSequenceKeypoint.new(1.00, 0.86)
                 })
                 cuteCloudGradient.Rotation = 0
                 cuteCloudGradient.Parent = cuteCloudBackground
