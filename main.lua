@@ -397,36 +397,12 @@ local function renderMessages(messages)
                     NumberSequenceKeypoint.new(0.03, 0.42),
                     NumberSequenceKeypoint.new(0.08, 0.14),
                     NumberSequenceKeypoint.new(0.50, 0.04),
-                    NumberSequenceKeypoint.new(0.90, 0.18),
-                    NumberSequenceKeypoint.new(0.97, 0.52),
-                    NumberSequenceKeypoint.new(1.00, 0.86)
+                    NumberSequenceKeypoint.new(0.92, 0.14),
+                    NumberSequenceKeypoint.new(0.97, 0.42),
+                    NumberSequenceKeypoint.new(1.00, 0.70)
                 })
                 cuteCloudGradient.Rotation = 0
                 cuteCloudGradient.Parent = cuteCloudBackground
-
-                local cuteCloudRightEdge = Instance.new("Frame")
-                cuteCloudRightEdge.Name = "CuteCloudRightEdge"
-                cuteCloudRightEdge.Size = UDim2.new(0, 28, 0, containerHeight - 2)
-                cuteCloudRightEdge.Position = UDim2.new(1, -29, 0, 0)
-                cuteCloudRightEdge.BackgroundColor3 = Theme.Colors.Panel
-                cuteCloudRightEdge.BackgroundTransparency = 0
-                cuteCloudRightEdge.BorderSizePixel = 0
-                cuteCloudRightEdge.ZIndex = 3
-                cuteCloudRightEdge.Parent = container
-
-                local cuteCloudRightEdgeGradient = Instance.new("UIGradient")
-                cuteCloudRightEdgeGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
-                    ColorSequenceKeypoint.new(0.62, Theme.Colors.Panel),
-                    ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
-                })
-                cuteCloudRightEdgeGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0.00, 1.00),
-                    NumberSequenceKeypoint.new(0.62, 0.62),
-                    NumberSequenceKeypoint.new(1.00, 0.18)
-                })
-                cuteCloudRightEdgeGradient.Rotation = 0
-                cuteCloudRightEdgeGradient.Parent = cuteCloudRightEdge
 
                 local cuteCloudStars = Instance.new("Frame")
                 cuteCloudStars.Name = "CuteCloudStars"
