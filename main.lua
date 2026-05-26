@@ -367,49 +367,45 @@ local function renderMessages(messages)
             container.ZIndex = hasPremiumChatStyle and 4 or 1
 
             if hasCuteCloudStyle then
-                local function createCuteCloudSideShadow(name, position, transparency)
-                    local shadow = Instance.new("Frame")
-                    shadow.Name = name
-                    shadow.Size = UDim2.new(0, 24, 0, containerHeight - 6)
-                    shadow.Position = position
-                    shadow.BackgroundColor3 = Color3.fromRGB(184, 244, 255)
-                    shadow.BackgroundTransparency = 0
-                    shadow.BorderSizePixel = 0
-                    shadow.ZIndex = 1
-                    shadow.Parent = container
+                local function createCuteCloudSideFade(name, position, colorSequence)
+                    local fade = Instance.new("Frame")
+                    fade.Name = name
+                    fade.Size = UDim2.new(0, 28, 0, containerHeight - 2)
+                    fade.Position = position
+                    fade.BackgroundColor3 = Theme.Colors.Panel
+                    fade.BackgroundTransparency = 0
+                    fade.BorderSizePixel = 0
+                    fade.ZIndex = 1
+                    fade.Parent = container
 
-                    local shadowCorner = Instance.new("UICorner")
-                    shadowCorner.CornerRadius = UDim.new(0, 16)
-                    shadowCorner.Parent = shadow
-
-                    local shadowGradient = Instance.new("UIGradient")
-                    shadowGradient.Color = ColorSequence.new({
-                        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 223, 247)),
-                        ColorSequenceKeypoint.new(0.55, Color3.fromRGB(210, 230, 255)),
-                        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(184, 244, 255))
+                    local fadeGradient = Instance.new("UIGradient")
+                    fadeGradient.Color = colorSequence
+                    fadeGradient.Transparency = NumberSequence.new({
+                        NumberSequenceKeypoint.new(0.00, 0.00),
+                        NumberSequenceKeypoint.new(0.50, 0.04),
+                        NumberSequenceKeypoint.new(1.00, 0.00)
                     })
-                    shadowGradient.Transparency = transparency
-                    shadowGradient.Rotation = 0
-                    shadowGradient.Parent = shadow
+                    fadeGradient.Rotation = 0
+                    fadeGradient.Parent = fade
                 end
 
-                createCuteCloudSideShadow(
-                    "CuteCloudLeftShadow",
-                    UDim2.new(0, -8, 0, 3),
-                    NumberSequence.new({
-                        NumberSequenceKeypoint.new(0.00, 1.00),
-                        NumberSequenceKeypoint.new(0.62, 0.70),
-                        NumberSequenceKeypoint.new(1.00, 0.36)
+                createCuteCloudSideFade(
+                    "CuteCloudLeftFade",
+                    UDim2.new(0, -10, 0, 0),
+                    ColorSequence.new({
+                        ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
+                        ColorSequenceKeypoint.new(0.34, Color3.fromRGB(255, 223, 247)),
+                        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))
                     })
                 )
 
-                createCuteCloudSideShadow(
-                    "CuteCloudRightShadow",
-                    UDim2.new(1, -16, 0, 3),
-                    NumberSequence.new({
-                        NumberSequenceKeypoint.new(0.00, 0.36),
-                        NumberSequenceKeypoint.new(0.38, 0.70),
-                        NumberSequenceKeypoint.new(1.00, 1.00)
+                createCuteCloudSideFade(
+                    "CuteCloudRightFade",
+                    UDim2.new(1, -18, 0, 0),
+                    ColorSequence.new({
+                        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(184, 244, 255)),
+                        ColorSequenceKeypoint.new(0.66, Color3.fromRGB(184, 244, 255)),
+                        ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
                     })
                 )
 
