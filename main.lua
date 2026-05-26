@@ -261,6 +261,7 @@ local function renderMessages(messages)
                 chatStyle == "cutecloud"
             local hasGatoDarkStyle = false
             local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
+            local premiumContentZIndex = hasPremiumChatStyle and 4 or 3
 
             local avatar = Instance.new("ImageLabel")
             avatar.Name = "Avatar"
@@ -268,7 +269,7 @@ local function renderMessages(messages)
             avatar.Position = UDim2.new(0, 0, 0, 4)
             avatar.BackgroundTransparency = 1
             avatar.Image = getAvatarImage(msg.roblox_user_id)
-            avatar.ZIndex = hasPremiumChatStyle and 4 or 3
+            avatar.ZIndex = premiumContentZIndex
             avatar.Parent = container
 
             local avatarCorner = Instance.new("UICorner")
@@ -288,7 +289,7 @@ local function renderMessages(messages)
             nameLabel.TextSize = 12
             nameLabel.TextXAlignment = Enum.TextXAlignment.Left
             nameLabel.TextTruncate = Enum.TextTruncate.AtEnd
-            nameLabel.ZIndex = hasPremiumChatStyle and 4 or 3
+            nameLabel.ZIndex = premiumContentZIndex
             nameLabel.Parent = container
 
             local clanText = ""
@@ -312,7 +313,7 @@ local function renderMessages(messages)
             clanLabel.TextSize = 11
             clanLabel.TextXAlignment = Enum.TextXAlignment.Left
             clanLabel.TextTruncate = Enum.TextTruncate.AtEnd
-            clanLabel.ZIndex = hasPremiumChatStyle and 4 or 3
+            clanLabel.ZIndex = premiumContentZIndex
             clanLabel.Parent = container
 
             local headerWidth =
@@ -1255,6 +1256,10 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
 
     shopUI.ItemButtons.NameColor.MouseButton1Click:Connect(function()
         buyInventoryItem("username_color_purple", shopUI.ItemButtons.NameColor)
+    end)
+
+    shopUI.ItemButtons.CustomChat.MouseButton1Click:Connect(function()
+        buyInventoryItem("chat_style_cloud", shopUI.ItemButtons.CustomChat)
     end)
 
     shopUI.ItemButtons.ChatColor.MouseButton1Click:Connect(function()
