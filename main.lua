@@ -367,6 +367,34 @@ local function renderMessages(messages)
             container.ZIndex = hasPremiumChatStyle and 4 or 1
 
             if hasCuteCloudStyle then
+                local cuteCloudShadow = Instance.new("Frame")
+                cuteCloudShadow.Name = "CuteCloudSoftShadow"
+                cuteCloudShadow.Size = UDim2.new(1, 8, 0, containerHeight + 6)
+                cuteCloudShadow.Position = UDim2.new(0, -4, 0, -3)
+                cuteCloudShadow.BackgroundColor3 = Color3.fromRGB(184, 244, 255)
+                cuteCloudShadow.BackgroundTransparency = 0.52
+                cuteCloudShadow.BorderSizePixel = 0
+                cuteCloudShadow.ZIndex = 0
+                cuteCloudShadow.Parent = container
+
+                local shadowCorner = Instance.new("UICorner")
+                shadowCorner.CornerRadius = UDim.new(0, 18)
+                shadowCorner.Parent = cuteCloudShadow
+
+                local shadowGradient = Instance.new("UIGradient")
+                shadowGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 223, 247)),
+                    ColorSequenceKeypoint.new(0.45, Color3.fromRGB(210, 230, 255)),
+                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(184, 244, 255))
+                })
+                shadowGradient.Transparency = NumberSequence.new({
+                    NumberSequenceKeypoint.new(0.00, 0.72),
+                    NumberSequenceKeypoint.new(0.50, 0.40),
+                    NumberSequenceKeypoint.new(1.00, 0.70)
+                })
+                shadowGradient.Rotation = 18
+                shadowGradient.Parent = cuteCloudShadow
+
                 local cuteCloudBackground = Instance.new("Frame")
                 cuteCloudBackground.Name = "CuteCloudBackground"
                 cuteCloudBackground.Size = UDim2.new(1, -2, 0, containerHeight - 2)
@@ -392,12 +420,6 @@ local function renderMessages(messages)
                 })
                 cuteCloudGradient.Rotation = 18
                 cuteCloudGradient.Parent = cuteCloudBackground
-
-                local cuteCloudStroke = Instance.new("UIStroke")
-                cuteCloudStroke.Color = Color3.fromRGB(210, 230, 255)
-                cuteCloudStroke.Transparency = 0.35
-                cuteCloudStroke.Thickness = 1
-                cuteCloudStroke.Parent = cuteCloudBackground
 
                 local cuteCloudStars = Instance.new("Frame")
                 cuteCloudStars.Name = "CuteCloudStars"
