@@ -393,13 +393,13 @@ local function renderMessages(messages)
                     ColorSequenceKeypoint.new(1.00, Color3.fromRGB(184, 244, 255))
                 })
                 cuteCloudGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0.00, 1.00),
-                    NumberSequenceKeypoint.new(0.03, 0.74),
-                    NumberSequenceKeypoint.new(0.10, 0.22),
-                    NumberSequenceKeypoint.new(0.50, 0.05),
-                    NumberSequenceKeypoint.new(0.90, 0.22),
-                    NumberSequenceKeypoint.new(0.97, 0.74),
-                    NumberSequenceKeypoint.new(1.00, 1.00)
+                    NumberSequenceKeypoint.new(0.00, 0.40),
+                    NumberSequenceKeypoint.new(0.02, 0.20),
+                    NumberSequenceKeypoint.new(0.06, 0.08),
+                    NumberSequenceKeypoint.new(0.50, 0.03),
+                    NumberSequenceKeypoint.new(0.94, 0.08),
+                    NumberSequenceKeypoint.new(0.98, 0.20),
+                    NumberSequenceKeypoint.new(1.00, 0.40)
                 })
                 cuteCloudGradient.Rotation = 0
                 cuteCloudGradient.Parent = cuteCloudBackground
