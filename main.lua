@@ -261,7 +261,7 @@ local function renderMessages(messages)
                 chatStyle == "cutecloud"
             local hasGatoDarkStyle = false
             local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
-            local premiumContentZIndex = hasPremiumChatStyle and 4 or 3
+            local premiumContentZIndex = hasPremiumChatStyle and 5 or 3
 
             local avatar = Instance.new("ImageLabel")
             avatar.Name = "Avatar"
@@ -375,6 +375,7 @@ local function renderMessages(messages)
                 cuteCloudBackground.BackgroundTransparency = 0
                 cuteCloudBackground.BorderSizePixel = 0
                 cuteCloudBackground.ZIndex = 2
+                cuteCloudBackground.ClipsDescendants = true
                 cuteCloudBackground.Parent = container
 
                 local cuteCloudCorner = Instance.new("UICorner")
@@ -405,12 +406,12 @@ local function renderMessages(messages)
 
                 local cuteCloudStars = Instance.new("Frame")
                 cuteCloudStars.Name = "CuteCloudStars"
-                cuteCloudStars.Size = UDim2.new(1, -2, 0, containerHeight - 2)
-                cuteCloudStars.Position = UDim2.new(0, 1, 0, 0)
+                cuteCloudStars.Size = UDim2.new(1, 0, 1, 0)
+                cuteCloudStars.Position = UDim2.new(0, 0, 0, 0)
                 cuteCloudStars.BackgroundTransparency = 1
                 cuteCloudStars.BorderSizePixel = 0
                 cuteCloudStars.ZIndex = 4
-                cuteCloudStars.Parent = container
+                cuteCloudStars.Parent = cuteCloudBackground
 
                 local starColors = {
                     Color3.fromRGB(255, 255, 255),
@@ -425,9 +426,9 @@ local function renderMessages(messages)
                     star.Name = "CuteCloudStar"
                     star.Size = UDim2.new(0, size, 0, size)
                     star.Position = UDim2.new(
-                        math.random(8, 92) / 100,
+                        math.random(12, 88) / 100,
                         0,
-                        math.random(12, 82) / 100,
+                        math.random(18, 78) / 100,
                         0
                     )
                     star.BackgroundTransparency = 1
@@ -502,7 +503,7 @@ local function renderMessages(messages)
             messageText.TextXAlignment = Enum.TextXAlignment.Left
             messageText.TextYAlignment = Enum.TextYAlignment.Top
             messageText.TextWrapped = true
-            messageText.ZIndex = hasPremiumChatStyle and 4 or 1
+            messageText.ZIndex = hasPremiumChatStyle and 5 or 1
             messageText.Parent = container
         end
     end
