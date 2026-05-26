@@ -3,6 +3,7 @@ local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
 local MarketplaceService = game:GetService("MarketplaceService")
 local TextService = game:GetService("TextService")
+local TweenService = game:GetService("TweenService")
 
 local player = Players.LocalPlayer
 local running = true
@@ -251,9 +252,112 @@ local function renderMessages(messages)
             container.Parent = chatPanel.MessagesBox
 
             local chatStyle = tostring(msg.chat_style or ""):lower()
-            local hasCuteCloudStyle = false
+            local chatColor = tostring(msg.chat_color or ""):lower()
+            local hasCuteCloudStyle = chatColor == "pink" or chatColor == "chat_color_pink"
             local hasGatoDarkStyle = false
             local hasPremiumChatStyle = hasCuteCloudStyle or hasGatoDarkStyle
+
+            if hasCuteCloudStyle then
+                local cuteCloudBackground = Instance.new("Frame")
+                cuteCloudBackground.Name = "CuteCloudBackground"
+                cuteCloudBackground.Size = UDim2.new(1, 0, 1, 0)
+                cuteCloudBackground.Position = UDim2.new(0, 0, 0, 0)
+                cuteCloudBackground.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+                cuteCloudBackground.BackgroundTransparency = 0.07
+                cuteCloudBackground.BorderSizePixel = 0
+                cuteCloudBackground.ZIndex = 1
+                cuteCloudBackground.Parent = container
+
+                local cuteCloudCorner = Instance.new("UICorner")
+                cuteCloudCorner.CornerRadius = UDim.new(0, 14)
+                cuteCloudCorner.Parent = cuteCloudBackground
+
+                local cuteCloudGradient = Instance.new("UIGradient")
+                cuteCloudGradient.Color = ColorSequence.new({
+                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(255, 255, 255)),
+                    ColorSequenceKeypoint.new(0.20, Color3.fromRGB(238, 247, 255)),
+                    ColorSequenceKeypoint.new(0.42, Color3.fromRGB(217, 232, 255)),
+                    ColorSequenceKeypoint.new(0.65, Color3.fromRGB(216, 199, 255)),
+                    ColorSequenceKeypoint.new(0.85, Color3.fromRGB(255, 223, 247)),
+                    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(184, 244, 255))
+                })
+                cuteCloudGradient.Rotation = 18
+                cuteCloudGradient.Parent = cuteCloudBackground
+
+                local cuteCloudStroke = Instance.new("UIStroke")
+                cuteCloudStroke.Color = Color3.fromRGB(210, 230, 255)
+                cuteCloudStroke.Transparency = 0.35
+                cuteCloudStroke.Thickness = 1
+                cuteCloudStroke.Parent = cuteCloudBackground
+
+                local cuteCloudStars = Instance.new("Frame")
+                cuteCloudStars.Name = "CuteCloudStars"
+                cuteCloudStars.Size = UDim2.new(1, 0, 1, 0)
+                cuteCloudStars.Position = UDim2.new(0, 0, 0, 0)
+                cuteCloudStars.BackgroundTransparency = 1
+                cuteCloudStars.BorderSizePixel = 0
+                cuteCloudStars.ZIndex = 2
+                cuteCloudStars.Parent = container
+
+                local starColors = {
+                    Color3.fromRGB(255, 255, 255),
+                    Color3.fromRGB(184, 244, 255),
+                    Color3.fromRGB(255, 223, 247)
+                }
+
+                for i = 1, 6 do
+                    local star = Instance.new("Frame")
+                    local size = math.random(2, 4)
+
+                    star.Name = "CuteCloudStar"
+                    star.Size = UDim2.new(0, size, 0, size)
+                    star.Position = UDim2.new(
+                        math.random(8, 92) / 100,
+                        0,
+                        math.random(12, 82) / 100,
+                        0
+                    )
+                    star.BackgroundColor3 = starColors[((i - 1) % #starColors) + 1]
+                    star.BackgroundTransparency = math.random(18, 42) / 100
+                    star.BorderSizePixel = 0
+                    star.ZIndex = 2
+                    star.Parent = cuteCloudStars
+
+                    local starCorner = Instance.new("UICorner")
+                    starCorner.CornerRadius = UDim.new(1, 0)
+                    starCorner.Parent = star
+
+                    local starStroke = Instance.new("UIStroke")
+                    starStroke.Color = Color3.fromRGB(120, 236, 255)
+                    starStroke.Transparency = math.random(42, 70) / 100
+                    starStroke.Thickness = 1
+                    starStroke.Parent = star
+
+                    task.spawn(function()
+                        while star.Parent do
+                            local duration = math.random(15, 30) / 10
+                            local targetTransparency = math.random(15, 55) / 100
+                            local targetStrokeTransparency = math.random(35, 75) / 100
+                            local tweenInfo = TweenInfo.new(
+                                duration,
+                                Enum.EasingStyle.Sine,
+                                Enum.EasingDirection.InOut
+                            )
+
+                            local starTween = TweenService:Create(star, tweenInfo, {
+                                BackgroundTransparency = targetTransparency
+                            })
+                            local strokeTween = TweenService:Create(starStroke, tweenInfo, {
+                                Transparency = targetStrokeTransparency
+                            })
+
+                            starTween:Play()
+                            strokeTween:Play()
+                            starTween.Completed:Wait()
+                        end
+                    end)
+                end
+            end
 
             local avatar = Instance.new("ImageLabel")
             avatar.Name = "Avatar"
@@ -261,7 +365,7 @@ local function renderMessages(messages)
             avatar.Position = UDim2.new(0, 0, 0, 4)
             avatar.BackgroundTransparency = 1
             avatar.Image = getAvatarImage(msg.roblox_user_id)
-            avatar.ZIndex = hasGatoDarkStyle and 4 or 3
+            avatar.ZIndex = hasPremiumChatStyle and 4 or 3
             avatar.Parent = container
 
             local avatarCorner = Instance.new("UICorner")
@@ -276,12 +380,12 @@ local function renderMessages(messages)
             nameLabel.Position = UDim2.new(0, 44, 0, 0)
             nameLabel.BackgroundTransparency = 1
             nameLabel.Text = tostring(name)
-            nameLabel.TextColor3 = Theme.Colors.Text
+            nameLabel.TextColor3 = hasCuteCloudStyle and Color3.fromRGB(42, 48, 76) or Theme.Colors.Text
             nameLabel.Font = Theme.Font.Bold
             nameLabel.TextSize = 12
             nameLabel.TextXAlignment = Enum.TextXAlignment.Left
             nameLabel.TextTruncate = Enum.TextTruncate.AtEnd
-            nameLabel.ZIndex = hasGatoDarkStyle and 4 or 3
+            nameLabel.ZIndex = hasPremiumChatStyle and 4 or 3
             nameLabel.Parent = container
 
             local clanText = ""
@@ -305,7 +409,7 @@ local function renderMessages(messages)
             clanLabel.TextSize = 11
             clanLabel.TextXAlignment = Enum.TextXAlignment.Left
             clanLabel.TextTruncate = Enum.TextTruncate.AtEnd
-            clanLabel.ZIndex = hasGatoDarkStyle and 4 or 3
+            clanLabel.ZIndex = hasPremiumChatStyle and 4 or 3
             clanLabel.Parent = container
 
             local headerWidth =
@@ -360,13 +464,13 @@ local function renderMessages(messages)
             messageText.Position = UDim2.new(0, 44, 0, 20)
             messageText.BackgroundTransparency = 1
             messageText.Text = tostring(msg.message)
-            messageText.TextColor3 = Theme.Colors.Text
+            messageText.TextColor3 = hasCuteCloudStyle and Color3.fromRGB(42, 48, 76) or Theme.Colors.Text
             messageText.Font = Theme.Font.Regular
             messageText.TextSize = 13
             messageText.TextXAlignment = Enum.TextXAlignment.Left
             messageText.TextYAlignment = Enum.TextYAlignment.Top
             messageText.TextWrapped = true
-            messageText.ZIndex = hasPremiumChatStyle and 5 or 1
+            messageText.ZIndex = hasPremiumChatStyle and 4 or 1
             messageText.Parent = container
         end
     end
