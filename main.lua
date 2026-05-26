@@ -406,9 +406,9 @@ local function renderMessages(messages)
 
                 local cuteCloudRightEdge = Instance.new("Frame")
                 cuteCloudRightEdge.Name = "CuteCloudRightEdge"
-                cuteCloudRightEdge.Size = UDim2.new(0, 18, 0, containerHeight - 2)
-                cuteCloudRightEdge.Position = UDim2.new(1, -19, 0, 0)
-                cuteCloudRightEdge.BackgroundColor3 = Color3.fromRGB(184, 244, 255)
+                cuteCloudRightEdge.Size = UDim2.new(0, 28, 0, containerHeight - 2)
+                cuteCloudRightEdge.Position = UDim2.new(1, -29, 0, 0)
+                cuteCloudRightEdge.BackgroundColor3 = Theme.Colors.Panel
                 cuteCloudRightEdge.BackgroundTransparency = 0
                 cuteCloudRightEdge.BorderSizePixel = 0
                 cuteCloudRightEdge.ZIndex = 3
@@ -416,14 +416,14 @@ local function renderMessages(messages)
 
                 local cuteCloudRightEdgeGradient = Instance.new("UIGradient")
                 cuteCloudRightEdgeGradient.Color = ColorSequence.new({
-                    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(184, 244, 255)),
-                    ColorSequenceKeypoint.new(0.68, Color3.fromRGB(184, 244, 255)),
+                    ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
+                    ColorSequenceKeypoint.new(0.62, Theme.Colors.Panel),
                     ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
                 })
                 cuteCloudRightEdgeGradient.Transparency = NumberSequence.new({
-                    NumberSequenceKeypoint.new(0.00, 0.05),
-                    NumberSequenceKeypoint.new(0.68, 0.16),
-                    NumberSequenceKeypoint.new(1.00, 0.36)
+                    NumberSequenceKeypoint.new(0.00, 1.00),
+                    NumberSequenceKeypoint.new(0.62, 0.62),
+                    NumberSequenceKeypoint.new(1.00, 0.18)
                 })
                 cuteCloudRightEdgeGradient.Rotation = 0
                 cuteCloudRightEdgeGradient.Parent = cuteCloudRightEdge
