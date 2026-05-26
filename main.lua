@@ -367,52 +367,10 @@ local function renderMessages(messages)
             container.ZIndex = hasPremiumChatStyle and 4 or 1
 
             if hasCuteCloudStyle then
-                local function createCuteCloudSideFade(name, position, colorSequence)
-                    local fade = Instance.new("Frame")
-                    fade.Name = name
-                    fade.Size = UDim2.new(0, 28, 0, containerHeight - 2)
-                    fade.Position = position
-                    fade.BackgroundColor3 = Theme.Colors.Panel
-                    fade.BackgroundTransparency = 0
-                    fade.BorderSizePixel = 0
-                    fade.ZIndex = 1
-                    fade.Parent = container
-
-                    local fadeGradient = Instance.new("UIGradient")
-                    fadeGradient.Color = colorSequence
-                    fadeGradient.Transparency = NumberSequence.new({
-                        NumberSequenceKeypoint.new(0.00, 0.00),
-                        NumberSequenceKeypoint.new(0.50, 0.04),
-                        NumberSequenceKeypoint.new(1.00, 0.00)
-                    })
-                    fadeGradient.Rotation = 0
-                    fadeGradient.Parent = fade
-                end
-
-                createCuteCloudSideFade(
-                    "CuteCloudLeftFade",
-                    UDim2.new(0, -10, 0, 0),
-                    ColorSequence.new({
-                        ColorSequenceKeypoint.new(0.00, Theme.Colors.Panel),
-                        ColorSequenceKeypoint.new(0.34, Color3.fromRGB(255, 223, 247)),
-                        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(255, 255, 255))
-                    })
-                )
-
-                createCuteCloudSideFade(
-                    "CuteCloudRightFade",
-                    UDim2.new(1, -18, 0, 0),
-                    ColorSequence.new({
-                        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(184, 244, 255)),
-                        ColorSequenceKeypoint.new(0.66, Color3.fromRGB(184, 244, 255)),
-                        ColorSequenceKeypoint.new(1.00, Theme.Colors.Panel)
-                    })
-                )
-
                 local cuteCloudBackground = Instance.new("Frame")
                 cuteCloudBackground.Name = "CuteCloudBackground"
-                cuteCloudBackground.Size = UDim2.new(1, -2, 0, containerHeight - 2)
-                cuteCloudBackground.Position = UDim2.new(0, 1, 0, 0)
+                cuteCloudBackground.Size = UDim2.new(1, -68, 0, containerHeight - 2)
+                cuteCloudBackground.Position = UDim2.new(0, 34, 0, 0)
                 cuteCloudBackground.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 cuteCloudBackground.BackgroundTransparency = 0.07
                 cuteCloudBackground.BorderSizePixel = 0
@@ -420,7 +378,7 @@ local function renderMessages(messages)
                 cuteCloudBackground.Parent = container
 
                 local cuteCloudCorner = Instance.new("UICorner")
-                cuteCloudCorner.CornerRadius = UDim.new(0, 14)
+                cuteCloudCorner.CornerRadius = UDim.new(0, 0)
                 cuteCloudCorner.Parent = cuteCloudBackground
 
                 local cuteCloudGradient = Instance.new("UIGradient")
@@ -435,13 +393,56 @@ local function renderMessages(messages)
                 cuteCloudGradient.Rotation = 18
                 cuteCloudGradient.Parent = cuteCloudBackground
 
+                local function createCuteCloudSideFade(name, position, color, transparency)
+                    local fade = Instance.new("Frame")
+                    fade.Name = name
+                    fade.Size = UDim2.new(0, 44, 0, containerHeight - 2)
+                    fade.Position = position
+                    fade.BackgroundColor3 = color
+                    fade.BackgroundTransparency = 0
+                    fade.BorderSizePixel = 0
+                    fade.ZIndex = 3
+                    fade.Parent = container
+
+                    local fadeGradient = Instance.new("UIGradient")
+                    fadeGradient.Color = ColorSequence.new({
+                        ColorSequenceKeypoint.new(0.00, color),
+                        ColorSequenceKeypoint.new(1.00, color)
+                    })
+                    fadeGradient.Transparency = transparency
+                    fadeGradient.Rotation = 0
+                    fadeGradient.Parent = fade
+                end
+
+                createCuteCloudSideFade(
+                    "CuteCloudLeftFade",
+                    UDim2.new(0, 3, 0, 0),
+                    Color3.fromRGB(255, 255, 255),
+                    NumberSequence.new({
+                        NumberSequenceKeypoint.new(0.00, 1.00),
+                        NumberSequenceKeypoint.new(0.58, 0.50),
+                        NumberSequenceKeypoint.new(1.00, 0.07)
+                    })
+                )
+
+                createCuteCloudSideFade(
+                    "CuteCloudRightFade",
+                    UDim2.new(1, -47, 0, 0),
+                    Color3.fromRGB(184, 244, 255),
+                    NumberSequence.new({
+                        NumberSequenceKeypoint.new(0.00, 0.07),
+                        NumberSequenceKeypoint.new(0.42, 0.50),
+                        NumberSequenceKeypoint.new(1.00, 1.00)
+                    })
+                )
+
                 local cuteCloudStars = Instance.new("Frame")
                 cuteCloudStars.Name = "CuteCloudStars"
-                cuteCloudStars.Size = UDim2.new(1, -2, 0, containerHeight - 2)
-                cuteCloudStars.Position = UDim2.new(0, 1, 0, 0)
+                cuteCloudStars.Size = UDim2.new(1, -6, 0, containerHeight - 2)
+                cuteCloudStars.Position = UDim2.new(0, 3, 0, 0)
                 cuteCloudStars.BackgroundTransparency = 1
                 cuteCloudStars.BorderSizePixel = 0
-                cuteCloudStars.ZIndex = 3
+                cuteCloudStars.ZIndex = 4
                 cuteCloudStars.Parent = container
 
                 local starColors = {
@@ -464,7 +465,7 @@ local function renderMessages(messages)
                     )
                     star.BackgroundTransparency = 1
                     star.BorderSizePixel = 0
-                    star.ZIndex = 3
+                    star.ZIndex = 4
                     star.Parent = cuteCloudStars
 
                     local starColor = starColors[((i - 1) % #starColors) + 1]
@@ -484,7 +485,7 @@ local function renderMessages(messages)
                         part.BackgroundTransparency = partTransparency
                         part.BorderSizePixel = 0
                         part.Rotation = rotation
-                        part.ZIndex = 3
+                        part.ZIndex = 4
                         part.Parent = star
 
                         local partCorner = Instance.new("UICorner")
