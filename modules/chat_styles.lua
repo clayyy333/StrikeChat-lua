@@ -378,7 +378,7 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             centerImage.Name = style.name .. "CenterImage"
             centerImage.AnchorPoint = Vector2.new(0.5, 0.5)
             centerImage.Size = UDim2.new(0, 132, 0, 50)
-            centerImage.Position = UDim2.new(0.52, 0, 0.36, 0)
+            centerImage.Position = UDim2.new(0.52, 0, 0.32, 0)
             centerImage.BackgroundTransparency = 1
             centerImage.Image = style.royalGoldImage
             centerImage.ImageTransparency = 0.38
