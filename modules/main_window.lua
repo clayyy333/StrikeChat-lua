@@ -33,100 +33,74 @@ function MainWindow.Create(CoreGui, Theme)
     topBar.BackgroundTransparency = 1
     topBar.Parent = main
 
-    local title = Instance.new("Frame")
+    local title = Instance.new("TextLabel")
     title.Name = "Title"
     title.Size = UDim2.new(1, -110, 1, 0)
     title.Position = UDim2.new(0, 16, 0, 0)
     title.BackgroundTransparency = 1
+    title.Text = "StrikeChat"
+    title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    title.Font = Theme.Font.Bold
+    title.TextSize = 18
+    title.TextTransparency = 0
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.TextYAlignment = Enum.TextYAlignment.Center
     title.Parent = topBar
 
-    local titleLayout = Instance.new("UIListLayout")
-    titleLayout.FillDirection = Enum.FillDirection.Horizontal
-    titleLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
-    titleLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    titleLayout.Padding = UDim.new(0, 0)
-    titleLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    titleLayout.Parent = title
-
-    local titleColors = {
-        Color3.fromRGB(244, 67, 54),
-        Color3.fromRGB(255, 152, 0),
-        Color3.fromRGB(255, 235, 59),
-        Color3.fromRGB(76, 175, 80),
-        Color3.fromRGB(0, 188, 212),
-        Color3.fromRGB(33, 150, 243),
-        Color3.fromRGB(63, 81, 181),
-        Color3.fromRGB(156, 39, 176),
-        Color3.fromRGB(233, 30, 99),
-        Color3.fromRGB(121, 85, 72)
+    local titleGradients = {
+        ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(168, 6, 235)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 70, 190)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(74, 142, 245))
+        }),
+        ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 70, 190)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(74, 142, 245)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(168, 6, 235))
+        }),
+        ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(74, 142, 245)),
+            ColorSequenceKeypoint.new(0.5, Color3.fromRGB(168, 6, 235)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 70, 190))
+        })
     }
 
-    local titleLetters = {}
-    local titleText = "StrikeChat"
-
-    for index = 1, #titleText do
-        local letter = Instance.new("TextLabel")
-        letter.Name = "TitleLetter" .. tostring(index)
-        letter.Size = UDim2.new(0, 12, 1, 0)
-        letter.BackgroundTransparency = 1
-        letter.Text = titleText:sub(index, index)
-        letter.TextColor3 = titleColors[index]
-        letter.Font = Theme.Font.Bold
-        letter.TextSize = 18
-        letter.TextTransparency = 0
-        letter.TextXAlignment = Enum.TextXAlignment.Center
-        letter.TextYAlignment = Enum.TextYAlignment.Center
-        letter.LayoutOrder = index
-        letter.Parent = title
-
-        table.insert(titleLetters, letter)
-    end
-
-    local function refreshTitleColors()
-        local previousColor = nil
-
-        for _, letter in ipairs(titleLetters) do
-            local nextColor = titleColors[math.random(1, #titleColors)]
-
-            while previousColor and nextColor == previousColor do
-                nextColor = titleColors[math.random(1, #titleColors)]
-            end
-
-            letter.TextColor3 = nextColor
-            previousColor = nextColor
-        end
-    end
+    local titleGradient = Instance.new("UIGradient")
+    titleGradient.Color = titleGradients[1]
+    titleGradient.Rotation = 0
+    titleGradient.Parent = title
 
     task.spawn(function()
+        local gradientIndex = 1
+
         while title.Parent do
-            refreshTitleColors()
+            gradientIndex = (gradientIndex % #titleGradients) + 1
+            titleGradient.Color = titleGradients[gradientIndex]
 
-            for _, letter in ipairs(titleLetters) do
-                TweenService:Create(
-                    letter,
-                    TweenInfo.new(0.85, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    {
-                        TextTransparency = 0.28,
-                        TextSize = 17
-                    }
-                ):Play()
-            end
+            TweenService:Create(
+                title,
+                TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                {
+                    TextTransparency = 0.22,
+                    TextSize = 17
+                }
+            ):Play()
 
-            task.wait(0.85)
-            refreshTitleColors()
+            task.wait(0.9)
 
-            for _, letter in ipairs(titleLetters) do
-                TweenService:Create(
-                    letter,
-                    TweenInfo.new(0.85, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
-                    {
-                        TextTransparency = 0,
-                        TextSize = 18
-                    }
-                ):Play()
-            end
+            gradientIndex = (gradientIndex % #titleGradients) + 1
+            titleGradient.Color = titleGradients[gradientIndex]
 
-            task.wait(0.85)
+            TweenService:Create(
+                title,
+                TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                {
+                    TextTransparency = 0,
+                    TextSize = 18
+                }
+            ):Play()
+
+            task.wait(0.9)
         end
     end)
 
