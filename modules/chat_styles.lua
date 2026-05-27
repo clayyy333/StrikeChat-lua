@@ -110,7 +110,7 @@ function ChatStyles.Get(message, Theme)
             textColor = Theme.Colors.Text,
             showStars = false,
             showRoyalGoldDust = true,
-            showRoyalCrown = true,
+            royalGoldImage = "rbxassetid://88299760917499",
             royalGoldColors = {
                 Color3.fromRGB(255, 218, 92),
                 Color3.fromRGB(255, 184, 42),
@@ -373,72 +373,18 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
     end
 
     if style.showRoyalGoldDust then
-        if style.showRoyalCrown then
-            local crown = Instance.new("Frame")
-            crown.Name = style.name .. "Crown"
-            crown.AnchorPoint = Vector2.new(0.5, 0.5)
-            crown.Size = UDim2.new(0, 92, 0, 34)
-            crown.Position = UDim2.new(0.52, 0, 0.52, 0)
-            crown.BackgroundTransparency = 1
-            crown.BorderSizePixel = 0
-            crown.ZIndex = 3
-            crown.Parent = background
-
-            local crownColor = Color3.fromRGB(255, 210, 82)
-
-            local base = Instance.new("Frame")
-            base.Name = "CrownBase"
-            base.AnchorPoint = Vector2.new(0.5, 0.5)
-            base.Size = UDim2.new(0, 58, 0, 6)
-            base.Position = UDim2.new(0.5, 0, 0.78, 0)
-            base.BackgroundColor3 = crownColor
-            base.BackgroundTransparency = 0.56
-            base.BorderSizePixel = 0
-            base.ZIndex = 3
-            base.Parent = crown
-
-            local baseCorner = Instance.new("UICorner")
-            baseCorner.CornerRadius = UDim.new(1, 0)
-            baseCorner.Parent = base
-
-            local lowerBase = Instance.new("Frame")
-            lowerBase.Name = "CrownLowerBase"
-            lowerBase.AnchorPoint = Vector2.new(0.5, 0.5)
-            lowerBase.Size = UDim2.new(0, 44, 0, 4)
-            lowerBase.Position = UDim2.new(0.5, 0, 0.91, 0)
-            lowerBase.BackgroundColor3 = Color3.fromRGB(255, 185, 46)
-            lowerBase.BackgroundTransparency = 0.64
-            lowerBase.BorderSizePixel = 0
-            lowerBase.ZIndex = 3
-            lowerBase.Parent = crown
-
-            local lowerBaseCorner = Instance.new("UICorner")
-            lowerBaseCorner.CornerRadius = UDim.new(1, 0)
-            lowerBaseCorner.Parent = lowerBase
-
-            for _, point in ipairs({
-                { 0.22, 0.60, 10 },
-                { 0.38, 0.46, 15 },
-                { 0.50, 0.34, 18 },
-                { 0.62, 0.46, 15 },
-                { 0.78, 0.60, 10 }
-            }) do
-                local spike = Instance.new("Frame")
-                spike.Name = "CrownSpike"
-                spike.AnchorPoint = Vector2.new(0.5, 0.5)
-                spike.Size = UDim2.new(0, 6, 0, point[3])
-                spike.Position = UDim2.new(point[1], 0, point[2], 0)
-                spike.BackgroundColor3 = crownColor
-                spike.BackgroundTransparency = 0.62
-                spike.BorderSizePixel = 0
-                spike.Rotation = point[1] < 0.5 and -16 or (point[1] > 0.5 and 16 or 0)
-                spike.ZIndex = 3
-                spike.Parent = crown
-
-                local spikeCorner = Instance.new("UICorner")
-                spikeCorner.CornerRadius = UDim.new(1, 0)
-                spikeCorner.Parent = spike
-            end
+        if style.royalGoldImage then
+            local centerImage = Instance.new("ImageLabel")
+            centerImage.Name = style.name .. "CenterImage"
+            centerImage.AnchorPoint = Vector2.new(0.5, 0.5)
+            centerImage.Size = UDim2.new(0, 104, 0, 40)
+            centerImage.Position = UDim2.new(0.52, 0, 0.52, 0)
+            centerImage.BackgroundTransparency = 1
+            centerImage.Image = style.royalGoldImage
+            centerImage.ImageTransparency = 0.38
+            centerImage.ScaleType = Enum.ScaleType.Fit
+            centerImage.ZIndex = 3
+            centerImage.Parent = background
         end
 
         for i = 1, 24 do
