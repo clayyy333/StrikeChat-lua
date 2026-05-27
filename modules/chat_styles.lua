@@ -110,6 +110,7 @@ function ChatStyles.Get(message, Theme)
             textColor = Color3.fromRGB(255, 245, 214),
             showStars = false,
             showRoyalGoldDust = true,
+            showRoyalCrown = true,
             royalGoldColors = {
                 Color3.fromRGB(255, 218, 92),
                 Color3.fromRGB(255, 184, 42),
@@ -372,7 +373,87 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
     end
 
     if style.showRoyalGoldDust then
-        for i = 1, 16 do
+        if style.showRoyalCrown then
+            local crown = Instance.new("Frame")
+            crown.Name = style.name .. "Crown"
+            crown.AnchorPoint = Vector2.new(0.5, 0.5)
+            crown.Size = UDim2.new(0, 84, 0, 30)
+            crown.Position = UDim2.new(0.52, 0, 0.52, 0)
+            crown.BackgroundTransparency = 1
+            crown.BorderSizePixel = 0
+            crown.ZIndex = 3
+            crown.Parent = background
+
+            local crownColor = Color3.fromRGB(255, 210, 82)
+
+            local crownGlow = Instance.new("Frame")
+            crownGlow.Name = "CrownGlow"
+            crownGlow.AnchorPoint = Vector2.new(0.5, 0.5)
+            crownGlow.Size = UDim2.new(0, 96, 0, 26)
+            crownGlow.Position = UDim2.new(0.5, 0, 0.62, 0)
+            crownGlow.BackgroundColor3 = crownColor
+            crownGlow.BackgroundTransparency = 0.86
+            crownGlow.BorderSizePixel = 0
+            crownGlow.ZIndex = 3
+            crownGlow.Parent = crown
+
+            local crownGlowCorner = Instance.new("UICorner")
+            crownGlowCorner.CornerRadius = UDim.new(1, 0)
+            crownGlowCorner.Parent = crownGlow
+
+            local base = Instance.new("Frame")
+            base.Name = "CrownBase"
+            base.AnchorPoint = Vector2.new(0.5, 0.5)
+            base.Size = UDim2.new(0, 50, 0, 5)
+            base.Position = UDim2.new(0.5, 0, 0.76, 0)
+            base.BackgroundColor3 = crownColor
+            base.BackgroundTransparency = 0.48
+            base.BorderSizePixel = 0
+            base.ZIndex = 3
+            base.Parent = crown
+
+            local baseCorner = Instance.new("UICorner")
+            baseCorner.CornerRadius = UDim.new(1, 0)
+            baseCorner.Parent = base
+
+            for _, point in ipairs({
+                { 0.24, 0.58, 12 },
+                { 0.39, 0.42, 16 },
+                { 0.50, 0.30, 20 },
+                { 0.61, 0.42, 16 },
+                { 0.76, 0.58, 12 }
+            }) do
+                local spike = Instance.new("Frame")
+                spike.Name = "CrownSpike"
+                spike.AnchorPoint = Vector2.new(0.5, 0.5)
+                spike.Size = UDim2.new(0, 5, 0, point[3])
+                spike.Position = UDim2.new(point[1], 0, point[2], 0)
+                spike.BackgroundColor3 = crownColor
+                spike.BackgroundTransparency = 0.50
+                spike.BorderSizePixel = 0
+                spike.Rotation = point[1] < 0.5 and -16 or (point[1] > 0.5 and 16 or 0)
+                spike.ZIndex = 3
+                spike.Parent = crown
+
+                local spikeCorner = Instance.new("UICorner")
+                spikeCorner.CornerRadius = UDim.new(1, 0)
+                spikeCorner.Parent = spike
+
+                local jewel = Instance.new("Frame")
+                jewel.Name = "CrownJewel"
+                jewel.AnchorPoint = Vector2.new(0.5, 0.5)
+                jewel.Size = UDim2.new(0, 5, 0, 5)
+                jewel.Position = UDim2.new(point[1], 0, point[2] - 0.22, 0)
+                jewel.BackgroundColor3 = Color3.fromRGB(255, 240, 172)
+                jewel.BackgroundTransparency = 0.40
+                jewel.BorderSizePixel = 0
+                jewel.Rotation = 45
+                jewel.ZIndex = 3
+                jewel.Parent = crown
+            end
+        end
+
+        for i = 1, 24 do
             local dust = Instance.new("Frame")
             local size = math.random(2, 4)
 
@@ -395,9 +476,29 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             dustCorner.Parent = dust
         end
 
-        for i = 1, 5 do
+        for i = 1, 10 do
+            local diamond = Instance.new("Frame")
+            local size = math.random(4, 7)
+
+            diamond.Name = style.name .. "GoldDiamond"
+            diamond.Size = UDim2.new(0, size, 0, size)
+            diamond.Position = UDim2.new(
+                math.random(18, 84) / 100,
+                0,
+                math.random(18, 74) / 100,
+                0
+            )
+            diamond.BackgroundColor3 = style.royalGoldColors[((i - 1) % #style.royalGoldColors) + 1]
+            diamond.BackgroundTransparency = math.random(46, 72) / 100
+            diamond.BorderSizePixel = 0
+            diamond.Rotation = 45
+            diamond.ZIndex = 4
+            diamond.Parent = background
+        end
+
+        for i = 1, 8 do
             local glint = Instance.new("TextLabel")
-            local glyphs = { "+", "*", "<>" }
+            local glyphs = { "+", "*", "." }
 
             glint.Name = style.name .. "GoldGlint"
             glint.Size = UDim2.new(0, 14, 0, 14)
