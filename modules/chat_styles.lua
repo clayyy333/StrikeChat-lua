@@ -90,9 +90,9 @@ function ChatStyles.Get(message, Theme)
             gradientColors = {
                 { 0.00, Theme.Colors.Panel },
                 { 0.16, Color3.fromRGB(8, 24, 16) },
-                { 0.34, Color3.fromRGB(12, 64, 22) },
-                { 0.52, Color3.fromRGB(28, 168, 38) },
-                { 0.72, Color3.fromRGB(14, 88, 28) },
+                { 0.34, Color3.fromRGB(10, 52, 20) },
+                { 0.52, Color3.fromRGB(18, 118, 32) },
+                { 0.72, Color3.fromRGB(10, 70, 26) },
                 { 0.88, Color3.fromRGB(8, 42, 24) },
                 { 0.96, Color3.fromRGB(20, 32, 28) },
                 { 1.00, Theme.Colors.Panel }
@@ -320,7 +320,7 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
                     local startXScale = math.random(14, 88) / 100
                     local startYScale = math.random(-24, -4) / 100
                     local endYScale = math.random(84, 112) / 100
-                    local duration = math.random(22, 42) / 10
+                    local duration = math.random(12, 24) / 10
 
                     drop.Position = UDim2.new(startXScale, 0, startYScale, 0)
                     drop.TextTransparency = math.random(42, 76) / 100
