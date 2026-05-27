@@ -52,9 +52,10 @@ function RightPanel.Create(parent, Theme)
 
     local titleUnderline = Instance.new("Frame")
     titleUnderline.Name = "OnlineTitleUnderline"
-    titleUnderline.Size = UDim2.new(0, 60, 0, 1)
+    titleUnderline.Size = UDim2.new(1, -24, 0, 1)
     titleUnderline.Position = UDim2.new(0, 12, 0, 42)
-    titleUnderline.BackgroundColor3 = Theme.Colors.Text
+    titleUnderline.BackgroundColor3 = Color3.fromRGB(71, 72, 82)
+    titleUnderline.BackgroundTransparency = 0.35
     titleUnderline.BorderSizePixel = 0
     titleUnderline.Parent = parent
 
@@ -78,7 +79,7 @@ function RightPanel.Create(parent, Theme)
     layout.Parent = list
 
     local padding = Instance.new("UIPadding")
-    padding.PaddingTop = UDim.new(0, 2)
+    padding.PaddingTop = UDim.new(0, 0)
     padding.PaddingLeft = UDim.new(0, 4)
     padding.PaddingRight = UDim.new(0, 8)
     padding.Parent = list
