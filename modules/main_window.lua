@@ -74,33 +74,30 @@ function MainWindow.Create(CoreGui, Theme)
         local gradientIndex = 1
 
         while title.Parent do
-            gradientIndex = (gradientIndex % #titleGradients) + 1
-            titleGradient.Color = titleGradients[gradientIndex]
-
             TweenService:Create(
                 title,
-                TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                TweenInfo.new(1.35, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
                 {
-                    TextTransparency = 0.22,
-                    TextSize = 17
+                    TextTransparency = 0.12,
+                    TextSize = 17.5
                 }
             ):Play()
 
-            task.wait(0.9)
+            task.wait(1.35)
 
             gradientIndex = (gradientIndex % #titleGradients) + 1
             titleGradient.Color = titleGradients[gradientIndex]
 
             TweenService:Create(
                 title,
-                TweenInfo.new(0.9, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                TweenInfo.new(1.35, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
                 {
                     TextTransparency = 0,
                     TextSize = 18
                 }
             ):Play()
 
-            task.wait(0.9)
+            task.wait(1.35)
         end
     end)
 
