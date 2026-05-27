@@ -1,6 +1,8 @@
 local MainWindow = {}
 
 function MainWindow.Create(CoreGui, Theme)
+    local TweenService = game:GetService("TweenService")
+
     local gui = Instance.new("ScreenGui")
     gui.Name = "StrikeChat_Main"
     gui.ResetOnSpawn = false
@@ -31,17 +33,102 @@ function MainWindow.Create(CoreGui, Theme)
     topBar.BackgroundTransparency = 1
     topBar.Parent = main
 
-    local title = Instance.new("TextLabel")
+    local title = Instance.new("Frame")
     title.Name = "Title"
     title.Size = UDim2.new(1, -110, 1, 0)
     title.Position = UDim2.new(0, 16, 0, 0)
     title.BackgroundTransparency = 1
-    title.Text = "StrikeChat"
-    title.TextColor3 = Theme.Colors.Text
-    title.Font = Theme.Font.Bold
-    title.TextSize = 18
-    title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = topBar
+
+    local titleLayout = Instance.new("UIListLayout")
+    titleLayout.FillDirection = Enum.FillDirection.Horizontal
+    titleLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+    titleLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    titleLayout.Padding = UDim.new(0, 0)
+    titleLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    titleLayout.Parent = title
+
+    local titleColors = {
+        Color3.fromRGB(244, 67, 54),
+        Color3.fromRGB(255, 152, 0),
+        Color3.fromRGB(255, 235, 59),
+        Color3.fromRGB(76, 175, 80),
+        Color3.fromRGB(0, 188, 212),
+        Color3.fromRGB(33, 150, 243),
+        Color3.fromRGB(63, 81, 181),
+        Color3.fromRGB(156, 39, 176),
+        Color3.fromRGB(233, 30, 99),
+        Color3.fromRGB(121, 85, 72)
+    }
+
+    local titleLetters = {}
+    local titleText = "StrikeChat"
+
+    for index = 1, #titleText do
+        local letter = Instance.new("TextLabel")
+        letter.Name = "TitleLetter" .. tostring(index)
+        letter.Size = UDim2.new(0, 12, 1, 0)
+        letter.BackgroundTransparency = 1
+        letter.Text = titleText:sub(index, index)
+        letter.TextColor3 = titleColors[index]
+        letter.Font = Theme.Font.Bold
+        letter.TextSize = 18
+        letter.TextTransparency = 0
+        letter.TextXAlignment = Enum.TextXAlignment.Center
+        letter.TextYAlignment = Enum.TextYAlignment.Center
+        letter.LayoutOrder = index
+        letter.Parent = title
+
+        table.insert(titleLetters, letter)
+    end
+
+    local function refreshTitleColors()
+        local previousColor = nil
+
+        for _, letter in ipairs(titleLetters) do
+            local nextColor = titleColors[math.random(1, #titleColors)]
+
+            while previousColor and nextColor == previousColor do
+                nextColor = titleColors[math.random(1, #titleColors)]
+            end
+
+            letter.TextColor3 = nextColor
+            previousColor = nextColor
+        end
+    end
+
+    task.spawn(function()
+        while title.Parent do
+            refreshTitleColors()
+
+            for _, letter in ipairs(titleLetters) do
+                TweenService:Create(
+                    letter,
+                    TweenInfo.new(0.85, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    {
+                        TextTransparency = 0.28,
+                        TextSize = 17
+                    }
+                ):Play()
+            end
+
+            task.wait(0.85)
+            refreshTitleColors()
+
+            for _, letter in ipairs(titleLetters) do
+                TweenService:Create(
+                    letter,
+                    TweenInfo.new(0.85, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    {
+                        TextTransparency = 0,
+                        TextSize = 18
+                    }
+                ):Play()
+            end
+
+            task.wait(0.85)
+        end
+    end)
 
     local minimize = Instance.new("TextButton")
     minimize.Name = "Minimize"
