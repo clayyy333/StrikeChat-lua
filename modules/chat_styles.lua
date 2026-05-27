@@ -70,6 +70,36 @@ function ChatStyles.Get(message, Theme)
         }
     end
 
+    if chatStyle == "hackermstrix"
+        or chatStyle == "hackermatrix"
+        or chatStyle == "hacker_matrix"
+        or chatStyle == "chat_style_hackermstrix"
+        or chatStyle == "chat_style_hackermatrix"
+    then
+        return {
+            name = "HackerMatrix",
+            textColor = Color3.fromRGB(222, 255, 222),
+            showStars = false,
+            showMatrixRain = true,
+            matrixColors = {
+                Color3.fromRGB(132, 255, 66),
+                Color3.fromRGB(64, 220, 64),
+                Color3.fromRGB(178, 255, 96),
+                Color3.fromRGB(46, 170, 54)
+            },
+            gradientColors = {
+                { 0.00, Theme.Colors.Panel },
+                { 0.16, Color3.fromRGB(8, 24, 16) },
+                { 0.34, Color3.fromRGB(12, 64, 22) },
+                { 0.52, Color3.fromRGB(28, 168, 38) },
+                { 0.72, Color3.fromRGB(14, 88, 28) },
+                { 0.88, Color3.fromRGB(8, 42, 24) },
+                { 0.96, Color3.fromRGB(20, 32, 28) },
+                { 1.00, Theme.Colors.Panel }
+            }
+        }
+    end
+
     if chatStyle == "cloud"
         or chatStyle == "cutecloud"
         or chatStyle == "cute_cloud"
@@ -258,6 +288,57 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             local dustCorner = Instance.new("UICorner")
             dustCorner.CornerRadius = UDim.new(1, 0)
             dustCorner.Parent = dust
+        end
+    end
+
+    if style.showMatrixRain then
+        for i = 1, 18 do
+            local drop = Instance.new("TextLabel")
+            local glyphs = { "0", "1", "|", ":", "." }
+
+            drop.Name = style.name .. "MatrixRain"
+            drop.Size = UDim2.new(0, math.random(4, 8), 0, math.random(10, 18))
+            drop.Position = UDim2.new(
+                math.random(14, 88) / 100,
+                0,
+                math.random(-10, 84) / 100,
+                0
+            )
+            drop.BackgroundTransparency = 1
+            drop.Text = glyphs[((i - 1) % #glyphs) + 1]
+            drop.TextColor3 = style.matrixColors[((i - 1) % #style.matrixColors) + 1]
+            drop.TextTransparency = math.random(36, 70) / 100
+            drop.Font = Enum.Font.Code
+            drop.TextSize = math.random(7, 11)
+            drop.TextXAlignment = Enum.TextXAlignment.Center
+            drop.TextYAlignment = Enum.TextYAlignment.Center
+            drop.ZIndex = 4
+            drop.Parent = background
+
+            task.spawn(function()
+                while drop.Parent do
+                    local startXScale = math.random(14, 88) / 100
+                    local startYScale = math.random(-24, -4) / 100
+                    local endYScale = math.random(84, 112) / 100
+                    local duration = math.random(22, 42) / 10
+
+                    drop.Position = UDim2.new(startXScale, 0, startYScale, 0)
+                    drop.TextTransparency = math.random(42, 76) / 100
+
+                    local tweenInfo = TweenInfo.new(
+                        duration,
+                        Enum.EasingStyle.Linear,
+                        Enum.EasingDirection.Out
+                    )
+
+                    TweenService:Create(drop, tweenInfo, {
+                        Position = UDim2.new(startXScale, 0, endYScale, 0),
+                        TextTransparency = 0.88
+                    }):Play()
+
+                    task.wait(duration + math.random(2, 8) / 10)
+                end
+            end)
         end
     end
 
