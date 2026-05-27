@@ -38,21 +38,33 @@ function ChatStyles.Get(message, Theme)
         return {
             name = "GalaxyDream",
             textColor = Theme.Colors.Text,
-            starColors = {
-                Color3.fromRGB(255, 255, 255),
-                Color3.fromRGB(120, 180, 255),
-                Color3.fromRGB(180, 110, 255),
-                Color3.fromRGB(90, 235, 255)
+            showStars = false,
+            showNebulaDust = true,
+            showCosmicMist = true,
+            showOrbitLines = true,
+            nebulaDustColors = {
+                Color3.fromRGB(118, 152, 255),
+                Color3.fromRGB(172, 104, 255),
+                Color3.fromRGB(76, 218, 235),
+                Color3.fromRGB(232, 208, 255)
+            },
+            cosmicMistColors = {
+                Color3.fromRGB(92, 46, 156),
+                Color3.fromRGB(24, 92, 154),
+                Color3.fromRGB(110, 44, 126)
+            },
+            orbitLineColors = {
+                Color3.fromRGB(128, 170, 255),
+                Color3.fromRGB(176, 120, 255)
             },
             gradientColors = {
                 { 0.00, Theme.Colors.Panel },
-                { 0.14, Color3.fromRGB(16, 26, 70) },
-                { 0.28, Color3.fromRGB(54, 25, 118) },
-                { 0.46, Color3.fromRGB(147, 50, 188) },
-                { 0.62, Color3.fromRGB(45, 88, 190) },
-                { 0.78, Color3.fromRGB(24, 185, 225) },
-                { 0.90, Color3.fromRGB(54, 65, 115) },
-                { 0.96, Color3.fromRGB(45, 48, 70) },
+                { 0.16, Color3.fromRGB(18, 24, 64) },
+                { 0.34, Color3.fromRGB(48, 28, 96) },
+                { 0.52, Color3.fromRGB(92, 38, 128) },
+                { 0.72, Color3.fromRGB(32, 54, 126) },
+                { 0.88, Color3.fromRGB(16, 104, 142) },
+                { 0.96, Color3.fromRGB(30, 34, 58) },
                 { 1.00, Theme.Colors.Panel }
             }
         }
@@ -153,84 +165,182 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
     gradient.Rotation = 0
     gradient.Parent = background
 
-    local stars = Instance.new("Frame")
-    stars.Name = style.name .. "Stars"
-    stars.Size = UDim2.new(1, 0, 1, 0)
-    stars.Position = UDim2.new(0, 0, 0, 0)
-    stars.BackgroundTransparency = 1
-    stars.BorderSizePixel = 0
-    stars.ZIndex = 4
-    stars.Parent = background
+    if style.showCosmicMist then
+        for i = 1, 3 do
+            local mist = Instance.new("Frame")
+            mist.Name = style.name .. "CosmicMist"
+            mist.AnchorPoint = Vector2.new(0.5, 0.5)
+            mist.Size = UDim2.new(0, math.random(96, 148), 0, math.random(20, 34))
+            mist.Position = UDim2.new(
+                math.random(26, 78) / 100,
+                0,
+                math.random(34, 70) / 100,
+                0
+            )
+            mist.BackgroundColor3 = style.cosmicMistColors[((i - 1) % #style.cosmicMistColors) + 1]
+            mist.BackgroundTransparency = 0.82
+            mist.BorderSizePixel = 0
+            mist.Rotation = math.random(-14, 14)
+            mist.ZIndex = 3
+            mist.Parent = background
 
-    for i = 1, 5 do
-        local star = Instance.new("Frame")
-        local size = math.random(7, 10)
+            local mistCorner = Instance.new("UICorner")
+            mistCorner.CornerRadius = UDim.new(1, 0)
+            mistCorner.Parent = mist
 
-        star.Name = style.name .. "Star"
-        star.Size = UDim2.new(0, size, 0, size)
-        star.Position = UDim2.new(
-            math.random(12, 88) / 100,
-            0,
-            math.random(18, 78) / 100,
-            0
-        )
-        star.BackgroundTransparency = 1
-        star.BorderSizePixel = 0
-        star.ZIndex = 4
-        star.Parent = stars
-
-        local starColor = style.starColors[((i - 1) % #style.starColors) + 1]
-        local starParts = {}
-
-        for _, rotation in ipairs({ 0, 90, 45, -45 }) do
-            local isMainRay = rotation == 0 or rotation == 90
-            local partLength = isMainRay and size or math.floor(size * 0.72)
-            local partTransparency = isMainRay and 0.18 or 0.36
-
-            local part = Instance.new("Frame")
-            part.Name = "StarPart"
-            part.AnchorPoint = Vector2.new(0.5, 0.5)
-            part.Size = UDim2.new(0, partLength, 0, 2)
-            part.Position = UDim2.new(0.5, 0, 0.5, 0)
-            part.BackgroundColor3 = starColor
-            part.BackgroundTransparency = partTransparency
-            part.BorderSizePixel = 0
-            part.Rotation = rotation
-            part.ZIndex = 4
-            part.Parent = star
-
-            local partCorner = Instance.new("UICorner")
-            partCorner.CornerRadius = UDim.new(1, 0)
-            partCorner.Parent = part
-
-            table.insert(starParts, part)
+            local mistGradient = Instance.new("UIGradient")
+            mistGradient.Transparency = makeTransparencySequence({
+                { 0.00, 1.00 },
+                { 0.24, 0.68 },
+                { 0.50, 0.28 },
+                { 0.76, 0.68 },
+                { 1.00, 1.00 }
+            })
+            mistGradient.Rotation = math.random(0, 180)
+            mistGradient.Parent = mist
         end
+    end
 
-        task.spawn(function()
-            while star.Parent do
-                local duration = math.random(15, 30) / 10
-                local targetTransparency = math.random(15, 55) / 100
-                local tweenInfo = TweenInfo.new(
-                    duration,
-                    Enum.EasingStyle.Sine,
-                    Enum.EasingDirection.InOut
-                )
+    if style.showOrbitLines then
+        for i = 1, 3 do
+            local orbit = Instance.new("Frame")
+            orbit.Name = style.name .. "OrbitLine"
+            orbit.AnchorPoint = Vector2.new(0.5, 0.5)
+            orbit.Size = UDim2.new(0, math.random(130, 210), 0, 1)
+            orbit.Position = UDim2.new(
+                math.random(36, 68) / 100,
+                0,
+                math.random(34, 68) / 100,
+                0
+            )
+            orbit.BackgroundColor3 = style.orbitLineColors[((i - 1) % #style.orbitLineColors) + 1]
+            orbit.BackgroundTransparency = 0.78
+            orbit.BorderSizePixel = 0
+            orbit.Rotation = math.random(-15, 16)
+            orbit.ZIndex = 3
+            orbit.Parent = background
 
-                for _, part in ipairs(starParts) do
-                    local isDiagonal = part.Rotation == 45 or part.Rotation == -45
+            local orbitCorner = Instance.new("UICorner")
+            orbitCorner.CornerRadius = UDim.new(1, 0)
+            orbitCorner.Parent = orbit
 
-                    TweenService:Create(part, tweenInfo, {
-                        BackgroundTransparency = math.clamp(
-                            targetTransparency + (isDiagonal and 0.16 or 0),
-                            0.15,
-                            0.58
-                        )
-                    }):Play()
-                end
+            local orbitGradient = Instance.new("UIGradient")
+            orbitGradient.Transparency = makeTransparencySequence({
+                { 0.00, 1.00 },
+                { 0.18, 0.86 },
+                { 0.50, 0.20 },
+                { 0.82, 0.86 },
+                { 1.00, 1.00 }
+            })
+            orbitGradient.Parent = orbit
+        end
+    end
 
-                task.wait(duration)
+    if style.showNebulaDust then
+        for i = 1, 12 do
+            local dust = Instance.new("Frame")
+            local size = math.random(2, 4)
+
+            dust.Name = style.name .. "NebulaDust"
+            dust.Size = UDim2.new(0, size, 0, size)
+            dust.Position = UDim2.new(
+                math.random(14, 88) / 100,
+                0,
+                math.random(22, 76) / 100,
+                0
+            )
+            dust.BackgroundColor3 = style.nebulaDustColors[((i - 1) % #style.nebulaDustColors) + 1]
+            dust.BackgroundTransparency = math.random(50, 78) / 100
+            dust.BorderSizePixel = 0
+            dust.ZIndex = 4
+            dust.Parent = background
+
+            local dustCorner = Instance.new("UICorner")
+            dustCorner.CornerRadius = UDim.new(1, 0)
+            dustCorner.Parent = dust
+        end
+    end
+
+    if style.showStars ~= false then
+        local stars = Instance.new("Frame")
+        stars.Name = style.name .. "Stars"
+        stars.Size = UDim2.new(1, 0, 1, 0)
+        stars.Position = UDim2.new(0, 0, 0, 0)
+        stars.BackgroundTransparency = 1
+        stars.BorderSizePixel = 0
+        stars.ZIndex = 4
+        stars.Parent = background
+
+        for i = 1, 5 do
+            local star = Instance.new("Frame")
+            local size = math.random(7, 10)
+
+            star.Name = style.name .. "Star"
+            star.Size = UDim2.new(0, size, 0, size)
+            star.Position = UDim2.new(
+                math.random(12, 88) / 100,
+                0,
+                math.random(18, 78) / 100,
+                0
+            )
+            star.BackgroundTransparency = 1
+            star.BorderSizePixel = 0
+            star.ZIndex = 4
+            star.Parent = stars
+
+            local starColor = style.starColors[((i - 1) % #style.starColors) + 1]
+            local starParts = {}
+
+            for _, rotation in ipairs({ 0, 90, 45, -45 }) do
+                local isMainRay = rotation == 0 or rotation == 90
+                local partLength = isMainRay and size or math.floor(size * 0.72)
+                local partTransparency = isMainRay and 0.18 or 0.36
+
+                local part = Instance.new("Frame")
+                part.Name = "StarPart"
+                part.AnchorPoint = Vector2.new(0.5, 0.5)
+                part.Size = UDim2.new(0, partLength, 0, 2)
+                part.Position = UDim2.new(0.5, 0, 0.5, 0)
+                part.BackgroundColor3 = starColor
+                part.BackgroundTransparency = partTransparency
+                part.BorderSizePixel = 0
+                part.Rotation = rotation
+                part.ZIndex = 4
+                part.Parent = star
+
+                local partCorner = Instance.new("UICorner")
+                partCorner.CornerRadius = UDim.new(1, 0)
+                partCorner.Parent = part
+
+                table.insert(starParts, part)
             end
-        end)
+
+            task.spawn(function()
+                while star.Parent do
+                    local duration = math.random(15, 30) / 10
+                    local targetTransparency = math.random(15, 55) / 100
+                    local tweenInfo = TweenInfo.new(
+                        duration,
+                        Enum.EasingStyle.Sine,
+                        Enum.EasingDirection.InOut
+                    )
+
+                    for _, part in ipairs(starParts) do
+                        local isDiagonal = part.Rotation == 45 or part.Rotation == -45
+
+                        TweenService:Create(part, tweenInfo, {
+                            BackgroundTransparency = math.clamp(
+                                targetTransparency + (isDiagonal and 0.16 or 0),
+                                0.15,
+                                0.58
+                            )
+                        }):Play()
+                    end
+
+                    task.wait(duration)
+                end
+            end)
+        end
     end
 end
 
