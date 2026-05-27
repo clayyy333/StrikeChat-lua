@@ -8,8 +8,8 @@ function MainWindow.Create(CoreGui, Theme)
 
     local main = Instance.new("Frame")
     main.Name = "Main"
-    main.Size = UDim2.new(0.86, 0, 0.78, 0)
-    main.Position = UDim2.new(0.5, 0, 0.54, 0)
+    main.Size = UDim2.new(0.86, 0, 0.86, 0)
+    main.Position = UDim2.new(0.5, 0, 0.5, 0)
     main.AnchorPoint = Vector2.new(0.5, 0.5)
     main.BackgroundColor3 = Theme.Colors.Panel
     main.BorderSizePixel = 0
