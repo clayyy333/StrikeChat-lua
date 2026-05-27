@@ -322,7 +322,7 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
     end
 
     if style.showMatrixRain then
-        for i = 1, 18 do
+        for i = 1, 28 do
             local drop = Instance.new("TextLabel")
             local glyphs = { "0", "1", "|", ":", "." }
 
@@ -350,7 +350,7 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
                     local startXScale = math.random(14, 88) / 100
                     local startYScale = math.random(-24, -4) / 100
                     local endYScale = math.random(84, 112) / 100
-                    local duration = math.random(12, 24) / 10
+                    local duration = math.random(7, 15) / 10
 
                     drop.Position = UDim2.new(startXScale, 0, startYScale, 0)
                     drop.TextTransparency = math.random(42, 76) / 100
