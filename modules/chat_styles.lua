@@ -107,7 +107,7 @@ function ChatStyles.Get(message, Theme)
     then
         return {
             name = "RoyalGold",
-            textColor = Color3.fromRGB(255, 245, 214),
+            textColor = Color3.fromRGB(26, 20, 12),
             showStars = false,
             showRoyalGoldDust = true,
             showRoyalCrown = true,
@@ -377,7 +377,7 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             local crown = Instance.new("Frame")
             crown.Name = style.name .. "Crown"
             crown.AnchorPoint = Vector2.new(0.5, 0.5)
-            crown.Size = UDim2.new(0, 84, 0, 30)
+            crown.Size = UDim2.new(0, 92, 0, 34)
             crown.Position = UDim2.new(0.52, 0, 0.52, 0)
             crown.BackgroundTransparency = 1
             crown.BorderSizePixel = 0
@@ -389,10 +389,10 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             local crownGlow = Instance.new("Frame")
             crownGlow.Name = "CrownGlow"
             crownGlow.AnchorPoint = Vector2.new(0.5, 0.5)
-            crownGlow.Size = UDim2.new(0, 96, 0, 26)
+            crownGlow.Size = UDim2.new(0, 110, 0, 30)
             crownGlow.Position = UDim2.new(0.5, 0, 0.62, 0)
             crownGlow.BackgroundColor3 = crownColor
-            crownGlow.BackgroundTransparency = 0.86
+            crownGlow.BackgroundTransparency = 0.84
             crownGlow.BorderSizePixel = 0
             crownGlow.ZIndex = 3
             crownGlow.Parent = crown
@@ -404,10 +404,10 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             local base = Instance.new("Frame")
             base.Name = "CrownBase"
             base.AnchorPoint = Vector2.new(0.5, 0.5)
-            base.Size = UDim2.new(0, 50, 0, 5)
-            base.Position = UDim2.new(0.5, 0, 0.76, 0)
+            base.Size = UDim2.new(0, 58, 0, 6)
+            base.Position = UDim2.new(0.5, 0, 0.78, 0)
             base.BackgroundColor3 = crownColor
-            base.BackgroundTransparency = 0.48
+            base.BackgroundTransparency = 0.42
             base.BorderSizePixel = 0
             base.ZIndex = 3
             base.Parent = crown
@@ -416,20 +416,35 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             baseCorner.CornerRadius = UDim.new(1, 0)
             baseCorner.Parent = base
 
+            local lowerBase = Instance.new("Frame")
+            lowerBase.Name = "CrownLowerBase"
+            lowerBase.AnchorPoint = Vector2.new(0.5, 0.5)
+            lowerBase.Size = UDim2.new(0, 44, 0, 4)
+            lowerBase.Position = UDim2.new(0.5, 0, 0.91, 0)
+            lowerBase.BackgroundColor3 = Color3.fromRGB(255, 185, 46)
+            lowerBase.BackgroundTransparency = 0.50
+            lowerBase.BorderSizePixel = 0
+            lowerBase.ZIndex = 3
+            lowerBase.Parent = crown
+
+            local lowerBaseCorner = Instance.new("UICorner")
+            lowerBaseCorner.CornerRadius = UDim.new(1, 0)
+            lowerBaseCorner.Parent = lowerBase
+
             for _, point in ipairs({
-                { 0.24, 0.58, 12 },
-                { 0.39, 0.42, 16 },
-                { 0.50, 0.30, 20 },
-                { 0.61, 0.42, 16 },
-                { 0.76, 0.58, 12 }
+                { 0.20, 0.58, 13 },
+                { 0.36, 0.42, 18 },
+                { 0.50, 0.27, 23 },
+                { 0.64, 0.42, 18 },
+                { 0.80, 0.58, 13 }
             }) do
                 local spike = Instance.new("Frame")
                 spike.Name = "CrownSpike"
                 spike.AnchorPoint = Vector2.new(0.5, 0.5)
-                spike.Size = UDim2.new(0, 5, 0, point[3])
+                spike.Size = UDim2.new(0, 6, 0, point[3])
                 spike.Position = UDim2.new(point[1], 0, point[2], 0)
                 spike.BackgroundColor3 = crownColor
-                spike.BackgroundTransparency = 0.50
+                spike.BackgroundTransparency = 0.44
                 spike.BorderSizePixel = 0
                 spike.Rotation = point[1] < 0.5 and -16 or (point[1] > 0.5 and 16 or 0)
                 spike.ZIndex = 3
@@ -442,10 +457,10 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
                 local jewel = Instance.new("Frame")
                 jewel.Name = "CrownJewel"
                 jewel.AnchorPoint = Vector2.new(0.5, 0.5)
-                jewel.Size = UDim2.new(0, 5, 0, 5)
+                jewel.Size = UDim2.new(0, 6, 0, 6)
                 jewel.Position = UDim2.new(point[1], 0, point[2] - 0.22, 0)
                 jewel.BackgroundColor3 = Color3.fromRGB(255, 240, 172)
-                jewel.BackgroundTransparency = 0.40
+                jewel.BackgroundTransparency = 0.34
                 jewel.BorderSizePixel = 0
                 jewel.Rotation = 45
                 jewel.ZIndex = 3
