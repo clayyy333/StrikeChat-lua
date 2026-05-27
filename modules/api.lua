@@ -249,12 +249,19 @@ function Api.GetMyInventory(player)
 end
 
 
-function Api.UseInventoryItem(player, itemId)
+function Api.UseInventoryItem(player, itemId, styleValue)
+    local query =
+        "?roblox_user_id=" .. Api.Encode(player.UserId) ..
+        "&item_id=" .. Api.Encode(itemId)
+
+    if styleValue then
+        query = query .. "&style_value=" .. Api.Encode(styleValue)
+    end
+
     return Api.Request(
         Api.BaseUrl ..
         "/inventory/use-item" ..
-        "?roblox_user_id=" .. Api.Encode(player.UserId) ..
-        "&item_id=" .. Api.Encode(itemId),
+        query,
         "POST"
     )
 end

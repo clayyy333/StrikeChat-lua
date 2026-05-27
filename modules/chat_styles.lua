@@ -28,14 +28,12 @@ end
 
 function ChatStyles.Get(message, Theme)
     local chatStyle = lower(message and message.chat_style)
-    local chatColor = lower(message and message.chat_color)
 
     if chatStyle == "galaxy"
         or chatStyle == "galaxydream"
         or chatStyle == "galaxy_dream"
         or chatStyle == "chat_style_galaxy"
         or chatStyle == "chat_style_galaxy_dream"
-        or chatStyle == "chat_style_cloud"
     then
         return {
             name = "GalaxyDream",
@@ -60,10 +58,10 @@ function ChatStyles.Get(message, Theme)
         }
     end
 
-    if chatColor == "pink"
-        or chatColor == "chat_color_pink"
-        or chatStyle == "cloud"
+    if chatStyle == "cloud"
         or chatStyle == "cutecloud"
+        or chatStyle == "cute_cloud"
+        or chatStyle == "chat_style_cloud"
     then
         return {
             name = "CuteCloud",

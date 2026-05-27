@@ -397,10 +397,6 @@ function ShopUI.Create(parent, Theme)
         Color3.fromRGB(66, 135, 245)
     )
     item3.Parent = itemsContainer
-    item3BuyButton.Text = "Proximamente"
-    item3BuyButton.BackgroundColor3 = Color3.fromRGB(70, 74, 84)
-    item3BuyButton.AutoButtonColor = false
-    item3BuyButton.Active = false
 
     local item4, item4BuyButton = createShopItem(
         "COLOR DE CHAT",

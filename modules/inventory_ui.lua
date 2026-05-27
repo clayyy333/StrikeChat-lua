@@ -32,10 +32,18 @@ local STYLE_OPTIONS = {
 local CHAT_STYLE_NAMES = {
     bubble = "Burbuja",
     cloud = "Cute Cloud",
+    galaxy = "Galaxy",
     dog = "Perrito",
     cat = "Gatito",
     rainbow = "Arcoiris",
     hacker = "Hacker"
+}
+
+local CUSTOM_CHAT_ITEM_ID = "chat_personalizado"
+
+local CUSTOM_CHAT_STYLES = {
+    { value = "cloud", label = "Cute Cloud" },
+    { value = "galaxy", label = "Galaxy" }
 }
 
 local function getInventoryEntryData(entry)
@@ -383,6 +391,7 @@ function InventoryUI.Create(parent, Theme)
     applyChatStyleCorner.Parent = applyChatStyleButton
 
     local selectedChatStyleItemId = nil
+    local selectedChatStyleValue = nil
     local selectedChatStyleRows = {}
     local chatStyleUseCallback = nil
 
@@ -422,11 +431,13 @@ function InventoryUI.Create(parent, Theme)
         selectedChatStyleRows = {}
     end
 
-    local function setSelectedChatStyle(itemId)
+    local function setSelectedChatStyle(itemId, styleValue)
         selectedChatStyleItemId = itemId
+        selectedChatStyleValue = styleValue
+        local selectedKey = tostring(itemId or "") .. ":" .. tostring(styleValue or "")
 
-        for rowItemId, row in pairs(selectedChatStyleRows) do
-            row.BackgroundColor3 = rowItemId == itemId and CATEGORY_COLORS.chat_style or Theme.Colors.PanelLight
+        for rowKey, row in pairs(selectedChatStyleRows) do
+            row.BackgroundColor3 = rowKey == selectedKey and CATEGORY_COLORS.chat_style or Theme.Colors.PanelLight
         end
     end
 
@@ -436,56 +447,75 @@ function InventoryUI.Create(parent, Theme)
         chatStyleForm.Visible = true
         chatStyleUseCallback = onUse
         selectedChatStyleItemId = nil
+        selectedChatStyleValue = nil
 
         clearChatStyleOptions()
 
         local firstAvailableItemId = nil
+        local firstAvailableStyleValue = nil
 
         for _, entry in ipairs(items or {}) do
             local item = getInventoryEntryData(entry)
 
             if item.category == "chat_style" then
-                local styleValue = tostring(item.value or item.item_id or "")
-                local label = CHAT_STYLE_NAMES[styleValue] or tostring(item.name or "Estilo")
+                local styleOptions = {}
 
-                local option = Instance.new("TextButton")
-                option.Name = "ChatStyleOption"
-                option.Size = UDim2.new(1, 0, 0, 38)
-                option.BackgroundColor3 = Theme.Colors.PanelLight
-                option.BorderSizePixel = 0
-                option.Text = label .. (entry.is_equipped and "  En uso" or "")
-                option.TextColor3 = Theme.Colors.Text
-                option.Font = Theme.Font.Bold
-                option.TextSize = 12
-                option.TextXAlignment = Enum.TextXAlignment.Left
-                option.ZIndex = 88
-                option.Parent = chatStyleOptions
+                if item.item_id == CUSTOM_CHAT_ITEM_ID then
+                    styleOptions = CUSTOM_CHAT_STYLES
+                else
+                    local styleValue = tostring(item.value or item.item_id or "")
 
-                local optionCorner = Instance.new("UICorner")
-                optionCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
-                optionCorner.Parent = option
-
-                local optionPadding = Instance.new("UIPadding")
-                optionPadding.PaddingLeft = UDim.new(0, 12)
-                optionPadding.PaddingRight = UDim.new(0, 12)
-                optionPadding.Parent = option
-
-                selectedChatStyleRows[item.item_id] = option
-
-                if not firstAvailableItemId and not entry.is_equipped then
-                    firstAvailableItemId = item.item_id
+                    styleOptions = {
+                        {
+                            value = styleValue,
+                            label = CHAT_STYLE_NAMES[styleValue] or tostring(item.name or "Estilo")
+                        }
+                    }
                 end
 
-                option.MouseButton1Click:Connect(function()
-                    if not entry.is_equipped then
-                        setSelectedChatStyle(item.item_id)
+                for _, styleOption in ipairs(styleOptions) do
+                    local isStyleEquipped = tostring(entry.active_chat_style or "") == styleOption.value
+                    local option = Instance.new("TextButton")
+                    option.Name = "ChatStyleOption"
+                    option.Size = UDim2.new(1, 0, 0, 38)
+                    option.BackgroundColor3 = Theme.Colors.PanelLight
+                    option.BorderSizePixel = 0
+                    option.Text = styleOption.label .. (isStyleEquipped and "  En uso" or "")
+                    option.TextColor3 = Theme.Colors.Text
+                    option.Font = Theme.Font.Bold
+                    option.TextSize = 12
+                    option.TextXAlignment = Enum.TextXAlignment.Left
+                    option.ZIndex = 88
+                    option.Parent = chatStyleOptions
+
+                    local optionCorner = Instance.new("UICorner")
+                    optionCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+                    optionCorner.Parent = option
+
+                    local optionPadding = Instance.new("UIPadding")
+                    optionPadding.PaddingLeft = UDim.new(0, 12)
+                    optionPadding.PaddingRight = UDim.new(0, 12)
+                    optionPadding.Parent = option
+
+                    local rowKey = tostring(item.item_id or "") .. ":" .. tostring(styleOption.value or "")
+                    selectedChatStyleRows[rowKey] = option
+
+                    if not firstAvailableItemId and not isStyleEquipped then
+                        firstAvailableItemId = item.item_id
+                        firstAvailableStyleValue = styleOption.value
                     end
-                end)
+
+                    option.MouseButton1Click:Connect(function()
+                        if not isStyleEquipped then
+                            setSelectedChatStyle(item.item_id, styleOption.value)
+                        end
+                    end)
+                end
             end
         end
 
         if firstAvailableItemId then
-            setSelectedChatStyle(firstAvailableItemId)
+            setSelectedChatStyle(firstAvailableItemId, firstAvailableStyleValue)
             setStatus("Selecciona el estilo de chat que quieres usar.", false)
         else
             setStatus("No tienes estilos de chat disponibles para aplicar.", true)
@@ -600,12 +630,14 @@ function InventoryUI.Create(parent, Theme)
             useButton.TextColor3 = Theme.Colors.TextMuted
         elseif item.item_id == "clan_ticket" and not entry.is_equipped then
             useButton.Text = "Crear"
-        elseif item.category == "chat_style" and not entry.is_equipped then
+        elseif item.category == "chat_style" and (not entry.is_equipped or item.item_id == CUSTOM_CHAT_ITEM_ID) then
             useButton.Text = "Elegir"
+            useButton.AutoButtonColor = entry.can_use
+            useButton.Active = entry.can_use
         end
 
         useButton.MouseButton1Click:Connect(function()
-            if entry.can_use and not entry.is_equipped and onUse then
+            if entry.can_use and (not entry.is_equipped or item.item_id == CUSTOM_CHAT_ITEM_ID) and onUse then
                 if item.category == "chat_style" then
                     showChatStyleForm(items, onUse)
                 else
@@ -676,7 +708,7 @@ function InventoryUI.Create(parent, Theme)
 
     applyChatStyleButton.MouseButton1Click:Connect(function()
         if selectedChatStyleItemId and chatStyleUseCallback then
-            chatStyleUseCallback(selectedChatStyleItemId)
+            chatStyleUseCallback(selectedChatStyleItemId, selectedChatStyleValue)
         else
             setStatus("Selecciona un estilo de chat.", true)
         end

@@ -804,7 +804,8 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
             profile_not_found = "No se encontro tu perfil.",
             item_not_owned = "Este item no esta en tu inventario.",
             item_not_found = "Este item ya no esta disponible.",
-            item_not_usable = "Este item aun no se puede usar desde inventario."
+            item_not_usable = "Este item aun no se puede usar desde inventario.",
+            invalid_chat_style = "Ese estilo de chat no esta disponible."
         }
 
         return messages[reason] or "No se pudo usar el item."
@@ -834,7 +835,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
         local inventoryResult = Api.GetMyInventory(player)
 
         if inventoryResult and inventoryResult.status == "ok" then
-            inventoryUI.Render(inventoryResult.items or {}, function(itemId)
+            inventoryUI.Render(inventoryResult.items or {}, function(itemId, styleValue)
                 if inventoryLocked then
                     return
                 end
@@ -842,7 +843,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
                 inventoryLocked = true
                 inventoryUI.ShowStatus("Aplicando item...", false)
 
-                local useResult = Api.UseInventoryItem(player, itemId)
+                local useResult = Api.UseInventoryItem(player, itemId, styleValue)
 
                 if useResult and useResult.status == "ok" then
                     if useResult.action == "create_clan" then
@@ -1154,7 +1155,7 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
     end)
 
     shopUI.ItemButtons.CustomChat.MouseButton1Click:Connect(function()
-        buyInventoryItem("chat_style_cloud", shopUI.ItemButtons.CustomChat)
+        buyInventoryItem("chat_personalizado", shopUI.ItemButtons.CustomChat)
     end)
 
     shopUI.ItemButtons.ChatColor.MouseButton1Click:Connect(function()
