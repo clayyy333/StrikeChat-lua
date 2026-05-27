@@ -304,9 +304,9 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             dust.Name = style.name .. "NebulaDust"
             dust.Size = UDim2.new(0, size, 0, size)
             dust.Position = UDim2.new(
-                math.random(14, 88) / 100,
+                math.random(18, 82) / 100,
                 0,
-                math.random(22, 76) / 100,
+                math.random(24, 72) / 100,
                 0
             )
             dust.BackgroundColor3 = style.nebulaDustColors[((i - 1) % #style.nebulaDustColors) + 1]
@@ -409,9 +409,9 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             dust.Name = style.name .. "GoldDust"
             dust.Size = UDim2.new(0, size, 0, size)
             dust.Position = UDim2.new(
-                math.random(14, 88) / 100,
+                math.random(18, 82) / 100,
                 0,
-                math.random(22, 76) / 100,
+                math.random(24, 72) / 100,
                 0
             )
             dust.BackgroundColor3 = style.royalGoldColors[((i - 1) % #style.royalGoldColors) + 1]
@@ -432,9 +432,9 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             diamond.Name = style.name .. "GoldDiamond"
             diamond.Size = UDim2.new(0, size, 0, size)
             diamond.Position = UDim2.new(
-                math.random(18, 84) / 100,
+                math.random(20, 80) / 100,
                 0,
-                math.random(18, 74) / 100,
+                math.random(22, 70) / 100,
                 0
             )
             diamond.BackgroundColor3 = style.royalGoldColors[((i - 1) % #style.royalGoldColors) + 1]
@@ -452,9 +452,9 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             glint.Name = style.name .. "GoldGlint"
             glint.Size = UDim2.new(0, 14, 0, 14)
             glint.Position = UDim2.new(
-                math.random(18, 84) / 100,
+                math.random(20, 80) / 100,
                 0,
-                math.random(20, 72) / 100,
+                math.random(22, 68) / 100,
                 0
             )
             glint.BackgroundTransparency = 1

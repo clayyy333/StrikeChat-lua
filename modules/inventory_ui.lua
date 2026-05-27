@@ -347,11 +347,18 @@ function InventoryUI.Create(parent, Theme)
     chatStyleHint.ZIndex = 87
     chatStyleHint.Parent = chatStyleForm
 
-    local chatStyleOptions = Instance.new("Frame")
+    local chatStyleOptions = Instance.new("ScrollingFrame")
     chatStyleOptions.Name = "ChatStyleOptions"
     chatStyleOptions.Size = UDim2.new(1, -8, 1, -126)
     chatStyleOptions.Position = UDim2.new(0, 0, 0, 68)
     chatStyleOptions.BackgroundTransparency = 1
+    chatStyleOptions.BorderSizePixel = 0
+    chatStyleOptions.CanvasSize = UDim2.new(0, 0, 0, 0)
+    chatStyleOptions.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    chatStyleOptions.ScrollingDirection = Enum.ScrollingDirection.Y
+    chatStyleOptions.ScrollBarThickness = 3
+    chatStyleOptions.ScrollBarImageColor3 = CATEGORY_COLORS.chat_style
+    chatStyleOptions.ClipsDescendants = true
     chatStyleOptions.ZIndex = 87
     chatStyleOptions.Parent = chatStyleForm
 
