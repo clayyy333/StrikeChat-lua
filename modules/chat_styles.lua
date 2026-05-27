@@ -378,7 +378,7 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             centerImage.Name = style.name .. "CenterImage"
             centerImage.AnchorPoint = Vector2.new(0.5, 0.5)
             centerImage.Size = UDim2.new(0, 132, 0, 50)
-            centerImage.Position = UDim2.new(0.52, 0, 0.46, 0)
+            centerImage.Position = UDim2.new(0.52, 0, 0.43, 0)
             centerImage.BackgroundTransparency = 1
             centerImage.Image = style.royalGoldImage
             centerImage.ImageTransparency = 0.38
@@ -386,41 +386,20 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             centerImage.ZIndex = 4
             centerImage.Parent = background
 
-            task.spawn(function()
-                while centerImage.Parent do
-                    local tweenOut = TweenService:Create(
-                        centerImage,
-                        TweenInfo.new(
-                            1.8,
-                            Enum.EasingStyle.Sine,
-                            Enum.EasingDirection.InOut
-                        ),
-                        {
-                            Size = UDim2.new(0, 140, 0, 53),
-                            ImageTransparency = 0.32
-                        }
-                    )
-
-                    tweenOut:Play()
-                    task.wait(1.8)
-
-                    local tweenIn = TweenService:Create(
-                        centerImage,
-                        TweenInfo.new(
-                            1.8,
-                            Enum.EasingStyle.Sine,
-                            Enum.EasingDirection.InOut
-                        ),
-                        {
-                            Size = UDim2.new(0, 132, 0, 50),
-                            ImageTransparency = 0.40
-                        }
-                    )
-
-                    tweenIn:Play()
-                    task.wait(1.8)
-                end
-            end)
+            TweenService:Create(
+                centerImage,
+                TweenInfo.new(
+                    2.6,
+                    Enum.EasingStyle.Sine,
+                    Enum.EasingDirection.InOut,
+                    -1,
+                    true
+                ),
+                {
+                    Size = UDim2.new(0, 137, 0, 52),
+                    ImageTransparency = 0.34
+                }
+            ):Play()
         end
 
         for i = 1, 24 do
