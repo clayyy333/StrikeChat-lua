@@ -52,7 +52,7 @@ function RightPanel.Create(parent, Theme)
 
     local titleUnderline = Instance.new("Frame")
     titleUnderline.Name = "OnlineTitleUnderline"
-    titleUnderline.Size = UDim2.new(0, 60, 0, 2)
+    titleUnderline.Size = UDim2.new(0, 60, 0, 1)
     titleUnderline.Position = UDim2.new(0, 12, 0, 42)
     titleUnderline.BackgroundColor3 = Theme.Colors.Text
     titleUnderline.BorderSizePixel = 0
