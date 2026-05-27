@@ -50,6 +50,14 @@ function RightPanel.Create(parent, Theme)
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.Parent = parent
 
+    local titleUnderline = Instance.new("Frame")
+    titleUnderline.Name = "OnlineTitleUnderline"
+    titleUnderline.Size = UDim2.new(0, 60, 0, 2)
+    titleUnderline.Position = UDim2.new(0, 12, 0, 42)
+    titleUnderline.BackgroundColor3 = Theme.Colors.Text
+    titleUnderline.BorderSizePixel = 0
+    titleUnderline.Parent = parent
+
     local list = Instance.new("ScrollingFrame")
     list.Name = "OnlineList"
     list.Size = UDim2.new(1, -24, 1, -56)
@@ -70,7 +78,7 @@ function RightPanel.Create(parent, Theme)
     layout.Parent = list
 
     local padding = Instance.new("UIPadding")
-    padding.PaddingTop = UDim.new(0, 8)
+    padding.PaddingTop = UDim.new(0, 2)
     padding.PaddingLeft = UDim.new(0, 4)
     padding.PaddingRight = UDim.new(0, 8)
     padding.Parent = list
@@ -196,6 +204,7 @@ function RightPanel.Create(parent, Theme)
 
     return {
         Title = title,
+        TitleUnderline = titleUnderline,
         List = list,
         Render = render
     }
