@@ -295,9 +295,16 @@ function ShopUI.Create(parent, Theme)
     itemsContainer.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
     itemsContainer.Parent = root
 
+    local itemsPadding = Instance.new("UIPadding")
+    itemsPadding.PaddingTop = UDim.new(0, 3)
+    itemsPadding.PaddingBottom = UDim.new(0, 8)
+    itemsPadding.PaddingLeft = UDim.new(0, 3)
+    itemsPadding.PaddingRight = UDim.new(0, 8)
+    itemsPadding.Parent = itemsContainer
+
     local itemsLayout = Instance.new("UIGridLayout")
-    itemsLayout.CellSize = UDim2.new(0, 220, 0, 110)
-    itemsLayout.CellPadding = UDim2.new(0, 14, 0, 14)
+    itemsLayout.CellSize = UDim2.new(0, 216, 0, 108)
+    itemsLayout.CellPadding = UDim2.new(0, 16, 0, 16)
     itemsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
     itemsLayout.SortOrder = Enum.SortOrder.LayoutOrder
     itemsLayout.Parent = itemsContainer
@@ -332,6 +339,7 @@ function ShopUI.Create(parent, Theme)
         itemStroke.Color = color
         itemStroke.Thickness = 1
         itemStroke.Transparency = 0.15
+        itemStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
         itemStroke.Parent = item
 
         if badgeText then
