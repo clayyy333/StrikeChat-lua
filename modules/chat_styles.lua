@@ -378,13 +378,49 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             centerImage.Name = style.name .. "CenterImage"
             centerImage.AnchorPoint = Vector2.new(0.5, 0.5)
             centerImage.Size = UDim2.new(0, 132, 0, 50)
-            centerImage.Position = UDim2.new(0.52, 0, 0.52, 0)
+            centerImage.Position = UDim2.new(0.52, 0, 0.46, 0)
             centerImage.BackgroundTransparency = 1
             centerImage.Image = style.royalGoldImage
             centerImage.ImageTransparency = 0.38
             centerImage.ScaleType = Enum.ScaleType.Fit
-            centerImage.ZIndex = 3
+            centerImage.ZIndex = 4
             centerImage.Parent = background
+
+            task.spawn(function()
+                while centerImage.Parent do
+                    local tweenOut = TweenService:Create(
+                        centerImage,
+                        TweenInfo.new(
+                            1.8,
+                            Enum.EasingStyle.Sine,
+                            Enum.EasingDirection.InOut
+                        ),
+                        {
+                            Size = UDim2.new(0, 140, 0, 53),
+                            ImageTransparency = 0.32
+                        }
+                    )
+
+                    tweenOut:Play()
+                    task.wait(1.8)
+
+                    local tweenIn = TweenService:Create(
+                        centerImage,
+                        TweenInfo.new(
+                            1.8,
+                            Enum.EasingStyle.Sine,
+                            Enum.EasingDirection.InOut
+                        ),
+                        {
+                            Size = UDim2.new(0, 132, 0, 50),
+                            ImageTransparency = 0.40
+                        }
+                    )
+
+                    tweenIn:Play()
+                    task.wait(1.8)
+                end
+            end)
         end
 
         for i = 1, 24 do
@@ -402,7 +438,7 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             dust.BackgroundColor3 = style.royalGoldColors[((i - 1) % #style.royalGoldColors) + 1]
             dust.BackgroundTransparency = math.random(40, 74) / 100
             dust.BorderSizePixel = 0
-            dust.ZIndex = 4
+            dust.ZIndex = 3
             dust.Parent = background
 
             local dustCorner = Instance.new("UICorner")
@@ -426,7 +462,7 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             diamond.BackgroundTransparency = math.random(46, 72) / 100
             diamond.BorderSizePixel = 0
             diamond.Rotation = 45
-            diamond.ZIndex = 4
+            diamond.ZIndex = 3
             diamond.Parent = background
         end
 
@@ -450,7 +486,7 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
             glint.TextSize = math.random(7, 10)
             glint.TextXAlignment = Enum.TextXAlignment.Center
             glint.TextYAlignment = Enum.TextYAlignment.Center
-            glint.ZIndex = 4
+            glint.ZIndex = 3
             glint.Parent = background
 
             task.spawn(function()
