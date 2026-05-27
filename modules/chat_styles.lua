@@ -100,6 +100,35 @@ function ChatStyles.Get(message, Theme)
         }
     end
 
+    if chatStyle == "royalgold"
+        or chatStyle == "royal_gold"
+        or chatStyle == "chat_style_royalgold"
+        or chatStyle == "chat_style_royal_gold"
+    then
+        return {
+            name = "RoyalGold",
+            textColor = Color3.fromRGB(255, 245, 214),
+            showStars = false,
+            showRoyalGoldDust = true,
+            royalGoldColors = {
+                Color3.fromRGB(255, 218, 92),
+                Color3.fromRGB(255, 184, 42),
+                Color3.fromRGB(255, 239, 172),
+                Color3.fromRGB(186, 124, 28)
+            },
+            gradientColors = {
+                { 0.00, Theme.Colors.Panel },
+                { 0.16, Color3.fromRGB(42, 29, 14) },
+                { 0.34, Color3.fromRGB(104, 68, 20) },
+                { 0.52, Color3.fromRGB(210, 144, 34) },
+                { 0.72, Color3.fromRGB(126, 82, 22) },
+                { 0.88, Color3.fromRGB(58, 39, 18) },
+                { 0.96, Color3.fromRGB(36, 31, 28) },
+                { 1.00, Theme.Colors.Panel }
+            }
+        }
+    end
+
     if chatStyle == "cloud"
         or chatStyle == "cutecloud"
         or chatStyle == "cute_cloud"
@@ -337,6 +366,73 @@ function ChatStyles.ApplyBackground(container, Theme, style, containerHeight)
                     }):Play()
 
                     task.wait(duration + math.random(2, 8) / 10)
+                end
+            end)
+        end
+    end
+
+    if style.showRoyalGoldDust then
+        for i = 1, 16 do
+            local dust = Instance.new("Frame")
+            local size = math.random(2, 4)
+
+            dust.Name = style.name .. "GoldDust"
+            dust.Size = UDim2.new(0, size, 0, size)
+            dust.Position = UDim2.new(
+                math.random(14, 88) / 100,
+                0,
+                math.random(22, 76) / 100,
+                0
+            )
+            dust.BackgroundColor3 = style.royalGoldColors[((i - 1) % #style.royalGoldColors) + 1]
+            dust.BackgroundTransparency = math.random(40, 74) / 100
+            dust.BorderSizePixel = 0
+            dust.ZIndex = 4
+            dust.Parent = background
+
+            local dustCorner = Instance.new("UICorner")
+            dustCorner.CornerRadius = UDim.new(1, 0)
+            dustCorner.Parent = dust
+        end
+
+        for i = 1, 5 do
+            local glint = Instance.new("TextLabel")
+            local glyphs = { "+", "*", "<>" }
+
+            glint.Name = style.name .. "GoldGlint"
+            glint.Size = UDim2.new(0, 14, 0, 14)
+            glint.Position = UDim2.new(
+                math.random(18, 84) / 100,
+                0,
+                math.random(20, 72) / 100,
+                0
+            )
+            glint.BackgroundTransparency = 1
+            glint.Text = glyphs[((i - 1) % #glyphs) + 1]
+            glint.TextColor3 = style.royalGoldColors[((i - 1) % #style.royalGoldColors) + 1]
+            glint.TextTransparency = math.random(34, 62) / 100
+            glint.Font = Enum.Font.GothamBold
+            glint.TextSize = math.random(7, 10)
+            glint.TextXAlignment = Enum.TextXAlignment.Center
+            glint.TextYAlignment = Enum.TextYAlignment.Center
+            glint.ZIndex = 4
+            glint.Parent = background
+
+            task.spawn(function()
+                while glint.Parent do
+                    local duration = math.random(14, 28) / 10
+                    local targetTransparency = math.random(24, 64) / 100
+                    local tweenInfo = TweenInfo.new(
+                        duration,
+                        Enum.EasingStyle.Sine,
+                        Enum.EasingDirection.InOut
+                    )
+
+                    TweenService:Create(glint, tweenInfo, {
+                        TextTransparency = targetTransparency
+                    }):Play()
+
+                    task.wait(duration)
                 end
             end)
         end

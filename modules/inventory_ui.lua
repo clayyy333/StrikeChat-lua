@@ -34,6 +34,7 @@ local CHAT_STYLE_NAMES = {
     cloud = "Cute Cloud",
     galaxy = "Galaxy",
     hackermstrix = "HackerMatrix",
+    royalgold = "Royal Gold",
     dog = "Perrito",
     cat = "Gatito",
     rainbow = "Arcoiris",
@@ -45,7 +46,8 @@ local CUSTOM_CHAT_ITEM_ID = "chat_personalizado"
 local CUSTOM_CHAT_STYLES = {
     { value = "cloud", label = "Cute Cloud" },
     { value = "galaxy", label = "Galaxy" },
-    { value = "hackermstrix", label = "HackerMatrix" }
+    { value = "hackermstrix", label = "HackerMatrix" },
+    { value = "royalgold", label = "Royal Gold" }
 }
 
 local function getInventoryEntryData(entry)
