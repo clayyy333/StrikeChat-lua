@@ -33,6 +33,10 @@ function ClanTableUI.Create(parent, Theme, clans)
     backgroundImage.ZIndex = 1
     backgroundImage.Parent = root
 
+    local backgroundImageCorner = Instance.new("UICorner")
+    backgroundImageCorner.CornerRadius = UDim.new(0, 12)
+    backgroundImageCorner.Parent = backgroundImage
+
     root.BorderSizePixel = 0
     root.Parent = gui
 
