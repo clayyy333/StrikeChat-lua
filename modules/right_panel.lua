@@ -219,20 +219,56 @@ function RightPanel.Create(parent, Theme)
         status.TextTruncate = Enum.TextTruncate.AtEnd
         status.Parent = row
 
+        local openingProfile = false
+        local function openProfile()
+            if openingProfile then
+                return
+            end
+
+            openingProfile = true
+
+            if onUserSelected then
+                onUserSelected(user)
+            end
+
+            task.delay(0.35, function()
+                openingProfile = false
+            end)
+        end
+
+        local function bindOpenProfile(target)
+            target.Active = true
+
+            target.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1
+                    or input.UserInputType == Enum.UserInputType.Touch
+                then
+                    openProfile()
+                end
+            end)
+        end
+
+        bindOpenProfile(row)
+        bindOpenProfile(avatarHolder)
+        bindOpenProfile(avatar)
+        bindOpenProfile(name)
+        bindOpenProfile(status)
+
         local clickArea = Instance.new("TextButton")
         clickArea.Name = "OpenPublicProfile"
         clickArea.Size = UDim2.new(1, 0, 1, 0)
         clickArea.BackgroundTransparency = 1
         clickArea.Text = ""
         clickArea.AutoButtonColor = false
+        clickArea.Active = true
         clickArea.ZIndex = 20
         clickArea.Parent = row
 
         clickArea.MouseButton1Click:Connect(function()
-            if onUserSelected then
-                onUserSelected(user)
-            end
+            openProfile()
         end)
+
+        bindOpenProfile(clickArea)
     end
 
     local function render(users, onUserSelected)
