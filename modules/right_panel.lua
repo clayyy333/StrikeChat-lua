@@ -38,6 +38,34 @@ function RightPanel.Create(parent, Theme)
             :gsub("'", "&apos;")
     end
 
+    local function getUserStatusText(user)
+        local visibility = tostring(user.game_status_visibility or user.activity_visibility or "private"):lower()
+
+        if visibility ~= "public" then
+            return "En linea"
+        end
+
+        local activityText =
+            user.activity_text or
+            user.current_activity_text or
+            user.game_activity_text
+
+        if activityText and tostring(activityText):gsub("%s+", "") ~= "" then
+            return tostring(activityText)
+        end
+
+        local placeName =
+            user.place_name or
+            user.current_place_name or
+            user.game_name
+
+        if placeName and tostring(placeName):gsub("%s+", "") ~= "" then
+            return "Jugando a " .. tostring(placeName)
+        end
+
+        return "En linea"
+    end
+
     local title = Instance.new("TextLabel")
     title.Name = "OnlineTitle"
     title.Size = UDim2.new(1, -24, 0, 36)
@@ -183,11 +211,12 @@ function RightPanel.Create(parent, Theme)
         status.Size = UDim2.new(1, -60, 0, 14)
         status.Position = UDim2.new(0, 42, 0, 26)
         status.BackgroundTransparency = 1
-        status.Text = "En línea"
+        status.Text = getUserStatusText(user)
         status.TextColor3 = Theme.Colors.TextMuted
         status.Font = Theme.Font.Regular
         status.TextSize = 11
         status.TextXAlignment = Enum.TextXAlignment.Left
+        status.TextTruncate = Enum.TextTruncate.AtEnd
         status.Parent = row
     end
 
