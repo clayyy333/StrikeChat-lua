@@ -49,6 +49,7 @@ function ChatPanel.Create(parent, Theme)
     messagesBox.Size = UDim2.new(1, -24, 1, -92)
     messagesBox.Position = UDim2.new(0, 12, 0, 42)
     messagesBox.BackgroundColor3 = Theme.Colors.Panel
+    messagesBox.BackgroundTransparency = 0.45
     messagesBox.BorderSizePixel = 0
     messagesBox.ScrollBarThickness = 4
     messagesBox.CanvasSize = UDim2.new(0, 0, 0, 0)

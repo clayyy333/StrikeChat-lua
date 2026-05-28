@@ -196,7 +196,7 @@ function MainWindow.Create(CoreGui, Theme)
     rightPanel.Name = "RightPanel"
     rightPanel.Size = UDim2.new(0.22, -7, 1, 0)
     rightPanel.BackgroundColor3 = Theme.Colors.Background
-    rightPanel.BackgroundTransparency = 0.16
+    rightPanel.BackgroundTransparency = 0
     rightPanel.BorderSizePixel = 0
     rightPanel.ZIndex = 2
     rightPanel.LayoutOrder = 3
