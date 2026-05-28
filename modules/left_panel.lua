@@ -117,7 +117,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     pointsIcon.Name = "PointsIcon"
     pointsIcon.Size = UDim2.new(0, 20, 0, 20)
     pointsIcon.BackgroundTransparency = 1
-    pointsIcon.Image = "rbxassetid://124520045081815"
+    pointsIcon.Image = "rbxassetid://83362559828351"
     pointsIcon.ScaleType = Enum.ScaleType.Fit
     pointsIcon.LayoutOrder = 2
     pointsIcon.Parent = pointsRow

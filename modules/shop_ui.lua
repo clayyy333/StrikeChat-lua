@@ -158,7 +158,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
     pointsBadgeCorner.Parent = pointsBadge
 
     local pointsBadgeStroke = Instance.new("UIStroke")
-    pointsBadgeStroke.Color = Color3.fromRGB(122, 92, 190)
+    pointsBadgeStroke.Color = Color3.fromRGB(24, 22, 34)
     pointsBadgeStroke.Thickness = 1
     pointsBadgeStroke.Transparency = 0.35
     pointsBadgeStroke.Parent = pointsBadge
@@ -193,7 +193,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
     pointsIcon.Size = UDim2.new(0, 22, 0, 22)
     pointsIcon.Position = UDim2.new(1, -30, 0.5, -11)
     pointsIcon.BackgroundTransparency = 1
-    pointsIcon.Image = "rbxassetid://124520045081815"
+    pointsIcon.Image = "rbxassetid://83362559828351"
     pointsIcon.ScaleType = Enum.ScaleType.Fit
     pointsIcon.Parent = pointsBadge
 
