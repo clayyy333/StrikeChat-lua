@@ -15,7 +15,23 @@ function MainWindow.Create(CoreGui, Theme)
     main.AnchorPoint = Vector2.new(0.5, 0.5)
     main.BackgroundColor3 = Theme.Colors.Panel
     main.BorderSizePixel = 0
+    main.ClipsDescendants = true
     main.Parent = gui
+
+    local backgroundImage = Instance.new("ImageLabel")
+    backgroundImage.Name = "MainBackgroundImage"
+    backgroundImage.Size = UDim2.new(1, 0, 1, 0)
+    backgroundImage.Position = UDim2.new(0, 0, 0, 0)
+    backgroundImage.BackgroundTransparency = 1
+    backgroundImage.Image = "rbxassetid://97919424245878"
+    backgroundImage.ScaleType = Enum.ScaleType.Crop
+    backgroundImage.ImageTransparency = 0
+    backgroundImage.ZIndex = 1
+    backgroundImage.Parent = main
+
+    local backgroundImageCorner = Instance.new("UICorner")
+    backgroundImageCorner.CornerRadius = UDim.new(0, Theme.Radius.Main)
+    backgroundImageCorner.Parent = backgroundImage
 
     local mainCorner = Instance.new("UICorner")
     mainCorner.CornerRadius = UDim.new(0, Theme.Radius.Main)
@@ -31,6 +47,7 @@ function MainWindow.Create(CoreGui, Theme)
     topBar.Name = "TopBar"
     topBar.Size = UDim2.new(1, 0, 0, 46)
     topBar.BackgroundTransparency = 1
+    topBar.ZIndex = 2
     topBar.Parent = main
 
     local title = Instance.new("TextLabel")
@@ -45,6 +62,7 @@ function MainWindow.Create(CoreGui, Theme)
     title.TextTransparency = 0
     title.TextXAlignment = Enum.TextXAlignment.Left
     title.TextYAlignment = Enum.TextYAlignment.Center
+    title.ZIndex = 3
     title.Parent = topBar
 
     local titleGradients = {
@@ -108,6 +126,7 @@ function MainWindow.Create(CoreGui, Theme)
     minimize.TextColor3 = Theme.Colors.Text
     minimize.Font = Theme.Font.Bold
     minimize.TextSize = 18
+    minimize.ZIndex = 3
     minimize.Parent = topBar
 
     local minCorner = Instance.new("UICorner")
@@ -123,6 +142,7 @@ function MainWindow.Create(CoreGui, Theme)
     close.TextColor3 = Theme.Colors.Danger
     close.Font = Theme.Font.Bold
     close.TextSize = 15
+    close.ZIndex = 3
     close.Parent = topBar
 
     local closeCorner = Instance.new("UICorner")
@@ -134,6 +154,7 @@ function MainWindow.Create(CoreGui, Theme)
     content.Size = UDim2.new(1, -24, 1, -58)
     content.Position = UDim2.new(0, 12, 0, 50)
     content.BackgroundTransparency = 1
+    content.ZIndex = 2
     content.Parent = main
 
     local layout = Instance.new("UIListLayout")
@@ -146,7 +167,9 @@ function MainWindow.Create(CoreGui, Theme)
     leftPanel.Name = "LeftPanel"
     leftPanel.Size = UDim2.new(0.22, -7, 1, 0)
     leftPanel.BackgroundColor3 = Theme.Colors.Background
+    leftPanel.BackgroundTransparency = 0.16
     leftPanel.BorderSizePixel = 0
+    leftPanel.ZIndex = 2
     leftPanel.LayoutOrder = 1
     leftPanel.Parent = content
 
@@ -158,7 +181,9 @@ function MainWindow.Create(CoreGui, Theme)
     chatPanel.Name = "ChatPanel"
     chatPanel.Size = UDim2.new(0.56, -7, 1, 0)
     chatPanel.BackgroundColor3 = Theme.Colors.Background
+    chatPanel.BackgroundTransparency = 0.16
     chatPanel.BorderSizePixel = 0
+    chatPanel.ZIndex = 2
     chatPanel.LayoutOrder = 2
     chatPanel.Parent = content
 
@@ -170,7 +195,9 @@ function MainWindow.Create(CoreGui, Theme)
     rightPanel.Name = "RightPanel"
     rightPanel.Size = UDim2.new(0.22, -7, 1, 0)
     rightPanel.BackgroundColor3 = Theme.Colors.Background
+    rightPanel.BackgroundTransparency = 0.16
     rightPanel.BorderSizePixel = 0
+    rightPanel.ZIndex = 2
     rightPanel.LayoutOrder = 3
     rightPanel.Parent = content
 
