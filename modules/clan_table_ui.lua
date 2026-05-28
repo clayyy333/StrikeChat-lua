@@ -29,7 +29,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     backgroundImage.BackgroundTransparency = 1
     backgroundImage.Image = "rbxassetid://104513803022128"
     backgroundImage.ScaleType = Enum.ScaleType.Crop
-    backgroundImage.ImageTransparency = 0.22
+    backgroundImage.ImageTransparency = 0
     backgroundImage.ZIndex = 0
     backgroundImage.Parent = root
 
@@ -95,6 +95,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     leftPanel.Size = UDim2.new(0.64, -10, 1, 0)
     leftPanel.Position = UDim2.new(0, 0, 0, 0)
     leftPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
+    leftPanel.BackgroundTransparency = 0.18
     leftPanel.BorderSizePixel = 0
     leftPanel.Parent = mainContainer
 
@@ -113,6 +114,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     tableHeader.Size = UDim2.new(1, -24, 0, 34)
     tableHeader.Position = UDim2.new(0, 12, 0, 12)
     tableHeader.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
+    tableHeader.BackgroundTransparency = 0.12
     tableHeader.BorderSizePixel = 0
     tableHeader.Parent = leftPanel
 
@@ -191,6 +193,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     rightPanel.Size = UDim2.new(0.36, -10, 1, 44)
     rightPanel.Position = UDim2.new(0.64, 10, 0, 0)
     rightPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
+    rightPanel.BackgroundTransparency = 0.18
     rightPanel.BorderSizePixel = 0
     rightPanel.Parent = mainContainer
 
@@ -221,6 +224,7 @@ function ClanTableUI.Create(parent, Theme, clans)
         row.Name = "ClanRow"
         row.Size = UDim2.new(1, 0, 0, 42)
         row.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
+        row.BackgroundTransparency = 0.1
         
         row.BorderSizePixel = 0
         row.Text = ""
@@ -346,6 +350,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     clanImage.Size = UDim2.new(1, -32, 0, 120)
     clanImage.Position = UDim2.new(0, 16, 0, 56)
     clanImage.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
+    clanImage.BackgroundTransparency = 0.18
     clanImage.BorderSizePixel = 0
     clanImage.Parent = rightPanel
 
@@ -414,6 +419,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     clanDescription.Size = UDim2.new(1, -32, 0, 68)
     clanDescription.Position = UDim2.new(0, 16, 0, 270)
     clanDescription.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
+    clanDescription.BackgroundTransparency = 0.12
     clanDescription.BorderSizePixel = 0
     clanDescription.Text = ""
     clanDescription.TextColor3 = Theme.Colors.TextMuted
@@ -493,6 +499,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     footer.Size = UDim2.new(0.64, -36, 0, 28)
     footer.Position = UDim2.new(0, 20, 1, -38)
     footer.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
+    footer.BackgroundTransparency = 0.18
     footer.BorderSizePixel = 0
     footer.Parent = root
 
