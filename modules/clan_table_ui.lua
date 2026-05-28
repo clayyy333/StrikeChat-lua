@@ -30,7 +30,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     backgroundImage.Image = "rbxassetid://104513803022128"
     backgroundImage.ScaleType = Enum.ScaleType.Crop
     backgroundImage.ImageTransparency = 0
-    backgroundImage.ZIndex = 0
+    backgroundImage.ZIndex = 1
     backgroundImage.Parent = root
 
     root.BorderSizePixel = 0
@@ -52,6 +52,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     titleContainer.Size = UDim2.new(1, -160, 0, 54)
     titleContainer.Position = UDim2.new(0, 80, 0, 18)
     titleContainer.BackgroundTransparency = 1
+    titleContainer.ZIndex = 2
     titleContainer.Parent = root
 
     local title = Instance.new("TextLabel")
@@ -76,6 +77,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     closeButton.TextColor3 = Theme.Colors.Text
     closeButton.Font = Theme.Font.Bold
     closeButton.TextSize = 18
+    closeButton.ZIndex = 2
     closeButton.Parent = root
 
     local closeCorner = Instance.new("UICorner")
@@ -88,6 +90,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     mainContainer.Position = UDim2.new(0, 20, 0, 78)
     mainContainer.BackgroundTransparency = 1
     mainContainer.BorderSizePixel = 0
+    mainContainer.ZIndex = 2
     mainContainer.Parent = root
 
     local leftPanel = Instance.new("Frame")
@@ -501,6 +504,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     footer.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
     footer.BackgroundTransparency = 0.18
     footer.BorderSizePixel = 0
+    footer.ZIndex = 2
     footer.Parent = root
 
     local footerCorner = Instance.new("UICorner")
