@@ -37,19 +37,6 @@ function LeftPanel.Create(parent, Theme, profile, player)
         avatarImage.Image = content
     end
 
-    local onlineDot = Instance.new("Frame")
-    onlineDot.Name = "OnlineDot"
-    onlineDot.Size = UDim2.new(0, 12, 0, 12)
-    onlineDot.Position = UDim2.new(1, -10, 1, -10)
-    onlineDot.BackgroundColor3 = Theme.Colors.Success
-    onlineDot.BorderSizePixel = 0
-    onlineDot.ZIndex = 3
-    onlineDot.Parent = avatar
-
-    local onlineCorner = Instance.new("UICorner")
-    onlineCorner.CornerRadius = UDim.new(1, 0)
-    onlineCorner.Parent = onlineDot
-
     local displayName = Instance.new("TextLabel")
     displayName.Name = "DisplayName"
     displayName.Size = UDim2.new(1, -104, 0, 24)
