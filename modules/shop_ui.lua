@@ -193,7 +193,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
     pointsIcon.Size = UDim2.new(0, 22, 0, 22)
     pointsIcon.Position = UDim2.new(1, -30, 0.5, -11)
     pointsIcon.BackgroundTransparency = 1
-    pointsIcon.Image = "rbxassetid://121344746915243"
+    pointsIcon.Image = "rbxassetid://124520045081815"
     pointsIcon.ScaleType = Enum.ScaleType.Fit
     pointsIcon.Parent = pointsBadge
 

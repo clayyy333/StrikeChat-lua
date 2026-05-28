@@ -1107,6 +1107,19 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
     window.Gui.Enabled = false
 
     local currentPoints = tonumber(leftPanel.PointsValue and leftPanel.PointsValue.Text) or 0
+    local latestProfileResult = Api.GetMyProfile(player)
+
+    if latestProfileResult
+        and latestProfileResult.status == "ok"
+        and latestProfileResult.profile
+    then
+        currentPoints = tonumber(latestProfileResult.profile.personal_points) or currentPoints
+
+        if leftPanel.PointsValue then
+            leftPanel.PointsValue.Text = tostring(currentPoints)
+        end
+    end
+
     local shopUI = ShopUI.Create(CoreGui, Theme, currentPoints)
     local rewardModal = RewardModal.Create(shopUI.Gui, Theme)
     local rewardPurchaseLocked = false

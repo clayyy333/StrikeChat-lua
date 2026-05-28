@@ -83,28 +83,44 @@ function LeftPanel.Create(parent, Theme, profile, player)
     pointsTitle.TextColor3 = Theme.Colors.TextMuted
     pointsTitle.Font = Theme.Font.Regular
     pointsTitle.TextSize = 11
-    pointsTitle.TextXAlignment = Enum.TextXAlignment.Left
+    pointsTitle.TextXAlignment = Enum.TextXAlignment.Center
     pointsTitle.Parent = pointsBox
 
+    local pointsRow = Instance.new("Frame")
+    pointsRow.Name = "PointsRow"
+    pointsRow.Size = UDim2.new(1, -16, 0, 24)
+    pointsRow.Position = UDim2.new(0, 8, 0, 25)
+    pointsRow.BackgroundTransparency = 1
+    pointsRow.Parent = pointsBox
+
+    local pointsRowLayout = Instance.new("UIListLayout")
+    pointsRowLayout.FillDirection = Enum.FillDirection.Horizontal
+    pointsRowLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    pointsRowLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    pointsRowLayout.Padding = UDim.new(0, 5)
+    pointsRowLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    pointsRowLayout.Parent = pointsRow
+
     local pointsValue = Instance.new("TextLabel")
-    pointsValue.Size = UDim2.new(1, -42, 0, 24)
-    pointsValue.Position = UDim2.new(0, 8, 0, 25)
+    pointsValue.Size = UDim2.new(0, 0, 1, 0)
+    pointsValue.AutomaticSize = Enum.AutomaticSize.X
     pointsValue.BackgroundTransparency = 1
     pointsValue.Text = tostring(profile.personal_points or 0)
     pointsValue.TextColor3 = Theme.Colors.Text
     pointsValue.Font = Theme.Font.Bold
     pointsValue.TextSize = 17
-    pointsValue.TextXAlignment = Enum.TextXAlignment.Right
-    pointsValue.Parent = pointsBox
+    pointsValue.TextXAlignment = Enum.TextXAlignment.Center
+    pointsValue.LayoutOrder = 1
+    pointsValue.Parent = pointsRow
 
     local pointsIcon = Instance.new("ImageLabel")
     pointsIcon.Name = "PointsIcon"
     pointsIcon.Size = UDim2.new(0, 20, 0, 20)
-    pointsIcon.Position = UDim2.new(1, -30, 0, 27)
     pointsIcon.BackgroundTransparency = 1
-    pointsIcon.Image = "rbxassetid://121344746915243"
+    pointsIcon.Image = "rbxassetid://124520045081815"
     pointsIcon.ScaleType = Enum.ScaleType.Fit
-    pointsIcon.Parent = pointsBox
+    pointsIcon.LayoutOrder = 2
+    pointsIcon.Parent = pointsRow
 
     local createdButtons = {}
 
