@@ -1106,10 +1106,29 @@ end)
 leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
     window.Gui.Enabled = false
 
-    local shopUI = ShopUI.Create(CoreGui, Theme)
+    local currentPoints = tonumber(leftPanel.PointsValue and leftPanel.PointsValue.Text) or 0
+    local shopUI = ShopUI.Create(CoreGui, Theme, currentPoints)
     local rewardModal = RewardModal.Create(shopUI.Gui, Theme)
     local rewardPurchaseLocked = false
     local shopPurchaseLocked = false
+
+    local function updateDisplayedPoints(profile)
+        if not profile then
+            return
+        end
+
+        local points = tostring(profile.personal_points or 0)
+
+        if leftPanel.PointsValue then
+            leftPanel.PointsValue.Text = points
+        end
+
+        if shopUI.SetPoints then
+            shopUI.SetPoints(points)
+        elseif shopUI.PointsValue then
+            shopUI.PointsValue.Text = points
+        end
+    end
 
     local function applyLimitedStock(key, remaining)
         local label = shopUI.LimitedStockLabels[key]
@@ -1192,6 +1211,7 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
             and result.status == "ok"
             and result.reward_redeem
         then
+            updateDisplayedPoints(result.profile)
             rewardModal.Open(
                 result.reward_redeem.code,
                 player.UserId,
@@ -1226,11 +1246,7 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
                 button.Active = false
             end
 
-            if result.profile then
-                if leftPanel.PointsValue then
-                    leftPanel.PointsValue.Text = tostring(result.profile.personal_points or 0)
-                end
-            end
+            updateDisplayedPoints(result.profile)
         else
             if button and result and result.reason == "item_already_owned" then
                 button.Text = "YA LO TIENES"

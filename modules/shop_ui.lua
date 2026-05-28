@@ -1,6 +1,6 @@
 local ShopUI = {}
 
-function ShopUI.Create(parent, Theme)
+function ShopUI.Create(parent, Theme, initialPoints)
     local gui = Instance.new("ScreenGui")
     gui.Name = "ShopUI"
     gui.ResetOnSpawn = false
@@ -143,6 +143,59 @@ function ShopUI.Create(parent, Theme)
     local closeCorner = Instance.new("UICorner")
     closeCorner.CornerRadius = UDim.new(0, 8)
     closeCorner.Parent = closeButton
+
+    local pointsBadge = Instance.new("Frame")
+    pointsBadge.Name = "PointsBadge"
+    pointsBadge.Size = UDim2.new(0, 178, 0, 38)
+    pointsBadge.Position = UDim2.new(0, 18, 0, 12)
+    pointsBadge.BackgroundColor3 = Color3.fromRGB(14, 12, 22)
+    pointsBadge.BackgroundTransparency = 0.08
+    pointsBadge.BorderSizePixel = 0
+    pointsBadge.Parent = root
+
+    local pointsBadgeCorner = Instance.new("UICorner")
+    pointsBadgeCorner.CornerRadius = UDim.new(0, 9)
+    pointsBadgeCorner.Parent = pointsBadge
+
+    local pointsBadgeStroke = Instance.new("UIStroke")
+    pointsBadgeStroke.Color = Color3.fromRGB(122, 92, 190)
+    pointsBadgeStroke.Thickness = 1
+    pointsBadgeStroke.Transparency = 0.35
+    pointsBadgeStroke.Parent = pointsBadge
+
+    local pointsLabel = Instance.new("TextLabel")
+    pointsLabel.Name = "PointsLabel"
+    pointsLabel.Size = UDim2.new(0, 72, 1, 0)
+    pointsLabel.Position = UDim2.new(0, 12, 0, 0)
+    pointsLabel.BackgroundTransparency = 1
+    pointsLabel.Text = "Mis puntos"
+    pointsLabel.TextColor3 = Theme.Colors.TextMuted
+    pointsLabel.Font = Theme.Font.Bold
+    pointsLabel.TextSize = 11
+    pointsLabel.TextXAlignment = Enum.TextXAlignment.Left
+    pointsLabel.Parent = pointsBadge
+
+    local pointsValue = Instance.new("TextLabel")
+    pointsValue.Name = "PointsValue"
+    pointsValue.Size = UDim2.new(1, -116, 1, 0)
+    pointsValue.Position = UDim2.new(0, 84, 0, 0)
+    pointsValue.BackgroundTransparency = 1
+    pointsValue.Text = tostring(initialPoints or 0)
+    pointsValue.TextColor3 = Theme.Colors.Text
+    pointsValue.Font = Theme.Font.Bold
+    pointsValue.TextSize = 15
+    pointsValue.TextXAlignment = Enum.TextXAlignment.Right
+    pointsValue.TextTruncate = Enum.TextTruncate.AtEnd
+    pointsValue.Parent = pointsBadge
+
+    local pointsIcon = Instance.new("ImageLabel")
+    pointsIcon.Name = "PointsIcon"
+    pointsIcon.Size = UDim2.new(0, 22, 0, 22)
+    pointsIcon.Position = UDim2.new(1, -30, 0.5, -11)
+    pointsIcon.BackgroundTransparency = 1
+    pointsIcon.Image = "rbxassetid://121344746915243"
+    pointsIcon.ScaleType = Enum.ScaleType.Fit
+    pointsIcon.Parent = pointsBadge
 
     local title = Instance.new("TextLabel")
     title.Name = "Title"
@@ -487,6 +540,7 @@ function ShopUI.Create(parent, Theme)
         Gui = gui,
         Root = root,
         CloseButton = closeButton,
+        PointsValue = pointsValue,
 
         FeaturedButton = featuredPrice,
         ItemsContainer = itemsContainer,
@@ -512,6 +566,10 @@ function ShopUI.Create(parent, Theme)
 
         Destroy = function()
             gui:Destroy()
+        end,
+
+        SetPoints = function(value)
+            pointsValue.Text = tostring(value or 0)
         end
     }
 end

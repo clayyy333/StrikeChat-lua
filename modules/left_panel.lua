@@ -87,15 +87,24 @@ function LeftPanel.Create(parent, Theme, profile, player)
     pointsTitle.Parent = pointsBox
 
     local pointsValue = Instance.new("TextLabel")
-    pointsValue.Size = UDim2.new(1, -16, 0, 24)
+    pointsValue.Size = UDim2.new(1, -42, 0, 24)
     pointsValue.Position = UDim2.new(0, 8, 0, 25)
     pointsValue.BackgroundTransparency = 1
     pointsValue.Text = tostring(profile.personal_points or 0)
     pointsValue.TextColor3 = Theme.Colors.Text
     pointsValue.Font = Theme.Font.Bold
     pointsValue.TextSize = 17
-    pointsValue.TextXAlignment = Enum.TextXAlignment.Center
+    pointsValue.TextXAlignment = Enum.TextXAlignment.Right
     pointsValue.Parent = pointsBox
+
+    local pointsIcon = Instance.new("ImageLabel")
+    pointsIcon.Name = "PointsIcon"
+    pointsIcon.Size = UDim2.new(0, 20, 0, 20)
+    pointsIcon.Position = UDim2.new(1, -30, 0, 27)
+    pointsIcon.BackgroundTransparency = 1
+    pointsIcon.Image = "rbxassetid://121344746915243"
+    pointsIcon.ScaleType = Enum.ScaleType.Fit
+    pointsIcon.Parent = pointsBox
 
     local createdButtons = {}
 

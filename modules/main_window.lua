@@ -24,7 +24,7 @@ function MainWindow.Create(CoreGui, Theme)
     backgroundImage.Size = UDim2.new(1, 0, 1, 0)
     backgroundImage.Position = UDim2.new(0, 0, 0, 0)
     backgroundImage.BackgroundTransparency = 1
-    backgroundImage.Image = "rbxassetid://124495218640781"
+    backgroundImage.Image = "rbxassetid://108399174210397"
     backgroundImage.ScaleType = Enum.ScaleType.Crop
     backgroundImage.ImageTransparency = 0
     backgroundImage.ZIndex = 1
