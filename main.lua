@@ -77,6 +77,10 @@ local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme)
 
+if window.RaiseContent then
+    window.RaiseContent()
+end
+
 local adminNotice = Instance.new("TextLabel")
 adminNotice.Name = "AdminNotice"
 adminNotice.Size = UDim2.new(0, 360, 0, 22)

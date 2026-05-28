@@ -2,6 +2,7 @@ local MainWindow = {}
 
 function MainWindow.Create(CoreGui, Theme)
     local TweenService = game:GetService("TweenService")
+    local CONTENT_ZINDEX = 8
 
     local gui = Instance.new("ScreenGui")
     gui.Name = "StrikeChat_Main"
@@ -237,15 +238,35 @@ function MainWindow.Create(CoreGui, Theme)
         main.Visible = true
     end)
 
+    local function raiseGuiContent(root)
+        for _, item in ipairs(root:GetDescendants()) do
+            if item:IsA("GuiObject") then
+                item.ZIndex = math.max(item.ZIndex, CONTENT_ZINDEX)
+            end
+        end
+    end
+
+    content.DescendantAdded:Connect(function(item)
+        if item:IsA("GuiObject") then
+            item.ZIndex = math.max(item.ZIndex, CONTENT_ZINDEX)
+        end
+    end)
+
+    raiseGuiContent(content)
+
     return {
         Gui = gui,
         Main = main,
+        Content = content,
         LeftPanel = leftPanel,
         ChatPanel = chatPanel,
         RightPanel = rightPanel,
         CloseButton = close,
         MinimizeButton = minimize,
-        MinimizedButton = minimizedButton
+        MinimizedButton = minimizedButton,
+        RaiseContent = function()
+            raiseGuiContent(content)
+        end
     }
 end
 
