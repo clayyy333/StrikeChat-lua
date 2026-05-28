@@ -168,10 +168,29 @@ local clanColorMap = {
     cyan = Color3.fromRGB(64, 210, 230)
 }
 
+local usernameColorMap = {
+    white = Color3.fromRGB(245, 245, 245),
+    red = Color3.fromRGB(235, 74, 74),
+    green = Color3.fromRGB(78, 190, 92),
+    blue = Color3.fromRGB(74, 142, 245),
+    yellow = Color3.fromRGB(245, 205, 70),
+    orange = Color3.fromRGB(255, 156, 64),
+    pink = Color3.fromRGB(255, 110, 180),
+    purple = Color3.fromRGB(168, 6, 235),
+    black = Color3.fromRGB(32, 32, 36),
+    cyan = Color3.fromRGB(64, 210, 230)
+}
+
 local function getClanColor(colorName)
     local key = tostring(colorName or ""):lower()
 
     return clanColorMap[key] or Theme.Colors.TextMuted
+end
+
+local function getUsernameColor(colorName, fallbackColor)
+    local key = tostring(colorName or ""):lower()
+
+    return usernameColorMap[key] or fallbackColor
 end
 
 
@@ -282,7 +301,10 @@ local function renderMessages(messages)
             nameLabel.Position = UDim2.new(0, 44, 0, 0)
             nameLabel.BackgroundTransparency = 1
             nameLabel.Text = tostring(name)
-            nameLabel.TextColor3 = ChatStyles.GetTextColor(messageStyle, Theme.Colors.Text)
+            nameLabel.TextColor3 = getUsernameColor(
+                msg.username_color,
+                ChatStyles.GetTextColor(messageStyle, Theme.Colors.Text)
+            )
             nameLabel.Font = Theme.Font.Bold
             nameLabel.TextSize = 12
             nameLabel.TextTransparency = 0
@@ -435,10 +457,15 @@ local function enrichOnlineUserActivities(users)
 
                 cached = {
                     updated_at = now,
-                    activity_text = activityText
+                    activity_text = activityText,
+                    active_username_color = profile and profile.active_username_color
                 }
 
                 activityProfileCache[userId] = cached
+            end
+
+            if cached.active_username_color then
+                onlineUser.active_username_color = cached.active_username_color
             end
 
             if cached.activity_text and tostring(cached.activity_text):gsub("%s+", "") ~= "" then

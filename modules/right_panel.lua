@@ -14,10 +14,29 @@ function RightPanel.Create(parent, Theme)
         cyan = Color3.fromRGB(64, 210, 230)
     }
 
+    local usernameColorMap = {
+        white = Color3.fromRGB(245, 245, 245),
+        red = Color3.fromRGB(235, 74, 74),
+        green = Color3.fromRGB(78, 190, 92),
+        blue = Color3.fromRGB(74, 142, 245),
+        yellow = Color3.fromRGB(245, 205, 70),
+        orange = Color3.fromRGB(255, 156, 64),
+        pink = Color3.fromRGB(255, 110, 180),
+        purple = Color3.fromRGB(168, 6, 235),
+        black = Color3.fromRGB(32, 32, 36),
+        cyan = Color3.fromRGB(64, 210, 230)
+    }
+
     local function getClanColor(colorName)
         local key = tostring(colorName or ""):lower()
 
         return clanColorMap[key] or Theme.Colors.TextMuted
+    end
+
+    local function getUsernameColor(colorName)
+        local key = tostring(colorName or ""):lower()
+
+        return usernameColorMap[key] or Theme.Colors.Text
     end
 
     local function colorToHex(color)
@@ -194,7 +213,11 @@ function RightPanel.Create(parent, Theme)
 
         name.RichText = true
         name.Text =
+            '<font color="' ..
+            colorToHex(getUsernameColor(user.active_username_color or user.username_color)) ..
+            '">' ..
             escapeRichText(displayName) ..
+            "</font>" ..
             '<font color="' ..
             colorToHex(getClanColor(user.clan_color)) ..
             '">' ..
