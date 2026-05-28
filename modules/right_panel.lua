@@ -114,18 +114,21 @@ function RightPanel.Create(parent, Theme)
 
     local function clear()
         for _, child in ipairs(list:GetChildren()) do
-            if child:IsA("Frame") then
+            if child:IsA("GuiObject") then
                 child:Destroy()
             end
         end
     end
 
     local function renderUser(user, onUserSelected)
-        local row = Instance.new("Frame")
+        local row = Instance.new("TextButton")
         row.Name = "UserRow"
         row.Size = UDim2.new(1, 0, 0, 54)
         row.BackgroundColor3 = Theme.Colors.Background
         row.BorderSizePixel = 0
+        row.Text = ""
+        row.AutoButtonColor = false
+        row.Active = true
         row.Parent = list
 
         local rowCorner = Instance.new("UICorner")
@@ -236,39 +239,8 @@ function RightPanel.Create(parent, Theme)
             end)
         end
 
-        local function bindOpenProfile(target)
-            target.Active = true
-
-            target.InputBegan:Connect(function(input)
-                if input.UserInputType == Enum.UserInputType.MouseButton1
-                    or input.UserInputType == Enum.UserInputType.Touch
-                then
-                    openProfile()
-                end
-            end)
-        end
-
-        bindOpenProfile(row)
-        bindOpenProfile(avatarHolder)
-        bindOpenProfile(avatar)
-        bindOpenProfile(name)
-        bindOpenProfile(status)
-
-        local clickArea = Instance.new("TextButton")
-        clickArea.Name = "OpenPublicProfile"
-        clickArea.Size = UDim2.new(1, 0, 1, 0)
-        clickArea.BackgroundTransparency = 1
-        clickArea.Text = ""
-        clickArea.AutoButtonColor = false
-        clickArea.Active = true
-        clickArea.ZIndex = 20
-        clickArea.Parent = row
-
-        clickArea.MouseButton1Click:Connect(function()
-            openProfile()
-        end)
-
-        bindOpenProfile(clickArea)
+        row.Activated:Connect(openProfile)
+        row.MouseButton1Click:Connect(openProfile)
     end
 
     local function render(users, onUserSelected)
