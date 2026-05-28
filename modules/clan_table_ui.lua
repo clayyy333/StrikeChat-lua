@@ -27,9 +27,9 @@ function ClanTableUI.Create(parent, Theme, clans)
     backgroundImage.Size = UDim2.new(1, 0, 1, 0)
     backgroundImage.Position = UDim2.new(0, 0, 0, 0)
     backgroundImage.BackgroundTransparency = 1
-    backgroundImage.Image = "rbxassetid://7072718362"
+    backgroundImage.Image = "rbxassetid://104513803022128"
     backgroundImage.ScaleType = Enum.ScaleType.Crop
-    backgroundImage.ImageTransparency = 1
+    backgroundImage.ImageTransparency = 0.22
     backgroundImage.ZIndex = 0
     backgroundImage.Parent = root
 
