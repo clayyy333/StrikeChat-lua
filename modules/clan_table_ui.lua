@@ -11,16 +11,16 @@ function ClanTableUI.Create(parent, Theme, clans)
     root.Name = "Root"
     root.Size = UDim2.new(0, 920, 0, 490)
     root.Position = UDim2.new(0.5, -460, 0.5, -245)
-    root.BackgroundColor3 = Color3.fromRGB(95, 106, 27)
+    root.BackgroundColor3 = Color3.fromRGB(157, 186, 60)
 
     local rootGradient = Instance.new("UIGradient")
     rootGradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromRGB(95, 106, 27)),
-        ColorSequenceKeypoint.new(0.36, Color3.fromRGB(145, 162, 34)),
-        ColorSequenceKeypoint.new(0.68, Color3.fromRGB(157, 186, 60)),
+        ColorSequenceKeypoint.new(0.28, Color3.fromRGB(145, 162, 34)),
+        ColorSequenceKeypoint.new(0.58, Color3.fromRGB(157, 186, 60)),
         ColorSequenceKeypoint.new(1, Color3.fromRGB(118, 191, 0))
     })
-    rootGradient.Rotation = 125
+    rootGradient.Rotation = 90
     rootGradient.Parent = root
     
     local backgroundImage = Instance.new("ImageLabel")
@@ -29,9 +29,9 @@ function ClanTableUI.Create(parent, Theme, clans)
     backgroundImage.Position = UDim2.new(0, 0, 0, 0)
     backgroundImage.BackgroundTransparency = 1
     backgroundImage.Image = "rbxassetid://7072718362"
-    backgroundImage.ImageColor3 = Color3.fromRGB(190, 220, 82)
+    backgroundImage.ImageColor3 = Color3.fromRGB(218, 235, 92)
     backgroundImage.ScaleType = Enum.ScaleType.Crop
-    backgroundImage.ImageTransparency = 0.88
+    backgroundImage.ImageTransparency = 0.92
     backgroundImage.ZIndex = 0
     backgroundImage.Parent = root
 
@@ -47,8 +47,8 @@ function ClanTableUI.Create(parent, Theme, clans)
         line.Name = "SubtleDiagonalLine"
         line.Size = UDim2.new(0, 560, 0, 1)
         line.Position = UDim2.new(0, -120 + (index * 138), 0, -20 + (index * 56))
-        line.BackgroundColor3 = Color3.fromRGB(240, 214, 120)
-        line.BackgroundTransparency = 0.9
+        line.BackgroundColor3 = Color3.fromRGB(238, 255, 155)
+        line.BackgroundTransparency = 0.84
         line.BorderSizePixel = 0
         line.Rotation = -18
         line.ZIndex = 0
@@ -65,8 +65,8 @@ function ClanTableUI.Create(parent, Theme, clans)
             0,
             38 + ((index * 53) % 410)
         )
-        dot.BackgroundColor3 = Color3.fromRGB(240, 214, 120)
-        dot.BackgroundTransparency = 0.55
+        dot.BackgroundColor3 = Color3.fromRGB(246, 255, 172)
+        dot.BackgroundTransparency = 0.5
         dot.BorderSizePixel = 0
         dot.ZIndex = 0
         dot.Parent = patternLayer
@@ -84,9 +84,9 @@ function ClanTableUI.Create(parent, Theme, clans)
     rootCorner.Parent = root
 
     local rootStroke = Instance.new("UIStroke")
-    rootStroke.Color = Color3.fromRGB(55, 55, 64)
+    rootStroke.Color = Color3.fromRGB(236, 255, 176)
     rootStroke.Thickness = 1
-    rootStroke.Transparency = 0.2
+    rootStroke.Transparency = 0.1
     rootStroke.Parent = root
 
 
@@ -137,7 +137,8 @@ function ClanTableUI.Create(parent, Theme, clans)
     leftPanel.Name = "LeftPanel"
     leftPanel.Size = UDim2.new(0.64, -10, 1, 0)
     leftPanel.Position = UDim2.new(0, 0, 0, 0)
-    leftPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
+    leftPanel.BackgroundColor3 = Color3.fromRGB(86, 97, 14)
+    leftPanel.BackgroundTransparency = 0.08
     leftPanel.BorderSizePixel = 0
     leftPanel.Parent = mainContainer
 
@@ -146,16 +147,17 @@ function ClanTableUI.Create(parent, Theme, clans)
     leftCorner.Parent = leftPanel
 
     local leftStroke = Instance.new("UIStroke")
-    leftStroke.Color = Color3.fromRGB(75, 75, 82)
+    leftStroke.Color = Color3.fromRGB(223, 244, 132)
     leftStroke.Thickness = 1
-    leftStroke.Transparency = 0.15
+    leftStroke.Transparency = 0.08
     leftStroke.Parent = leftPanel
 
     local tableHeader = Instance.new("Frame")
     tableHeader.Name = "TableHeader"
     tableHeader.Size = UDim2.new(1, -24, 0, 34)
     tableHeader.Position = UDim2.new(0, 12, 0, 12)
-    tableHeader.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
+    tableHeader.BackgroundColor3 = Color3.fromRGB(137, 166, 32)
+    tableHeader.BackgroundTransparency = 0.04
     tableHeader.BorderSizePixel = 0
     tableHeader.Parent = leftPanel
 
@@ -233,7 +235,8 @@ function ClanTableUI.Create(parent, Theme, clans)
     rightPanel.Name = "RightPanel"
     rightPanel.Size = UDim2.new(0.36, -10, 1, 44)
     rightPanel.Position = UDim2.new(0.64, 10, 0, 0)
-    rightPanel.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
+    rightPanel.BackgroundColor3 = Color3.fromRGB(86, 97, 14)
+    rightPanel.BackgroundTransparency = 0.08
     rightPanel.BorderSizePixel = 0
     rightPanel.Parent = mainContainer
 
@@ -242,9 +245,9 @@ function ClanTableUI.Create(parent, Theme, clans)
     rightCorner.Parent = rightPanel
 
     local rightStroke = Instance.new("UIStroke")
-    rightStroke.Color = Color3.fromRGB(75, 75, 82)
+    rightStroke.Color = Color3.fromRGB(223, 244, 132)
     rightStroke.Thickness = 1
-    rightStroke.Transparency = 0.15
+    rightStroke.Transparency = 0.08
     rightStroke.Parent = rightPanel
 
     local clanTitle
@@ -263,7 +266,8 @@ function ClanTableUI.Create(parent, Theme, clans)
         local row = Instance.new("TextButton")
         row.Name = "ClanRow"
         row.Size = UDim2.new(1, 0, 0, 42)
-        row.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
+        row.BackgroundColor3 = Color3.fromRGB(78, 88, 12)
+        row.BackgroundTransparency = 0.04
         
         row.BorderSizePixel = 0
         row.Text = ""
@@ -275,7 +279,7 @@ function ClanTableUI.Create(parent, Theme, clans)
 
         local rowStroke = Instance.new("UIStroke")
         rowStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-        rowStroke.Color = Color3.fromRGB(55, 55, 64)
+        rowStroke.Color = Color3.fromRGB(178, 204, 70)
         rowStroke.Thickness = 1
         rowStroke.Transparency = 1
         rowStroke.Parent = row
@@ -286,13 +290,13 @@ function ClanTableUI.Create(parent, Theme, clans)
                     local stroke = child:FindFirstChildOfClass("UIStroke")
 
                     if stroke then
-                        stroke.Color = Color3.fromRGB(55, 55, 64)
+                        stroke.Color = Color3.fromRGB(178, 204, 70)
                         stroke.Transparency = 1
                     end
                 end
             end
 
-            rowStroke.Color = Color3.fromRGB(255, 255, 255)
+            rowStroke.Color = Color3.fromRGB(238, 255, 155)
             rowStroke.Transparency = 0.15
 
             clanTitle.Text = tostring(clan.name or "Clan")
@@ -388,7 +392,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     clanImage.Name = "ClanImage"
     clanImage.Size = UDim2.new(1, -32, 0, 120)
     clanImage.Position = UDim2.new(0, 16, 0, 56)
-    clanImage.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
+    clanImage.BackgroundColor3 = Color3.fromRGB(78, 88, 12)
     clanImage.BorderSizePixel = 0
     clanImage.Parent = rightPanel
 
@@ -456,7 +460,8 @@ function ClanTableUI.Create(parent, Theme, clans)
     clanDescription = Instance.new("TextLabel")
     clanDescription.Size = UDim2.new(1, -32, 0, 68)
     clanDescription.Position = UDim2.new(0, 16, 0, 270)
-    clanDescription.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
+    clanDescription.BackgroundColor3 = Color3.fromRGB(78, 88, 12)
+    clanDescription.BackgroundTransparency = 0.04
     clanDescription.BorderSizePixel = 0
     clanDescription.Text = ""
     clanDescription.TextColor3 = Theme.Colors.TextMuted
@@ -535,7 +540,8 @@ function ClanTableUI.Create(parent, Theme, clans)
     footer.Name = "Footer"
     footer.Size = UDim2.new(0.64, -36, 0, 28)
     footer.Position = UDim2.new(0, 20, 1, -38)
-    footer.BackgroundColor3 = Color3.fromRGB(18, 20, 24)
+    footer.BackgroundColor3 = Color3.fromRGB(86, 97, 14)
+    footer.BackgroundTransparency = 0.08
     footer.BorderSizePixel = 0
     footer.Parent = root
 
@@ -544,7 +550,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     footerCorner.Parent = footer
 
     local footerStroke = Instance.new("UIStroke")
-    footerStroke.Color = Color3.fromRGB(55, 55, 64)
+    footerStroke.Color = Color3.fromRGB(223, 244, 132)
     footerStroke.Thickness = 1
     footerStroke.Transparency = 0.25
     footerStroke.Parent = footer
