@@ -149,6 +149,7 @@ chatPanel.RoomType.Text = currentRoom.type
 local lastChatSignature = ""
 
 local avatarCache = {}
+local activityProfileCache = {}
 local setRoom
 local selectedPrivateRoom = nil
 local confirmAction = nil
@@ -410,11 +411,48 @@ local function refreshChat()
     end
 end
 
+local function enrichOnlineUserActivities(users)
+    local now = os.clock()
+
+    for _, onlineUser in ipairs(users or {}) do
+        local userId = onlineUser.roblox_user_id
+
+        if userId then
+            local cached = activityProfileCache[userId]
+
+            if not cached or (now - cached.updated_at) > 30 then
+                local publicResult = Api.GetPublicProfile(userId)
+                local profile = publicResult and publicResult.profile
+                local activityText = profile and profile.activity_text
+
+                cached = {
+                    updated_at = now,
+                    activity_text = activityText
+                }
+
+                activityProfileCache[userId] = cached
+            end
+
+            if cached.activity_text and tostring(cached.activity_text):gsub("%s+", "") ~= "" then
+                onlineUser.activity_text = cached.activity_text
+                onlineUser.game_status_visibility = "public"
+            else
+                onlineUser.activity_text = nil
+                onlineUser.game_status_visibility = "private"
+            end
+        end
+    end
+
+    return users
+end
+
 local function refreshOnlineUsers()
     if currentRoom.id == "global" then
         local result = Api.GetOnlineUsers()
 
         if result and result.users then
+            enrichOnlineUserActivities(result.users)
+
             rightPanel.Title.Text =
                 "En Línea - " .. tostring(#result.users)
 
@@ -446,6 +484,8 @@ local function refreshOnlineUsers()
             end
         end
     end
+
+    enrichOnlineUserActivities(roomUsers)
 
     rightPanel.Title.Text =
         "En Sala - " .. tostring(#roomUsers)
