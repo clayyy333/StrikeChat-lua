@@ -153,6 +153,7 @@ local activityProfileCache = {}
 local setRoom
 local selectedPrivateRoom = nil
 local confirmAction = nil
+local activePublicProfileUI = nil
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -446,6 +447,34 @@ local function enrichOnlineUserActivities(users)
     return users
 end
 
+local function openPublicProfileForUser(user)
+    if not user or not user.roblox_user_id then
+        return
+    end
+
+    local publicResult = Api.GetPublicProfile(user.roblox_user_id)
+
+    if not publicResult or publicResult.status ~= "ok" or not publicResult.profile then
+        return
+    end
+
+    if activePublicProfileUI then
+        activePublicProfileUI.Destroy()
+        activePublicProfileUI = nil
+    end
+
+    activePublicProfileUI = PublicProfileUI.Create(
+        window.Gui,
+        Theme,
+        publicResult.profile,
+        player
+    )
+
+    activePublicProfileUI.CloseButton.MouseButton1Click:Connect(function()
+        activePublicProfileUI = nil
+    end)
+end
+
 local function refreshOnlineUsers()
     if currentRoom.id == "global" then
         local result = Api.GetOnlineUsers()
@@ -456,7 +485,7 @@ local function refreshOnlineUsers()
             rightPanel.Title.Text =
                 "En Línea - " .. tostring(#result.users)
 
-            rightPanel.Render(result.users)
+            rightPanel.Render(result.users, openPublicProfileForUser)
         end
 
         return
@@ -490,7 +519,7 @@ local function refreshOnlineUsers()
     rightPanel.Title.Text =
         "En Sala - " .. tostring(#roomUsers)
 
-    rightPanel.Render(roomUsers)
+    rightPanel.Render(roomUsers, openPublicProfileForUser)
 end
 
 local function refreshRooms(isPrivate)

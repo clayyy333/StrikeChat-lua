@@ -120,7 +120,7 @@ function RightPanel.Create(parent, Theme)
         end
     end
 
-    local function renderUser(user)
+    local function renderUser(user, onUserSelected)
         local row = Instance.new("Frame")
         row.Name = "UserRow"
         row.Size = UDim2.new(1, 0, 0, 54)
@@ -218,14 +218,29 @@ function RightPanel.Create(parent, Theme)
         status.TextXAlignment = Enum.TextXAlignment.Left
         status.TextTruncate = Enum.TextTruncate.AtEnd
         status.Parent = row
+
+        local clickArea = Instance.new("TextButton")
+        clickArea.Name = "OpenPublicProfile"
+        clickArea.Size = UDim2.new(1, 0, 1, 0)
+        clickArea.BackgroundTransparency = 1
+        clickArea.Text = ""
+        clickArea.AutoButtonColor = false
+        clickArea.ZIndex = 20
+        clickArea.Parent = row
+
+        clickArea.MouseButton1Click:Connect(function()
+            if onUserSelected then
+                onUserSelected(user)
+            end
+        end)
     end
 
-    local function render(users)
+    local function render(users, onUserSelected)
         clear()
 
 
         for _, user in ipairs(users or {}) do
-            renderUser(user)
+            renderUser(user, onUserSelected)
         end
 
         task.wait()
