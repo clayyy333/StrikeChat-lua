@@ -11,7 +11,17 @@ function ClanTableUI.Create(parent, Theme, clans)
     root.Name = "Root"
     root.Size = UDim2.new(0, 920, 0, 490)
     root.Position = UDim2.new(0.5, -460, 0.5, -245)
-    root.BackgroundColor3 = Color3.fromRGB(10, 11, 14)
+    root.BackgroundColor3 = Color3.fromRGB(95, 106, 27)
+
+    local rootGradient = Instance.new("UIGradient")
+    rootGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(95, 106, 27)),
+        ColorSequenceKeypoint.new(0.36, Color3.fromRGB(145, 162, 34)),
+        ColorSequenceKeypoint.new(0.68, Color3.fromRGB(157, 186, 60)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(118, 191, 0))
+    })
+    rootGradient.Rotation = 125
+    rootGradient.Parent = root
     
     local backgroundImage = Instance.new("ImageLabel")
     backgroundImage.Name = "BackgroundImage"
@@ -19,10 +29,53 @@ function ClanTableUI.Create(parent, Theme, clans)
     backgroundImage.Position = UDim2.new(0, 0, 0, 0)
     backgroundImage.BackgroundTransparency = 1
     backgroundImage.Image = "rbxassetid://7072718362"
+    backgroundImage.ImageColor3 = Color3.fromRGB(190, 220, 82)
     backgroundImage.ScaleType = Enum.ScaleType.Crop
-    backgroundImage.ImageTransparency = 0.55
+    backgroundImage.ImageTransparency = 0.88
     backgroundImage.ZIndex = 0
     backgroundImage.Parent = root
+
+    local patternLayer = Instance.new("Frame")
+    patternLayer.Name = "GreenPatternLayer"
+    patternLayer.Size = UDim2.new(1, 0, 1, 0)
+    patternLayer.BackgroundTransparency = 1
+    patternLayer.ZIndex = 0
+    patternLayer.Parent = root
+
+    for index = 1, 8 do
+        local line = Instance.new("Frame")
+        line.Name = "SubtleDiagonalLine"
+        line.Size = UDim2.new(0, 560, 0, 1)
+        line.Position = UDim2.new(0, -120 + (index * 138), 0, -20 + (index * 56))
+        line.BackgroundColor3 = Color3.fromRGB(240, 214, 120)
+        line.BackgroundTransparency = 0.9
+        line.BorderSizePixel = 0
+        line.Rotation = -18
+        line.ZIndex = 0
+        line.Parent = patternLayer
+    end
+
+    for index = 1, 18 do
+        local dot = Instance.new("Frame")
+        dot.Name = "SoftGoldDot"
+        dot.Size = UDim2.new(0, 2, 0, 2)
+        dot.Position = UDim2.new(
+            0,
+            42 + ((index * 97) % 820),
+            0,
+            38 + ((index * 53) % 410)
+        )
+        dot.BackgroundColor3 = Color3.fromRGB(240, 214, 120)
+        dot.BackgroundTransparency = 0.55
+        dot.BorderSizePixel = 0
+        dot.ZIndex = 0
+        dot.Parent = patternLayer
+
+        local dotCorner = Instance.new("UICorner")
+        dotCorner.CornerRadius = UDim.new(1, 0)
+        dotCorner.Parent = dot
+    end
+
     root.BorderSizePixel = 0
     root.Parent = gui
 
