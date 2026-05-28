@@ -265,6 +265,7 @@ local function renderMessages(messages)
             avatar.Size = UDim2.new(0, 34, 0, 34)
             avatar.Position = UDim2.new(0, 0, 0, 4)
             avatar.BackgroundTransparency = 1
+            avatar.ImageTransparency = 0
             avatar.Image = getAvatarImage(msg.roblox_user_id)
             avatar.ZIndex = premiumContentZIndex
             avatar.Parent = container
@@ -284,6 +285,7 @@ local function renderMessages(messages)
             nameLabel.TextColor3 = ChatStyles.GetTextColor(messageStyle, Theme.Colors.Text)
             nameLabel.Font = Theme.Font.Bold
             nameLabel.TextSize = 12
+            nameLabel.TextTransparency = 0
             nameLabel.TextXAlignment = Enum.TextXAlignment.Left
             nameLabel.TextTruncate = Enum.TextTruncate.AtEnd
             nameLabel.ZIndex = premiumContentZIndex
@@ -308,6 +310,7 @@ local function renderMessages(messages)
             clanLabel.TextColor3 = getClanColor(msg.clan_color)
             clanLabel.Font = Theme.Font.Bold
             clanLabel.TextSize = 11
+            clanLabel.TextTransparency = 0
             clanLabel.TextXAlignment = Enum.TextXAlignment.Left
             clanLabel.TextTruncate = Enum.TextTruncate.AtEnd
             clanLabel.ZIndex = premiumContentZIndex
@@ -365,6 +368,10 @@ local function renderMessages(messages)
             container.ZIndex = ChatStyles.GetContainerZIndex(messageStyle)
 
             ChatStyles.ApplyBackground(container, Theme, messageStyle, containerHeight)
+
+            avatar.ZIndex = premiumContentZIndex
+            nameLabel.ZIndex = premiumContentZIndex
+            clanLabel.ZIndex = premiumContentZIndex
 
             local messageText = Instance.new("TextLabel")
             messageText.Name = "Message"

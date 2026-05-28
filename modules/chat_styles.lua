@@ -176,7 +176,7 @@ function ChatStyles.GetSizing(style)
 end
 
 function ChatStyles.GetContentZIndex(style)
-    return style and 5 or 3
+    return style and 20 or 12
 end
 
 function ChatStyles.GetContainerZIndex(style)
@@ -184,7 +184,7 @@ function ChatStyles.GetContainerZIndex(style)
 end
 
 function ChatStyles.GetTextZIndex(style)
-    return style and 5 or 1
+    return style and 20 or 12
 end
 
 function ChatStyles.GetTextColor(style, fallbackColor)
