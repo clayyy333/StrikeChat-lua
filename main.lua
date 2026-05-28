@@ -878,6 +878,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
             item_not_owned = "Este item no esta en tu inventario.",
             item_not_found = "Este item ya no esta disponible.",
             item_not_usable = "Este item aun no se puede usar desde inventario.",
+            invalid_username_color = "Ese color de nombre no esta disponible.",
             invalid_chat_style = "Ese estilo de chat no esta disponible."
         }
 

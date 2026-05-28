@@ -24,6 +24,19 @@ local COLOR_OPTIONS = {
     { value = "yellow", label = "Amarillo", color = Color3.fromRGB(245, 190, 60) }
 }
 
+local USERNAME_COLOR_OPTIONS = {
+    { value = "red", label = "Rojo", color = Color3.fromRGB(235, 74, 74) },
+    { value = "green", label = "Verde", color = Color3.fromRGB(78, 190, 92) },
+    { value = "blue", label = "Azul", color = Color3.fromRGB(74, 142, 245) },
+    { value = "yellow", label = "Amarillo", color = Color3.fromRGB(245, 205, 70) },
+    { value = "orange", label = "Naranja", color = Color3.fromRGB(255, 156, 64) },
+    { value = "pink", label = "Rosado", color = Color3.fromRGB(255, 110, 180) },
+    { value = "purple", label = "Morado", color = Color3.fromRGB(168, 6, 235) },
+    { value = "white", label = "Blanco", color = Color3.fromRGB(245, 245, 245) },
+    { value = "black", label = "Negro", color = Color3.fromRGB(32, 32, 36) },
+    { value = "cyan", label = "Celeste", color = Color3.fromRGB(64, 210, 230) }
+}
+
 local STYLE_OPTIONS = {
     { value = "bracket", label = "Tag Profesional = [TAG]" },
     { value = "plain", label = "Tag Normal = TAG" }
@@ -401,10 +414,114 @@ function InventoryUI.Create(parent, Theme)
     applyChatStyleCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
     applyChatStyleCorner.Parent = applyChatStyleButton
 
+    local nameColorForm = Instance.new("Frame")
+    nameColorForm.Name = "NameColorForm"
+    nameColorForm.Size = UDim2.new(1, -32, 1, -76)
+    nameColorForm.Position = UDim2.new(0, 16, 0, 62)
+    nameColorForm.BackgroundColor3 = Theme.Colors.Background
+    nameColorForm.BorderSizePixel = 0
+    nameColorForm.Visible = false
+    nameColorForm.ZIndex = 86
+    nameColorForm.Parent = modal
+
+    local nameColorCorner = Instance.new("UICorner")
+    nameColorCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    nameColorCorner.Parent = nameColorForm
+
+    local nameColorPadding = Instance.new("UIPadding")
+    nameColorPadding.PaddingTop = UDim.new(0, 12)
+    nameColorPadding.PaddingLeft = UDim.new(0, 12)
+    nameColorPadding.PaddingRight = UDim.new(0, 12)
+    nameColorPadding.Parent = nameColorForm
+
+    local nameColorTitle = Instance.new("TextLabel")
+    nameColorTitle.Name = "NameColorTitle"
+    nameColorTitle.Size = UDim2.new(1, -8, 0, 24)
+    nameColorTitle.BackgroundTransparency = 1
+    nameColorTitle.Text = "Color de Nombre"
+    nameColorTitle.TextColor3 = Theme.Colors.Text
+    nameColorTitle.Font = Theme.Font.Bold
+    nameColorTitle.TextSize = 15
+    nameColorTitle.TextXAlignment = Enum.TextXAlignment.Left
+    nameColorTitle.ZIndex = 87
+    nameColorTitle.Parent = nameColorForm
+
+    local nameColorHint = Instance.new("TextLabel")
+    nameColorHint.Name = "NameColorHint"
+    nameColorHint.Size = UDim2.new(1, -8, 0, 34)
+    nameColorHint.Position = UDim2.new(0, 0, 0, 26)
+    nameColorHint.BackgroundTransparency = 1
+    nameColorHint.Text = "Elige el color que quieres usar en tu nombre."
+    nameColorHint.TextColor3 = Theme.Colors.TextMuted
+    nameColorHint.Font = Theme.Font.Regular
+    nameColorHint.TextSize = 12
+    nameColorHint.TextWrapped = true
+    nameColorHint.TextXAlignment = Enum.TextXAlignment.Left
+    nameColorHint.ZIndex = 87
+    nameColorHint.Parent = nameColorForm
+
+    local nameColorOptions = Instance.new("ScrollingFrame")
+    nameColorOptions.Name = "NameColorOptions"
+    nameColorOptions.Size = UDim2.new(1, -8, 1, -126)
+    nameColorOptions.Position = UDim2.new(0, 0, 0, 68)
+    nameColorOptions.BackgroundTransparency = 1
+    nameColorOptions.BorderSizePixel = 0
+    nameColorOptions.CanvasSize = UDim2.new(0, 0, 0, 0)
+    nameColorOptions.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    nameColorOptions.ScrollingDirection = Enum.ScrollingDirection.Y
+    nameColorOptions.ScrollBarThickness = 3
+    nameColorOptions.ScrollBarImageColor3 = CATEGORY_COLORS.username_color
+    nameColorOptions.ClipsDescendants = true
+    nameColorOptions.ZIndex = 87
+    nameColorOptions.Parent = nameColorForm
+
+    local nameColorOptionsLayout = Instance.new("UIListLayout")
+    nameColorOptionsLayout.Padding = UDim.new(0, 8)
+    nameColorOptionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    nameColorOptionsLayout.Parent = nameColorOptions
+
+    local cancelNameColorButton = Instance.new("TextButton")
+    cancelNameColorButton.Name = "CancelNameColorButton"
+    cancelNameColorButton.Size = UDim2.new(0.5, -8, 0, 34)
+    cancelNameColorButton.Position = UDim2.new(0, 0, 1, -46)
+    cancelNameColorButton.BackgroundColor3 = Theme.Colors.PanelLight
+    cancelNameColorButton.BorderSizePixel = 0
+    cancelNameColorButton.Text = "Cancelar"
+    cancelNameColorButton.TextColor3 = Theme.Colors.TextMuted
+    cancelNameColorButton.Font = Theme.Font.Bold
+    cancelNameColorButton.TextSize = 12
+    cancelNameColorButton.ZIndex = 87
+    cancelNameColorButton.Parent = nameColorForm
+
+    local cancelNameColorCorner = Instance.new("UICorner")
+    cancelNameColorCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    cancelNameColorCorner.Parent = cancelNameColorButton
+
+    local applyNameColorButton = Instance.new("TextButton")
+    applyNameColorButton.Name = "ApplyNameColorButton"
+    applyNameColorButton.Size = UDim2.new(0.5, -8, 0, 34)
+    applyNameColorButton.Position = UDim2.new(0.5, 8, 1, -46)
+    applyNameColorButton.BackgroundColor3 = CATEGORY_COLORS.username_color
+    applyNameColorButton.BorderSizePixel = 0
+    applyNameColorButton.Text = "Usar"
+    applyNameColorButton.TextColor3 = Theme.Colors.Text
+    applyNameColorButton.Font = Theme.Font.Bold
+    applyNameColorButton.TextSize = 12
+    applyNameColorButton.ZIndex = 87
+    applyNameColorButton.Parent = nameColorForm
+
+    local applyNameColorCorner = Instance.new("UICorner")
+    applyNameColorCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    applyNameColorCorner.Parent = applyNameColorButton
+
     local selectedChatStyleItemId = nil
     local selectedChatStyleValue = nil
     local selectedChatStyleRows = {}
     local chatStyleUseCallback = nil
+    local selectedNameColorItemId = nil
+    local selectedNameColorValue = nil
+    local selectedNameColorRows = {}
+    local nameColorUseCallback = nil
 
     local function clearList()
         for _, child in ipairs(list:GetChildren()) do
@@ -422,12 +539,14 @@ function InventoryUI.Create(parent, Theme)
     local function showList()
         clanForm.Visible = false
         chatStyleForm.Visible = false
+        nameColorForm.Visible = false
         list.Visible = true
     end
 
     local function showClanForm()
         list.Visible = false
         chatStyleForm.Visible = false
+        nameColorForm.Visible = false
         clanForm.Visible = true
         setStatus("Completa los datos para crear tu clan.", false)
     end
@@ -440,6 +559,16 @@ function InventoryUI.Create(parent, Theme)
         end
 
         selectedChatStyleRows = {}
+    end
+
+    local function clearNameColorOptions()
+        for _, child in ipairs(nameColorOptions:GetChildren()) do
+            if child:IsA("TextButton") or child:IsA("TextLabel") then
+                child:Destroy()
+            end
+        end
+
+        selectedNameColorRows = {}
     end
 
     local function setSelectedChatStyle(itemId, styleValue)
@@ -455,6 +584,7 @@ function InventoryUI.Create(parent, Theme)
     local function showChatStyleForm(items, onUse)
         list.Visible = false
         clanForm.Visible = false
+        nameColorForm.Visible = false
         chatStyleForm.Visible = true
         chatStyleUseCallback = onUse
         selectedChatStyleItemId = nil
@@ -533,6 +663,95 @@ function InventoryUI.Create(parent, Theme)
         end
     end
 
+    local function setSelectedNameColor(itemId, colorValue)
+        selectedNameColorItemId = itemId
+        selectedNameColorValue = colorValue
+
+        for rowKey, row in pairs(selectedNameColorRows) do
+            row.BackgroundColor3 = rowKey == colorValue and CATEGORY_COLORS.username_color or Theme.Colors.PanelLight
+        end
+    end
+
+    local function showNameColorForm(items, onUse)
+        list.Visible = false
+        clanForm.Visible = false
+        chatStyleForm.Visible = false
+        nameColorForm.Visible = true
+        nameColorUseCallback = onUse
+        selectedNameColorItemId = nil
+        selectedNameColorValue = nil
+
+        clearNameColorOptions()
+
+        local firstUsernameColorItem = nil
+        local firstAvailableColor = nil
+        local activeUsernameColor = nil
+
+        for _, entry in ipairs(items or {}) do
+            local item = getInventoryEntryData(entry)
+
+            if item.category == "username_color" then
+                firstUsernameColorItem = firstUsernameColorItem or item.item_id
+                activeUsernameColor = activeUsernameColor or entry.active_username_color
+            end
+        end
+
+        if not firstUsernameColorItem then
+            setStatus("No tienes color de nombre disponible para aplicar.", true)
+            return
+        end
+
+        for _, colorOption in ipairs(USERNAME_COLOR_OPTIONS) do
+            local isColorEquipped = tostring(activeUsernameColor or "") == colorOption.value
+            local option = Instance.new("TextButton")
+            option.Name = "NameColorOption"
+            option.Size = UDim2.new(1, 0, 0, 38)
+            option.BackgroundColor3 = Theme.Colors.PanelLight
+            option.BorderSizePixel = 0
+            option.Text = colorOption.label .. (isColorEquipped and "  En uso" or "")
+            option.TextColor3 = Theme.Colors.Text
+            option.Font = Theme.Font.Bold
+            option.TextSize = 12
+            option.TextXAlignment = Enum.TextXAlignment.Left
+            option.ZIndex = 88
+            option.Parent = nameColorOptions
+
+            local optionCorner = Instance.new("UICorner")
+            optionCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+            optionCorner.Parent = option
+
+            local optionStroke = Instance.new("UIStroke")
+            optionStroke.Color = colorOption.color
+            optionStroke.Thickness = 1
+            optionStroke.Transparency = isColorEquipped and 0.05 or 0.35
+            optionStroke.Parent = option
+
+            local optionPadding = Instance.new("UIPadding")
+            optionPadding.PaddingLeft = UDim.new(0, 12)
+            optionPadding.PaddingRight = UDim.new(0, 12)
+            optionPadding.Parent = option
+
+            selectedNameColorRows[colorOption.value] = option
+
+            if not firstAvailableColor and not isColorEquipped then
+                firstAvailableColor = colorOption.value
+            end
+
+            option.MouseButton1Click:Connect(function()
+                if not isColorEquipped then
+                    setSelectedNameColor(firstUsernameColorItem, colorOption.value)
+                end
+            end)
+        end
+
+        if firstAvailableColor then
+            setSelectedNameColor(firstUsernameColorItem, firstAvailableColor)
+            setStatus("Selecciona el color de nombre que quieres usar.", false)
+        else
+            setStatus("Ya estas usando el color seleccionado.", false)
+        end
+    end
+
     local function renderEmpty(message)
         clearList()
 
@@ -554,6 +773,13 @@ function InventoryUI.Create(parent, Theme)
     local function renderItem(entry, onUse, items)
         local item = getInventoryEntryData(entry)
         local accent = CATEGORY_COLORS[item.category] or Theme.Colors.Accent
+        local displayName = tostring(item.name or item.item_id or "Item")
+        local displayDescription = tostring(item.description or "")
+
+        if item.category == "username_color" then
+            displayName = "Color de nombre"
+            displayDescription = "Elige un color para mostrar en tu nombre."
+        end
 
         local row = Instance.new("Frame")
         row.Name = "InventoryItem"
@@ -579,7 +805,7 @@ function InventoryUI.Create(parent, Theme)
         name.Size = UDim2.new(1, -126, 0, 22)
         name.Position = UDim2.new(0, 12, 0, 9)
         name.BackgroundTransparency = 1
-        name.Text = tostring(item.name or item.item_id or "Item")
+        name.Text = displayName
         name.TextColor3 = Theme.Colors.Text
         name.Font = Theme.Font.Bold
         name.TextSize = 13
@@ -607,7 +833,7 @@ function InventoryUI.Create(parent, Theme)
         description.Size = UDim2.new(1, -126, 0, 18)
         description.Position = UDim2.new(0, 12, 0, 50)
         description.BackgroundTransparency = 1
-        description.Text = tostring(item.description or "")
+        description.Text = displayDescription
         description.TextColor3 = Theme.Colors.TextMuted
         description.Font = Theme.Font.Regular
         description.TextSize = 10
@@ -641,6 +867,11 @@ function InventoryUI.Create(parent, Theme)
             useButton.TextColor3 = Theme.Colors.TextMuted
         elseif item.item_id == "clan_ticket" and not entry.is_equipped then
             useButton.Text = "Crear"
+        elseif item.category == "username_color" then
+            useButton.Text = "Elegir"
+            useButton.BackgroundColor3 = accent
+            useButton.AutoButtonColor = entry.can_use
+            useButton.Active = entry.can_use
         elseif item.category == "chat_style" and (not entry.is_equipped or item.item_id == CUSTOM_CHAT_ITEM_ID) then
             useButton.Text = "Elegir"
             useButton.AutoButtonColor = entry.can_use
@@ -648,8 +879,14 @@ function InventoryUI.Create(parent, Theme)
         end
 
         useButton.MouseButton1Click:Connect(function()
-            if entry.can_use and (not entry.is_equipped or item.item_id == CUSTOM_CHAT_ITEM_ID) and onUse then
-                if item.category == "chat_style" then
+            if entry.can_use and (
+                not entry.is_equipped or
+                item.category == "username_color" or
+                item.item_id == CUSTOM_CHAT_ITEM_ID
+            ) and onUse then
+                if item.category == "username_color" then
+                    showNameColorForm(items, onUse)
+                elseif item.category == "chat_style" then
                     showChatStyleForm(items, onUse)
                 else
                     onUse(item.item_id)
@@ -717,11 +954,24 @@ function InventoryUI.Create(parent, Theme)
         setStatus("", false)
     end)
 
+    cancelNameColorButton.MouseButton1Click:Connect(function()
+        showList()
+        setStatus("", false)
+    end)
+
     applyChatStyleButton.MouseButton1Click:Connect(function()
         if selectedChatStyleItemId and chatStyleUseCallback then
             chatStyleUseCallback(selectedChatStyleItemId, selectedChatStyleValue)
         else
             setStatus("Selecciona un estilo de chat.", true)
+        end
+    end)
+
+    applyNameColorButton.MouseButton1Click:Connect(function()
+        if selectedNameColorItemId and selectedNameColorValue and nameColorUseCallback then
+            nameColorUseCallback(selectedNameColorItemId, selectedNameColorValue)
+        else
+            setStatus("Selecciona un color de nombre.", true)
         end
     end)
 
@@ -745,6 +995,7 @@ function InventoryUI.Create(parent, Theme)
         ShowStatus = setStatus,
         ShowClanForm = showClanForm,
         ShowChatStyleForm = showChatStyleForm,
+        ShowNameColorForm = showNameColorForm,
         ShowList = showList,
         CreateClanButton = createClanButton,
 
