@@ -77,6 +77,10 @@ local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme)
 
+if window.SetBackgroundDesign then
+    window.SetBackgroundDesign(heartbeatResult.profile and heartbeatResult.profile.profile_banner_id)
+end
+
 if window.RaiseContent then
     window.RaiseContent()
 end
@@ -965,6 +969,10 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
 
                     if useResult.profile then
                         profileUI.ApplyProfile(useResult.profile)
+
+                        if window.SetBackgroundDesign then
+                            window.SetBackgroundDesign(useResult.profile.profile_banner_id)
+                        end
                     end
 
                     inventoryUI.ShowList()

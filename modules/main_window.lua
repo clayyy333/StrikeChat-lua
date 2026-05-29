@@ -2,7 +2,35 @@ local MainWindow = {}
 
 function MainWindow.Create(CoreGui, Theme)
     local TweenService = game:GetService("TweenService")
+    local ContentProvider = game:GetService("ContentProvider")
     local CONTENT_ZINDEX = 8
+    local DEFAULT_BACKGROUND_DESIGN_ID = "114828705105935"
+
+    local function getAssetImage(assetId)
+        if assetId == nil then
+            return "rbxassetid://" .. DEFAULT_BACKGROUND_DESIGN_ID
+        end
+
+        local value = tostring(assetId):gsub("^%s+", ""):gsub("%s+$", "")
+
+        if value == "" then
+            return "rbxassetid://" .. DEFAULT_BACKGROUND_DESIGN_ID
+        end
+
+        if value == "0" or value == "none" or value == "strikechat_space" then
+            return nil
+        end
+
+        if value:match("^rbxassetid://") or value:match("^rbxasset://") or value:match("^http") then
+            return value
+        end
+
+        if value:match("^%d+$") then
+            return "rbxassetid://" .. value
+        end
+
+        return value
+    end
 
     local gui = Instance.new("ScreenGui")
     gui.Name = "StrikeChat_Main"
@@ -24,7 +52,7 @@ function MainWindow.Create(CoreGui, Theme)
     backgroundImage.Size = UDim2.new(1, 0, 1, 0)
     backgroundImage.Position = UDim2.new(0, 0, 0, 0)
     backgroundImage.BackgroundTransparency = 1
-    backgroundImage.Image = "rbxassetid://108399174210397"
+    backgroundImage.Image = "rbxassetid://" .. DEFAULT_BACKGROUND_DESIGN_ID
     backgroundImage.ScaleType = Enum.ScaleType.Crop
     backgroundImage.ImageTransparency = 0
     backgroundImage.ZIndex = 1
@@ -33,6 +61,30 @@ function MainWindow.Create(CoreGui, Theme)
     local backgroundImageCorner = Instance.new("UICorner")
     backgroundImageCorner.CornerRadius = UDim.new(0, Theme.Radius.Main)
     backgroundImageCorner.Parent = backgroundImage
+
+    local function applyBackgroundDesign(designId)
+        local image = getAssetImage(designId)
+
+        if image then
+            backgroundImage.Image = image
+            backgroundImage.Visible = true
+
+            task.spawn(function()
+                local expectedImage = image
+                local ok = pcall(function()
+                    ContentProvider:PreloadAsync({ backgroundImage })
+                end)
+
+                if backgroundImage.Parent and backgroundImage.Image == expectedImage and not ok then
+                    backgroundImage.Image = ""
+                    backgroundImage.Visible = false
+                end
+            end)
+        else
+            backgroundImage.Image = ""
+            backgroundImage.Visible = false
+        end
+    end
 
     local mainCorner = Instance.new("UICorner")
     mainCorner.CornerRadius = UDim.new(0, Theme.Radius.Main)
@@ -264,6 +316,7 @@ function MainWindow.Create(CoreGui, Theme)
         CloseButton = close,
         MinimizeButton = minimize,
         MinimizedButton = minimizedButton,
+        SetBackgroundDesign = applyBackgroundDesign,
         RaiseContent = function()
             raiseGuiContent(content)
         end
