@@ -453,7 +453,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
             priceLabel.AutomaticSize = Enum.AutomaticSize.X
             priceLabel.BackgroundTransparency = 1
             priceLabel.Text = "Valor 10"
-            priceLabel.TextColor3 = Color3.fromRGB(255, 220, 120)
+            priceLabel.TextColor3 = Theme.Colors.Text
             priceLabel.Font = Theme.Font.Bold
             priceLabel.TextSize = 12
             priceLabel.TextXAlignment = Enum.TextXAlignment.Center
@@ -468,6 +468,30 @@ function ShopUI.Create(parent, Theme, initialPoints)
             priceIcon.ScaleType = Enum.ScaleType.Fit
             priceIcon.LayoutOrder = 2
             priceIcon.Parent = priceRow
+
+            task.spawn(function()
+                local fadeOut = true
+
+                while priceRow.Parent do
+                    if fadeOut then
+                        priceLabel.TextTransparency += 0.03
+                        priceIcon.ImageTransparency += 0.03
+
+                        if priceLabel.TextTransparency >= 0.45 then
+                            fadeOut = false
+                        end
+                    else
+                        priceLabel.TextTransparency -= 0.03
+                        priceIcon.ImageTransparency -= 0.03
+
+                        if priceLabel.TextTransparency <= 0 then
+                            fadeOut = true
+                        end
+                    end
+
+                    task.wait(0.05)
+                end
+            end)
         end
 
         local buyButton = Instance.new("TextButton")
