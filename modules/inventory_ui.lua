@@ -802,7 +802,7 @@ function InventoryUI.Create(parent, Theme)
 
         local name = Instance.new("TextLabel")
         name.Name = "Name"
-        name.Size = UDim2.new(1, -164, 0, 22)
+        name.Size = UDim2.new(1, -218, 0, 22)
         name.Position = UDim2.new(0, 12, 0, 9)
         name.BackgroundTransparency = 1
         name.Text = displayName
@@ -816,7 +816,7 @@ function InventoryUI.Create(parent, Theme)
 
         local category = Instance.new("TextLabel")
         category.Name = "Category"
-        category.Size = UDim2.new(1, -164, 0, 18)
+        category.Size = UDim2.new(1, -218, 0, 18)
         category.Position = UDim2.new(0, 12, 0, 31)
         category.BackgroundTransparency = 1
         category.Text = CATEGORY_LABELS[item.category] or tostring(item.category or "Item")
@@ -830,7 +830,7 @@ function InventoryUI.Create(parent, Theme)
 
         local description = Instance.new("TextLabel")
         description.Name = "Description"
-        description.Size = UDim2.new(1, -164, 0, 18)
+        description.Size = UDim2.new(1, -218, 0, 18)
         description.Position = UDim2.new(0, 12, 0, 50)
         description.BackgroundTransparency = 1
         description.Text = displayDescription
@@ -845,7 +845,7 @@ function InventoryUI.Create(parent, Theme)
         local useButton = Instance.new("TextButton")
         useButton.Name = "UseButton"
         useButton.Size = UDim2.new(0, 80, 0, 32)
-        useButton.Position = UDim2.new(1, -130, 0.5, -16)
+        useButton.Position = UDim2.new(1, -180, 0.5, -16)
         useButton.BackgroundColor3 = entry.is_equipped and Color3.fromRGB(60, 65, 75) or accent
         useButton.BorderSizePixel = 0
         useButton.Text = entry.is_equipped and "En uso" or "Usar"
@@ -863,14 +863,14 @@ function InventoryUI.Create(parent, Theme)
 
         local deleteButton = Instance.new("TextButton")
         deleteButton.Name = "DeleteButton"
-        deleteButton.Size = UDim2.new(0, 26, 0, 32)
-        deleteButton.Position = UDim2.new(1, -42, 0.5, -16)
+        deleteButton.Size = UDim2.new(0, 72, 0, 32)
+        deleteButton.Position = UDim2.new(1, -88, 0.5, -16)
         deleteButton.BackgroundColor3 = Color3.fromRGB(86, 38, 48)
         deleteButton.BorderSizePixel = 0
-        deleteButton.Text = "X"
+        deleteButton.Text = "Eliminar"
         deleteButton.TextColor3 = Color3.fromRGB(255, 210, 216)
         deleteButton.Font = Theme.Font.Bold
-        deleteButton.TextSize = 12
+        deleteButton.TextSize = 11
         deleteButton.AutoButtonColor = true
         deleteButton.Active = true
         deleteButton.ZIndex = 84

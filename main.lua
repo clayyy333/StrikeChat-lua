@@ -153,6 +153,7 @@ local activityProfileCache = {}
 local setRoom
 local selectedPrivateRoom = nil
 local confirmAction = nil
+local confirmSecondaryAction = nil
 local activePublicProfileUI = nil
 
 local clanColorMap = {
@@ -977,31 +978,45 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
 
                 inventoryLocked = false
             end, function(itemId)
-                if inventoryLocked then
-                    return
-                end
-
-                inventoryLocked = true
-                inventoryUI.ShowStatus("Eliminando item...", false)
-
-                local deleteResult = Api.DeleteInventoryItem(player, itemId)
-
-                if deleteResult and deleteResult.status == "deleted" then
-                    if deleteResult.profile then
-                        profileUI.ApplyProfile(deleteResult.profile)
+                confirmAction = function()
+                    if inventoryLocked then
+                        return
                     end
 
-                    refreshInventory()
-                    inventoryUI.ShowStatus("Item eliminado correctamente.", false)
-                    refreshOnlineUsers()
-                else
-                    inventoryUI.ShowStatus(
-                        getInventoryErrorMessage(deleteResult and deleteResult.reason),
-                        true
-                    )
+                    inventoryLocked = true
+                    inventoryUI.ShowStatus("Eliminando item...", false)
+
+                    local deleteResult = Api.DeleteInventoryItem(player, itemId)
+
+                    if deleteResult and deleteResult.status == "deleted" then
+                        if deleteResult.profile then
+                            profileUI.ApplyProfile(deleteResult.profile)
+                        end
+
+                        refreshInventory()
+                        inventoryUI.ShowStatus("Item eliminado correctamente.", false)
+                        refreshOnlineUsers()
+                    else
+                        inventoryUI.ShowStatus(
+                            getInventoryErrorMessage(deleteResult and deleteResult.reason),
+                            true
+                        )
+                    end
+
+                    inventoryLocked = false
                 end
 
-                inventoryLocked = false
+                confirmSecondaryAction = function()
+                    inventoryUI.ShowStatus("Eliminacion cancelada.", false)
+                end
+
+                confirmModal.Open(
+                    "Estas seguro/a que quieres eliminar este item de tu inventario?",
+                    "Si",
+                    "No"
+                )
+
+                confirmModal.SecondaryButton.Visible = true
             end)
             inventoryUI.ShowStatus("", false)
         else
@@ -1380,6 +1395,8 @@ passwordModal.CancelButton.MouseButton1Click:Connect(function()
 end)
 
 confirmModal.CloseButton.MouseButton1Click:Connect(function()
+    confirmAction = nil
+    confirmSecondaryAction = nil
     confirmModal.Close()
 end)
 
@@ -1389,12 +1406,20 @@ confirmModal.PrimaryButton.MouseButton1Click:Connect(function()
         confirmAction()
     end
 
+    confirmAction = nil
+    confirmSecondaryAction = nil
     confirmModal.Close()
 
 end)
 
 confirmModal.SecondaryButton.MouseButton1Click:Connect(function()
 
+    if confirmSecondaryAction then
+        confirmSecondaryAction()
+    end
+
+    confirmAction = nil
+    confirmSecondaryAction = nil
     confirmModal.Close()
 
 end)
