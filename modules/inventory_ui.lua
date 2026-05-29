@@ -770,7 +770,7 @@ function InventoryUI.Create(parent, Theme)
         empty.Parent = list
     end
 
-    local function renderItem(entry, onUse, items)
+    local function renderItem(entry, onUse, onDelete, items)
         local item = getInventoryEntryData(entry)
         local accent = CATEGORY_COLORS[item.category] or Theme.Colors.Accent
         local displayName = tostring(item.name or item.item_id or "Item")
@@ -802,7 +802,7 @@ function InventoryUI.Create(parent, Theme)
 
         local name = Instance.new("TextLabel")
         name.Name = "Name"
-        name.Size = UDim2.new(1, -126, 0, 22)
+        name.Size = UDim2.new(1, -164, 0, 22)
         name.Position = UDim2.new(0, 12, 0, 9)
         name.BackgroundTransparency = 1
         name.Text = displayName
@@ -816,7 +816,7 @@ function InventoryUI.Create(parent, Theme)
 
         local category = Instance.new("TextLabel")
         category.Name = "Category"
-        category.Size = UDim2.new(1, -126, 0, 18)
+        category.Size = UDim2.new(1, -164, 0, 18)
         category.Position = UDim2.new(0, 12, 0, 31)
         category.BackgroundTransparency = 1
         category.Text = CATEGORY_LABELS[item.category] or tostring(item.category or "Item")
@@ -830,7 +830,7 @@ function InventoryUI.Create(parent, Theme)
 
         local description = Instance.new("TextLabel")
         description.Name = "Description"
-        description.Size = UDim2.new(1, -126, 0, 18)
+        description.Size = UDim2.new(1, -164, 0, 18)
         description.Position = UDim2.new(0, 12, 0, 50)
         description.BackgroundTransparency = 1
         description.Text = displayDescription
@@ -844,8 +844,8 @@ function InventoryUI.Create(parent, Theme)
 
         local useButton = Instance.new("TextButton")
         useButton.Name = "UseButton"
-        useButton.Size = UDim2.new(0, 88, 0, 32)
-        useButton.Position = UDim2.new(1, -100, 0.5, -16)
+        useButton.Size = UDim2.new(0, 80, 0, 32)
+        useButton.Position = UDim2.new(1, -130, 0.5, -16)
         useButton.BackgroundColor3 = entry.is_equipped and Color3.fromRGB(60, 65, 75) or accent
         useButton.BorderSizePixel = 0
         useButton.Text = entry.is_equipped and "En uso" or "Usar"
@@ -860,6 +860,26 @@ function InventoryUI.Create(parent, Theme)
         local useCorner = Instance.new("UICorner")
         useCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
         useCorner.Parent = useButton
+
+        local deleteButton = Instance.new("TextButton")
+        deleteButton.Name = "DeleteButton"
+        deleteButton.Size = UDim2.new(0, 26, 0, 32)
+        deleteButton.Position = UDim2.new(1, -42, 0.5, -16)
+        deleteButton.BackgroundColor3 = Color3.fromRGB(86, 38, 48)
+        deleteButton.BorderSizePixel = 0
+        deleteButton.Text = "X"
+        deleteButton.TextColor3 = Color3.fromRGB(255, 210, 216)
+        deleteButton.Font = Theme.Font.Bold
+        deleteButton.TextSize = 12
+        deleteButton.AutoButtonColor = true
+        deleteButton.Active = true
+        deleteButton.ZIndex = 84
+        deleteButton.Visible = item.category ~= "limited_reward"
+        deleteButton.Parent = row
+
+        local deleteCorner = Instance.new("UICorner")
+        deleteCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+        deleteCorner.Parent = deleteButton
 
         if not entry.can_use then
             useButton.Text = "Guardado"
@@ -893,9 +913,15 @@ function InventoryUI.Create(parent, Theme)
                 end
             end
         end)
+
+        deleteButton.MouseButton1Click:Connect(function()
+            if deleteButton.Visible and onDelete then
+                onDelete(item.item_id)
+            end
+        end)
     end
 
-    local function render(items, onUse)
+    local function render(items, onUse, onDelete)
         clearList()
 
         if not items or #items == 0 then
@@ -904,7 +930,7 @@ function InventoryUI.Create(parent, Theme)
         end
 
         for _, entry in ipairs(items) do
-            renderItem(entry, onUse, items)
+            renderItem(entry, onUse, onDelete, items)
         end
 
         task.wait()

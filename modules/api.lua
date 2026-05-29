@@ -267,6 +267,17 @@ function Api.UseInventoryItem(player, itemId, styleValue)
 end
 
 
+function Api.DeleteInventoryItem(player, itemId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/inventory/item" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId) ..
+        "&item_id=" .. Api.Encode(itemId),
+        "DELETE"
+    )
+end
+
+
 function Api.GetLimitedRewardStock()
     return Api.Request(
         Api.BaseUrl .. "/shop/limited-stock",

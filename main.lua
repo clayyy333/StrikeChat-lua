@@ -912,6 +912,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
             item_not_owned = "Este item no esta en tu inventario.",
             item_not_found = "Este item ya no esta disponible.",
             item_not_usable = "Este item aun no se puede usar desde inventario.",
+            item_delete_not_allowed = "Este item no se puede eliminar.",
             invalid_username_color = "Ese color de nombre no esta disponible.",
             invalid_chat_style = "Ese estilo de chat no esta disponible."
         }
@@ -970,6 +971,32 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
                 else
                     inventoryUI.ShowStatus(
                         getInventoryErrorMessage(useResult and useResult.reason),
+                        true
+                    )
+                end
+
+                inventoryLocked = false
+            end, function(itemId)
+                if inventoryLocked then
+                    return
+                end
+
+                inventoryLocked = true
+                inventoryUI.ShowStatus("Eliminando item...", false)
+
+                local deleteResult = Api.DeleteInventoryItem(player, itemId)
+
+                if deleteResult and deleteResult.status == "deleted" then
+                    if deleteResult.profile then
+                        profileUI.ApplyProfile(deleteResult.profile)
+                    end
+
+                    refreshInventory()
+                    inventoryUI.ShowStatus("Item eliminado correctamente.", false)
+                    refreshOnlineUsers()
+                else
+                    inventoryUI.ShowStatus(
+                        getInventoryErrorMessage(deleteResult and deleteResult.reason),
                         true
                     )
                 end
