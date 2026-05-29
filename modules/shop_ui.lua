@@ -418,7 +418,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
 
         local itemTitle = Instance.new("TextLabel")
         itemTitle.Size = UDim2.new(1, -20, 0, showPrice and 30 or 36)
-        itemTitle.Position = UDim2.new(0, 10, 0, showPrice and 14 or 38)
+        itemTitle.Position = UDim2.new(0, 10, 0, showPrice and 4 or 38)
         itemTitle.BackgroundTransparency = 1
         itemTitle.Text = title
         itemTitle.TextColor3 = Theme.Colors.Text
@@ -433,7 +433,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
             local priceRow = Instance.new("Frame")
             priceRow.Name = "PriceRow"
             priceRow.Size = UDim2.new(1, -20, 0, 18)
-            priceRow.Position = UDim2.new(0, 10, 0, 44)
+            priceRow.Position = UDim2.new(0, 10, 0, 34)
             priceRow.BackgroundTransparency = 1
             priceRow.BorderSizePixel = 0
             priceRow.Active = false
