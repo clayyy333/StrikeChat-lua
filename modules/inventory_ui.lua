@@ -577,7 +577,7 @@ function InventoryUI.Create(parent, Theme)
 
     local backgroundDesignOptions = Instance.new("ScrollingFrame")
     backgroundDesignOptions.Name = "BackgroundDesignOptions"
-    backgroundDesignOptions.Size = UDim2.new(1, -8, 1, -126)
+    backgroundDesignOptions.Size = UDim2.new(1, -14, 1, -126)
     backgroundDesignOptions.Position = UDim2.new(0, 0, 0, 68)
     backgroundDesignOptions.BackgroundTransparency = 1
     backgroundDesignOptions.BorderSizePixel = 0
@@ -890,8 +890,25 @@ function InventoryUI.Create(parent, Theme)
         selectedBackgroundDesignValue = designValue
 
         for rowKey, row in pairs(selectedBackgroundDesignRows) do
-            row.BackgroundColor3 = rowKey == designValue and Color3.fromRGB(74, 76, 86) or Theme.Colors.PanelLight
+            if rowKey == designValue then
+                row.Button.BackgroundColor3 = Color3.fromRGB(74, 76, 86)
+            elseif row.IsEquipped then
+                row.Button.BackgroundColor3 = Color3.fromRGB(62, 66, 76)
+            else
+                row.Button.BackgroundColor3 = Theme.Colors.PanelLight
+            end
         end
+    end
+
+    local function getActiveBackgroundDesign(entry)
+        local activeBackground = entry.active_profile_banner or entry.profile_banner_id or DEFAULT_BACKGROUND_DESIGN_VALUE
+        local value = tostring(activeBackground or DEFAULT_BACKGROUND_DESIGN_VALUE):gsub("^%s+", ""):gsub("%s+$", "")
+
+        if value == "" then
+            return "none"
+        end
+
+        return value
     end
 
     local function getBackgroundDesignOptions(entry)
@@ -934,8 +951,8 @@ function InventoryUI.Create(parent, Theme)
             return
         end
 
-        local activeBackground = tostring(backgroundEntry.active_profile_banner or DEFAULT_BACKGROUND_DESIGN_VALUE)
-        local firstAvailableDesign = nil
+        local activeBackground = getActiveBackgroundDesign(backgroundEntry)
+        local selectedOnOpenDesign = activeBackground
 
         for _, designOption in ipairs(getBackgroundDesignOptions(backgroundEntry)) do
             local designValue = tostring(designOption.value or "none")
@@ -946,10 +963,10 @@ function InventoryUI.Create(parent, Theme)
 
             local option = Instance.new("TextButton")
             option.Name = "BackgroundDesignOption"
-            option.Size = UDim2.new(1, 0, 0, 38)
-            option.BackgroundColor3 = Theme.Colors.PanelLight
+            option.Size = UDim2.new(1, -6, 0, 38)
+            option.BackgroundColor3 = isDesignEquipped and Color3.fromRGB(62, 66, 76) or Theme.Colors.PanelLight
             option.BorderSizePixel = 0
-            option.Text = designLabel .. (isDesignEquipped and "  En uso" or "")
+            option.Text = ""
             option.TextColor3 = Theme.Colors.Text
             option.Font = Theme.Font.Bold
             option.TextSize = 12
@@ -963,14 +980,42 @@ function InventoryUI.Create(parent, Theme)
 
             local optionPadding = Instance.new("UIPadding")
             optionPadding.PaddingLeft = UDim.new(0, 12)
-            optionPadding.PaddingRight = UDim.new(0, 12)
+            optionPadding.PaddingRight = UDim.new(0, 74)
             optionPadding.Parent = option
 
-            selectedBackgroundDesignRows[designValue] = option
+            local optionLabel = Instance.new("TextLabel")
+            optionLabel.Name = "Label"
+            optionLabel.Size = UDim2.new(1, -76, 1, 0)
+            optionLabel.BackgroundTransparency = 1
+            optionLabel.Text = designLabel
+            optionLabel.TextColor3 = Theme.Colors.Text
+            optionLabel.Font = Theme.Font.Bold
+            optionLabel.TextSize = 12
+            optionLabel.TextXAlignment = Enum.TextXAlignment.Left
+            optionLabel.TextTruncate = Enum.TextTruncate.AtEnd
+            optionLabel.ZIndex = 89
+            optionLabel.Active = false
+            optionLabel.Parent = option
 
-            if not firstAvailableDesign and not isDesignEquipped then
-                firstAvailableDesign = designValue
-            end
+            local activeLabel = Instance.new("TextLabel")
+            activeLabel.Name = "ActiveLabel"
+            activeLabel.AnchorPoint = Vector2.new(1, 0.5)
+            activeLabel.Size = UDim2.new(0, 58, 0, 18)
+            activeLabel.Position = UDim2.new(1, -10, 0.5, 0)
+            activeLabel.BackgroundTransparency = 1
+            activeLabel.Text = isDesignEquipped and "En uso" or ""
+            activeLabel.TextColor3 = CATEGORY_COLORS.profile_banner
+            activeLabel.Font = Theme.Font.Bold
+            activeLabel.TextSize = 11
+            activeLabel.TextXAlignment = Enum.TextXAlignment.Right
+            activeLabel.ZIndex = 89
+            activeLabel.Active = false
+            activeLabel.Parent = option
+
+            selectedBackgroundDesignRows[designValue] = {
+                Button = option,
+                IsEquipped = isDesignEquipped
+            }
 
             option.MouseButton1Click:Connect(function()
                 if not isDesignEquipped then
@@ -979,8 +1024,8 @@ function InventoryUI.Create(parent, Theme)
             end)
         end
 
-        if firstAvailableDesign then
-            setSelectedBackgroundDesign(backgroundItem.item_id, firstAvailableDesign)
+        if selectedOnOpenDesign then
+            setSelectedBackgroundDesign(backgroundItem.item_id, selectedOnOpenDesign)
             setStatus("Selecciona el diseño de fondo que quieres usar.", false)
         else
             setStatus("Ya estas usando el diseño seleccionado.", false)

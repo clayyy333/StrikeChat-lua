@@ -4,7 +4,6 @@ function MainWindow.Create(CoreGui, Theme)
     local TweenService = game:GetService("TweenService")
     local CONTENT_ZINDEX = 8
     local DEFAULT_BACKGROUND_DESIGN_ID = "114828705105935"
-    local resolvedImageCache = {}
 
     local function getAssetImage(assetId)
         if assetId == nil then
@@ -32,77 +31,6 @@ function MainWindow.Create(CoreGui, Theme)
         return value
     end
 
-    local function resolveImageAsset(assetId)
-        local fallbackImage = getAssetImage(assetId)
-
-        if assetId == nil then
-            assetId = DEFAULT_BACKGROUND_DESIGN_ID
-        end
-
-        local value = tostring(assetId):gsub("^%s+", ""):gsub("%s+$", "")
-
-        if value == "" then
-            value = DEFAULT_BACKGROUND_DESIGN_ID
-        end
-
-        if not value:match("^%d+$") then
-            return fallbackImage
-        end
-
-        if resolvedImageCache[value] then
-            return resolvedImageCache[value]
-        end
-
-        local resolvedImage = nil
-        local success, objects = pcall(function()
-            return game:GetObjects("rbxassetid://" .. value)
-        end)
-
-        if success and objects then
-            for _, object in ipairs(objects) do
-                if object:IsA("Decal") or object:IsA("Texture") then
-                    if object.Texture and object.Texture ~= "" then
-                        resolvedImage = object.Texture
-                        break
-                    end
-                elseif object:IsA("ImageLabel") or object:IsA("ImageButton") then
-                    if object.Image and object.Image ~= "" then
-                        resolvedImage = object.Image
-                        break
-                    end
-                end
-
-                for _, descendant in ipairs(object:GetDescendants()) do
-                    if descendant:IsA("Decal") or descendant:IsA("Texture") then
-                        if descendant.Texture and descendant.Texture ~= "" then
-                            resolvedImage = descendant.Texture
-                            break
-                        end
-                    elseif descendant:IsA("ImageLabel") or descendant:IsA("ImageButton") then
-                        if descendant.Image and descendant.Image ~= "" then
-                            resolvedImage = descendant.Image
-                            break
-                        end
-                    end
-                end
-
-                if resolvedImage then
-                    break
-                end
-            end
-
-            for _, object in ipairs(objects) do
-                pcall(function()
-                    object:Destroy()
-                end)
-            end
-        end
-
-        resolvedImageCache[value] = resolvedImage or fallbackImage
-
-        return resolvedImageCache[value]
-    end
-
     local gui = Instance.new("ScreenGui")
     gui.Name = "StrikeChat_Main"
     gui.ResetOnSpawn = false
@@ -123,7 +51,7 @@ function MainWindow.Create(CoreGui, Theme)
     backgroundImage.Size = UDim2.new(1, 0, 1, 0)
     backgroundImage.Position = UDim2.new(0, 0, 0, 0)
     backgroundImage.BackgroundTransparency = 1
-    backgroundImage.Image = resolveImageAsset(nil)
+    backgroundImage.Image = getAssetImage(nil)
     backgroundImage.ScaleType = Enum.ScaleType.Crop
     backgroundImage.ImageTransparency = 0
     backgroundImage.ZIndex = 1
@@ -134,7 +62,7 @@ function MainWindow.Create(CoreGui, Theme)
     backgroundImageCorner.Parent = backgroundImage
 
     local function applyBackgroundDesign(designId)
-        local image = resolveImageAsset(designId)
+        local image = getAssetImage(designId)
 
         if image then
             backgroundImage.Image = image
