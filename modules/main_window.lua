@@ -358,6 +358,94 @@ function MainWindow.Create(CoreGui, Theme)
         end
     end
 
+    local function playOpeningReveal()
+        local revealZIndex = CONTENT_ZINDEX + 20
+
+        local leftReveal = Instance.new("Frame")
+        leftReveal.Name = "LeftOpeningReveal"
+        leftReveal.Size = UDim2.new(0.5, 1, 1, 0)
+        leftReveal.Position = UDim2.new(0, 0, 0, 0)
+        leftReveal.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+        leftReveal.BorderSizePixel = 0
+        leftReveal.ZIndex = revealZIndex
+        leftReveal.Parent = main
+
+        local leftGradient = Instance.new("UIGradient")
+        leftGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(26, 22, 36)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(54, 38, 78))
+        })
+        leftGradient.Rotation = 0
+        leftGradient.Parent = leftReveal
+
+        local rightReveal = Instance.new("Frame")
+        rightReveal.Name = "RightOpeningReveal"
+        rightReveal.Size = UDim2.new(0.5, 1, 1, 0)
+        rightReveal.Position = UDim2.new(0.5, -1, 0, 0)
+        rightReveal.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+        rightReveal.BorderSizePixel = 0
+        rightReveal.ZIndex = revealZIndex
+        rightReveal.Parent = main
+
+        local rightGradient = Instance.new("UIGradient")
+        rightGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(54, 38, 78)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(26, 22, 36))
+        })
+        rightGradient.Rotation = 0
+        rightGradient.Parent = rightReveal
+
+        local seam = Instance.new("Frame")
+        seam.Name = "OpeningRevealSeam"
+        seam.AnchorPoint = Vector2.new(0.5, 0)
+        seam.Size = UDim2.new(0, 2, 1, 0)
+        seam.Position = UDim2.new(0.5, 0, 0, 0)
+        seam.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        seam.BackgroundTransparency = 0.68
+        seam.BorderSizePixel = 0
+        seam.ZIndex = revealZIndex + 1
+        seam.Parent = main
+
+        local tweenInfo = TweenInfo.new(
+            0.62,
+            Enum.EasingStyle.Quart,
+            Enum.EasingDirection.Out
+        )
+
+        task.delay(0.08, function()
+            if not main.Parent then
+                return
+            end
+
+            TweenService:Create(leftReveal, tweenInfo, {
+                Size = UDim2.new(0, 0, 1, 0)
+            }):Play()
+
+            TweenService:Create(rightReveal, tweenInfo, {
+                Position = UDim2.new(1, 0, 0, 0),
+                Size = UDim2.new(0, 0, 1, 0)
+            }):Play()
+
+            TweenService:Create(seam, TweenInfo.new(0.42, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+                BackgroundTransparency = 1
+            }):Play()
+
+            task.delay(0.7, function()
+                if leftReveal.Parent then
+                    leftReveal:Destroy()
+                end
+
+                if rightReveal.Parent then
+                    rightReveal:Destroy()
+                end
+
+                if seam.Parent then
+                    seam:Destroy()
+                end
+            end)
+        end)
+    end
+
     content.DescendantAdded:Connect(function(item)
         if item:IsA("GuiObject") then
             item.ZIndex = math.max(item.ZIndex, CONTENT_ZINDEX)
@@ -365,6 +453,7 @@ function MainWindow.Create(CoreGui, Theme)
     end)
 
     raiseGuiContent(content)
+    playOpeningReveal()
 
     return {
         Gui = gui,
