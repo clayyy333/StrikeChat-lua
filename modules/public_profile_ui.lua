@@ -3,6 +3,7 @@ local PublicProfileUI = {}
 function PublicProfileUI.Create(parent, Theme, profile, player)
     local Players = game:GetService("Players")
     local DEFAULT_PROFILE_BANNER_ID = "114828705105935"
+    local resolvedImageCache = {}
 
     profile = profile or {}
 
@@ -81,6 +82,73 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
         end
 
         return value
+    end
+
+    local function resolveImageAsset(assetId)
+        local fallbackImage = getAssetImage(assetId)
+
+        if assetId == nil then
+            return nil
+        end
+
+        local value = tostring(assetId):gsub("^%s+", ""):gsub("%s+$", "")
+
+        if not value:match("^%d+$") then
+            return fallbackImage
+        end
+
+        if resolvedImageCache[value] then
+            return resolvedImageCache[value]
+        end
+
+        local resolvedImage = nil
+        local success, objects = pcall(function()
+            return game:GetObjects("rbxassetid://" .. value)
+        end)
+
+        if success and objects then
+            for _, object in ipairs(objects) do
+                if object:IsA("Decal") or object:IsA("Texture") then
+                    if object.Texture and object.Texture ~= "" then
+                        resolvedImage = object.Texture
+                        break
+                    end
+                elseif object:IsA("ImageLabel") or object:IsA("ImageButton") then
+                    if object.Image and object.Image ~= "" then
+                        resolvedImage = object.Image
+                        break
+                    end
+                end
+
+                for _, descendant in ipairs(object:GetDescendants()) do
+                    if descendant:IsA("Decal") or descendant:IsA("Texture") then
+                        if descendant.Texture and descendant.Texture ~= "" then
+                            resolvedImage = descendant.Texture
+                            break
+                        end
+                    elseif descendant:IsA("ImageLabel") or descendant:IsA("ImageButton") then
+                        if descendant.Image and descendant.Image ~= "" then
+                            resolvedImage = descendant.Image
+                            break
+                        end
+                    end
+                end
+
+                if resolvedImage then
+                    break
+                end
+            end
+
+            for _, object in ipairs(objects) do
+                pcall(function()
+                    object:Destroy()
+                end)
+            end
+        end
+
+        resolvedImageCache[value] = resolvedImage or fallbackImage
+
+        return resolvedImageCache[value]
     end
 
     round(modal, Theme.Radius.Main)
@@ -292,7 +360,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     local bannerAsset = nil
 
     if profile.profile_banner_id and tostring(profile.profile_banner_id) ~= DEFAULT_PROFILE_BANNER_ID then
-        bannerAsset = getAssetImage(profile.profile_banner_id)
+        bannerAsset = resolveImageAsset(profile.profile_banner_id)
     end
 
     if bannerAsset then
