@@ -2,22 +2,10 @@ local ShopUI = {}
 
 function ShopUI.Create(parent, Theme, initialPoints)
     local function animatePointsIcon(iconHolder, icon)
-        local baseSize = icon.AbsoluteSize.X
-
-        if baseSize <= 0 then
-            baseSize = 22
-        end
-
         task.spawn(function()
             while iconHolder.Parent do
                 local now = os.clock()
-                local pulse = (math.sin(now * 2) + 1) / 2
-                local iconSize = baseSize + (pulse * 2)
-
-                icon.Rotation = 0
-                icon.Size = UDim2.new(0, iconSize, 0, iconSize)
-                icon.Position = UDim2.new(0.5, -(iconSize / 2), 0.5, -(iconSize / 2))
-                icon.ImageTransparency = pulse * 0.08
+                icon.Rotation = math.sin(now * 2.1) * 8
 
                 task.wait(0.05)
             end
