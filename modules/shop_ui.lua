@@ -193,7 +193,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
     pointsIcon.Size = UDim2.new(0, 22, 0, 22)
     pointsIcon.Position = UDim2.new(1, -30, 0.5, -11)
     pointsIcon.BackgroundTransparency = 1
-    pointsIcon.Image = "rbxassetid://83362559828351"
+    pointsIcon.Image = "rbxassetid://124520045081815"
     pointsIcon.ScaleType = Enum.ScaleType.Fit
     pointsIcon.Parent = pointsBadge
 
@@ -362,7 +362,11 @@ function ShopUI.Create(parent, Theme, initialPoints)
     itemsLayout.SortOrder = Enum.SortOrder.LayoutOrder
     itemsLayout.Parent = itemsContainer
 
-    local function createShopItem(title, color, badgeText)
+    local function createShopItem(title, color, badgeText, showPrice)
+        if showPrice == nil then
+            showPrice = true
+        end
+
         local item = Instance.new("Frame")
         item.BackgroundColor3 = Color3.fromRGB(22, 24, 30)
 
@@ -413,15 +417,58 @@ function ShopUI.Create(parent, Theme, initialPoints)
         end
 
         local itemTitle = Instance.new("TextLabel")
-        itemTitle.Size = UDim2.new(1, -20, 0, 36)
-        itemTitle.Position = UDim2.new(0, 10, 0, 38)
+        itemTitle.Size = UDim2.new(1, -20, 0, showPrice and 30 or 36)
+        itemTitle.Position = UDim2.new(0, 10, 0, showPrice and 22 or 38)
         itemTitle.BackgroundTransparency = 1
         itemTitle.Text = title
         itemTitle.TextColor3 = Theme.Colors.Text
         itemTitle.Font = Theme.Font.Bold
         itemTitle.TextSize = 16
         itemTitle.TextWrapped = true
+        itemTitle.TextXAlignment = Enum.TextXAlignment.Center
+        itemTitle.TextYAlignment = Enum.TextYAlignment.Center
         itemTitle.Parent = item
+
+        if showPrice then
+            local priceRow = Instance.new("Frame")
+            priceRow.Name = "PriceRow"
+            priceRow.Size = UDim2.new(1, -20, 0, 18)
+            priceRow.Position = UDim2.new(0, 10, 0, 52)
+            priceRow.BackgroundTransparency = 1
+            priceRow.BorderSizePixel = 0
+            priceRow.Active = false
+            priceRow.Parent = item
+
+            local priceLayout = Instance.new("UIListLayout")
+            priceLayout.FillDirection = Enum.FillDirection.Horizontal
+            priceLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            priceLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+            priceLayout.Padding = UDim.new(0, 4)
+            priceLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            priceLayout.Parent = priceRow
+
+            local priceLabel = Instance.new("TextLabel")
+            priceLabel.Name = "PriceLabel"
+            priceLabel.Size = UDim2.new(0, 0, 1, 0)
+            priceLabel.AutomaticSize = Enum.AutomaticSize.X
+            priceLabel.BackgroundTransparency = 1
+            priceLabel.Text = "Valor 10"
+            priceLabel.TextColor3 = Color3.fromRGB(255, 220, 120)
+            priceLabel.Font = Theme.Font.Bold
+            priceLabel.TextSize = 12
+            priceLabel.TextXAlignment = Enum.TextXAlignment.Center
+            priceLabel.LayoutOrder = 1
+            priceLabel.Parent = priceRow
+
+            local priceIcon = Instance.new("ImageLabel")
+            priceIcon.Name = "PriceIcon"
+            priceIcon.Size = UDim2.new(0, 16, 0, 16)
+            priceIcon.BackgroundTransparency = 1
+            priceIcon.Image = "rbxassetid://124520045081815"
+            priceIcon.ScaleType = Enum.ScaleType.Fit
+            priceIcon.LayoutOrder = 2
+            priceIcon.Parent = priceRow
+        end
 
         local buyButton = Instance.new("TextButton")
         buyButton.Size = UDim2.new(1, -20, 0, 32)
@@ -474,7 +521,8 @@ function ShopUI.Create(parent, Theme, initialPoints)
     local item6, item6BuyButton = createShopItem(
         "100 ROBUX",
         Color3.fromRGB(245, 190, 60),
-        "10 cantidad por mes"
+        "10 cantidad por mes",
+        false
     )
     item6.Parent = itemsContainer
 
