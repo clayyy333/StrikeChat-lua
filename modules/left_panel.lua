@@ -3,6 +3,72 @@ local LeftPanel = {}
 function LeftPanel.Create(parent, Theme, profile, player)
     local Players = game:GetService("Players")
 
+    local function animatePointsIcon(iconHolder, icon, baseSize, orbitRadius, particleCount)
+        local glow = Instance.new("ImageLabel")
+        glow.Name = "PointsGlow"
+        glow.Size = UDim2.new(0, baseSize + 10, 0, baseSize + 10)
+        glow.Position = UDim2.new(0.5, -((baseSize + 10) / 2), 0.5, -((baseSize + 10) / 2))
+        glow.BackgroundTransparency = 1
+        glow.Image = icon.Image
+        glow.ImageColor3 = Color3.fromRGB(255, 255, 255)
+        glow.ImageTransparency = 0.72
+        glow.ScaleType = Enum.ScaleType.Fit
+        glow.ZIndex = icon.ZIndex - 1
+        glow.Parent = iconHolder
+
+        local particles = {}
+
+        for index = 1, particleCount do
+            local particle = Instance.new("Frame")
+            particle.Name = "OrbitParticle"
+            particle.Size = UDim2.new(0, 2, 0, 2)
+            particle.BackgroundColor3 = Color3.fromRGB(255, 235, 150)
+            particle.BackgroundTransparency = 0.2
+            particle.BorderSizePixel = 0
+            particle.ZIndex = icon.ZIndex + 1
+            particle.Parent = iconHolder
+
+            local particleCorner = Instance.new("UICorner")
+            particleCorner.CornerRadius = UDim.new(1, 0)
+            particleCorner.Parent = particle
+
+            table.insert(particles, {
+                frame = particle,
+                offset = (math.pi * 2 / particleCount) * index
+            })
+        end
+
+        task.spawn(function()
+            while iconHolder.Parent do
+                local now = os.clock()
+                local pulse = (math.sin(now * 2.2) + 1) / 2
+                local iconSize = baseSize + (pulse * 2)
+                local glowSize = baseSize + 10 + (pulse * 5)
+
+                icon.Rotation = (now * 22) % 360
+                icon.Size = UDim2.new(0, iconSize, 0, iconSize)
+                icon.Position = UDim2.new(0.5, -(iconSize / 2), 0.5, -(iconSize / 2))
+                icon.ImageTransparency = 0.02 + (pulse * 0.08)
+
+                glow.Size = UDim2.new(0, glowSize, 0, glowSize)
+                glow.Position = UDim2.new(0.5, -(glowSize / 2), 0.5, -(glowSize / 2))
+                glow.ImageTransparency = 0.82 - (pulse * 0.22)
+
+                for _, particleData in ipairs(particles) do
+                    local angle = (now * 1.6) + particleData.offset
+                    local particle = particleData.frame
+                    local x = math.cos(angle) * orbitRadius
+                    local y = math.sin(angle) * orbitRadius
+
+                    particle.Position = UDim2.new(0.5, x - 1, 0.5, y - 1)
+                    particle.BackgroundTransparency = 0.15 + (((math.sin(now * 3 + particleData.offset) + 1) / 2) * 0.45)
+                end
+
+                task.wait(0.03)
+            end
+        end)
+    end
+
     local avatar = Instance.new("Frame")
     avatar.Name = "AvatarPlaceholder"
     avatar.Size = UDim2.new(0, 68, 0, 68)
@@ -113,14 +179,25 @@ function LeftPanel.Create(parent, Theme, profile, player)
     pointsValue.LayoutOrder = 1
     pointsValue.Parent = pointsRow
 
+    local pointsIconHolder = Instance.new("Frame")
+    pointsIconHolder.Name = "PointsIconHolder"
+    pointsIconHolder.Size = UDim2.new(0, 28, 0, 28)
+    pointsIconHolder.BackgroundTransparency = 1
+    pointsIconHolder.LayoutOrder = 2
+    pointsIconHolder.ClipsDescendants = false
+    pointsIconHolder.Parent = pointsRow
+
     local pointsIcon = Instance.new("ImageLabel")
     pointsIcon.Name = "PointsIcon"
     pointsIcon.Size = UDim2.new(0, 20, 0, 20)
+    pointsIcon.Position = UDim2.new(0.5, -10, 0.5, -10)
     pointsIcon.BackgroundTransparency = 1
     pointsIcon.Image = "rbxassetid://124520045081815"
     pointsIcon.ScaleType = Enum.ScaleType.Fit
-    pointsIcon.LayoutOrder = 2
-    pointsIcon.Parent = pointsRow
+    pointsIcon.ZIndex = 3
+    pointsIcon.Parent = pointsIconHolder
+
+    animatePointsIcon(pointsIconHolder, pointsIcon, 20, 12, 3)
 
     local createdButtons = {}
 
