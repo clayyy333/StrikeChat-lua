@@ -395,17 +395,6 @@ function MainWindow.Create(CoreGui, Theme)
         rightGradient.Rotation = 0
         rightGradient.Parent = rightReveal
 
-        local seam = Instance.new("Frame")
-        seam.Name = "OpeningRevealSeam"
-        seam.AnchorPoint = Vector2.new(0.5, 0)
-        seam.Size = UDim2.new(0, 2, 1, 0)
-        seam.Position = UDim2.new(0.5, 0, 0, 0)
-        seam.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
-        seam.BackgroundTransparency = 0.05
-        seam.BorderSizePixel = 0
-        seam.ZIndex = revealZIndex + 1
-        seam.Parent = main
-
         local tweenInfo = TweenInfo.new(
             0.62,
             Enum.EasingStyle.Quart,
@@ -426,10 +415,6 @@ function MainWindow.Create(CoreGui, Theme)
                 Size = UDim2.new(0, 0, 1, 0)
             }):Play()
 
-            TweenService:Create(seam, TweenInfo.new(0.42, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
-                BackgroundTransparency = 1
-            }):Play()
-
             task.delay(0.7, function()
                 if leftReveal.Parent then
                     leftReveal:Destroy()
@@ -437,10 +422,6 @@ function MainWindow.Create(CoreGui, Theme)
 
                 if rightReveal.Parent then
                     rightReveal:Destroy()
-                end
-
-                if seam.Parent then
-                    seam:Destroy()
                 end
             end)
         end)
