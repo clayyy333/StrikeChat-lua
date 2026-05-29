@@ -3,6 +3,11 @@ local ProfileUI = {}
 function ProfileUI.Create(parent, Theme, profile, player)
     local Players = game:GetService("Players")
     local DEFAULT_PROFILE_BANNER_ID = "114828705105935"
+    local IMAGE_SOURCE_OVERRIDES = {
+        ["87212336811608"] = "rbxthumb://type=Asset&id=87212336811608&w=420&h=420",
+        ["106061011904389"] = "rbxthumb://type=Asset&id=106061011904389&w=420&h=420",
+        ["88694974755838"] = "rbxthumb://type=Asset&id=88694974755838&w=420&h=420"
+    }
 
     profile = profile or {}
 
@@ -73,6 +78,10 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
         if value == "" or value == "0" or value == "none" or value == "strikechat_space" then
             return nil
+        end
+
+        if IMAGE_SOURCE_OVERRIDES[value] then
+            return IMAGE_SOURCE_OVERRIDES[value]
         end
 
         if value:match("^rbxassetid://") or value:match("^rbxasset://") or value:match("^http") then
@@ -310,6 +319,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
         if image then
             bannerImage.Image = image
+            bannerImage.ImageTransparency = 0
             bannerImage.Visible = true
         else
             bannerImage.Image = ""
