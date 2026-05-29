@@ -2,7 +2,6 @@ local ProfileUI = {}
 
 function ProfileUI.Create(parent, Theme, profile, player)
     local Players = game:GetService("Players")
-    local ContentProvider = game:GetService("ContentProvider")
     local DEFAULT_PROFILE_BANNER_ID = "114828705105935"
 
     profile = profile or {}
@@ -312,18 +311,6 @@ function ProfileUI.Create(parent, Theme, profile, player)
         if image then
             bannerImage.Image = image
             bannerImage.Visible = true
-
-            task.spawn(function()
-                local expectedImage = image
-                local ok = pcall(function()
-                    ContentProvider:PreloadAsync({ bannerImage })
-                end)
-
-                if bannerImage.Parent and bannerImage.Image == expectedImage and not ok then
-                    bannerImage.Image = ""
-                    bannerImage.Visible = false
-                end
-            end)
         else
             bannerImage.Image = ""
             bannerImage.Visible = false

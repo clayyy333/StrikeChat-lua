@@ -2,7 +2,6 @@ local MainWindow = {}
 
 function MainWindow.Create(CoreGui, Theme)
     local TweenService = game:GetService("TweenService")
-    local ContentProvider = game:GetService("ContentProvider")
     local CONTENT_ZINDEX = 8
     local DEFAULT_BACKGROUND_DESIGN_ID = "114828705105935"
 
@@ -68,18 +67,6 @@ function MainWindow.Create(CoreGui, Theme)
         if image then
             backgroundImage.Image = image
             backgroundImage.Visible = true
-
-            task.spawn(function()
-                local expectedImage = image
-                local ok = pcall(function()
-                    ContentProvider:PreloadAsync({ backgroundImage })
-                end)
-
-                if backgroundImage.Parent and backgroundImage.Image == expectedImage and not ok then
-                    backgroundImage.Image = ""
-                    backgroundImage.Visible = false
-                end
-            end)
         else
             backgroundImage.Image = ""
             backgroundImage.Visible = false
