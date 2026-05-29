@@ -4,30 +4,20 @@ function MainWindow.Create(CoreGui, Theme)
     local TweenService = game:GetService("TweenService")
     local CONTENT_ZINDEX = 8
     local DEFAULT_BACKGROUND_DESIGN_ID = "114828705105935"
-    local IMAGE_SOURCE_OVERRIDES = {
-        ["114828705105935"] = "rbxthumb://type=Asset&id=114828705105935&w=420&h=420",
-        ["87212336811608"] = "rbxthumb://type=Asset&id=87212336811608&w=420&h=420",
-        ["106061011904389"] = "rbxthumb://type=Asset&id=106061011904389&w=420&h=420",
-        ["88694974755838"] = "rbxthumb://type=Asset&id=88694974755838&w=420&h=420"
-    }
 
     local function getAssetImage(assetId)
         if assetId == nil then
-            return IMAGE_SOURCE_OVERRIDES[DEFAULT_BACKGROUND_DESIGN_ID] or "rbxassetid://" .. DEFAULT_BACKGROUND_DESIGN_ID
+            return "rbxassetid://" .. DEFAULT_BACKGROUND_DESIGN_ID
         end
 
         local value = tostring(assetId):gsub("^%s+", ""):gsub("%s+$", "")
 
         if value == "" then
-            return IMAGE_SOURCE_OVERRIDES[DEFAULT_BACKGROUND_DESIGN_ID] or "rbxassetid://" .. DEFAULT_BACKGROUND_DESIGN_ID
+            return "rbxassetid://" .. DEFAULT_BACKGROUND_DESIGN_ID
         end
 
         if value == "0" or value == "none" or value == "strikechat_space" then
             return nil
-        end
-
-        if IMAGE_SOURCE_OVERRIDES[value] then
-            return IMAGE_SOURCE_OVERRIDES[value]
         end
 
         if value:match("^rbxassetid://") or value:match("^rbxasset://") or value:match("^http") then
