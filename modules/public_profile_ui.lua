@@ -2,6 +2,8 @@ local PublicProfileUI = {}
 
 function PublicProfileUI.Create(parent, Theme, profile, player)
     local Players = game:GetService("Players")
+    local ContentProvider = game:GetService("ContentProvider")
+    local DEFAULT_PROFILE_BANNER_ID = "114828705105935"
 
     profile = profile or {}
 
@@ -171,7 +173,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     local banner = Instance.new("Frame")
     banner.Name = "Banner"
     banner.Size = UDim2.new(1, 0, 0, 132)
-    banner.BackgroundColor3 = Color3.fromRGB(58, 16, 90)
+    banner.BackgroundColor3 = Color3.fromRGB(10, 10, 12)
     banner.BorderSizePixel = 0
     banner.ClipsDescendants = true
     banner.ZIndex = 93
@@ -180,12 +182,10 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
 
     local bannerGradient = Instance.new("UIGradient")
     bannerGradient.Color = ColorSequence.new({
-        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(32, 10, 56)),
-        ColorSequenceKeypoint.new(0.18, Color3.fromRGB(150, 22, 190)),
-        ColorSequenceKeypoint.new(0.38, Color3.fromRGB(255, 56, 145)),
-        ColorSequenceKeypoint.new(0.58, Color3.fromRGB(170, 44, 198)),
-        ColorSequenceKeypoint.new(0.78, Color3.fromRGB(92, 28, 150)),
-        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(28, 12, 52))
+        ColorSequenceKeypoint.new(0.00, Color3.fromRGB(7, 7, 9)),
+        ColorSequenceKeypoint.new(0.35, Color3.fromRGB(13, 14, 18)),
+        ColorSequenceKeypoint.new(0.70, Color3.fromRGB(9, 10, 13)),
+        ColorSequenceKeypoint.new(1.00, Color3.fromRGB(3, 3, 5))
     })
     bannerGradient.Rotation = 25
     bannerGradient.Parent = banner
@@ -288,11 +288,23 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     bannerImage.Parent = banner
     round(bannerImage, 14)
 
-    local bannerAsset = getAssetImage(profile.profile_banner_id)
+    local bannerAsset = getAssetImage(profile.profile_banner_id or DEFAULT_PROFILE_BANNER_ID)
 
     if bannerAsset then
         bannerImage.Image = bannerAsset
         bannerImage.Visible = true
+
+        task.spawn(function()
+            local expectedImage = bannerAsset
+            local ok = pcall(function()
+                ContentProvider:PreloadAsync({ bannerImage })
+            end)
+
+            if bannerImage.Parent and bannerImage.Image == expectedImage and (not ok or not bannerImage.IsLoaded) then
+                bannerImage.Image = ""
+                bannerImage.Visible = false
+            end
+        end)
     else
         bannerImage.Visible = false
     end

@@ -4,7 +4,7 @@ local CATEGORY_LABELS = {
     username_color = "Color de nombre",
     chat_color = "Color de chat",
     chat_style = "Estilo de chat",
-    profile_banner = "Fondo de perfil",
+    profile_banner = "Diseño de fondo",
     clan = "Clan"
 }
 
@@ -61,6 +61,21 @@ local CUSTOM_CHAT_STYLES = {
     { value = "galaxy", label = "Galaxy" },
     { value = "hackermstrix", label = "HackerMatrix" },
     { value = "royalgold", label = "Royal Gold" }
+}
+
+local BACKGROUND_DESIGN_ITEM_ID = "profile_banner_space"
+local DEFAULT_BACKGROUND_DESIGN_VALUE = "114828705105935"
+
+local DEFAULT_BACKGROUND_DESIGN_OPTIONS = {
+    { value = DEFAULT_BACKGROUND_DESIGN_VALUE, label = "Estilo Neon" },
+    { value = "none", label = "Sin Diseño" },
+    { value = "78042862196503", label = "neon v2" },
+    { value = "108739418079272", label = "chico anime" },
+    { value = "140536962305117", label = "chica anime" },
+    { value = "75491780980123", label = "pareja anime" },
+    { value = "87212336811608", label = "cyber city" },
+    { value = "106061011904389", label = "cinnamoroll" },
+    { value = "88694974755838", label = "anime face" }
 }
 
 local function getInventoryEntryData(entry)
@@ -514,6 +529,106 @@ function InventoryUI.Create(parent, Theme)
     applyNameColorCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
     applyNameColorCorner.Parent = applyNameColorButton
 
+    local backgroundDesignForm = Instance.new("Frame")
+    backgroundDesignForm.Name = "BackgroundDesignForm"
+    backgroundDesignForm.Size = UDim2.new(1, -32, 1, -76)
+    backgroundDesignForm.Position = UDim2.new(0, 16, 0, 62)
+    backgroundDesignForm.BackgroundColor3 = Theme.Colors.Background
+    backgroundDesignForm.BorderSizePixel = 0
+    backgroundDesignForm.Visible = false
+    backgroundDesignForm.ZIndex = 86
+    backgroundDesignForm.Parent = modal
+
+    local backgroundDesignCorner = Instance.new("UICorner")
+    backgroundDesignCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    backgroundDesignCorner.Parent = backgroundDesignForm
+
+    local backgroundDesignPadding = Instance.new("UIPadding")
+    backgroundDesignPadding.PaddingTop = UDim.new(0, 12)
+    backgroundDesignPadding.PaddingLeft = UDim.new(0, 12)
+    backgroundDesignPadding.PaddingRight = UDim.new(0, 12)
+    backgroundDesignPadding.Parent = backgroundDesignForm
+
+    local backgroundDesignTitle = Instance.new("TextLabel")
+    backgroundDesignTitle.Name = "BackgroundDesignTitle"
+    backgroundDesignTitle.Size = UDim2.new(1, -8, 0, 24)
+    backgroundDesignTitle.BackgroundTransparency = 1
+    backgroundDesignTitle.Text = "Diseño de Fondo"
+    backgroundDesignTitle.TextColor3 = Theme.Colors.Text
+    backgroundDesignTitle.Font = Theme.Font.Bold
+    backgroundDesignTitle.TextSize = 15
+    backgroundDesignTitle.TextXAlignment = Enum.TextXAlignment.Left
+    backgroundDesignTitle.ZIndex = 87
+    backgroundDesignTitle.Parent = backgroundDesignForm
+
+    local backgroundDesignHint = Instance.new("TextLabel")
+    backgroundDesignHint.Name = "BackgroundDesignHint"
+    backgroundDesignHint.Size = UDim2.new(1, -8, 0, 34)
+    backgroundDesignHint.Position = UDim2.new(0, 0, 0, 26)
+    backgroundDesignHint.BackgroundTransparency = 1
+    backgroundDesignHint.Text = "Elige el fondo que quieres mostrar en tu perfil."
+    backgroundDesignHint.TextColor3 = Theme.Colors.TextMuted
+    backgroundDesignHint.Font = Theme.Font.Regular
+    backgroundDesignHint.TextSize = 12
+    backgroundDesignHint.TextWrapped = true
+    backgroundDesignHint.TextXAlignment = Enum.TextXAlignment.Left
+    backgroundDesignHint.ZIndex = 87
+    backgroundDesignHint.Parent = backgroundDesignForm
+
+    local backgroundDesignOptions = Instance.new("ScrollingFrame")
+    backgroundDesignOptions.Name = "BackgroundDesignOptions"
+    backgroundDesignOptions.Size = UDim2.new(1, -8, 1, -126)
+    backgroundDesignOptions.Position = UDim2.new(0, 0, 0, 68)
+    backgroundDesignOptions.BackgroundTransparency = 1
+    backgroundDesignOptions.BorderSizePixel = 0
+    backgroundDesignOptions.CanvasSize = UDim2.new(0, 0, 0, 0)
+    backgroundDesignOptions.AutomaticCanvasSize = Enum.AutomaticSize.Y
+    backgroundDesignOptions.ScrollingDirection = Enum.ScrollingDirection.Y
+    backgroundDesignOptions.ScrollBarThickness = 3
+    backgroundDesignOptions.ScrollBarImageColor3 = Theme.Colors.TextMuted
+    backgroundDesignOptions.ClipsDescendants = true
+    backgroundDesignOptions.ZIndex = 87
+    backgroundDesignOptions.Parent = backgroundDesignForm
+
+    local backgroundDesignOptionsLayout = Instance.new("UIListLayout")
+    backgroundDesignOptionsLayout.Padding = UDim.new(0, 8)
+    backgroundDesignOptionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    backgroundDesignOptionsLayout.Parent = backgroundDesignOptions
+
+    local cancelBackgroundDesignButton = Instance.new("TextButton")
+    cancelBackgroundDesignButton.Name = "CancelBackgroundDesignButton"
+    cancelBackgroundDesignButton.Size = UDim2.new(0.5, -8, 0, 34)
+    cancelBackgroundDesignButton.Position = UDim2.new(0, 0, 1, -46)
+    cancelBackgroundDesignButton.BackgroundColor3 = Theme.Colors.PanelLight
+    cancelBackgroundDesignButton.BorderSizePixel = 0
+    cancelBackgroundDesignButton.Text = "Cancelar"
+    cancelBackgroundDesignButton.TextColor3 = Theme.Colors.TextMuted
+    cancelBackgroundDesignButton.Font = Theme.Font.Bold
+    cancelBackgroundDesignButton.TextSize = 12
+    cancelBackgroundDesignButton.ZIndex = 87
+    cancelBackgroundDesignButton.Parent = backgroundDesignForm
+
+    local cancelBackgroundDesignCorner = Instance.new("UICorner")
+    cancelBackgroundDesignCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    cancelBackgroundDesignCorner.Parent = cancelBackgroundDesignButton
+
+    local applyBackgroundDesignButton = Instance.new("TextButton")
+    applyBackgroundDesignButton.Name = "ApplyBackgroundDesignButton"
+    applyBackgroundDesignButton.Size = UDim2.new(0.5, -8, 0, 34)
+    applyBackgroundDesignButton.Position = UDim2.new(0.5, 8, 1, -46)
+    applyBackgroundDesignButton.BackgroundColor3 = CATEGORY_COLORS.profile_banner
+    applyBackgroundDesignButton.BorderSizePixel = 0
+    applyBackgroundDesignButton.Text = "Usar"
+    applyBackgroundDesignButton.TextColor3 = Theme.Colors.Text
+    applyBackgroundDesignButton.Font = Theme.Font.Bold
+    applyBackgroundDesignButton.TextSize = 12
+    applyBackgroundDesignButton.ZIndex = 87
+    applyBackgroundDesignButton.Parent = backgroundDesignForm
+
+    local applyBackgroundDesignCorner = Instance.new("UICorner")
+    applyBackgroundDesignCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+    applyBackgroundDesignCorner.Parent = applyBackgroundDesignButton
+
     local selectedChatStyleItemId = nil
     local selectedChatStyleValue = nil
     local selectedChatStyleRows = {}
@@ -522,6 +637,10 @@ function InventoryUI.Create(parent, Theme)
     local selectedNameColorValue = nil
     local selectedNameColorRows = {}
     local nameColorUseCallback = nil
+    local selectedBackgroundDesignItemId = nil
+    local selectedBackgroundDesignValue = nil
+    local selectedBackgroundDesignRows = {}
+    local backgroundDesignUseCallback = nil
 
     local function clearList()
         for _, child in ipairs(list:GetChildren()) do
@@ -540,6 +659,7 @@ function InventoryUI.Create(parent, Theme)
         clanForm.Visible = false
         chatStyleForm.Visible = false
         nameColorForm.Visible = false
+        backgroundDesignForm.Visible = false
         list.Visible = true
     end
 
@@ -547,6 +667,7 @@ function InventoryUI.Create(parent, Theme)
         list.Visible = false
         chatStyleForm.Visible = false
         nameColorForm.Visible = false
+        backgroundDesignForm.Visible = false
         clanForm.Visible = true
         setStatus("Completa los datos para crear tu clan.", false)
     end
@@ -571,6 +692,16 @@ function InventoryUI.Create(parent, Theme)
         selectedNameColorRows = {}
     end
 
+    local function clearBackgroundDesignOptions()
+        for _, child in ipairs(backgroundDesignOptions:GetChildren()) do
+            if child:IsA("TextButton") or child:IsA("TextLabel") then
+                child:Destroy()
+            end
+        end
+
+        selectedBackgroundDesignRows = {}
+    end
+
     local function setSelectedChatStyle(itemId, styleValue)
         selectedChatStyleItemId = itemId
         selectedChatStyleValue = styleValue
@@ -585,6 +716,7 @@ function InventoryUI.Create(parent, Theme)
         list.Visible = false
         clanForm.Visible = false
         nameColorForm.Visible = false
+        backgroundDesignForm.Visible = false
         chatStyleForm.Visible = true
         chatStyleUseCallback = onUse
         selectedChatStyleItemId = nil
@@ -676,6 +808,7 @@ function InventoryUI.Create(parent, Theme)
         list.Visible = false
         clanForm.Visible = false
         chatStyleForm.Visible = false
+        backgroundDesignForm.Visible = false
         nameColorForm.Visible = true
         nameColorUseCallback = onUse
         selectedNameColorItemId = nil
@@ -752,6 +885,108 @@ function InventoryUI.Create(parent, Theme)
         end
     end
 
+    local function setSelectedBackgroundDesign(itemId, designValue)
+        selectedBackgroundDesignItemId = itemId
+        selectedBackgroundDesignValue = designValue
+
+        for rowKey, row in pairs(selectedBackgroundDesignRows) do
+            row.BackgroundColor3 = rowKey == designValue and Color3.fromRGB(74, 76, 86) or Theme.Colors.PanelLight
+        end
+    end
+
+    local function getBackgroundDesignOptions(entry)
+        local options = entry.profile_banner_options
+
+        if typeof(options) == "table" and #options > 0 then
+            return options
+        end
+
+        return DEFAULT_BACKGROUND_DESIGN_OPTIONS
+    end
+
+    local function showBackgroundDesignForm(items, onUse)
+        list.Visible = false
+        clanForm.Visible = false
+        chatStyleForm.Visible = false
+        nameColorForm.Visible = false
+        backgroundDesignForm.Visible = true
+        backgroundDesignUseCallback = onUse
+        selectedBackgroundDesignItemId = nil
+        selectedBackgroundDesignValue = nil
+
+        clearBackgroundDesignOptions()
+
+        local backgroundEntry = nil
+        local backgroundItem = nil
+
+        for _, entry in ipairs(items or {}) do
+            local item = getInventoryEntryData(entry)
+
+            if item.category == "profile_banner" then
+                backgroundEntry = entry
+                backgroundItem = item
+                break
+            end
+        end
+
+        if not backgroundEntry or not backgroundItem then
+            setStatus("No tienes diseños de fondo disponibles.", true)
+            return
+        end
+
+        local activeBackground = tostring(backgroundEntry.active_profile_banner or DEFAULT_BACKGROUND_DESIGN_VALUE)
+        local firstAvailableDesign = nil
+
+        for _, designOption in ipairs(getBackgroundDesignOptions(backgroundEntry)) do
+            local designValue = tostring(designOption.value or "none")
+            local designLabel = tostring(designOption.label or designOption.name or "Fondo")
+            local isDesignEquipped =
+                activeBackground == designValue or
+                (activeBackground == "" and designValue == "none")
+
+            local option = Instance.new("TextButton")
+            option.Name = "BackgroundDesignOption"
+            option.Size = UDim2.new(1, 0, 0, 38)
+            option.BackgroundColor3 = Theme.Colors.PanelLight
+            option.BorderSizePixel = 0
+            option.Text = designLabel .. (isDesignEquipped and "  En uso" or "")
+            option.TextColor3 = Theme.Colors.Text
+            option.Font = Theme.Font.Bold
+            option.TextSize = 12
+            option.TextXAlignment = Enum.TextXAlignment.Left
+            option.ZIndex = 88
+            option.Parent = backgroundDesignOptions
+
+            local optionCorner = Instance.new("UICorner")
+            optionCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+            optionCorner.Parent = option
+
+            local optionPadding = Instance.new("UIPadding")
+            optionPadding.PaddingLeft = UDim.new(0, 12)
+            optionPadding.PaddingRight = UDim.new(0, 12)
+            optionPadding.Parent = option
+
+            selectedBackgroundDesignRows[designValue] = option
+
+            if not firstAvailableDesign and not isDesignEquipped then
+                firstAvailableDesign = designValue
+            end
+
+            option.MouseButton1Click:Connect(function()
+                if not isDesignEquipped then
+                    setSelectedBackgroundDesign(backgroundItem.item_id, designValue)
+                end
+            end)
+        end
+
+        if firstAvailableDesign then
+            setSelectedBackgroundDesign(backgroundItem.item_id, firstAvailableDesign)
+            setStatus("Selecciona el diseño de fondo que quieres usar.", false)
+        else
+            setStatus("Ya estas usando el diseño seleccionado.", false)
+        end
+    end
+
     local function renderEmpty(message)
         clearList()
 
@@ -779,6 +1014,9 @@ function InventoryUI.Create(parent, Theme)
         if item.category == "username_color" then
             displayName = "Color de nombre"
             displayDescription = "Elige un color para mostrar en tu nombre."
+        elseif item.category == "profile_banner" then
+            displayName = "Diseño de fondo"
+            displayDescription = "Elige un fondo para mostrar en tu perfil."
         end
 
         local row = Instance.new("Frame")
@@ -896,18 +1134,25 @@ function InventoryUI.Create(parent, Theme)
             useButton.Text = "Elegir"
             useButton.AutoButtonColor = entry.can_use
             useButton.Active = entry.can_use
+        elseif item.category == "profile_banner" then
+            useButton.Text = "Elegir fondo"
+            useButton.AutoButtonColor = entry.can_use
+            useButton.Active = entry.can_use
         end
 
         useButton.MouseButton1Click:Connect(function()
             if entry.can_use and (
                 not entry.is_equipped or
                 item.category == "username_color" or
-                item.item_id == CUSTOM_CHAT_ITEM_ID
+                item.item_id == CUSTOM_CHAT_ITEM_ID or
+                item.item_id == BACKGROUND_DESIGN_ITEM_ID
             ) and onUse then
                 if item.category == "username_color" then
                     showNameColorForm(items, onUse)
                 elseif item.category == "chat_style" then
                     showChatStyleForm(items, onUse)
+                elseif item.category == "profile_banner" then
+                    showBackgroundDesignForm(items, onUse)
                 else
                     onUse(item.item_id)
                 end
@@ -985,6 +1230,11 @@ function InventoryUI.Create(parent, Theme)
         setStatus("", false)
     end)
 
+    cancelBackgroundDesignButton.MouseButton1Click:Connect(function()
+        showList()
+        setStatus("", false)
+    end)
+
     applyChatStyleButton.MouseButton1Click:Connect(function()
         if selectedChatStyleItemId and chatStyleUseCallback then
             chatStyleUseCallback(selectedChatStyleItemId, selectedChatStyleValue)
@@ -998,6 +1248,14 @@ function InventoryUI.Create(parent, Theme)
             nameColorUseCallback(selectedNameColorItemId, selectedNameColorValue)
         else
             setStatus("Selecciona un color de nombre.", true)
+        end
+    end)
+
+    applyBackgroundDesignButton.MouseButton1Click:Connect(function()
+        if selectedBackgroundDesignItemId and selectedBackgroundDesignValue and backgroundDesignUseCallback then
+            backgroundDesignUseCallback(selectedBackgroundDesignItemId, selectedBackgroundDesignValue)
+        else
+            setStatus("Selecciona un diseño de fondo.", true)
         end
     end)
 
@@ -1022,6 +1280,7 @@ function InventoryUI.Create(parent, Theme)
         ShowClanForm = showClanForm,
         ShowChatStyleForm = showChatStyleForm,
         ShowNameColorForm = showNameColorForm,
+        ShowBackgroundDesignForm = showBackgroundDesignForm,
         ShowList = showList,
         CreateClanButton = createClanButton,
 

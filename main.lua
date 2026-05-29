@@ -915,7 +915,8 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
             item_not_usable = "Este item aun no se puede usar desde inventario.",
             item_delete_not_allowed = "Este item no se puede eliminar.",
             invalid_username_color = "Ese color de nombre no esta disponible.",
-            invalid_chat_style = "Ese estilo de chat no esta disponible."
+            invalid_chat_style = "Ese estilo de chat no esta disponible.",
+            invalid_profile_banner = "Ese diseño de fondo no esta disponible."
         }
 
         return messages[reason] or "No se pudo usar el item."
