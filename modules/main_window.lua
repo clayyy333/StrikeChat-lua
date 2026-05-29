@@ -400,8 +400,8 @@ function MainWindow.Create(CoreGui, Theme)
         seam.AnchorPoint = Vector2.new(0.5, 0)
         seam.Size = UDim2.new(0, 2, 1, 0)
         seam.Position = UDim2.new(0.5, 0, 0, 0)
-        seam.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        seam.BackgroundTransparency = 0.68
+        seam.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+        seam.BackgroundTransparency = 0.05
         seam.BorderSizePixel = 0
         seam.ZIndex = revealZIndex + 1
         seam.Parent = main
