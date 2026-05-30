@@ -19,6 +19,10 @@ local function cleanAssetId(assetId)
     return value
 end
 
+local function getAssetThumbnail(assetId)
+    return "rbxthumb://type=Asset&id=" .. tostring(assetId) .. "&w=150&h=150"
+end
+
 function AvatarRenderer.GetRobloxHeadshot(userId)
     local numericUserId = tonumber(userId)
 
@@ -94,11 +98,12 @@ function AvatarRenderer.ResolveAssetImage(assetId)
         return assetImageCache[value]
     end
 
-    local fallbackImage = "rbxassetid://" .. value
+    local assetPath = "rbxassetid://" .. value
+    local fallbackImage = getAssetThumbnail(value)
     local resolvedImage = nil
 
     local success, objects = pcall(function()
-        return game:GetObjects(fallbackImage)
+        return game:GetObjects(assetPath)
     end)
 
     if success and objects then
@@ -175,7 +180,7 @@ function AvatarRenderer.SetAvatar(imageLabel, robloxUserId, profileAvatarId, use
     imageLabel.Image = customImage or fallbackImage
 
     if customImage and fallbackImage ~= "" then
-        task.delay(1.4, function()
+        task.delay(4, function()
             if not imageLabel.Parent then
                 return
             end
