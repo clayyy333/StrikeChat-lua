@@ -916,6 +916,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
     round(avatarCloseButton, 8)
 
     local avatarCandidateId = selectedProfileAvatarId
+    local avatarCandidateIsDefault = selectedProfileAvatarId == ""
     local suppressAvatarInputChange = false
     local avatarInputVersion = 0
 
@@ -925,6 +926,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
     end
 
     local function setAvatarCandidate(assetId, showCustomPreview)
+        avatarCandidateIsDefault = false
         avatarCandidateId = tostring(assetId or ""):gsub("^%s+", ""):gsub("%s+$", "")
         avatarModalStatus.Text = ""
 
@@ -941,6 +943,47 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
         end
     end
 
+    local defaultOption = Instance.new("ImageButton")
+    defaultOption.Name = "AvatarOptionDefault"
+    defaultOption.BackgroundColor3 = Color3.fromRGB(45, 46, 52)
+    defaultOption.BorderSizePixel = 0
+    defaultOption.Image = AvatarRenderer and AvatarRenderer.GetRobloxHeadshot
+        and AvatarRenderer.GetRobloxHeadshot(player.UserId)
+        or ""
+    defaultOption.ScaleType = Enum.ScaleType.Crop
+    defaultOption.ZIndex = 83
+    defaultOption.LayoutOrder = 0
+    defaultOption.Parent = avatarGrid
+    round(defaultOption, 9)
+    stroke(defaultOption, Color3.fromRGB(80, 82, 92), 0.5)
+
+    local defaultOptionLabel = Instance.new("TextLabel")
+    defaultOptionLabel.Name = "Label"
+    defaultOptionLabel.Size = UDim2.new(1, 0, 0, 14)
+    defaultOptionLabel.Position = UDim2.new(0, 0, 1, -14)
+    defaultOptionLabel.BackgroundColor3 = Color3.fromRGB(20, 21, 25)
+    defaultOptionLabel.BackgroundTransparency = 0.18
+    defaultOptionLabel.BorderSizePixel = 0
+    defaultOptionLabel.Text = "Por defecto"
+    defaultOptionLabel.TextColor3 = Theme.Colors.Text
+    defaultOptionLabel.Font = Theme.Font.Bold
+    defaultOptionLabel.TextSize = 8
+    defaultOptionLabel.TextXAlignment = Enum.TextXAlignment.Center
+    defaultOptionLabel.ZIndex = 84
+    defaultOptionLabel.Parent = defaultOption
+    round(defaultOptionLabel, 6)
+
+    defaultOption.MouseButton1Click:Connect(function()
+        suppressAvatarInputChange = true
+        avatarIdInput.Text = ""
+        suppressAvatarInputChange = false
+        avatarInputVersion += 1
+        avatarCandidateId = ""
+        avatarCandidateIsDefault = true
+        setAvatarModalMode(false)
+        avatarModalStatus.Text = "Avatar de Roblox seleccionado."
+    end)
+
     for index, avatarId in ipairs(DEFAULT_PROFILE_AVATAR_IDS) do
         local option = Instance.new("ImageButton")
         option.Name = "AvatarOption" .. tostring(index)
@@ -949,6 +992,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
         option.Image = ""
         option.ScaleType = Enum.ScaleType.Crop
         option.ZIndex = 83
+        option.LayoutOrder = index
         option.Parent = avatarGrid
         round(option, 9)
         stroke(option, Color3.fromRGB(80, 82, 92), 0.5)
@@ -983,12 +1027,14 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
 
         if text == "" then
             avatarCandidateId = selectedProfileAvatarId
+            avatarCandidateIsDefault = selectedProfileAvatarId == ""
             setAvatarModalMode(false)
             avatarModalStatus.Text = ""
             return
         end
 
         avatarCandidateId = text
+        avatarCandidateIsDefault = false
         avatarModalStatus.Text = ""
         customPreviewImage.Image = ""
         setAvatarModalMode(true)
@@ -1019,6 +1065,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
         suppressAvatarInputChange = false
         avatarInputVersion += 1
         avatarCandidateId = selectedProfileAvatarId
+        avatarCandidateIsDefault = selectedProfileAvatarId == ""
         setAvatarModalMode(false)
         avatarModalStatus.Text = ""
     end)
@@ -1030,6 +1077,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
 
     editAvatarButton.MouseButton1Click:Connect(function()
         avatarCandidateId = selectedProfileAvatarId
+        avatarCandidateIsDefault = selectedProfileAvatarId == ""
         suppressAvatarInputChange = true
         avatarIdInput.Text = ""
         suppressAvatarInputChange = false
@@ -1040,17 +1088,17 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
     end)
 
     avatarApplyButton.MouseButton1Click:Connect(function()
-        if not avatarCandidateId or avatarCandidateId:gsub("%s+", "") == "" then
+        if not avatarCandidateIsDefault and (not avatarCandidateId or avatarCandidateId:gsub("%s+", "") == "") then
             avatarModalStatus.Text = "Selecciona una imagen o inserta un ID."
             return
         end
 
-        if not avatarCandidateId:match("^%d+$") or #avatarCandidateId < 6 then
+        if not avatarCandidateIsDefault and (not avatarCandidateId:match("^%d+$") or #avatarCandidateId < 6) then
             avatarModalStatus.Text = "El ID debe ser numerico."
             return
         end
 
-        selectedProfileAvatarId = avatarCandidateId
+        selectedProfileAvatarId = avatarCandidateIsDefault and "" or avatarCandidateId
         applyProfileAvatar(selectedProfileAvatarId)
         closeAvatarModal()
         statusLabel.Text = "Imagen aplicada. Guarda cambios para mantenerla."
