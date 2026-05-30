@@ -1,8 +1,17 @@
 local ProfileUI = {}
 
-function ProfileUI.Create(parent, Theme, profile, player)
+function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
     local Players = game:GetService("Players")
     local DEFAULT_PROFILE_BANNER_ID = "114828705105935"
+    local DEFAULT_PROFILE_AVATAR_IDS = {
+        "79645048761895",
+        "107672328050388",
+        "94902567700413",
+        "17164967802",
+        "17165206355",
+        "18679886860",
+        "15209100462"
+    }
     local resolvedImageCache = {}
 
     profile = profile or {}
@@ -10,6 +19,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     local original = {
         display_name = tostring(profile.display_name or player.DisplayName),
         bio = tostring(profile.bio or ""),
+        profile_avatar_id = tostring(profile.profile_avatar_id or ""),
         game_status_visibility = tostring(profile.game_status_visibility or "public")
     }
 
@@ -186,6 +196,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
     content.Parent = root
 
     local selectedVisibility = original.game_status_visibility
+    local selectedProfileAvatarId = original.profile_avatar_id
 
     local function createPanelShadow(name, size, position, rotation, transparency)
         local shadow = Instance.new("Frame")
@@ -408,17 +419,42 @@ function ProfileUI.Create(parent, Theme, profile, player)
     avatarImage.Parent = avatarFrame
     round(avatarImage, 41)
 
-    local ok, image = pcall(function()
-        return Players:GetUserThumbnailAsync(
-            player.UserId,
-            Enum.ThumbnailType.AvatarBust,
-            Enum.ThumbnailSize.Size180x180
-        )
-    end)
+    local function applyProfileAvatar(profileAvatarId)
+        if AvatarRenderer and AvatarRenderer.SetAvatar then
+            AvatarRenderer.SetAvatar(avatarImage, player.UserId, profileAvatarId, true)
+            return
+        end
 
-    if ok then
-        avatarImage.Image = image
+        local ok, image = pcall(function()
+            return Players:GetUserThumbnailAsync(
+                player.UserId,
+                Enum.ThumbnailType.AvatarBust,
+                Enum.ThumbnailSize.Size180x180
+            )
+        end)
+
+        if ok then
+            avatarImage.Image = image
+        end
     end
+
+    applyProfileAvatar(selectedProfileAvatarId)
+
+    local editAvatarButton = Instance.new("TextButton")
+    editAvatarButton.Name = "EditAvatarButton"
+    editAvatarButton.Size = UDim2.new(0, 26, 0, 26)
+    editAvatarButton.Position = UDim2.new(1, -26, 1, -26)
+    editAvatarButton.BackgroundColor3 = Color3.fromRGB(54, 55, 62)
+    editAvatarButton.BackgroundTransparency = 0.02
+    editAvatarButton.BorderSizePixel = 0
+    editAvatarButton.Text = "E"
+    editAvatarButton.TextColor3 = Theme.Colors.Text
+    editAvatarButton.Font = Theme.Font.Bold
+    editAvatarButton.TextSize = 14
+    editAvatarButton.ZIndex = avatarFrame.ZIndex + 3
+    editAvatarButton.Parent = avatarFrame
+    round(editAvatarButton, 13)
+    stroke(editAvatarButton, Color3.fromRGB(94, 96, 108), 0.35)
 
     local displayInput = Instance.new("TextBox")
     displayInput.Name = "DisplayNameInput"
@@ -705,6 +741,325 @@ function ProfileUI.Create(parent, Theme, profile, player)
     round(publicProfileButton, 8)
     stroke(publicProfileButton, Color3.fromRGB(96, 98, 110), 0.38)
 
+    local avatarModalOverlay = Instance.new("Frame")
+    avatarModalOverlay.Name = "AvatarModalOverlay"
+    avatarModalOverlay.Size = UDim2.new(1, 0, 1, 0)
+    avatarModalOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    avatarModalOverlay.BackgroundTransparency = 0.42
+    avatarModalOverlay.Visible = false
+    avatarModalOverlay.ZIndex = 80
+    avatarModalOverlay.Parent = gui
+
+    local avatarModal = Instance.new("Frame")
+    avatarModal.Name = "AvatarModal"
+    avatarModal.Size = UDim2.new(0, 318, 0, 336)
+    avatarModal.Position = UDim2.new(0.5, 0, 0.5, 0)
+    avatarModal.AnchorPoint = Vector2.new(0.5, 0.5)
+    avatarModal.BackgroundColor3 = modalColor
+    avatarModal.BorderSizePixel = 0
+    avatarModal.ZIndex = 81
+    avatarModal.Parent = avatarModalOverlay
+    round(avatarModal, 12)
+    stroke(avatarModal, Color3.fromRGB(96, 98, 110), 0.38)
+
+    local avatarModalTitle = Instance.new("TextLabel")
+    avatarModalTitle.Name = "Title"
+    avatarModalTitle.Size = UDim2.new(1, -46, 0, 28)
+    avatarModalTitle.Position = UDim2.new(0, 18, 0, 12)
+    avatarModalTitle.BackgroundTransparency = 1
+    avatarModalTitle.Text = "Imagen de perfil"
+    avatarModalTitle.TextColor3 = Theme.Colors.Text
+    avatarModalTitle.Font = Theme.Font.Bold
+    avatarModalTitle.TextSize = 14
+    avatarModalTitle.TextXAlignment = Enum.TextXAlignment.Left
+    avatarModalTitle.ZIndex = 82
+    avatarModalTitle.Parent = avatarModal
+
+    local avatarModalClose = Instance.new("TextButton")
+    avatarModalClose.Name = "Close"
+    avatarModalClose.Size = UDim2.new(0, 26, 0, 24)
+    avatarModalClose.Position = UDim2.new(1, -36, 0, 12)
+    avatarModalClose.BackgroundColor3 = Color3.fromRGB(64, 65, 73)
+    avatarModalClose.BorderSizePixel = 0
+    avatarModalClose.Text = "X"
+    avatarModalClose.TextColor3 = Theme.Colors.Text
+    avatarModalClose.Font = Theme.Font.Bold
+    avatarModalClose.TextSize = 12
+    avatarModalClose.ZIndex = 82
+    avatarModalClose.Parent = avatarModal
+    round(avatarModalClose, 8)
+
+    local avatarGrid = Instance.new("Frame")
+    avatarGrid.Name = "AvatarGrid"
+    avatarGrid.Size = UDim2.new(1, -34, 0, 112)
+    avatarGrid.Position = UDim2.new(0, 17, 0, 52)
+    avatarGrid.BackgroundTransparency = 1
+    avatarGrid.ZIndex = 82
+    avatarGrid.Parent = avatarModal
+
+    local avatarGridLayout = Instance.new("UIGridLayout")
+    avatarGridLayout.CellSize = UDim2.new(0, 58, 0, 48)
+    avatarGridLayout.CellPadding = UDim2.new(0, 12, 0, 12)
+    avatarGridLayout.FillDirectionMaxCells = 4
+    avatarGridLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    avatarGridLayout.Parent = avatarGrid
+
+    local customPreviewHolder = Instance.new("Frame")
+    customPreviewHolder.Name = "CustomPreviewHolder"
+    customPreviewHolder.Size = UDim2.new(0, 98, 0, 98)
+    customPreviewHolder.Position = UDim2.new(0.5, -49, 0, 58)
+    customPreviewHolder.BackgroundColor3 = Color3.fromRGB(24, 25, 30)
+    customPreviewHolder.BorderSizePixel = 0
+    customPreviewHolder.Visible = false
+    customPreviewHolder.ZIndex = 82
+    customPreviewHolder.Parent = avatarModal
+    round(customPreviewHolder, 12)
+    stroke(customPreviewHolder, Color3.fromRGB(75, 77, 88), 0.45)
+
+    local customPreviewImage = Instance.new("ImageLabel")
+    customPreviewImage.Name = "PreviewImage"
+    customPreviewImage.Size = UDim2.new(1, -10, 1, -10)
+    customPreviewImage.Position = UDim2.new(0, 5, 0, 5)
+    customPreviewImage.BackgroundColor3 = Color3.fromRGB(16, 17, 20)
+    customPreviewImage.BorderSizePixel = 0
+    customPreviewImage.ScaleType = Enum.ScaleType.Crop
+    customPreviewImage.ZIndex = 83
+    customPreviewImage.Parent = customPreviewHolder
+    round(customPreviewImage, 10)
+
+    local clearCustomPreview = Instance.new("TextButton")
+    clearCustomPreview.Name = "ClearPreview"
+    clearCustomPreview.Size = UDim2.new(0, 22, 0, 22)
+    clearCustomPreview.Position = UDim2.new(1, -14, 0, -8)
+    clearCustomPreview.BackgroundColor3 = Color3.fromRGB(64, 65, 73)
+    clearCustomPreview.BorderSizePixel = 0
+    clearCustomPreview.Text = "X"
+    clearCustomPreview.TextColor3 = Theme.Colors.Text
+    clearCustomPreview.Font = Theme.Font.Bold
+    clearCustomPreview.TextSize = 11
+    clearCustomPreview.ZIndex = 84
+    clearCustomPreview.Parent = customPreviewHolder
+    round(clearCustomPreview, 11)
+
+    local avatarInputLabel = Instance.new("TextLabel")
+    avatarInputLabel.Name = "InputLabel"
+    avatarInputLabel.Size = UDim2.new(1, -36, 0, 18)
+    avatarInputLabel.Position = UDim2.new(0, 18, 0, 178)
+    avatarInputLabel.BackgroundTransparency = 1
+    avatarInputLabel.Text = "Inserta ID pfp de tu preferencia"
+    avatarInputLabel.TextColor3 = Theme.Colors.TextMuted
+    avatarInputLabel.Font = Theme.Font.Bold
+    avatarInputLabel.TextSize = 11
+    avatarInputLabel.TextXAlignment = Enum.TextXAlignment.Left
+    avatarInputLabel.ZIndex = 82
+    avatarInputLabel.Parent = avatarModal
+
+    local avatarIdInput = Instance.new("TextBox")
+    avatarIdInput.Name = "AvatarIdInput"
+    avatarIdInput.Size = UDim2.new(1, -36, 0, 34)
+    avatarIdInput.Position = UDim2.new(0, 18, 0, 202)
+    avatarIdInput.BackgroundColor3 = inputColor
+    avatarIdInput.BorderSizePixel = 0
+    avatarIdInput.Text = ""
+    avatarIdInput.PlaceholderText = "Procura usar imagenes pfp"
+    avatarIdInput.TextColor3 = Theme.Colors.Text
+    avatarIdInput.PlaceholderColor3 = Theme.Colors.TextMuted
+    avatarIdInput.Font = Theme.Font.Regular
+    avatarIdInput.TextSize = 11
+    avatarIdInput.ClearTextOnFocus = false
+    avatarIdInput.ZIndex = 82
+    avatarIdInput.Parent = avatarModal
+    round(avatarIdInput, 8)
+    stroke(avatarIdInput, Color3.fromRGB(43, 44, 50), 0.55)
+    addPadding(avatarIdInput, 10, 10, 0, 0)
+
+    local avatarModalStatus = Instance.new("TextLabel")
+    avatarModalStatus.Name = "Status"
+    avatarModalStatus.Size = UDim2.new(1, -36, 0, 22)
+    avatarModalStatus.Position = UDim2.new(0, 18, 0, 242)
+    avatarModalStatus.BackgroundTransparency = 1
+    avatarModalStatus.Text = ""
+    avatarModalStatus.TextColor3 = Theme.Colors.TextMuted
+    avatarModalStatus.Font = Theme.Font.Regular
+    avatarModalStatus.TextSize = 10
+    avatarModalStatus.TextWrapped = true
+    avatarModalStatus.TextXAlignment = Enum.TextXAlignment.Left
+    avatarModalStatus.ZIndex = 82
+    avatarModalStatus.Parent = avatarModal
+
+    local avatarApplyButton = Instance.new("TextButton")
+    avatarApplyButton.Name = "Apply"
+    avatarApplyButton.Size = UDim2.new(0, 122, 0, 32)
+    avatarApplyButton.Position = UDim2.new(0.5, -132, 1, -48)
+    avatarApplyButton.BackgroundColor3 = Color3.fromRGB(66, 102, 76)
+    avatarApplyButton.BorderSizePixel = 0
+    avatarApplyButton.Text = "Aplicar"
+    avatarApplyButton.TextColor3 = Theme.Colors.Text
+    avatarApplyButton.Font = Theme.Font.Bold
+    avatarApplyButton.TextSize = 12
+    avatarApplyButton.ZIndex = 82
+    avatarApplyButton.Parent = avatarModal
+    round(avatarApplyButton, 8)
+
+    local avatarCloseButton = Instance.new("TextButton")
+    avatarCloseButton.Name = "CloseButton"
+    avatarCloseButton.Size = UDim2.new(0, 122, 0, 32)
+    avatarCloseButton.Position = UDim2.new(0.5, 10, 1, -48)
+    avatarCloseButton.BackgroundColor3 = Color3.fromRGB(66, 68, 78)
+    avatarCloseButton.BorderSizePixel = 0
+    avatarCloseButton.Text = "Cerrar"
+    avatarCloseButton.TextColor3 = Theme.Colors.Text
+    avatarCloseButton.Font = Theme.Font.Bold
+    avatarCloseButton.TextSize = 12
+    avatarCloseButton.ZIndex = 82
+    avatarCloseButton.Parent = avatarModal
+    round(avatarCloseButton, 8)
+
+    local avatarCandidateId = selectedProfileAvatarId
+    local suppressAvatarInputChange = false
+    local avatarInputVersion = 0
+
+    local function setAvatarModalMode(showCustomPreview)
+        avatarGrid.Visible = not showCustomPreview
+        customPreviewHolder.Visible = showCustomPreview
+    end
+
+    local function setAvatarCandidate(assetId, showCustomPreview)
+        avatarCandidateId = tostring(assetId or ""):gsub("^%s+", ""):gsub("%s+$", "")
+        avatarModalStatus.Text = ""
+
+        if showCustomPreview then
+            setAvatarModalMode(true)
+
+            if AvatarRenderer and AvatarRenderer.SetAssetPreview then
+                AvatarRenderer.SetAssetPreview(customPreviewImage, avatarCandidateId)
+            else
+                customPreviewImage.Image = resolveImageAsset(avatarCandidateId) or ""
+            end
+        else
+            setAvatarModalMode(false)
+        end
+    end
+
+    for index, avatarId in ipairs(DEFAULT_PROFILE_AVATAR_IDS) do
+        local option = Instance.new("ImageButton")
+        option.Name = "AvatarOption" .. tostring(index)
+        option.BackgroundColor3 = Color3.fromRGB(45, 46, 52)
+        option.BorderSizePixel = 0
+        option.Image = ""
+        option.ScaleType = Enum.ScaleType.Crop
+        option.ZIndex = 83
+        option.Parent = avatarGrid
+        round(option, 9)
+        stroke(option, Color3.fromRGB(80, 82, 92), 0.5)
+
+        if AvatarRenderer and AvatarRenderer.SetAssetPreview then
+            AvatarRenderer.SetAssetPreview(option, avatarId)
+        else
+            option.Image = resolveImageAsset(avatarId) or ""
+        end
+
+        option.MouseButton1Click:Connect(function()
+            suppressAvatarInputChange = true
+            avatarIdInput.Text = ""
+            suppressAvatarInputChange = false
+            avatarInputVersion += 1
+            setAvatarCandidate(avatarId, false)
+            avatarModalStatus.Text = "Imagen seleccionada."
+        end)
+    end
+
+    avatarIdInput:GetPropertyChangedSignal("Text"):Connect(function()
+        if suppressAvatarInputChange then
+            return
+        end
+
+        local text = (avatarIdInput.Text or ""):gsub("%D", "")
+
+        if text ~= avatarIdInput.Text then
+            avatarIdInput.Text = text
+            return
+        end
+
+        if text == "" then
+            avatarCandidateId = selectedProfileAvatarId
+            setAvatarModalMode(false)
+            avatarModalStatus.Text = ""
+            return
+        end
+
+        avatarCandidateId = text
+        avatarModalStatus.Text = ""
+        customPreviewImage.Image = ""
+        setAvatarModalMode(true)
+
+        avatarInputVersion += 1
+        local currentVersion = avatarInputVersion
+
+        task.delay(0.35, function()
+            if currentVersion ~= avatarInputVersion then
+                return
+            end
+
+            if avatarIdInput.Text ~= text then
+                return
+            end
+
+            if AvatarRenderer and AvatarRenderer.SetAssetPreview then
+                AvatarRenderer.SetAssetPreview(customPreviewImage, text)
+            else
+                customPreviewImage.Image = resolveImageAsset(text) or ""
+            end
+        end)
+    end)
+
+    clearCustomPreview.MouseButton1Click:Connect(function()
+        suppressAvatarInputChange = true
+        avatarIdInput.Text = ""
+        suppressAvatarInputChange = false
+        avatarInputVersion += 1
+        avatarCandidateId = selectedProfileAvatarId
+        setAvatarModalMode(false)
+        avatarModalStatus.Text = ""
+    end)
+
+    local function closeAvatarModal()
+        avatarModalOverlay.Visible = false
+        avatarModalStatus.Text = ""
+    end
+
+    editAvatarButton.MouseButton1Click:Connect(function()
+        avatarCandidateId = selectedProfileAvatarId
+        suppressAvatarInputChange = true
+        avatarIdInput.Text = ""
+        suppressAvatarInputChange = false
+        avatarInputVersion += 1
+        setAvatarModalMode(false)
+        avatarModalStatus.Text = ""
+        avatarModalOverlay.Visible = true
+    end)
+
+    avatarApplyButton.MouseButton1Click:Connect(function()
+        if not avatarCandidateId or avatarCandidateId:gsub("%s+", "") == "" then
+            avatarModalStatus.Text = "Selecciona una imagen o inserta un ID."
+            return
+        end
+
+        if not avatarCandidateId:match("^%d+$") or #avatarCandidateId < 6 then
+            avatarModalStatus.Text = "El ID debe ser numerico."
+            return
+        end
+
+        selectedProfileAvatarId = avatarCandidateId
+        applyProfileAvatar(selectedProfileAvatarId)
+        closeAvatarModal()
+        statusLabel.Text = "Imagen aplicada. Guarda cambios para mantenerla."
+        statusLabel.TextColor3 = Theme.Colors.TextMuted
+    end)
+
+    avatarModalClose.MouseButton1Click:Connect(closeAvatarModal)
+    avatarCloseButton.MouseButton1Click:Connect(closeAvatarModal)
+
     local function updateVisibilityButtons()
         publicButton.BackgroundColor3 =
             selectedVisibility == "public" and Color3.fromRGB(76, 78, 90) or Color3.fromRGB(56, 57, 64)
@@ -757,6 +1112,10 @@ function ProfileUI.Create(parent, Theme, profile, player)
                 data.bio = nextBio
             end
 
+            if selectedProfileAvatarId ~= original.profile_avatar_id then
+                data.profile_avatar_id = selectedProfileAvatarId
+            end
+
             if selectedVisibility ~= original.game_status_visibility then
                 data.game_status_visibility = selectedVisibility
             end
@@ -768,6 +1127,7 @@ function ProfileUI.Create(parent, Theme, profile, player)
             return {
                 display_name = displayInput.Text,
                 bio = descriptionInput.Text,
+                profile_avatar_id = selectedProfileAvatarId,
                 game_status_visibility = selectedVisibility
             }
         end,
@@ -777,15 +1137,18 @@ function ProfileUI.Create(parent, Theme, profile, player)
 
             original.display_name = tostring(profile.display_name or player.DisplayName)
             original.bio = tostring(profile.bio or "")
+            original.profile_avatar_id = tostring(profile.profile_avatar_id or "")
             original.game_status_visibility = tostring(profile.game_status_visibility or "public")
 
             displayInput.Text = original.display_name
             username.Text = "@" .. tostring(profile.roblox_username or player.Name)
             descriptionInput.Text = original.bio
+            selectedProfileAvatarId = original.profile_avatar_id
             selectedVisibility = original.game_status_visibility
             pointsValue.Text = tostring(profile.personal_points or 0)
             clanValue.Text = tostring(profile.clan_name or "Sin clan")
             applyBannerImage(profile.profile_banner_id)
+            applyProfileAvatar(selectedProfileAvatarId)
             updateVisibilityButtons()
             refreshCanvas()
         end,

@@ -36,6 +36,7 @@ local ProfileUI = loadstring(game:HttpGet(BASE_RAW .. "modules/profile_ui.lua"))
 local PublicProfileUI = loadstring(game:HttpGet(BASE_RAW .. "modules/public_profile_ui.lua"))()
 local InventoryUI = loadstring(game:HttpGet(BASE_RAW .. "modules/inventory_ui.lua"))()
 local ChatStyles = loadstring(game:HttpGet(BASE_RAW .. "modules/chat_styles.lua"))()
+local AvatarRenderer = loadstring(game:HttpGet(BASE_RAW .. "modules/avatar_renderer.lua"))()
 
 local function getCurrentGameActivity()
     local placeName = nil
@@ -75,7 +76,7 @@ end
 local window = MainWindow.Create(CoreGui, Theme)
 local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
-local rightPanel = RightPanel.Create(window.RightPanel, Theme)
+local rightPanel = RightPanel.Create(window.RightPanel, Theme, AvatarRenderer)
 
 if window.SetBackgroundDesign then
     window.SetBackgroundDesign(heartbeatResult.profile and heartbeatResult.profile.profile_banner_id)
@@ -152,7 +153,6 @@ chatPanel.RoomType.Text = currentRoom.type
 
 local lastChatSignature = ""
 
-local avatarCache = {}
 local activityProfileCache = {}
 local setRoom
 local selectedPrivateRoom = nil
@@ -224,27 +224,6 @@ end)
 
 
 
-local function getAvatarImage(userId)
-    if avatarCache[userId] then
-        return avatarCache[userId]
-    end
-
-    local success, content = pcall(function()
-        return Players:GetUserThumbnailAsync(
-            userId,
-            Enum.ThumbnailType.HeadShot,
-            Enum.ThumbnailSize.Size100x100
-        )
-    end)
-
-    if success then
-        avatarCache[userId] = content
-        return content
-    end
-
-    return ""
-end
-
 local function renderMessages(messages)
     local signature = HttpService:JSONEncode(messages or {})
 
@@ -290,9 +269,10 @@ local function renderMessages(messages)
             avatar.Position = UDim2.new(0, 0, 0, 4)
             avatar.BackgroundTransparency = 1
             avatar.ImageTransparency = 0
-            avatar.Image = getAvatarImage(msg.roblox_user_id)
             avatar.ZIndex = premiumContentZIndex
             avatar.Parent = container
+
+            AvatarRenderer.SetAvatar(avatar, msg.roblox_user_id, msg.profile_avatar_id)
 
             local avatarCorner = Instance.new("UICorner")
             avatarCorner.CornerRadius = UDim.new(1, 0)
@@ -506,7 +486,8 @@ local function openPublicProfileForUser(user)
         window.Gui,
         Theme,
         publicResult.profile,
-        player
+        player,
+        AvatarRenderer
     )
 
     activePublicProfileUI.CloseButton.MouseButton1Click:Connect(function()
@@ -892,7 +873,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
         profile = profileResult.profile
     end
 
-    local profileUI = ProfileUI.Create(CoreGui, Theme, profile, player)
+    local profileUI = ProfileUI.Create(CoreGui, Theme, profile, player, AvatarRenderer)
     local inventoryUI = InventoryUI.Create(profileUI.Gui, Theme)
     local publicProfileUI = nil
     local saveLocked = false
@@ -944,6 +925,14 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
         }
 
         return messages[reason] or "No se pudo crear el clan."
+    end
+
+    local function getProfileSaveErrorMessage(reason)
+        local messages = {
+            invalid_profile_avatar = "El ID de imagen de perfil no es valido."
+        }
+
+        return messages[reason] or "No se pudo guardar el perfil."
     end
 
     local function refreshInventory()
@@ -1100,7 +1089,8 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
                 profileUI.Gui,
                 Theme,
                 publicResult.profile,
-                player
+                player,
+                AvatarRenderer
             )
 
             publicProfileUI.CloseButton.MouseButton1Click:Connect(function()
@@ -1145,8 +1135,11 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
             if leftPanel.PointsValue then
                 leftPanel.PointsValue.Text = tostring(result.profile.personal_points or 0)
             end
+
+            refreshOnlineUsers()
+            refreshChat()
         else
-            profileUI.ShowStatus(result and result.reason or "No se pudo guardar el perfil.", true)
+            profileUI.ShowStatus(getProfileSaveErrorMessage(result and result.reason), true)
         end
 
         saveLocked = false

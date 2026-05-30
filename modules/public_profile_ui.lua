@@ -1,6 +1,6 @@
 local PublicProfileUI = {}
 
-function PublicProfileUI.Create(parent, Theme, profile, player)
+function PublicProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
     local Players = game:GetService("Players")
     local DEFAULT_PROFILE_BANNER_ID = "114828705105935"
     local resolvedImageCache = {}
@@ -410,16 +410,21 @@ function PublicProfileUI.Create(parent, Theme, profile, player)
     round(avatarImage, 41)
 
     local userId = tonumber(profile.roblox_user_id) or player.UserId
-    local ok, image = pcall(function()
-        return Players:GetUserThumbnailAsync(
-            userId,
-            Enum.ThumbnailType.AvatarBust,
-            Enum.ThumbnailSize.Size180x180
-        )
-    end)
 
-    if ok then
-        avatarImage.Image = image
+    if AvatarRenderer and AvatarRenderer.SetAvatar then
+        AvatarRenderer.SetAvatar(avatarImage, userId, profile.profile_avatar_id, true)
+    else
+        local ok, image = pcall(function()
+            return Players:GetUserThumbnailAsync(
+                userId,
+                Enum.ThumbnailType.AvatarBust,
+                Enum.ThumbnailSize.Size180x180
+            )
+        end)
+
+        if ok then
+            avatarImage.Image = image
+        end
     end
 
     local identityX = 0

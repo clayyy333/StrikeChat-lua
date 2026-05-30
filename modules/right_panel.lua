@@ -1,6 +1,6 @@
 local RightPanel = {}
 
-function RightPanel.Create(parent, Theme)
+function RightPanel.Create(parent, Theme, AvatarRenderer)
     local clanColorMap = {
         white = Color3.fromRGB(245, 245, 245),
         red = Color3.fromRGB(235, 74, 74),
@@ -170,11 +170,16 @@ function RightPanel.Create(parent, Theme)
         avatar.Name = "Avatar"
         avatar.Size = UDim2.new(1, 0, 1, 0)
         avatar.BackgroundTransparency = 1
-        avatar.Image =
-            "https://www.roblox.com/headshot-thumbnail/image?userId="
-            .. tostring(user.roblox_user_id)
-            .. "&width=48&height=48&format=png"
         avatar.Parent = avatarHolder
+
+        if AvatarRenderer and AvatarRenderer.SetAvatar then
+            AvatarRenderer.SetAvatar(avatar, user.roblox_user_id, user.profile_avatar_id)
+        else
+            avatar.Image =
+                "https://www.roblox.com/headshot-thumbnail/image?userId="
+                .. tostring(user.roblox_user_id)
+                .. "&width=48&height=48&format=png"
+        end
 
         local avatarImageCorner = Instance.new("UICorner")
         avatarImageCorner.CornerRadius = UDim.new(1, 0)
