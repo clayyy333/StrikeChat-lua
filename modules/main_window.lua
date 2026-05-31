@@ -342,8 +342,8 @@ function MainWindow.Create(CoreGui, Theme)
 
     local function applyResponsiveLayout()
         if isMobileLandscape() then
-            main.Size = UDim2.new(0.98, 0, 1, -128)
-            main.Position = UDim2.new(0.5, 0, 1, -10)
+            main.Size = UDim2.new(0.99, 0, 1, -92)
+            main.Position = UDim2.new(0.5, 0, 1, -6)
             main.AnchorPoint = Vector2.new(0.5, 1)
 
             topBar.Size = UDim2.new(1, 0, 0, 42)
