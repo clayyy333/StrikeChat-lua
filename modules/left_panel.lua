@@ -2,6 +2,44 @@ local LeftPanel = {}
 
 function LeftPanel.Create(parent, Theme, profile, player)
     local Players = game:GetService("Players")
+    local UserInputService = game:GetService("UserInputService")
+
+    local function getViewportSize()
+        local camera = workspace.CurrentCamera
+
+        if camera then
+            return camera.ViewportSize
+        end
+
+        return Vector2.new(1280, 720)
+    end
+
+    local function isMobileLandscape()
+        local viewport = getViewportSize()
+        local shortSide = math.min(viewport.X, viewport.Y)
+        local longSide = math.max(viewport.X, viewport.Y)
+
+        return UserInputService.TouchEnabled
+            and viewport.X > viewport.Y
+            and shortSide <= 650
+            and longSide <= 1400
+    end
+
+    local scroll = Instance.new("ScrollingFrame")
+    scroll.Name = "LeftPanelScroll"
+    scroll.Size = UDim2.new(1, 0, 1, 0)
+    scroll.BackgroundTransparency = 1
+    scroll.BorderSizePixel = 0
+    scroll.ScrollBarThickness = 0
+    scroll.ScrollingEnabled = true
+    scroll.CanvasSize = UDim2.new(0, 0, 0, 390)
+    scroll.Parent = parent
+
+    local content = Instance.new("Frame")
+    content.Name = "LeftPanelContent"
+    content.Size = UDim2.new(1, 0, 0, 390)
+    content.BackgroundTransparency = 1
+    content.Parent = scroll
 
     local function animatePointsIcon(iconHolder, icon)
         task.spawn(function()
@@ -20,7 +58,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     avatar.Position = UDim2.new(0, 14, 0, 14)
     avatar.BackgroundColor3 = Theme.Colors.PanelLight
     avatar.BorderSizePixel = 0
-    avatar.Parent = parent
+    avatar.Parent = content
 
     local avatarCorner = Instance.new("UICorner")
     avatarCorner.CornerRadius = UDim.new(0, 14)
@@ -36,7 +74,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     avatarImageCorner.CornerRadius = UDim.new(0, 14)
     avatarImageCorner.Parent = avatarImage
 
-    local success, content = pcall(function()
+    local success, avatarContent = pcall(function()
         return Players:GetUserThumbnailAsync(
             player.UserId,
             Enum.ThumbnailType.AvatarThumbnail,
@@ -45,7 +83,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     end)
 
     if success then
-        avatarImage.Image = content
+        avatarImage.Image = avatarContent
     end
 
     local displayName = Instance.new("TextLabel")
@@ -59,7 +97,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     displayName.TextSize = 15
     displayName.TextXAlignment = Enum.TextXAlignment.Left
     displayName.TextTruncate = Enum.TextTruncate.AtEnd
-    displayName.Parent = parent
+    displayName.Parent = content
 
     local username = Instance.new("TextLabel")
     username.Name = "Username"
@@ -72,7 +110,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     username.TextSize = 12
     username.TextXAlignment = Enum.TextXAlignment.Left
     username.TextTruncate = Enum.TextTruncate.AtEnd
-    username.Parent = parent
+    username.Parent = content
 
     local adminButton = Instance.new("TextButton")
     adminButton.Name = "AdminButton"
@@ -86,7 +124,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     adminButton.Font = Theme.Font.Bold
     adminButton.TextSize = 9
     adminButton.Visible = false
-    adminButton.Parent = parent
+    adminButton.Parent = content
 
     local adminButtonCorner = Instance.new("UICorner")
     adminButtonCorner.CornerRadius = UDim.new(0, 6)
@@ -98,7 +136,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     pointsBox.Position = UDim2.new(0, 14, 0, 92)
     pointsBox.BackgroundColor3 = Theme.Colors.Panel
     pointsBox.BorderSizePixel = 0
-    pointsBox.Parent = parent
+    pointsBox.Parent = content
 
     local pointsCorner = Instance.new("UICorner")
     pointsCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
@@ -171,7 +209,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
         btn.Position = position
         btn.BackgroundColor3 = Theme.Colors.PanelLight
         btn.Text = ""
-        btn.Parent = parent
+        btn.Parent = content
 
         local btnCorner = Instance.new("UICorner")
         btnCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
@@ -212,7 +250,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
         btn.Position = UDim2.new(0, 18, 0, y)
         btn.BackgroundColor3 = Theme.Colors.PanelLight
         btn.Text = ""
-        btn.Parent = parent
+        btn.Parent = content
 
         local btnCorner = Instance.new("UICorner")
         btnCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
@@ -267,7 +305,154 @@ function LeftPanel.Create(parent, Theme, profile, player)
     createMenuButton("SalasPrivadas", "Salas Privadas", "🔒", 284)
     createMenuButton("TablaClanes", "Tabla de Clanes", "🏆", 324)
 
+    local function setButtonLayout(button, y)
+        if not button then
+            return
+        end
+
+        button.Size = UDim2.new(1, -28, 0, 32)
+        button.Position = UDim2.new(0, 14, 0, y)
+
+        local label = button:FindFirstChild("Label")
+        local icon = button:FindFirstChild("Icon")
+
+        if label then
+            label.Size = UDim2.new(1, -54, 1, 0)
+            label.Position = UDim2.new(0, 14, 0, 0)
+            label.TextSize = 11
+            label.TextTruncate = Enum.TextTruncate.AtEnd
+        end
+
+        if icon then
+            icon.Size = UDim2.new(0, 24, 1, 0)
+            icon.Position = UDim2.new(1, -32, 0, 0)
+            icon.TextSize = 13
+        end
+    end
+
+    local function resetTopButton(button, size, position)
+        if not button then
+            return
+        end
+
+        button.Size = size
+        button.Position = position
+
+        local label = button:FindFirstChild("Label")
+        local icon = button:FindFirstChild("Icon")
+
+        if label then
+            label.Size = UDim2.new(1, -36, 1, 0)
+            label.Position = UDim2.new(0, 10, 0, 0)
+            label.TextSize = 12
+            label.TextTruncate = Enum.TextTruncate.None
+        end
+
+        if icon then
+            icon.Size = UDim2.new(0, 24, 1, 0)
+            icon.Position = UDim2.new(1, -30, 0, 0)
+            icon.TextSize = 14
+        end
+    end
+
+    local function resetMenuButton(button, y)
+        if not button then
+            return
+        end
+
+        button.Size = UDim2.new(1, -36, 0, 32)
+        button.Position = UDim2.new(0, 18, 0, y)
+
+        local label = button:FindFirstChild("Label")
+        local icon = button:FindFirstChild("Icon")
+
+        if label then
+            label.Size = UDim2.new(1, -58, 1, 0)
+            label.Position = UDim2.new(0, 16, 0, 0)
+            label.TextSize = 12
+            label.TextTruncate = Enum.TextTruncate.None
+        end
+
+        if icon then
+            icon.Size = UDim2.new(0, 26, 1, 0)
+            icon.Position = UDim2.new(1, -38, 0, 0)
+            icon.TextSize = 14
+        end
+    end
+
+    local function applyResponsiveLayout()
+        if isMobileLandscape() then
+            content.Size = UDim2.new(1, 0, 0, 366)
+            scroll.CanvasSize = UDim2.new(0, 0, 0, 374)
+
+            avatar.Size = UDim2.new(0, 50, 0, 50)
+            avatar.Position = UDim2.new(0, 14, 0, 12)
+            displayName.Size = UDim2.new(1, -82, 0, 20)
+            displayName.Position = UDim2.new(0, 74, 0, 14)
+            displayName.TextSize = 13
+            username.Size = UDim2.new(1, -82, 0, 15)
+            username.Position = UDim2.new(0, 74, 0, 34)
+            username.TextSize = 10
+            adminButton.Position = UDim2.new(0, 74, 0, 54)
+
+            pointsBox.Size = UDim2.new(1, -28, 0, 48)
+            pointsBox.Position = UDim2.new(0, 14, 0, 74)
+            pointsTitle.Position = UDim2.new(0, 10, 0, 5)
+            pointsTitle.TextSize = 10
+            pointsRow.Position = UDim2.new(0, 8, 0, 22)
+            pointsValue.TextSize = 15
+            pointsIconHolder.Size = UDim2.new(0, 24, 0, 24)
+            pointsIcon.Size = UDim2.new(0, 18, 0, 18)
+            pointsIcon.Position = UDim2.new(0.5, -9, 0.5, -9)
+
+            setButtonLayout(createdButtons.Tienda, 136)
+            setButtonLayout(createdButtons.Perfil, 174)
+            setButtonLayout(createdButtons.CrearSalas, 212)
+            setButtonLayout(createdButtons.SalasPublicas, 250)
+            setButtonLayout(createdButtons.SalasPrivadas, 288)
+            setButtonLayout(createdButtons.TablaClanes, 326)
+        else
+            content.Size = UDim2.new(1, 0, 0, 390)
+            scroll.CanvasSize = UDim2.new(0, 0, 0, 390)
+
+            avatar.Size = UDim2.new(0, 68, 0, 68)
+            avatar.Position = UDim2.new(0, 14, 0, 14)
+            displayName.Size = UDim2.new(1, -104, 0, 24)
+            displayName.Position = UDim2.new(0, 92, 0, 18)
+            displayName.TextSize = 15
+            username.Size = UDim2.new(1, -104, 0, 16)
+            username.Position = UDim2.new(0, 92, 0, 42)
+            username.TextSize = 12
+            adminButton.Position = UDim2.new(0, 92, 0, 64)
+
+            pointsBox.Size = UDim2.new(1, -28, 0, 54)
+            pointsBox.Position = UDim2.new(0, 14, 0, 92)
+            pointsTitle.Position = UDim2.new(0, 10, 0, 6)
+            pointsTitle.TextSize = 11
+            pointsRow.Position = UDim2.new(0, 8, 0, 25)
+            pointsValue.TextSize = 17
+            pointsIconHolder.Size = UDim2.new(0, 28, 0, 28)
+            pointsIcon.Size = UDim2.new(0, 20, 0, 20)
+            pointsIcon.Position = UDim2.new(0.5, -10, 0.5, -10)
+
+            resetTopButton(createdButtons.Tienda, UDim2.new(0.5, -19, 0, 32), UDim2.new(0, 14, 0, 158))
+            resetTopButton(createdButtons.Perfil, UDim2.new(0.5, -19, 0, 32), UDim2.new(0.5, 5, 0, 158))
+            resetMenuButton(createdButtons.CrearSalas, 204)
+            resetMenuButton(createdButtons.SalasPublicas, 244)
+            resetMenuButton(createdButtons.SalasPrivadas, 284)
+            resetMenuButton(createdButtons.TablaClanes, 324)
+        end
+    end
+
+    applyResponsiveLayout()
+
+    if workspace.CurrentCamera then
+        workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(applyResponsiveLayout)
+    end
+
     return {
+        Scroll = scroll,
+        Content = content,
         Avatar = avatar,
         DisplayName = displayName,
         Username = username,

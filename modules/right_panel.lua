@@ -1,6 +1,29 @@
 local RightPanel = {}
 
 function RightPanel.Create(parent, Theme, AvatarRenderer)
+    local UserInputService = game:GetService("UserInputService")
+
+    local function getViewportSize()
+        local camera = workspace.CurrentCamera
+
+        if camera then
+            return camera.ViewportSize
+        end
+
+        return Vector2.new(1280, 720)
+    end
+
+    local function isMobileLandscape()
+        local viewport = getViewportSize()
+        local shortSide = math.min(viewport.X, viewport.Y)
+        local longSide = math.max(viewport.X, viewport.Y)
+
+        return UserInputService.TouchEnabled
+            and viewport.X > viewport.Y
+            and shortSide <= 650
+            and longSide <= 1400
+    end
+
     local clanColorMap = {
         white = Color3.fromRGB(245, 245, 245),
         red = Color3.fromRGB(235, 74, 74),
@@ -115,6 +138,7 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
     list.BackgroundColor3 = Theme.Colors.Background
     list.BorderSizePixel = 0
     list.ScrollBarThickness = 2
+    list.ScrollingEnabled = true
     list.CanvasSize = UDim2.new(0, 0, 0, 0)
     list.Parent = parent
 
@@ -283,6 +307,34 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
 
         task.wait()
         list.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 16)
+    end
+
+    local function applyResponsiveLayout()
+        if isMobileLandscape() then
+            title.Size = UDim2.new(1, -20, 0, 30)
+            title.Position = UDim2.new(0, 10, 0, 7)
+            title.TextSize = 13
+            titleUnderline.Size = UDim2.new(1, -20, 0, 1)
+            titleUnderline.Position = UDim2.new(0, 10, 0, 37)
+            list.Size = UDim2.new(1, -20, 1, -48)
+            list.Position = UDim2.new(0, 10, 0, 42)
+            list.ScrollBarThickness = 0
+        else
+            title.Size = UDim2.new(1, -24, 0, 36)
+            title.Position = UDim2.new(0, 12, 0, 8)
+            title.TextSize = 15
+            titleUnderline.Size = UDim2.new(1, -24, 0, 1)
+            titleUnderline.Position = UDim2.new(0, 12, 0, 42)
+            list.Size = UDim2.new(1, -24, 1, -56)
+            list.Position = UDim2.new(0, 12, 0, 46)
+            list.ScrollBarThickness = 2
+        end
+    end
+
+    applyResponsiveLayout()
+
+    if workspace.CurrentCamera then
+        workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(applyResponsiveLayout)
     end
 
     return {

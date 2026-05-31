@@ -2,9 +2,31 @@ local MainWindow = {}
 
 function MainWindow.Create(CoreGui, Theme)
     local TweenService = game:GetService("TweenService")
+    local UserInputService = game:GetService("UserInputService")
     local CONTENT_ZINDEX = 8
     local DEFAULT_BACKGROUND_DESIGN_ID = "114828705105935"
     local resolvedImageCache = {}
+
+    local function getViewportSize()
+        local camera = workspace.CurrentCamera
+
+        if camera then
+            return camera.ViewportSize
+        end
+
+        return Vector2.new(1280, 720)
+    end
+
+    local function isMobileLandscape()
+        local viewport = getViewportSize()
+        local shortSide = math.min(viewport.X, viewport.Y)
+        local longSide = math.max(viewport.X, viewport.Y)
+
+        return UserInputService.TouchEnabled
+            and viewport.X > viewport.Y
+            and shortSide <= 650
+            and longSide <= 1400
+    end
 
     local function getAssetImage(assetId)
         if assetId == nil then
@@ -317,6 +339,56 @@ function MainWindow.Create(CoreGui, Theme)
     local rightCorner = Instance.new("UICorner")
     rightCorner.CornerRadius = UDim.new(0, Theme.Radius.Panel)
     rightCorner.Parent = rightPanel
+
+    local function applyResponsiveLayout()
+        if isMobileLandscape() then
+            main.Size = UDim2.new(0.98, 0, 1, -128)
+            main.Position = UDim2.new(0.5, 0, 1, -10)
+            main.AnchorPoint = Vector2.new(0.5, 1)
+
+            topBar.Size = UDim2.new(1, 0, 0, 42)
+            title.Size = UDim2.new(1, -100, 1, 0)
+            title.Position = UDim2.new(0, 14, 0, 0)
+            title.TextSize = 16
+            minimize.Size = UDim2.new(0, 34, 0, 28)
+            minimize.Position = UDim2.new(1, -78, 0, 7)
+            close.Size = UDim2.new(0, 34, 0, 28)
+            close.Position = UDim2.new(1, -40, 0, 7)
+
+            content.Size = UDim2.new(1, -24, 1, -50)
+            content.Position = UDim2.new(0, 12, 0, 44)
+            layout.Padding = UDim.new(0, 10)
+            leftPanel.Size = UDim2.new(0.22, -7, 1, 0)
+            chatPanel.Size = UDim2.new(0.56, -7, 1, 0)
+            rightPanel.Size = UDim2.new(0.22, -7, 1, 0)
+        else
+            main.Size = UDim2.new(0.86, 0, 0.86, 0)
+            main.Position = UDim2.new(0.5, 0, 0.5, 0)
+            main.AnchorPoint = Vector2.new(0.5, 0.5)
+
+            topBar.Size = UDim2.new(1, 0, 0, 46)
+            title.Size = UDim2.new(1, -110, 1, 0)
+            title.Position = UDim2.new(0, 16, 0, 0)
+            title.TextSize = 18
+            minimize.Size = UDim2.new(0, 34, 0, 30)
+            minimize.Position = UDim2.new(1, -78, 0, 8)
+            close.Size = UDim2.new(0, 34, 0, 30)
+            close.Position = UDim2.new(1, -40, 0, 8)
+
+            content.Size = UDim2.new(1, -24, 1, -58)
+            content.Position = UDim2.new(0, 12, 0, 50)
+            layout.Padding = UDim.new(0, 10)
+            leftPanel.Size = UDim2.new(0.22, -7, 1, 0)
+            chatPanel.Size = UDim2.new(0.56, -7, 1, 0)
+            rightPanel.Size = UDim2.new(0.22, -7, 1, 0)
+        end
+    end
+
+    applyResponsiveLayout()
+
+    if workspace.CurrentCamera then
+        workspace.CurrentCamera:GetPropertyChangedSignal("ViewportSize"):Connect(applyResponsiveLayout)
+    end
 
     local minimizedButton = Instance.new("TextButton")
     minimizedButton.Name = "MinimizedButton"
