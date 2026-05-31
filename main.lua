@@ -88,7 +88,8 @@ if not heartbeatResult or heartbeatResult.status ~= "ok" then
     return
 end
 
-local window = MainWindow.Create(CoreGui, Theme)
+local selectedLayoutMode = MainWindow.ChooseLayout(CoreGui, Theme, I18n)
+local window = MainWindow.Create(CoreGui, Theme, selectedLayoutMode)
 local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme, AvatarRenderer)

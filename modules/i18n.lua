@@ -14,6 +14,7 @@ local esToEn = {
     ["Enviar"] = "Send",
     ["Escribe un mensaje..."] = "Type a message...",
     ["El sistema de puntos y Premios estara disponible pronto"] = "The points and Rewards system will be available soon",
+    ["Elige una opcion para una mejor Experiencia :"] = "Choose an option for a better Experience :",
 
     ["Puntos de Jugador"] = "Player Points",
     ["Crear Salas"] = "Create Rooms",

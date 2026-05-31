@@ -15,6 +15,14 @@ function LeftPanel.Create(parent, Theme, profile, player)
     end
 
     local function isMobileLandscape()
+        if _G.StrikeChatLayoutMode == "mobile" then
+            return true
+        end
+
+        if _G.StrikeChatLayoutMode == "pc" then
+            return false
+        end
+
         local viewport = getViewportSize()
         local shortSide = math.min(viewport.X, viewport.Y)
         local longSide = math.max(viewport.X, viewport.Y)

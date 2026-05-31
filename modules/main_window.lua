@@ -1,11 +1,248 @@
 local MainWindow = {}
 
-function MainWindow.Create(CoreGui, Theme)
+function MainWindow.ChooseLayout(CoreGui, Theme, I18n)
+    local TweenService = game:GetService("TweenService")
+    local LocalizationService = game:GetService("LocalizationService")
+    local selectedEvent = Instance.new("BindableEvent")
+    local selectedMode = nil
+
+    local function isEnglishRoblox()
+        local locale = ""
+
+        pcall(function()
+            locale = tostring(LocalizationService.RobloxLocaleId or "")
+        end)
+
+        return locale:lower():sub(1, 2) == "en"
+    end
+
+    local titleText = "Elige una opcion para una mejor Experiencia :"
+
+    if isEnglishRoblox() then
+        titleText = "Choose an option for a better Experience :"
+    elseif I18n and I18n.TranslateText then
+        titleText = I18n.TranslateText(titleText)
+    end
+
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "StrikeChat_LayoutChoice"
+    gui.ResetOnSpawn = false
+    gui.IgnoreGuiInset = true
+    gui.DisplayOrder = 9998
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    gui.Parent = CoreGui
+
+    local overlay = Instance.new("Frame")
+    overlay.Name = "Overlay"
+    overlay.Size = UDim2.new(1, 0, 1, 0)
+    overlay.BackgroundColor3 = Color3.fromRGB(8, 8, 12)
+    overlay.BackgroundTransparency = 0.28
+    overlay.BorderSizePixel = 0
+    overlay.Parent = gui
+
+    local leftSweep = Instance.new("Frame")
+    leftSweep.Name = "LeftInwardReveal"
+    leftSweep.Size = UDim2.new(0.5, 0, 1, 0)
+    leftSweep.Position = UDim2.new(-0.5, 0, 0, 0)
+    leftSweep.BackgroundColor3 = Color3.fromRGB(26, 22, 36)
+    leftSweep.BorderSizePixel = 0
+    leftSweep.ZIndex = 2
+    leftSweep.Parent = overlay
+
+    local rightSweep = Instance.new("Frame")
+    rightSweep.Name = "RightInwardReveal"
+    rightSweep.Size = UDim2.new(0.5, 0, 1, 0)
+    rightSweep.Position = UDim2.new(1, 0, 0, 0)
+    rightSweep.BackgroundColor3 = Color3.fromRGB(54, 38, 78)
+    rightSweep.BorderSizePixel = 0
+    rightSweep.ZIndex = 2
+    rightSweep.Parent = overlay
+
+    local panel = Instance.new("Frame")
+    panel.Name = "ChoicePanel"
+    panel.Size = UDim2.new(0.92, 0, 0, 186)
+    panel.Position = UDim2.new(0.5, 0, 0.5, 0)
+    panel.AnchorPoint = Vector2.new(0.5, 0.5)
+    panel.BackgroundColor3 = Theme.Colors.Panel
+    panel.BackgroundTransparency = 1
+    panel.BorderSizePixel = 0
+    panel.ZIndex = 5
+    panel.Parent = overlay
+
+    local panelScale = Instance.new("UIScale")
+    panelScale.Scale = 1.18
+    panelScale.Parent = panel
+
+    local panelSize = Instance.new("UISizeConstraint")
+    panelSize.MaxSize = Vector2.new(430, 186)
+    panelSize.MinSize = Vector2.new(300, 170)
+    panelSize.Parent = panel
+
+    local panelCorner = Instance.new("UICorner")
+    panelCorner.CornerRadius = UDim.new(0, Theme.Radius.Main)
+    panelCorner.Parent = panel
+
+    local panelStroke = Instance.new("UIStroke")
+    panelStroke.Color = Theme.Colors.Border
+    panelStroke.Thickness = 1.4
+    panelStroke.Transparency = 1
+    panelStroke.Parent = panel
+
+    local title = Instance.new("TextLabel")
+    title.Name = "Title"
+    title.Size = UDim2.new(1, -34, 0, 52)
+    title.Position = UDim2.new(0, 17, 0, 20)
+    title.BackgroundTransparency = 1
+    title.Text = titleText
+    title.TextColor3 = Theme.Colors.Text
+    title.TextTransparency = 1
+    title.Font = Theme.Font.Bold
+    title.TextSize = 16
+    title.TextScaled = true
+    title.TextWrapped = true
+    title.TextXAlignment = Enum.TextXAlignment.Center
+    title.ZIndex = 6
+    title.Parent = panel
+
+    local titleTextSize = Instance.new("UITextSizeConstraint")
+    titleTextSize.MinTextSize = 11
+    titleTextSize.MaxTextSize = 16
+    titleTextSize.Parent = title
+
+    local function createChoiceButton(name, text, position, mode)
+        local button = Instance.new("TextButton")
+        button.Name = name
+        button.Size = UDim2.new(0.5, -24, 0, 46)
+        button.Position = position
+        button.BackgroundColor3 = Theme.Colors.PanelLight
+        button.BackgroundTransparency = 1
+        button.BorderSizePixel = 0
+        button.Text = text
+        button.TextColor3 = Theme.Colors.Text
+        button.TextTransparency = 1
+        button.Font = Theme.Font.Bold
+        button.TextSize = 13
+        button.TextScaled = true
+        button.ZIndex = 6
+        button.Parent = panel
+
+        local buttonTextSize = Instance.new("UITextSizeConstraint")
+        buttonTextSize.MinTextSize = 9
+        buttonTextSize.MaxTextSize = 13
+        buttonTextSize.Parent = button
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, Theme.Radius.Button)
+        corner.Parent = button
+
+        button.MouseButton1Click:Connect(function()
+            if selectedMode then
+                return
+            end
+
+            selectedMode = mode
+            _G.StrikeChatLayoutMode = mode
+
+            TweenService:Create(panelScale, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                Scale = 0.94
+            }):Play()
+
+            TweenService:Create(overlay, TweenInfo.new(0.18, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {
+                BackgroundTransparency = 1
+            }):Play()
+
+            task.wait(0.2)
+            selectedEvent:Fire(mode)
+        end)
+
+        return button
+    end
+
+    local pcButton = createChoiceButton(
+        "PCEmulatorButton",
+        "PC/Emulator",
+        UDim2.new(0, 18, 1, -66),
+        "pc"
+    )
+
+    local mobileButton = createChoiceButton(
+        "MobileButton",
+        "Mobile(Celulares/Tablet)",
+        UDim2.new(0.5, 6, 1, -66),
+        "mobile"
+    )
+
+    TweenService:Create(leftSweep, TweenInfo.new(0.42, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0, 0, 0, 0)
+    }):Play()
+
+    TweenService:Create(rightSweep, TweenInfo.new(0.42, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+        Position = UDim2.new(0.5, 0, 0, 0)
+    }):Play()
+
+    task.delay(0.24, function()
+        if not panel.Parent then
+            return
+        end
+
+        TweenService:Create(panelScale, TweenInfo.new(0.36, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+            Scale = 1
+        }):Play()
+
+        TweenService:Create(panel, TweenInfo.new(0.22, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0
+        }):Play()
+
+        TweenService:Create(panelStroke, TweenInfo.new(0.22, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+            Transparency = 0.25
+        }):Play()
+
+        TweenService:Create(title, TweenInfo.new(0.22, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+            TextTransparency = 0
+        }):Play()
+
+        TweenService:Create(pcButton, TweenInfo.new(0.22, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0,
+            TextTransparency = 0
+        }):Play()
+
+        TweenService:Create(mobileButton, TweenInfo.new(0.22, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+            BackgroundTransparency = 0,
+            TextTransparency = 0
+        }):Play()
+    end)
+
+    task.delay(0.72, function()
+        if leftSweep.Parent then
+            leftSweep:Destroy()
+        end
+
+        if rightSweep.Parent then
+            rightSweep:Destroy()
+        end
+    end)
+
+    local mode = selectedEvent.Event:Wait()
+
+    if gui.Parent then
+        gui:Destroy()
+    end
+
+    selectedEvent:Destroy()
+
+    return mode
+end
+
+function MainWindow.Create(CoreGui, Theme, layoutMode)
     local TweenService = game:GetService("TweenService")
     local UserInputService = game:GetService("UserInputService")
     local CONTENT_ZINDEX = 8
     local DEFAULT_BACKGROUND_DESIGN_ID = "114828705105935"
     local resolvedImageCache = {}
+
+    if layoutMode == "mobile" or layoutMode == "pc" then
+        _G.StrikeChatLayoutMode = layoutMode
+    end
 
     local function getViewportSize()
         local camera = workspace.CurrentCamera
@@ -18,6 +255,14 @@ function MainWindow.Create(CoreGui, Theme)
     end
 
     local function isMobileLandscape()
+        if _G.StrikeChatLayoutMode == "mobile" then
+            return true
+        end
+
+        if _G.StrikeChatLayoutMode == "pc" then
+            return false
+        end
+
         local viewport = getViewportSize()
         local shortSide = math.min(viewport.X, viewport.Y)
         local longSide = math.max(viewport.X, viewport.Y)
@@ -342,8 +587,8 @@ function MainWindow.Create(CoreGui, Theme)
 
     local function applyResponsiveLayout()
         if isMobileLandscape() then
-            main.Size = UDim2.new(0.99, 0, 1, -92)
-            main.Position = UDim2.new(0.5, 0, 1, -6)
+            main.Size = UDim2.new(1, 0, 1, -64)
+            main.Position = UDim2.new(0.5, 0, 1, -2)
             main.AnchorPoint = Vector2.new(0.5, 1)
 
             topBar.Size = UDim2.new(1, 0, 0, 42)
@@ -355,12 +600,12 @@ function MainWindow.Create(CoreGui, Theme)
             close.Size = UDim2.new(0, 34, 0, 28)
             close.Position = UDim2.new(1, -40, 0, 7)
 
-            content.Size = UDim2.new(1, -24, 1, -50)
-            content.Position = UDim2.new(0, 12, 0, 44)
-            layout.Padding = UDim.new(0, 10)
-            leftPanel.Size = UDim2.new(0.22, -7, 1, 0)
-            chatPanel.Size = UDim2.new(0.56, -7, 1, 0)
-            rightPanel.Size = UDim2.new(0.22, -7, 1, 0)
+            content.Size = UDim2.new(1, -16, 1, -50)
+            content.Position = UDim2.new(0, 8, 0, 44)
+            layout.Padding = UDim.new(0, 8)
+            leftPanel.Size = UDim2.new(0.26, -6, 1, 0)
+            chatPanel.Size = UDim2.new(0.48, -6, 1, 0)
+            rightPanel.Size = UDim2.new(0.26, -6, 1, 0)
         else
             main.Size = UDim2.new(0.86, 0, 0.86, 0)
             main.Position = UDim2.new(0.5, 0, 0.5, 0)
