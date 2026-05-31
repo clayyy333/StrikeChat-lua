@@ -1,5 +1,7 @@
 local ShopUI = {}
 
+local POINTS_ICON_IMAGE = "rbxassetid://124520045081815"
+
 function ShopUI.Create(parent, Theme, initialPoints)
     local function animatePointsIcon(iconHolder, icon)
         task.spawn(function()
@@ -17,6 +19,56 @@ function ShopUI.Create(parent, Theme, initialPoints)
     gui.ResetOnSpawn = false
     gui.IgnoreGuiInset = true
     gui.Parent = parent
+
+    local function createPricePill(parentInstance, amount, position, size, textSize, zIndex)
+        local pricePill = Instance.new("Frame")
+        pricePill.Name = "PricePill"
+        pricePill.Size = size
+        pricePill.Position = position
+        pricePill.BackgroundColor3 = Color3.fromRGB(14, 12, 22)
+        pricePill.BackgroundTransparency = 0.08
+        pricePill.BorderSizePixel = 0
+        pricePill.ZIndex = zIndex or 3
+        pricePill.Parent = parentInstance
+
+        local pillCorner = Instance.new("UICorner")
+        pillCorner.CornerRadius = UDim.new(0, 8)
+        pillCorner.Parent = pricePill
+
+        local pillLayout = Instance.new("UIListLayout")
+        pillLayout.FillDirection = Enum.FillDirection.Horizontal
+        pillLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        pillLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        pillLayout.Padding = UDim.new(0, 4)
+        pillLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        pillLayout.Parent = pricePill
+
+        local priceText = Instance.new("TextLabel")
+        priceText.Name = "PriceText"
+        priceText.Size = UDim2.new(0, 0, 1, 0)
+        priceText.AutomaticSize = Enum.AutomaticSize.X
+        priceText.BackgroundTransparency = 1
+        priceText.Text = tostring(amount)
+        priceText.TextColor3 = Theme.Colors.Text
+        priceText.Font = Theme.Font.Bold
+        priceText.TextSize = textSize or 13
+        priceText.TextXAlignment = Enum.TextXAlignment.Center
+        priceText.LayoutOrder = 1
+        priceText.ZIndex = (zIndex or 3) + 1
+        priceText.Parent = pricePill
+
+        local priceIcon = Instance.new("ImageLabel")
+        priceIcon.Name = "PriceIcon"
+        priceIcon.Size = UDim2.new(0, 16, 0, 16)
+        priceIcon.BackgroundTransparency = 1
+        priceIcon.Image = POINTS_ICON_IMAGE
+        priceIcon.ScaleType = Enum.ScaleType.Fit
+        priceIcon.LayoutOrder = 2
+        priceIcon.ZIndex = (zIndex or 3) + 1
+        priceIcon.Parent = pricePill
+
+        return pricePill
+    end
 
     local root = Instance.new("Frame")
     root.Name = "Root"
@@ -213,7 +265,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
     pointsIcon.Size = UDim2.new(0, 22, 0, 22)
     pointsIcon.Position = UDim2.new(0.5, -11, 0.5, -11)
     pointsIcon.BackgroundTransparency = 1
-    pointsIcon.Image = "rbxassetid://124520045081815"
+    pointsIcon.Image = POINTS_ICON_IMAGE
     pointsIcon.ScaleType = Enum.ScaleType.Fit
     pointsIcon.ZIndex = 3
     pointsIcon.Parent = pointsIconHolder
@@ -331,6 +383,15 @@ function ShopUI.Create(parent, Theme, initialPoints)
     featuredTitle.TextXAlignment = Enum.TextXAlignment.Left
     featuredTitle.Parent = featuredCard
 
+    createPricePill(
+        featuredCard,
+        1000,
+        UDim2.new(1, -112, 0, 60),
+        UDim2.new(0, 92, 0, 28),
+        13,
+        3
+    )
+
     local featuredSubtitle = Instance.new("TextLabel")
     featuredSubtitle.Size = UDim2.new(1, -28, 0, 30)
     featuredSubtitle.Position = UDim2.new(0, 14, 0, 100)
@@ -443,6 +504,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
         itemTitle.Size = UDim2.new(1, -20, 0, showPrice and 30 or 36)
         itemTitle.Position = UDim2.new(0, 10, 0, showPrice and 4 or 38)
         itemTitle.BackgroundTransparency = 1
+        itemTitle.Name = "ItemTitle"
         itemTitle.Text = title
         itemTitle.TextColor3 = Theme.Colors.Text
         itemTitle.Font = Theme.Font.Bold
@@ -487,7 +549,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
             priceIcon.Name = "PriceIcon"
             priceIcon.Size = UDim2.new(0, 16, 0, 16)
             priceIcon.BackgroundTransparency = 1
-            priceIcon.Image = "rbxassetid://124520045081815"
+            priceIcon.Image = POINTS_ICON_IMAGE
             priceIcon.ScaleType = Enum.ScaleType.Fit
             priceIcon.LayoutOrder = 2
             priceIcon.Parent = priceRow
@@ -572,6 +634,23 @@ function ShopUI.Create(parent, Theme, initialPoints)
         false
     )
     item6.Parent = itemsContainer
+
+    local item6Title = item6:FindFirstChild("ItemTitle")
+
+    if item6Title then
+        item6Title.Size = UDim2.new(0, 112, 0, 36)
+        item6Title.Position = UDim2.new(0, 10, 0, 38)
+        item6Title.TextXAlignment = Enum.TextXAlignment.Left
+    end
+
+    createPricePill(
+        item6,
+        200,
+        UDim2.new(1, -84, 0, 42),
+        UDim2.new(0, 68, 0, 26),
+        12,
+        3
+    )
 
     local item6Gradient = Instance.new("UIGradient")
 
