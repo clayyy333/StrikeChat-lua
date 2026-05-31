@@ -1,6 +1,6 @@
 local ProfileUI = {}
 
-function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
+function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, currentActivity)
     local Players = game:GetService("Players")
     local DEFAULT_PROFILE_BANNER_ID = "114828705105935"
     local DEFAULT_PROFILE_AVATAR_IDS = {
@@ -15,6 +15,30 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
     local resolvedImageCache = {}
 
     profile = profile or {}
+
+    local function translateProfileText(text)
+        if _G.StrikeChatI18n then
+            return _G.StrikeChatI18n.TranslateText(text)
+        end
+
+        return text
+    end
+
+    local function getCurrentActivityText(nextProfile)
+        local placeName = currentActivity and currentActivity.place_name
+
+        if placeName and tostring(placeName):gsub("%s+", "") ~= "" then
+            return "Jugando a : " .. tostring(placeName)
+        end
+
+        local activityText = nextProfile and nextProfile.activity_text
+
+        if activityText and tostring(activityText):gsub("%s+", "") ~= "" then
+            return tostring(activityText)
+        end
+
+        return "Jugando a : Roblox"
+    end
 
     local original = {
         display_name = tostring(profile.display_name or player.DisplayName),
@@ -683,7 +707,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
     status.Size = UDim2.new(1, -20, 0, 30)
     status.Position = UDim2.new(0, 8, 0, 110)
     status.BackgroundTransparency = 1
-    status.Text = "Jugando a : Metro Life RP"
+    status.Text = translateProfileText(getCurrentActivityText(profile))
     status.TextColor3 = Theme.Colors.Text
     status.Font = Theme.Font.Bold
     status.TextSize = 15
@@ -1276,6 +1300,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
             selectedVisibility = original.game_status_visibility
             pointsValue.Text = tostring(profile.personal_points or 0)
             clanValue.Text = tostring(profile.clan_name or "Sin clan")
+            status.Text = translateProfileText(getCurrentActivityText(profile))
             applyBannerImage(profile.profile_banner_id)
             applyProfileAvatar(selectedProfileAvatarId)
             updateVisibilityButtons()

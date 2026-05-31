@@ -27,7 +27,6 @@ local esToEn = {
     ["Publico"] = "Public",
     ["Privado"] = "Private",
     ["Actividad reciente"] = "Recent activity",
-    ["Jugando a : Metro Life RP"] = "Playing : Metro Life RP",
     ["Idioma / language"] = "Language / idioma",
     ["Español"] = "Spanish",
     ["English"] = "English",
@@ -254,6 +253,18 @@ local function translatePattern(text)
 
     if deliveredEn then
         return I18n.Language == "en" and ("Delivered: " .. deliveredEn) or ("Entregados: " .. deliveredEn)
+    end
+
+    local playingWithColon = string.match(text, "^Jugando a%s*:%s*(.+)$")
+
+    if playingWithColon then
+        return I18n.Language == "en" and ("Playing : " .. playingWithColon) or ("Jugando a : " .. playingWithColon)
+    end
+
+    local playingWithColonEn = string.match(text, "^Playing%s*:%s*(.+)$")
+
+    if playingWithColonEn then
+        return I18n.Language == "en" and ("Playing : " .. playingWithColonEn) or ("Jugando a : " .. playingWithColonEn)
     end
 
     local playing = string.match(text, "^Jugando a%s+(.+)$")

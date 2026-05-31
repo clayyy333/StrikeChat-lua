@@ -1079,7 +1079,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
         profile = profileResult.profile
     end
 
-    local profileUI = ProfileUI.Create(CoreGui, Theme, profile, player, AvatarRenderer)
+    local profileUI = ProfileUI.Create(CoreGui, Theme, profile, player, AvatarRenderer, currentGameActivity)
     local inventoryUI = InventoryUI.Create(profileUI.Gui, Theme)
     I18n.RegisterRoot(profileUI.Gui)
     local publicProfileUI = nil
