@@ -783,12 +783,20 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
             _G.StrikeChatI18n.SetLanguage("es")
         end
 
+        if _G.StrikeChatShowDefaultAdminNotice then
+            _G.StrikeChatShowDefaultAdminNotice()
+        end
+
         updateLanguageButtons()
     end)
 
     englishButton.MouseButton1Click:Connect(function()
         if _G.StrikeChatI18n then
             _G.StrikeChatI18n.SetLanguage("en")
+        end
+
+        if _G.StrikeChatShowDefaultAdminNotice then
+            _G.StrikeChatShowDefaultAdminNotice()
         end
 
         updateLanguageButtons()

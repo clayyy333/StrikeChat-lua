@@ -120,6 +120,19 @@ adminNotice.TextXAlignment = Enum.TextXAlignment.Center
 adminNotice.ZIndex = 220
 adminNotice.Parent = window.Gui
 
+local DEFAULT_ADMIN_NOTICE_MESSAGE = "El sistema de puntos y Premios estara disponible pronto"
+local DEFAULT_ADMIN_NOTICE_DURATION = 60
+local defaultAdminNoticeExpiresAt = 0
+
+local function showDefaultAdminNotice()
+    defaultAdminNoticeExpiresAt = os.clock() + DEFAULT_ADMIN_NOTICE_DURATION
+    adminNotice.Text = "ADMIN : " .. tr(DEFAULT_ADMIN_NOTICE_MESSAGE)
+    adminNotice.Visible = true
+end
+
+_G.StrikeChatShowDefaultAdminNotice = showDefaultAdminNotice
+showDefaultAdminNotice()
+
 task.spawn(function()
     local fadeOut = true
 
@@ -279,21 +292,26 @@ end
 
 task.spawn(function()
     while true do
-        local noticesResult = Api.GetAdminNotices()
-
-        if noticesResult
-            and noticesResult.status == "ok"
-            and noticesResult.notices
-            and #noticesResult.notices > 0
-        then
-            local firstNotice = noticesResult.notices[1]
-
-            adminNotice.Text =
-                "ADMIN : " .. tostring(firstNotice.message)
-
+        if os.clock() < defaultAdminNoticeExpiresAt then
+            adminNotice.Text = "ADMIN : " .. tr(DEFAULT_ADMIN_NOTICE_MESSAGE)
             adminNotice.Visible = true
         else
-            adminNotice.Visible = false
+            local noticesResult = Api.GetAdminNotices()
+
+            if noticesResult
+                and noticesResult.status == "ok"
+                and noticesResult.notices
+                and #noticesResult.notices > 0
+            then
+                local firstNotice = noticesResult.notices[1]
+
+                adminNotice.Text =
+                    "ADMIN : " .. tostring(firstNotice.message)
+
+                adminNotice.Visible = true
+            else
+                adminNotice.Visible = false
+            end
         end
 
         task.wait(15)

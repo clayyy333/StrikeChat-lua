@@ -13,6 +13,7 @@ local esToEn = {
     ["Salir"] = "Leave",
     ["Enviar"] = "Send",
     ["Escribe un mensaje..."] = "Type a message...",
+    ["El sistema de puntos y Premios estara disponible pronto"] = "The points and Rewards system will be available soon",
 
     ["Puntos de Jugador"] = "Player Points",
     ["Crear Salas"] = "Create Rooms",
