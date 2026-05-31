@@ -105,20 +105,30 @@ if window.RaiseContent then
     window.RaiseContent()
 end
 
+local adminNoticeGui = Instance.new("ScreenGui")
+adminNoticeGui.Name = "StrikeChatAdminNoticeGui"
+adminNoticeGui.ResetOnSpawn = false
+adminNoticeGui.IgnoreGuiInset = true
+adminNoticeGui.DisplayOrder = 9999
+adminNoticeGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+adminNoticeGui.Parent = CoreGui
+
 local adminNotice = Instance.new("TextLabel")
 adminNotice.Name = "AdminNotice"
-adminNotice.Size = UDim2.new(0, 360, 0, 22)
-adminNotice.Position = UDim2.new(0.5, -170, 0, 92)
+adminNotice.Size = UDim2.new(0, 620, 0, 24)
+adminNotice.Position = UDim2.new(0.5, 0, 0, 92)
+adminNotice.AnchorPoint = Vector2.new(0.5, 0)
 adminNotice.BackgroundTransparency = 1
 adminNotice.Text = ""
 adminNotice.Visible = false
 adminNotice.TextColor3 = Color3.fromRGB(255, 175, 8)
 adminNotice.Font = Theme.Font.Bold
-adminNotice.TextSize = 13
+adminNotice.TextSize = 14
 adminNotice.TextTransparency = 0
 adminNotice.TextXAlignment = Enum.TextXAlignment.Center
-adminNotice.ZIndex = 220
-adminNotice.Parent = window.Gui
+adminNotice.TextTruncate = Enum.TextTruncate.AtEnd
+adminNotice.ZIndex = 10000
+adminNotice.Parent = adminNoticeGui
 
 local DEFAULT_ADMIN_NOTICE_MESSAGE = "El sistema de puntos y Premios estara disponible pronto"
 local DEFAULT_ADMIN_NOTICE_DURATION = 60
@@ -1775,6 +1785,10 @@ window.CloseButton.MouseButton1Click:Connect(function()
 
     if currentRoom.id ~= "global" then
         Api.LeaveRoom(player, currentRoom.id)
+    end
+
+    if adminNoticeGui then
+        adminNoticeGui:Destroy()
     end
 
     window.Gui:Destroy()
