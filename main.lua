@@ -131,7 +131,7 @@ adminNotice.ZIndex = 10000
 adminNotice.Parent = adminNoticeGui
 
 local DEFAULT_ADMIN_NOTICE_MESSAGE = "El sistema de puntos y Premios estara disponible pronto"
-local DEFAULT_ADMIN_NOTICE_DURATION = 60
+local DEFAULT_ADMIN_NOTICE_DURATION = 10
 local defaultAdminNoticeExpiresAt = 0
 
 local function showDefaultAdminNotice()

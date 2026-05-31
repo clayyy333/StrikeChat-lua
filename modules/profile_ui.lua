@@ -971,7 +971,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
     avatarIdInput.Name = "AvatarIdInput"
     avatarIdInput.Size = UDim2.new(1, -36, 0, 34)
     avatarIdInput.Position = UDim2.new(0, 18, 0, 202)
-    avatarIdInput.BackgroundColor3 = inputColor
+    avatarIdInput.BackgroundColor3 = Color3.fromRGB(30, 31, 36)
     avatarIdInput.BorderSizePixel = 0
     avatarIdInput.Text = ""
     avatarIdInput.PlaceholderText = "Procura usar imagenes pfp"
@@ -983,7 +983,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
     avatarIdInput.ZIndex = 82
     avatarIdInput.Parent = avatarModal
     round(avatarIdInput, 8)
-    stroke(avatarIdInput, Color3.fromRGB(43, 44, 50), 0.55)
+    stroke(avatarIdInput, Color3.fromRGB(96, 98, 112), 0.28)
     addPadding(avatarIdInput, 10, 10, 0, 0)
 
     local avatarModalStatus = Instance.new("TextLabel")
