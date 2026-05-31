@@ -253,7 +253,11 @@ function RewardModal.Create(parent, Theme)
         end,
 
         ShowError = function(message)
-            errorLabel.Text = message or "No se pudo canjear el codigo."
+            if _G.StrikeChatI18n then
+                errorLabel.Text = _G.StrikeChatI18n.TranslateText(message or "No se pudo canjear el codigo.")
+            else
+                errorLabel.Text = message or "No se pudo canjear el codigo."
+            end
         end,
 
         ClearError = function()

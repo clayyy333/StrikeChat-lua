@@ -360,7 +360,12 @@ function AdminPanelUI.Create(parent, Theme)
         end,
 
         ShowStatus = function(message, isError)
-            statusLabel.Text = message or ""
+            if _G.StrikeChatI18n then
+                statusLabel.Text = _G.StrikeChatI18n.TranslateText(message or "")
+            else
+                statusLabel.Text = message or ""
+            end
+
             statusLabel.TextColor3 = isError and Theme.Colors.Danger or Theme.Colors.TextMuted
         end,
 
@@ -508,7 +513,12 @@ function AdminPanelUI.CreateSecurityPrompt(parent, Theme)
         end,
 
         ShowStatus = function(message, isError)
-            statusLabel.Text = message or ""
+            if _G.StrikeChatI18n then
+                statusLabel.Text = _G.StrikeChatI18n.TranslateText(message or "")
+            else
+                statusLabel.Text = message or ""
+            end
+
             statusLabel.TextColor3 = isError and Theme.Colors.Danger or Theme.Colors.TextMuted
         end
     }

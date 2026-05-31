@@ -61,7 +61,7 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
         local visibility = tostring(user.game_status_visibility or user.activity_visibility or "private"):lower()
 
         if visibility ~= "public" then
-            return "En linea"
+            return _G.StrikeChatI18n and _G.StrikeChatI18n.TranslateText("En linea") or "En linea"
         end
 
         local activityText =
@@ -79,10 +79,12 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
             user.game_name
 
         if placeName and tostring(placeName):gsub("%s+", "") ~= "" then
-            return "Jugando a " .. tostring(placeName)
+            return _G.StrikeChatI18n
+                and _G.StrikeChatI18n.TranslateText("Jugando a " .. tostring(placeName))
+                or "Jugando a " .. tostring(placeName)
         end
 
-        return "En linea"
+        return _G.StrikeChatI18n and _G.StrikeChatI18n.TranslateText("En linea") or "En linea"
     end
 
     local title = Instance.new("TextLabel")

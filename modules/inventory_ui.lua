@@ -651,7 +651,12 @@ function InventoryUI.Create(parent, Theme)
     end
 
     local function setStatus(message, isError)
-        statusLabel.Text = message or ""
+        if _G.StrikeChatI18n then
+            statusLabel.Text = _G.StrikeChatI18n.TranslateText(message or "")
+        else
+            statusLabel.Text = message or ""
+        end
+
         statusLabel.TextColor3 = isError and Color3.fromRGB(255, 120, 120) or Theme.Colors.TextMuted
     end
 
@@ -1039,7 +1044,11 @@ function InventoryUI.Create(parent, Theme)
         empty.Name = "Empty"
         empty.Size = UDim2.new(1, -10, 0, 118)
         empty.BackgroundTransparency = 1
-        empty.Text = message or "Todavia no tienes items comprados."
+        if _G.StrikeChatI18n then
+            empty.Text = _G.StrikeChatI18n.TranslateText(message or "Todavia no tienes items comprados.")
+        else
+            empty.Text = message or "Todavia no tienes items comprados."
+        end
         empty.TextColor3 = Theme.Colors.TextMuted
         empty.Font = Theme.Font.Regular
         empty.TextSize = 12

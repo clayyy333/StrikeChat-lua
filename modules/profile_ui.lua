@@ -691,6 +691,87 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
     status.TextTruncate = Enum.TextTruncate.AtEnd
     status.Parent = rightPanel
 
+    local languageTitle = Instance.new("TextLabel")
+    languageTitle.Name = "LanguageTitle"
+    languageTitle.Size = UDim2.new(1, -20, 0, 20)
+    languageTitle.Position = UDim2.new(0, 0, 0, 150)
+    languageTitle.BackgroundTransparency = 1
+    languageTitle.Text = "Idioma / language"
+    languageTitle.TextColor3 = Theme.Colors.TextMuted
+    languageTitle.Font = Theme.Font.Bold
+    languageTitle.TextSize = 12
+    languageTitle.TextXAlignment = Enum.TextXAlignment.Left
+    languageTitle.Parent = rightPanel
+
+    local languageUnderline = Instance.new("Frame")
+    languageUnderline.Name = "LanguageUnderline"
+    languageUnderline.Size = UDim2.new(0, 60, 0, 2)
+    languageUnderline.Position = UDim2.new(0, 0, 0, 178)
+    languageUnderline.BackgroundColor3 = Theme.Colors.Text
+    languageUnderline.BorderSizePixel = 0
+    languageUnderline.Parent = rightPanel
+
+    local languageButtons = Instance.new("Frame")
+    languageButtons.Name = "LanguageButtons"
+    languageButtons.Size = UDim2.new(0, 208, 0, 30)
+    languageButtons.Position = UDim2.new(0, 0, 0, 194)
+    languageButtons.BackgroundTransparency = 1
+    languageButtons.Parent = rightPanel
+
+    local function makeLanguageButton(name, text, x)
+        local button = Instance.new("TextButton")
+        button.Name = name
+        button.Size = UDim2.new(0, 96, 0, 28)
+        button.Position = UDim2.new(0, x, 0, 0)
+        button.BackgroundColor3 = Color3.fromRGB(61, 62, 70)
+        button.BackgroundTransparency = 0.08
+        button.BorderSizePixel = 0
+        button.Text = text
+        button.TextColor3 = Theme.Colors.Text
+        button.Font = Theme.Font.Bold
+        button.TextSize = 12
+        button.TextXAlignment = Enum.TextXAlignment.Center
+        button.Parent = languageButtons
+        round(button, 8)
+        stroke(button, Color3.fromRGB(86, 88, 100), 0.5)
+
+        return button
+    end
+
+    local spanishButton = makeLanguageButton("SpanishButton", "Español", 0)
+    local englishButton = makeLanguageButton("EnglishButton", "English", 108)
+
+    local function updateLanguageButtons()
+        local i18n = _G.StrikeChatI18n
+        local language = i18n and i18n.GetLanguage and i18n.GetLanguage() or "es"
+
+        if language == "en" then
+            spanishButton.BackgroundColor3 = Color3.fromRGB(61, 62, 70)
+            englishButton.BackgroundColor3 = Color3.fromRGB(66, 102, 76)
+        else
+            spanishButton.BackgroundColor3 = Color3.fromRGB(66, 102, 76)
+            englishButton.BackgroundColor3 = Color3.fromRGB(61, 62, 70)
+        end
+    end
+
+    spanishButton.MouseButton1Click:Connect(function()
+        if _G.StrikeChatI18n then
+            _G.StrikeChatI18n.SetLanguage("es")
+        end
+
+        updateLanguageButtons()
+    end)
+
+    englishButton.MouseButton1Click:Connect(function()
+        if _G.StrikeChatI18n then
+            _G.StrikeChatI18n.SetLanguage("en")
+        end
+
+        updateLanguageButtons()
+    end)
+
+    updateLanguageButtons()
+
     local statusLabel = Instance.new("TextLabel")
     statusLabel.Name = "StatusLabel"
     statusLabel.Size = UDim2.new(1, -20, 0, 32)
@@ -1202,7 +1283,12 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
         end,
 
         ShowStatus = function(message, isError)
-            statusLabel.Text = message or ""
+            if _G.StrikeChatI18n then
+                statusLabel.Text = _G.StrikeChatI18n.TranslateText(message or "")
+            else
+                statusLabel.Text = message or ""
+            end
+
             statusLabel.TextColor3 = isError and Theme.Colors.Danger or Theme.Colors.TextMuted
         end,
 

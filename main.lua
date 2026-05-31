@@ -21,6 +21,8 @@ local BASE_RAW = "https://raw.githubusercontent.com/clayyy333/StrikeChat-lua/mai
 
 local Theme = loadstring(game:HttpGet(BASE_RAW .. "modules/theme.lua"))()
 local Api = loadstring(game:HttpGet(BASE_RAW .. "modules/api.lua"))()
+local I18n = loadstring(game:HttpGet(BASE_RAW .. "modules/i18n.lua"))()
+_G.StrikeChatI18n = I18n
 local MainWindow = loadstring(game:HttpGet(BASE_RAW .. "modules/main_window.lua"))()
 local ChatPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/chat_panel.lua"))()
 local LeftPanel = loadstring(game:HttpGet(BASE_RAW .. "modules/left_panel.lua"))()
@@ -68,6 +70,10 @@ local adminUserIds = {
 
 local function isCurrentUserAdmin()
     return adminUserIds[player.UserId] == true
+end
+
+local function tr(text)
+    return I18n.TranslateText(text)
 end
 
 if not Api.HasRequest() then
@@ -158,6 +164,8 @@ local createRoomModal = CreateRoomModal.Create(window.Gui, Theme)
 local roomsListModal = RoomsListModal.Create(window.Gui, Theme)
 local passwordModal = PasswordModal.Create(window.Gui, Theme)
 local confirmModal = ConfirmModal.Create(window.Gui, Theme)
+
+I18n.RegisterRoot(window.Gui)
 
 
 
@@ -352,6 +360,8 @@ local function ensureAdminPanel()
         refreshAdminPendingRewards()
         adminPanel.ShowStatus("Entregados: " .. tostring(deliveredCount), false)
     end)
+
+    I18n.Apply(window.Gui)
 end
 
 local function openAdminPanel()
@@ -394,6 +404,8 @@ local function ensureAdminSecurityPrompt()
             adminSecurityPrompt.ShowStatus("Codigo incorrecto.", true)
         end
     end)
+
+    I18n.Apply(window.Gui)
 end
 
 if isCurrentUserAdmin() and leftPanel.AdminButton then
@@ -677,6 +689,7 @@ local function openPublicProfileForUser(user)
         player,
         AvatarRenderer
     )
+    I18n.Apply(window.Gui)
 
     activePublicProfileUI.CloseButton.MouseButton1Click:Connect(function()
         activePublicProfileUI = nil
@@ -691,9 +704,10 @@ local function refreshOnlineUsers()
             enrichOnlineUserActivities(result.users)
 
             rightPanel.Title.Text =
-                "En Línea - " .. tostring(#result.users)
+                tr("En Línea - " .. tostring(#result.users))
 
             rightPanel.Render(result.users, openPublicProfileForUser)
+            I18n.Apply(window.Gui)
         end
 
         return
@@ -725,9 +739,10 @@ local function refreshOnlineUsers()
     enrichOnlineUserActivities(roomUsers)
 
     rightPanel.Title.Text =
-        "En Sala - " .. tostring(#roomUsers)
+        tr("En Sala - " .. tostring(#roomUsers))
 
     rightPanel.Render(roomUsers, openPublicProfileForUser)
+    I18n.Apply(window.Gui)
 end
 
 local function refreshRooms(isPrivate)
@@ -736,7 +751,7 @@ local function refreshRooms(isPrivate)
     local testLabel = Instance.new("TextLabel")
     testLabel.Size = UDim2.new(1, 0, 0, 40)
     testLabel.BackgroundTransparency = 1
-    testLabel.Text = "Cargando salas..."
+    testLabel.Text = tr("Cargando salas...")
     testLabel.TextColor3 = Theme.Colors.Text
     testLabel.Font = Theme.Font.Bold
     testLabel.TextSize = 13
@@ -746,17 +761,17 @@ local function refreshRooms(isPrivate)
 
     if isPrivate then
         result = Api.GetPrivateRooms()
-        roomsListModal.Title.Text = "Salas Privadas"
+        roomsListModal.Title.Text = tr("Salas Privadas")
     else
         result = Api.GetPublicRooms()
-        roomsListModal.Title.Text = "Salas Públicas"
+        roomsListModal.Title.Text = tr("Salas Públicas")
     end
 
     if not result or not result.rooms then
         local empty = Instance.new("TextLabel")
         empty.Size = UDim2.new(1, 0, 0, 40)
         empty.BackgroundTransparency = 1
-        empty.Text = "No se pudieron cargar salas."
+        empty.Text = tr("No se pudieron cargar salas.")
         empty.TextColor3 = Theme.Colors.TextMuted
         empty.Font = Theme.Font.Regular
         empty.TextSize = 12
@@ -933,11 +948,13 @@ local function refreshRooms(isPrivate)
             0,
             roomsListModal.Layout.AbsoluteContentSize.Y + 16
         )
+
+    I18n.Apply(window.Gui)
 end
 
 
 local function showStatus(message)
-    chatPanel.StatusLabel.Text = message or ""
+    chatPanel.StatusLabel.Text = tr(message or "")
 
     if message and message ~= "" then
         task.spawn(function()
@@ -1043,6 +1060,7 @@ leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
     end
 
     local clanUI = ClanTableUI.Create(CoreGui, Theme, clans)
+    I18n.RegisterRoot(clanUI.Gui)
 
     clanUI.CloseButton.MouseButton1Click:Connect(function()
         clanUI.Destroy()
@@ -1063,6 +1081,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
 
     local profileUI = ProfileUI.Create(CoreGui, Theme, profile, player, AvatarRenderer)
     local inventoryUI = InventoryUI.Create(profileUI.Gui, Theme)
+    I18n.RegisterRoot(profileUI.Gui)
     local publicProfileUI = nil
     local saveLocked = false
     local inventoryLocked = false
@@ -1280,6 +1299,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
                 player,
                 AvatarRenderer
             )
+            I18n.Apply(profileUI.Gui)
 
             publicProfileUI.CloseButton.MouseButton1Click:Connect(function()
                 publicProfileUI = nil
@@ -1354,6 +1374,7 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
 
     local shopUI = ShopUI.Create(CoreGui, Theme, currentPoints)
     local rewardModal = RewardModal.Create(shopUI.Gui, Theme)
+    I18n.RegisterRoot(shopUI.Gui)
     local rewardPurchaseLocked = false
     local shopPurchaseLocked = false
 
@@ -1383,10 +1404,10 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
             return
         end
 
-        label.Text = "Restante " .. tostring(remaining)
+        label.Text = tr("Restante " .. tostring(remaining))
 
         if remaining <= 0 then
-            button.Text = "AGOTADO"
+            button.Text = tr("AGOTADO")
             button.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
             button.AutoButtonColor = false
         end
@@ -1479,14 +1500,14 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
         local originalText = button and button.Text
 
         if button then
-            button.Text = "Comprando..."
+            button.Text = tr("Comprando...")
         end
 
         local result = Api.BuyShopItem(player, itemId)
 
         if result and result.status == "ok" and result.inventory_item then
             if button then
-                button.Text = "COMPRADO"
+                button.Text = tr("COMPRADO")
                 button.AutoButtonColor = false
                 button.Active = false
             end
@@ -1494,7 +1515,7 @@ leftPanel.Buttons.Tienda.MouseButton1Click:Connect(function()
             updateDisplayedPoints(result.profile)
         else
             if button and result and result.reason == "item_already_owned" then
-                button.Text = "YA LO TIENES"
+                button.Text = tr("YA LO TIENES")
                 button.AutoButtonColor = false
                 button.Active = false
             elseif button then
