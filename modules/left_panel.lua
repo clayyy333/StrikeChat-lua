@@ -46,7 +46,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
     local scrollHint = Instance.new("Frame")
     scrollHint.Name = "LeftScrollHint"
     scrollHint.Size = UDim2.new(0, 1, 1, -16)
-    scrollHint.Position = UDim2.new(1, -2, 0, 8)
+    scrollHint.Position = UDim2.new(0, 1, 0, 8)
     scrollHint.BackgroundColor3 = Theme.Colors.TextMuted
     scrollHint.BackgroundTransparency = 0.2
     scrollHint.BorderSizePixel = 0
@@ -405,12 +405,12 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     local function applyResponsiveLayout()
         if isMobileLandscape() then
-            scroll.ScrollBarThickness = 1
+            scroll.ScrollBarThickness = 0
             scroll.ScrollBarImageColor3 = Theme.Colors.TextMuted
             scroll.ScrollBarImageTransparency = 0.35
             scrollHint.Visible = true
             scrollHint.Size = UDim2.new(0, 1, 1, -16)
-            scrollHint.Position = UDim2.new(1, -2, 0, 8)
+            scrollHint.Position = UDim2.new(0, 1, 0, 8)
 
             content.Size = UDim2.new(1, 0, 0, 366)
             scroll.CanvasSize = UDim2.new(0, 0, 0, 374)
