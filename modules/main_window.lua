@@ -329,6 +329,8 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     local gui = Instance.new("ScreenGui")
     gui.Name = "StrikeChat_Main"
     gui.ResetOnSpawn = false
+    gui.IgnoreGuiInset = true
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     gui.Parent = CoreGui
 
     local main = Instance.new("Frame")
@@ -543,9 +545,9 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
 
     local function applyResponsiveLayout()
         if isMobileLandscape() then
-            main.Size = UDim2.new(1, 0, 1, -64)
-            main.Position = UDim2.new(0.5, 0, 1, -2)
-            main.AnchorPoint = Vector2.new(0.5, 1)
+            main.Size = UDim2.new(1, 2, 1, -64)
+            main.Position = UDim2.new(0, -1, 1, -2)
+            main.AnchorPoint = Vector2.new(0, 1)
 
             topBar.Size = UDim2.new(1, 0, 0, 42)
             title.Size = UDim2.new(1, -100, 1, 0)
@@ -556,12 +558,12 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
             close.Size = UDim2.new(0, 34, 0, 28)
             close.Position = UDim2.new(1, -40, 0, 7)
 
-            content.Size = UDim2.new(1, -16, 1, -50)
-            content.Position = UDim2.new(0, 8, 0, 44)
-            layout.Padding = UDim.new(0, 8)
-            leftPanel.Size = UDim2.new(0.26, -6, 1, 0)
-            chatPanel.Size = UDim2.new(0.48, -6, 1, 0)
-            rightPanel.Size = UDim2.new(0.26, -6, 1, 0)
+            content.Size = UDim2.new(1, 0, 1, -50)
+            content.Position = UDim2.new(0, 0, 0, 44)
+            layout.Padding = UDim.new(0, 6)
+            leftPanel.Size = UDim2.new(0.26, -4, 1, 0)
+            chatPanel.Size = UDim2.new(0.48, -4, 1, 0)
+            rightPanel.Size = UDim2.new(0.26, -4, 1, 0)
         else
             main.Size = UDim2.new(0.86, 0, 0.86, 0)
             main.Position = UDim2.new(0.5, 0, 0.5, 0)
