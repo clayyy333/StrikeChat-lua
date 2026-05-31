@@ -282,7 +282,7 @@ local function refreshAdminPendingRewards()
 
     adminPanel.ShowStatus("Cargando premios pendientes...", false)
 
-    local result = Api.GetPendingRewardRedeems()
+    local result = Api.GetPendingRewardRedeems(player)
 
     if result and result.status == "ok" and result.redeems then
         local groups = buildPendingRewardGroups(result.redeems)
@@ -349,7 +349,7 @@ local function ensureAdminPanel()
 
         adminPanel.ShowStatus("Enviando aviso...", false)
 
-        local result = Api.CreateAdminNotice(message)
+        local result = Api.CreateAdminNotice(player, message)
 
         if result and result.status == "created" then
             adminPanel.NoticeInput.Text = ""
@@ -376,7 +376,7 @@ local function ensureAdminPanel()
         local deliveredCount = 0
 
         for _, code in ipairs(selectedRewardGroup.codes or {}) do
-            local result = Api.MarkRewardDelivered(code)
+            local result = Api.MarkRewardDelivered(player, code)
 
             if result and result.status == "delivered" then
                 deliveredCount += 1
@@ -420,7 +420,7 @@ local function ensureAdminSecurityPrompt()
         Api.SetAdminCode(code)
         adminSecurityPrompt.ShowStatus("Verificando codigo...", false)
 
-        local result = Api.VerifyAdminAccess()
+        local result = Api.VerifyAdminAccess(player)
 
         if result and result.status == "ok" then
             adminAccessVerified = true

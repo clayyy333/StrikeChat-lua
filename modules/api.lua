@@ -1,7 +1,6 @@
 local Api = {}
 
 Api.BaseUrl = "https://strikechat-api.onrender.com"
-Api.AdminToken = "strikechat-admin-dev"
 Api.AdminCode = ""
 
 local HttpService = game:GetService("HttpService")
@@ -221,25 +220,25 @@ function Api.SetAdminCode(code)
 end
 
 
-function Api.GetAdminHeaders()
+function Api.GetAdminHeaders(player)
     return {
-        ["X-Admin-Token"] = Api.AdminToken,
-        ["X-Admin-Code"] = Api.AdminCode or ""
+        ["X-Admin-Code"] = Api.AdminCode or "",
+        ["X-Admin-User-Id"] = tostring(player and player.UserId or "")
     }
 end
 
 
-function Api.VerifyAdminAccess()
+function Api.VerifyAdminAccess(player)
     return Api.Request(
         Api.BaseUrl .. "/admin-auth/verify",
         "GET",
         nil,
-        Api.GetAdminHeaders()
+        Api.GetAdminHeaders(player)
     )
 end
 
 
-function Api.CreateAdminNotice(message)
+function Api.CreateAdminNotice(player, message)
     return Api.Request(
         Api.BaseUrl .. "/admin-notices/create",
         "POST",
@@ -247,7 +246,7 @@ function Api.CreateAdminNotice(message)
             message = message,
             target_platforms = {"external"}
         },
-        Api.GetAdminHeaders()
+        Api.GetAdminHeaders(player)
     )
 end
 
@@ -330,24 +329,24 @@ function Api.GetLimitedRewardStock()
 end
 
 
-function Api.GetPendingRewardRedeems()
+function Api.GetPendingRewardRedeems(player)
     return Api.Request(
         Api.BaseUrl .. "/shop/redeems/pending",
         "GET",
         nil,
-        Api.GetAdminHeaders()
+        Api.GetAdminHeaders(player)
     )
 end
 
 
-function Api.MarkRewardDelivered(code)
+function Api.MarkRewardDelivered(player, code)
     return Api.Request(
         Api.BaseUrl ..
         "/shop/redeems/mark-delivered" ..
         "?code=" .. Api.Encode(code),
         "POST",
         nil,
-        Api.GetAdminHeaders()
+        Api.GetAdminHeaders(player)
     )
 end
 
