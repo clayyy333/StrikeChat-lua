@@ -40,37 +40,19 @@ function MainWindow.ChooseLayout(CoreGui, Theme, I18n)
     overlay.BorderSizePixel = 0
     overlay.Parent = gui
 
-    local leftSweep = Instance.new("Frame")
-    leftSweep.Name = "LeftInwardReveal"
-    leftSweep.Size = UDim2.new(0.5, 0, 1, 0)
-    leftSweep.Position = UDim2.new(-0.5, 0, 0, 0)
-    leftSweep.BackgroundColor3 = Color3.fromRGB(26, 22, 36)
-    leftSweep.BorderSizePixel = 0
-    leftSweep.ZIndex = 2
-    leftSweep.Parent = overlay
-
-    local rightSweep = Instance.new("Frame")
-    rightSweep.Name = "RightInwardReveal"
-    rightSweep.Size = UDim2.new(0.5, 0, 1, 0)
-    rightSweep.Position = UDim2.new(1, 0, 0, 0)
-    rightSweep.BackgroundColor3 = Color3.fromRGB(54, 38, 78)
-    rightSweep.BorderSizePixel = 0
-    rightSweep.ZIndex = 2
-    rightSweep.Parent = overlay
-
     local panel = Instance.new("Frame")
     panel.Name = "ChoicePanel"
     panel.Size = UDim2.new(0.92, 0, 0, 186)
     panel.Position = UDim2.new(0.5, 0, 0.5, 0)
     panel.AnchorPoint = Vector2.new(0.5, 0.5)
     panel.BackgroundColor3 = Theme.Colors.Panel
-    panel.BackgroundTransparency = 1
+    panel.BackgroundTransparency = 0
     panel.BorderSizePixel = 0
     panel.ZIndex = 5
     panel.Parent = overlay
 
     local panelScale = Instance.new("UIScale")
-    panelScale.Scale = 1.18
+    panelScale.Scale = 1.22
     panelScale.Parent = panel
 
     local panelSize = Instance.new("UISizeConstraint")
@@ -85,7 +67,7 @@ function MainWindow.ChooseLayout(CoreGui, Theme, I18n)
     local panelStroke = Instance.new("UIStroke")
     panelStroke.Color = Theme.Colors.Border
     panelStroke.Thickness = 1.4
-    panelStroke.Transparency = 1
+    panelStroke.Transparency = 0.25
     panelStroke.Parent = panel
 
     local title = Instance.new("TextLabel")
@@ -172,54 +154,28 @@ function MainWindow.ChooseLayout(CoreGui, Theme, I18n)
         "mobile"
     )
 
-    TweenService:Create(leftSweep, TweenInfo.new(0.42, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-        Position = UDim2.new(0, 0, 0, 0)
+    TweenService:Create(panelScale, TweenInfo.new(0.42, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+        Scale = 1
     }):Play()
 
-    TweenService:Create(rightSweep, TweenInfo.new(0.42, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
-        Position = UDim2.new(0.5, 0, 0, 0)
-    }):Play()
-
-    task.delay(0.24, function()
+    task.delay(0.08, function()
         if not panel.Parent then
             return
         end
 
-        TweenService:Create(panelScale, TweenInfo.new(0.36, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
-            Scale = 1
-        }):Play()
-
-        TweenService:Create(panel, TweenInfo.new(0.22, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
-            BackgroundTransparency = 0
-        }):Play()
-
-        TweenService:Create(panelStroke, TweenInfo.new(0.22, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
-            Transparency = 0.25
-        }):Play()
-
-        TweenService:Create(title, TweenInfo.new(0.22, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+        TweenService:Create(title, TweenInfo.new(0.24, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
             TextTransparency = 0
         }):Play()
 
-        TweenService:Create(pcButton, TweenInfo.new(0.22, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+        TweenService:Create(pcButton, TweenInfo.new(0.24, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
             BackgroundTransparency = 0,
             TextTransparency = 0
         }):Play()
 
-        TweenService:Create(mobileButton, TweenInfo.new(0.22, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
+        TweenService:Create(mobileButton, TweenInfo.new(0.24, Enum.EasingStyle.Sine, Enum.EasingDirection.Out), {
             BackgroundTransparency = 0,
             TextTransparency = 0
         }):Play()
-    end)
-
-    task.delay(0.72, function()
-        if leftSweep.Parent then
-            leftSweep:Destroy()
-        end
-
-        if rightSweep.Parent then
-            rightSweep:Destroy()
-        end
     end)
 
     local mode = selectedEvent.Event:Wait()
