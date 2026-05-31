@@ -329,7 +329,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     local gui = Instance.new("ScreenGui")
     gui.Name = "StrikeChat_Main"
     gui.ResetOnSpawn = false
-    gui.IgnoreGuiInset = true
+    gui.IgnoreGuiInset = _G.StrikeChatLayoutMode == "mobile"
     gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     gui.Parent = CoreGui
 
@@ -545,6 +545,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
 
     local function applyResponsiveLayout()
         if isMobileLandscape() then
+            gui.IgnoreGuiInset = true
             main.Size = UDim2.new(1, 2, 1, -64)
             main.Position = UDim2.new(0, -1, 1, -2)
             main.AnchorPoint = Vector2.new(0, 1)
@@ -565,6 +566,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
             chatPanel.Size = UDim2.new(0.48, -4, 1, 0)
             rightPanel.Size = UDim2.new(0.26, -4, 1, 0)
         else
+            gui.IgnoreGuiInset = false
             main.Size = UDim2.new(0.86, 0, 0.86, 0)
             main.Position = UDim2.new(0.5, 0, 0.5, 0)
             main.AnchorPoint = Vector2.new(0.5, 0.5)
