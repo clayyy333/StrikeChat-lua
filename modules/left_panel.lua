@@ -43,6 +43,21 @@ function LeftPanel.Create(parent, Theme, profile, player)
     scroll.CanvasSize = UDim2.new(0, 0, 0, 390)
     scroll.Parent = parent
 
+    local scrollHint = Instance.new("Frame")
+    scrollHint.Name = "LeftScrollHint"
+    scrollHint.Size = UDim2.new(0, 1, 1, -16)
+    scrollHint.Position = UDim2.new(1, -2, 0, 8)
+    scrollHint.BackgroundColor3 = Theme.Colors.TextMuted
+    scrollHint.BackgroundTransparency = 0.2
+    scrollHint.BorderSizePixel = 0
+    scrollHint.Visible = false
+    scrollHint.ZIndex = 20
+    scrollHint.Parent = parent
+
+    local scrollHintCorner = Instance.new("UICorner")
+    scrollHintCorner.CornerRadius = UDim.new(1, 0)
+    scrollHintCorner.Parent = scrollHint
+
     local content = Instance.new("Frame")
     content.Name = "LeftPanelContent"
     content.Size = UDim2.new(1, 0, 0, 390)
@@ -393,6 +408,9 @@ function LeftPanel.Create(parent, Theme, profile, player)
             scroll.ScrollBarThickness = 1
             scroll.ScrollBarImageColor3 = Theme.Colors.TextMuted
             scroll.ScrollBarImageTransparency = 0.35
+            scrollHint.Visible = true
+            scrollHint.Size = UDim2.new(0, 1, 1, -16)
+            scrollHint.Position = UDim2.new(1, -2, 0, 8)
 
             content.Size = UDim2.new(1, 0, 0, 366)
             scroll.CanvasSize = UDim2.new(0, 0, 0, 374)
@@ -425,6 +443,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
             setButtonLayout(createdButtons.TablaClanes, 326)
         else
             scroll.ScrollBarThickness = 0
+            scrollHint.Visible = false
 
             content.Size = UDim2.new(1, 0, 0, 390)
             scroll.CanvasSize = UDim2.new(0, 0, 0, 390)
@@ -466,6 +485,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     return {
         Scroll = scroll,
+        ScrollHint = scrollHint,
         Content = content,
         Avatar = avatar,
         DisplayName = displayName,

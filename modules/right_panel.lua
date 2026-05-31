@@ -150,6 +150,21 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
     list.CanvasSize = UDim2.new(0, 0, 0, 0)
     list.Parent = parent
 
+    local scrollHint = Instance.new("Frame")
+    scrollHint.Name = "RightScrollHint"
+    scrollHint.Size = UDim2.new(0, 1, 1, -52)
+    scrollHint.Position = UDim2.new(1, -2, 0, 42)
+    scrollHint.BackgroundColor3 = Theme.Colors.TextMuted
+    scrollHint.BackgroundTransparency = 0.2
+    scrollHint.BorderSizePixel = 0
+    scrollHint.Visible = false
+    scrollHint.ZIndex = 20
+    scrollHint.Parent = parent
+
+    local scrollHintCorner = Instance.new("UICorner")
+    scrollHintCorner.CornerRadius = UDim.new(1, 0)
+    scrollHintCorner.Parent = scrollHint
+
     local listCorner = Instance.new("UICorner")
     listCorner.CornerRadius = UDim.new(0, Theme.Radius.Panel)
     listCorner.Parent = list
@@ -329,6 +344,9 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
             list.ScrollBarThickness = 1
             list.ScrollBarImageColor3 = Theme.Colors.TextMuted
             list.ScrollBarImageTransparency = 0.35
+            scrollHint.Visible = true
+            scrollHint.Size = UDim2.new(0, 1, 1, -52)
+            scrollHint.Position = UDim2.new(1, -2, 0, 42)
         else
             title.Size = UDim2.new(1, -24, 0, 36)
             title.Position = UDim2.new(0, 12, 0, 8)
@@ -339,6 +357,7 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
             list.Position = UDim2.new(0, 12, 0, 46)
             list.ScrollBarThickness = 2
             list.ScrollBarImageTransparency = 0
+            scrollHint.Visible = false
         end
     end
 
@@ -352,6 +371,7 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
         Title = title,
         TitleUnderline = titleUnderline,
         List = list,
+        ScrollHint = scrollHint,
         Render = render
     }
 end
