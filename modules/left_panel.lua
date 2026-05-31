@@ -390,6 +390,10 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     local function applyResponsiveLayout()
         if isMobileLandscape() then
+            scroll.ScrollBarThickness = 1
+            scroll.ScrollBarImageColor3 = Theme.Colors.TextMuted
+            scroll.ScrollBarImageTransparency = 0.35
+
             content.Size = UDim2.new(1, 0, 0, 366)
             scroll.CanvasSize = UDim2.new(0, 0, 0, 374)
 
@@ -420,6 +424,8 @@ function LeftPanel.Create(parent, Theme, profile, player)
             setButtonLayout(createdButtons.SalasPrivadas, 288)
             setButtonLayout(createdButtons.TablaClanes, 326)
         else
+            scroll.ScrollBarThickness = 0
+
             content.Size = UDim2.new(1, 0, 0, 390)
             scroll.CanvasSize = UDim2.new(0, 0, 0, 390)
 

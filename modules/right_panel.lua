@@ -326,7 +326,9 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
             titleUnderline.Position = UDim2.new(0, 10, 0, 37)
             list.Size = UDim2.new(1, -20, 1, -48)
             list.Position = UDim2.new(0, 10, 0, 42)
-            list.ScrollBarThickness = 0
+            list.ScrollBarThickness = 1
+            list.ScrollBarImageColor3 = Theme.Colors.TextMuted
+            list.ScrollBarImageTransparency = 0.35
         else
             title.Size = UDim2.new(1, -24, 0, 36)
             title.Position = UDim2.new(0, 12, 0, 8)
@@ -336,6 +338,7 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
             list.Size = UDim2.new(1, -24, 1, -56)
             list.Position = UDim2.new(0, 12, 0, 46)
             list.ScrollBarThickness = 2
+            list.ScrollBarImageTransparency = 0
         end
     end
 
