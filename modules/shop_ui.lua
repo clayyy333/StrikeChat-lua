@@ -20,20 +20,16 @@ function ShopUI.Create(parent, Theme, initialPoints)
     gui.IgnoreGuiInset = true
     gui.Parent = parent
 
-    local function createPricePill(parentInstance, amount, position, size, textSize, zIndex)
-        local pricePill = Instance.new("Frame")
-        pricePill.Name = "PricePill"
-        pricePill.Size = size
-        pricePill.Position = position
-        pricePill.BackgroundColor3 = Color3.fromRGB(14, 12, 22)
-        pricePill.BackgroundTransparency = 0.08
-        pricePill.BorderSizePixel = 0
-        pricePill.ZIndex = zIndex or 3
-        pricePill.Parent = parentInstance
-
-        local pillCorner = Instance.new("UICorner")
-        pillCorner.CornerRadius = UDim.new(0, 8)
-        pillCorner.Parent = pricePill
+    local function createPriceRow(parentInstance, amount, position, size, textSize, zIndex)
+        local priceRow = Instance.new("Frame")
+        priceRow.Name = "PriceRow"
+        priceRow.Size = size
+        priceRow.Position = position
+        priceRow.BackgroundTransparency = 1
+        priceRow.BorderSizePixel = 0
+        priceRow.Active = false
+        priceRow.ZIndex = zIndex or 3
+        priceRow.Parent = parentInstance
 
         local pillLayout = Instance.new("UIListLayout")
         pillLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -41,7 +37,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
         pillLayout.VerticalAlignment = Enum.VerticalAlignment.Center
         pillLayout.Padding = UDim.new(0, 4)
         pillLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        pillLayout.Parent = pricePill
+        pillLayout.Parent = priceRow
 
         local priceText = Instance.new("TextLabel")
         priceText.Name = "PriceText"
@@ -55,7 +51,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
         priceText.TextXAlignment = Enum.TextXAlignment.Center
         priceText.LayoutOrder = 1
         priceText.ZIndex = (zIndex or 3) + 1
-        priceText.Parent = pricePill
+        priceText.Parent = priceRow
 
         local priceIcon = Instance.new("ImageLabel")
         priceIcon.Name = "PriceIcon"
@@ -65,9 +61,33 @@ function ShopUI.Create(parent, Theme, initialPoints)
         priceIcon.ScaleType = Enum.ScaleType.Fit
         priceIcon.LayoutOrder = 2
         priceIcon.ZIndex = (zIndex or 3) + 1
-        priceIcon.Parent = pricePill
+        priceIcon.Parent = priceRow
 
-        return pricePill
+        task.spawn(function()
+            local fadeOut = true
+
+            while priceRow.Parent do
+                if fadeOut then
+                    priceText.TextTransparency += 0.03
+                    priceIcon.ImageTransparency += 0.03
+
+                    if priceText.TextTransparency >= 0.45 then
+                        fadeOut = false
+                    end
+                else
+                    priceText.TextTransparency -= 0.03
+                    priceIcon.ImageTransparency -= 0.03
+
+                    if priceText.TextTransparency <= 0 then
+                        fadeOut = true
+                    end
+                end
+
+                task.wait(0.05)
+            end
+        end)
+
+        return priceRow
     end
 
     local root = Instance.new("Frame")
@@ -383,11 +403,11 @@ function ShopUI.Create(parent, Theme, initialPoints)
     featuredTitle.TextXAlignment = Enum.TextXAlignment.Left
     featuredTitle.Parent = featuredCard
 
-    createPricePill(
+    createPriceRow(
         featuredCard,
         1000,
-        UDim2.new(1, -112, 0, 60),
-        UDim2.new(0, 92, 0, 28),
+        UDim2.new(1, -112, 0, 62),
+        UDim2.new(0, 92, 0, 22),
         13,
         3
     )
@@ -639,15 +659,15 @@ function ShopUI.Create(parent, Theme, initialPoints)
 
     if item6Title then
         item6Title.Size = UDim2.new(0, 112, 0, 36)
-        item6Title.Position = UDim2.new(0, 10, 0, 38)
+        item6Title.Position = UDim2.new(0, 10, 0, 31)
         item6Title.TextXAlignment = Enum.TextXAlignment.Left
     end
 
-    createPricePill(
+    createPriceRow(
         item6,
         200,
-        UDim2.new(1, -84, 0, 42),
-        UDim2.new(0, 68, 0, 26),
+        UDim2.new(1, -84, 0, 36),
+        UDim2.new(0, 68, 0, 20),
         12,
         3
     )
