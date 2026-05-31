@@ -381,4 +381,137 @@ function AdminPanelUI.Create(parent, Theme)
     }
 end
 
+function AdminPanelUI.CreateSecurityPrompt(parent, Theme)
+    local overlay = Instance.new("Frame")
+    overlay.Name = "AdminSecurityOverlay"
+    overlay.Size = UDim2.new(1, 0, 1, 0)
+    overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    overlay.BackgroundTransparency = 0.42
+    overlay.Visible = false
+    overlay.ZIndex = 150
+    overlay.Parent = parent
+
+    local function round(instance, radius)
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, radius or Theme.Radius.Button)
+        corner.Parent = instance
+        return corner
+    end
+
+    local function stroke(instance, color, transparency)
+        local uiStroke = Instance.new("UIStroke")
+        uiStroke.Color = color or Color3.fromRGB(80, 82, 92)
+        uiStroke.Thickness = 1
+        uiStroke.Transparency = transparency or 0.35
+        uiStroke.Parent = instance
+        return uiStroke
+    end
+
+    local modal = Instance.new("Frame")
+    modal.Name = "SecurityModal"
+    modal.Size = UDim2.new(0, 320, 0, 184)
+    modal.Position = UDim2.new(0.5, -160, 0.5, -92)
+    modal.BackgroundColor3 = Color3.fromRGB(48, 49, 55)
+    modal.BorderSizePixel = 0
+    modal.ZIndex = 151
+    modal.Parent = overlay
+    round(modal, 12)
+    stroke(modal, Color3.fromRGB(96, 98, 110), 0.38)
+
+    local title = Instance.new("TextLabel")
+    title.Name = "Title"
+    title.Size = UDim2.new(1, -36, 0, 40)
+    title.Position = UDim2.new(0, 18, 0, 16)
+    title.BackgroundTransparency = 1
+    title.Text = "Introducir codigo de seguridad"
+    title.TextColor3 = Theme.Colors.Text
+    title.Font = Theme.Font.Bold
+    title.TextSize = 14
+    title.TextWrapped = true
+    title.TextXAlignment = Enum.TextXAlignment.Left
+    title.ZIndex = 152
+    title.Parent = modal
+
+    local codeInput = Instance.new("TextBox")
+    codeInput.Name = "CodeInput"
+    codeInput.Size = UDim2.new(1, -36, 0, 34)
+    codeInput.Position = UDim2.new(0, 18, 0, 64)
+    codeInput.BackgroundColor3 = Color3.fromRGB(40, 41, 47)
+    codeInput.BorderSizePixel = 0
+    codeInput.Text = ""
+    codeInput.PlaceholderText = "Codigo"
+    codeInput.TextColor3 = Theme.Colors.Text
+    codeInput.PlaceholderColor3 = Theme.Colors.TextMuted
+    codeInput.Font = Theme.Font.Regular
+    codeInput.TextSize = 13
+    codeInput.ClearTextOnFocus = false
+    codeInput.ZIndex = 152
+    codeInput.Parent = modal
+    round(codeInput, 8)
+    stroke(codeInput, Color3.fromRGB(72, 74, 84), 0.45)
+
+    local acceptButton = Instance.new("TextButton")
+    acceptButton.Name = "AcceptButton"
+    acceptButton.Size = UDim2.new(0, 132, 0, 32)
+    acceptButton.Position = UDim2.new(0, 18, 1, -48)
+    acceptButton.BackgroundColor3 = Color3.fromRGB(66, 102, 76)
+    acceptButton.BorderSizePixel = 0
+    acceptButton.Text = "Aceptar"
+    acceptButton.TextColor3 = Theme.Colors.Text
+    acceptButton.Font = Theme.Font.Bold
+    acceptButton.TextSize = 12
+    acceptButton.ZIndex = 152
+    acceptButton.Parent = modal
+    round(acceptButton, 8)
+
+    local closeButton = Instance.new("TextButton")
+    closeButton.Name = "CloseButton"
+    closeButton.Size = UDim2.new(0, 132, 0, 32)
+    closeButton.Position = UDim2.new(1, -150, 1, -48)
+    closeButton.BackgroundColor3 = Color3.fromRGB(66, 68, 78)
+    closeButton.BorderSizePixel = 0
+    closeButton.Text = "Cerrar"
+    closeButton.TextColor3 = Theme.Colors.Text
+    closeButton.Font = Theme.Font.Bold
+    closeButton.TextSize = 12
+    closeButton.ZIndex = 152
+    closeButton.Parent = modal
+    round(closeButton, 8)
+
+    local statusLabel = Instance.new("TextLabel")
+    statusLabel.Name = "StatusLabel"
+    statusLabel.Size = UDim2.new(1, -36, 0, 22)
+    statusLabel.Position = UDim2.new(0, 18, 0, 104)
+    statusLabel.BackgroundTransparency = 1
+    statusLabel.Text = ""
+    statusLabel.TextColor3 = Theme.Colors.TextMuted
+    statusLabel.Font = Theme.Font.Regular
+    statusLabel.TextSize = 11
+    statusLabel.TextXAlignment = Enum.TextXAlignment.Left
+    statusLabel.ZIndex = 152
+    statusLabel.Parent = modal
+
+    return {
+        Overlay = overlay,
+        CodeInput = codeInput,
+        AcceptButton = acceptButton,
+        CloseButton = closeButton,
+
+        Open = function()
+            overlay.Visible = true
+            statusLabel.Text = ""
+            codeInput:CaptureFocus()
+        end,
+
+        Close = function()
+            overlay.Visible = false
+        end,
+
+        ShowStatus = function(message, isError)
+            statusLabel.Text = message or ""
+            statusLabel.TextColor3 = isError and Theme.Colors.Danger or Theme.Colors.TextMuted
+        end
+    }
+end
+
 return AdminPanelUI

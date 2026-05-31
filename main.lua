@@ -87,6 +87,8 @@ local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme, AvatarRenderer)
 local adminPanel = nil
+local adminSecurityPrompt = nil
+local adminAccessVerified = false
 local selectedRewardGroup = nil
 
 if window.SetBackgroundDesign then
@@ -290,70 +292,121 @@ task.spawn(function()
     end
 end)
 
+local function ensureAdminPanel()
+    if adminPanel then
+        return
+    end
+
+    adminPanel = AdminPanelUI.Create(window.Gui, Theme)
+
+    adminPanel.CloseButton.MouseButton1Click:Connect(function()
+        adminPanel.Close()
+    end)
+
+    adminPanel.SendNoticeButton.MouseButton1Click:Connect(function()
+        local message = adminPanel.NoticeInput.Text or ""
+
+        if message:gsub("%s+", "") == "" then
+            adminPanel.ShowStatus("Escribe un aviso antes de enviarlo.", true)
+            return
+        end
+
+        adminPanel.ShowStatus("Enviando aviso...", false)
+
+        local result = Api.CreateAdminNotice(message)
+
+        if result and result.status == "created" then
+            adminPanel.NoticeInput.Text = ""
+            adminPanel.ShowStatus("Aviso enviado correctamente.", false)
+        else
+            adminPanel.ShowStatus("No se pudo enviar el aviso.", true)
+        end
+    end)
+
+    adminPanel.RefreshButton.MouseButton1Click:Connect(refreshAdminPendingRewards)
+
+    adminPanel.BackButton.MouseButton1Click:Connect(function()
+        selectedRewardGroup = nil
+        adminPanel.CloseRewardDetail()
+    end)
+
+    adminPanel.DeliveredButton.MouseButton1Click:Connect(function()
+        if not selectedRewardGroup then
+            return
+        end
+
+        adminPanel.ShowStatus("Marcando premio como entregado...", false)
+
+        local deliveredCount = 0
+
+        for _, code in ipairs(selectedRewardGroup.codes or {}) do
+            local result = Api.MarkRewardDelivered(code)
+
+            if result and result.status == "delivered" then
+                deliveredCount += 1
+            end
+        end
+
+        selectedRewardGroup = nil
+        adminPanel.CloseRewardDetail()
+        refreshAdminPendingRewards()
+        adminPanel.ShowStatus("Entregados: " .. tostring(deliveredCount), false)
+    end)
+end
+
+local function openAdminPanel()
+    ensureAdminPanel()
+    adminPanel.Open()
+    refreshAdminPendingRewards()
+end
+
+local function ensureAdminSecurityPrompt()
+    if adminSecurityPrompt then
+        return
+    end
+
+    adminSecurityPrompt = AdminPanelUI.CreateSecurityPrompt(window.Gui, Theme)
+
+    adminSecurityPrompt.CloseButton.MouseButton1Click:Connect(function()
+        adminSecurityPrompt.Close()
+    end)
+
+    adminSecurityPrompt.AcceptButton.MouseButton1Click:Connect(function()
+        local code = adminSecurityPrompt.CodeInput.Text or ""
+
+        if code:gsub("%s+", "") == "" then
+            adminSecurityPrompt.ShowStatus("Introduce el codigo.", true)
+            return
+        end
+
+        Api.SetAdminCode(code)
+        adminSecurityPrompt.ShowStatus("Verificando codigo...", false)
+
+        local result = Api.VerifyAdminAccess()
+
+        if result and result.status == "ok" then
+            adminAccessVerified = true
+            adminSecurityPrompt.CodeInput.Text = ""
+            adminSecurityPrompt.Close()
+            openAdminPanel()
+        else
+            Api.SetAdminCode("")
+            adminSecurityPrompt.ShowStatus("Codigo incorrecto.", true)
+        end
+    end)
+end
+
 if isCurrentUserAdmin() and leftPanel.AdminButton then
     leftPanel.AdminButton.Visible = true
 
     leftPanel.AdminButton.MouseButton1Click:Connect(function()
-        if not adminPanel then
-            adminPanel = AdminPanelUI.Create(window.Gui, Theme)
-
-            adminPanel.CloseButton.MouseButton1Click:Connect(function()
-                adminPanel.Close()
-            end)
-
-            adminPanel.SendNoticeButton.MouseButton1Click:Connect(function()
-                local message = adminPanel.NoticeInput.Text or ""
-
-                if message:gsub("%s+", "") == "" then
-                    adminPanel.ShowStatus("Escribe un aviso antes de enviarlo.", true)
-                    return
-                end
-
-                adminPanel.ShowStatus("Enviando aviso...", false)
-
-                local result = Api.CreateAdminNotice(message)
-
-                if result and result.status == "created" then
-                    adminPanel.NoticeInput.Text = ""
-                    adminPanel.ShowStatus("Aviso enviado correctamente.", false)
-                else
-                    adminPanel.ShowStatus("No se pudo enviar el aviso.", true)
-                end
-            end)
-
-            adminPanel.RefreshButton.MouseButton1Click:Connect(refreshAdminPendingRewards)
-
-            adminPanel.BackButton.MouseButton1Click:Connect(function()
-                selectedRewardGroup = nil
-                adminPanel.CloseRewardDetail()
-            end)
-
-            adminPanel.DeliveredButton.MouseButton1Click:Connect(function()
-                if not selectedRewardGroup then
-                    return
-                end
-
-                adminPanel.ShowStatus("Marcando premio como entregado...", false)
-
-                local deliveredCount = 0
-
-                for _, code in ipairs(selectedRewardGroup.codes or {}) do
-                    local result = Api.MarkRewardDelivered(code)
-
-                    if result and result.status == "delivered" then
-                        deliveredCount += 1
-                    end
-                end
-
-                selectedRewardGroup = nil
-                adminPanel.CloseRewardDetail()
-                refreshAdminPendingRewards()
-                adminPanel.ShowStatus("Entregados: " .. tostring(deliveredCount), false)
-            end)
+        if adminAccessVerified then
+            openAdminPanel()
+            return
         end
 
-        adminPanel.Open()
-        refreshAdminPendingRewards()
+        ensureAdminSecurityPrompt()
+        adminSecurityPrompt.Open()
     end)
 end
 
