@@ -563,7 +563,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
         if isMobileLandscape() then
             applyScreenBoundsMode(true)
             main.Size = UDim2.new(1, 0, 1, -64)
-            main.Position = UDim2.new(0, 0, 1, -2)
+            main.Position = UDim2.new(0, 0, 1, 0)
             main.AnchorPoint = Vector2.new(0, 1)
 
             topBar.Size = UDim2.new(1, 0, 0, 42)
