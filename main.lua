@@ -37,6 +37,7 @@ local PublicProfileUI = loadstring(game:HttpGet(BASE_RAW .. "modules/public_prof
 local InventoryUI = loadstring(game:HttpGet(BASE_RAW .. "modules/inventory_ui.lua"))()
 local ChatStyles = loadstring(game:HttpGet(BASE_RAW .. "modules/chat_styles.lua"))()
 local AvatarRenderer = loadstring(game:HttpGet(BASE_RAW .. "modules/avatar_renderer.lua"))()
+local AdminPanelUI = loadstring(game:HttpGet(BASE_RAW .. "modules/admin_panel_ui.lua"))()
 
 local function getCurrentGameActivity()
     local placeName = nil
@@ -61,6 +62,14 @@ end
 
 local currentGameActivity = getCurrentGameActivity()
 
+local adminUserIds = {
+    [7929273069] = true
+}
+
+local function isCurrentUserAdmin()
+    return adminUserIds[player.UserId] == true
+end
+
 if not Api.HasRequest() then
     warn("Executor sin soporte request/http_request")
     return
@@ -77,6 +86,8 @@ local window = MainWindow.Create(CoreGui, Theme)
 local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme, AvatarRenderer)
+local adminPanel = nil
+local selectedRewardGroup = nil
 
 if window.SetBackgroundDesign then
     window.SetBackgroundDesign(heartbeatResult.profile and heartbeatResult.profile.profile_banner_id)
@@ -198,6 +209,62 @@ local function getUsernameColor(colorName, fallbackColor)
     return usernameColorMap[key] or fallbackColor
 end
 
+local function buildPendingRewardGroups(redeems)
+    local groupsByKey = {}
+    local groups = {}
+
+    for _, redeem in ipairs(redeems or {}) do
+        local key = tostring(redeem.roblox_user_id) .. ":" .. tostring(redeem.reward_type)
+        local group = groupsByKey[key]
+
+        if not group then
+            group = {
+                roblox_user_id = redeem.roblox_user_id,
+                roblox_username = redeem.roblox_username,
+                reward_type = redeem.reward_type,
+                count = 0,
+                codes = {}
+            }
+
+            groupsByKey[key] = group
+            table.insert(groups, group)
+        end
+
+        group.count += 1
+        table.insert(group.codes, redeem.code)
+    end
+
+    table.sort(groups, function(a, b)
+        return tostring(a.roblox_username):lower() < tostring(b.roblox_username):lower()
+    end)
+
+    return groups
+end
+
+local function refreshAdminPendingRewards()
+    if not adminPanel then
+        return
+    end
+
+    adminPanel.ShowStatus("Cargando premios pendientes...", false)
+
+    local result = Api.GetPendingRewardRedeems()
+
+    if result and result.status == "ok" and result.redeems then
+        local groups = buildPendingRewardGroups(result.redeems)
+
+        adminPanel.RenderPending(groups, function(group)
+            selectedRewardGroup = group
+            adminPanel.OpenRewardDetail(group)
+        end)
+
+        adminPanel.ShowStatus("Premios pendientes actualizados.", false)
+    else
+        adminPanel.RenderPending({}, nil)
+        adminPanel.ShowStatus("No se pudieron cargar los premios pendientes.", true)
+    end
+end
+
 
 task.spawn(function()
     while true do
@@ -221,6 +288,73 @@ task.spawn(function()
         task.wait(15)
     end
 end)
+
+if isCurrentUserAdmin() and leftPanel.AdminButton then
+    leftPanel.AdminButton.Visible = true
+
+    leftPanel.AdminButton.MouseButton1Click:Connect(function()
+        if not adminPanel then
+            adminPanel = AdminPanelUI.Create(window.Gui, Theme)
+
+            adminPanel.CloseButton.MouseButton1Click:Connect(function()
+                adminPanel.Close()
+            end)
+
+            adminPanel.SendNoticeButton.MouseButton1Click:Connect(function()
+                local message = adminPanel.NoticeInput.Text or ""
+
+                if message:gsub("%s+", "") == "" then
+                    adminPanel.ShowStatus("Escribe un aviso antes de enviarlo.", true)
+                    return
+                end
+
+                adminPanel.ShowStatus("Enviando aviso...", false)
+
+                local result = Api.CreateAdminNotice(message)
+
+                if result and result.status == "created" then
+                    adminPanel.NoticeInput.Text = ""
+                    adminPanel.ShowStatus("Aviso enviado correctamente.", false)
+                else
+                    adminPanel.ShowStatus("No se pudo enviar el aviso.", true)
+                end
+            end)
+
+            adminPanel.RefreshButton.MouseButton1Click:Connect(refreshAdminPendingRewards)
+
+            adminPanel.BackButton.MouseButton1Click:Connect(function()
+                selectedRewardGroup = nil
+                adminPanel.CloseRewardDetail()
+            end)
+
+            adminPanel.DeliveredButton.MouseButton1Click:Connect(function()
+                if not selectedRewardGroup then
+                    return
+                end
+
+                adminPanel.ShowStatus("Marcando premio como entregado...", false)
+
+                local deliveredCount = 0
+
+                for _, code in ipairs(selectedRewardGroup.codes or {}) do
+                    local result = Api.MarkRewardDelivered(code)
+
+                    if result and result.status == "delivered" then
+                        deliveredCount += 1
+                    end
+                end
+
+                selectedRewardGroup = nil
+                adminPanel.CloseRewardDetail()
+                refreshAdminPendingRewards()
+                adminPanel.ShowStatus("Entregados: " .. tostring(deliveredCount), false)
+            end)
+        end
+
+        adminPanel.Open()
+        refreshAdminPendingRewards()
+    end)
+end
 
 
 

@@ -1,6 +1,7 @@
 local Api = {}
 
 Api.BaseUrl = "https://strikechat-api.onrender.com"
+Api.AdminToken = "strikechat-admin-dev"
 
 local HttpService = game:GetService("HttpService")
 
@@ -29,17 +30,23 @@ function Api.Decode(body)
     return nil
 end
 
-function Api.Request(url, method, body)
+function Api.Request(url, method, body, extraHeaders)
     if not httpRequest then
         return nil
+    end
+
+    local headers = {
+        ["Content-Type"] = "application/json"
+    }
+
+    for key, value in pairs(extraHeaders or {}) do
+        headers[key] = value
     end
 
     local data = {
         Url = url,
         Method = method or "GET",
-        Headers = {
-            ["Content-Type"] = "application/json"
-        }
+        Headers = headers
     }
 
     if body then
@@ -208,6 +215,21 @@ function Api.GetAdminNotices()
 end
 
 
+function Api.CreateAdminNotice(message)
+    return Api.Request(
+        Api.BaseUrl .. "/admin-notices/create",
+        "POST",
+        {
+            message = message,
+            target_platforms = {"external"}
+        },
+        {
+            ["X-Admin-Token"] = Api.AdminToken
+        }
+    )
+end
+
+
 function Api.GetPublicProfile(robloxUserId)
     return Api.Request(
         Api.BaseUrl ..
@@ -282,6 +304,32 @@ function Api.GetLimitedRewardStock()
     return Api.Request(
         Api.BaseUrl .. "/shop/limited-stock",
         "GET"
+    )
+end
+
+
+function Api.GetPendingRewardRedeems()
+    return Api.Request(
+        Api.BaseUrl .. "/shop/redeems/pending",
+        "GET",
+        nil,
+        {
+            ["X-Admin-Token"] = Api.AdminToken
+        }
+    )
+end
+
+
+function Api.MarkRewardDelivered(code)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/shop/redeems/mark-delivered" ..
+        "?code=" .. Api.Encode(code),
+        "POST",
+        nil,
+        {
+            ["X-Admin-Token"] = Api.AdminToken
+        }
     )
 end
 

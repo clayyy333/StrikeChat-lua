@@ -63,7 +63,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     local username = Instance.new("TextLabel")
     username.Name = "Username"
-    username.Size = UDim2.new(1, -104, 0, 20)
+    username.Size = UDim2.new(1, -104, 0, 16)
     username.Position = UDim2.new(0, 92, 0, 42)
     username.BackgroundTransparency = 1
     username.Text = "@" .. tostring(player.Name)
@@ -73,6 +73,24 @@ function LeftPanel.Create(parent, Theme, profile, player)
     username.TextXAlignment = Enum.TextXAlignment.Left
     username.TextTruncate = Enum.TextTruncate.AtEnd
     username.Parent = parent
+
+    local adminButton = Instance.new("TextButton")
+    adminButton.Name = "AdminButton"
+    adminButton.Size = UDim2.new(0, 74, 0, 18)
+    adminButton.Position = UDim2.new(0, 92, 0, 64)
+    adminButton.BackgroundColor3 = Theme.Colors.PanelLight
+    adminButton.BackgroundTransparency = 0.08
+    adminButton.BorderSizePixel = 0
+    adminButton.Text = "Admin"
+    adminButton.TextColor3 = Theme.Colors.TextMuted
+    adminButton.Font = Theme.Font.Bold
+    adminButton.TextSize = 9
+    adminButton.Visible = false
+    adminButton.Parent = parent
+
+    local adminButtonCorner = Instance.new("UICorner")
+    adminButtonCorner.CornerRadius = UDim.new(0, 6)
+    adminButtonCorner.Parent = adminButton
 
     local pointsBox = Instance.new("Frame")
     pointsBox.Name = "PointsBox"
@@ -253,6 +271,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
         Avatar = avatar,
         DisplayName = displayName,
         Username = username,
+        AdminButton = adminButton,
         PointsValue = pointsValue,
         Buttons = createdButtons
     }
