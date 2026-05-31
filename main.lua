@@ -109,6 +109,7 @@ adminNotice.Font = Theme.Font.Bold
 adminNotice.TextSize = 13
 adminNotice.TextTransparency = 0
 adminNotice.TextXAlignment = Enum.TextXAlignment.Center
+adminNotice.ZIndex = 220
 adminNotice.Parent = window.Gui
 
 task.spawn(function()

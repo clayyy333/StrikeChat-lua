@@ -126,8 +126,8 @@ function AdminPanelUI.Create(parent, Theme)
 
     local refreshButton = Instance.new("TextButton")
     refreshButton.Name = "RefreshButton"
-    refreshButton.Size = UDim2.new(0, 118, 0, 30)
-    refreshButton.Position = UDim2.new(0, 144, 0, 184)
+    refreshButton.Size = UDim2.new(0, 246, 0, 30)
+    refreshButton.Position = UDim2.new(0, 292, 1, -42)
     refreshButton.BackgroundColor3 = Color3.fromRGB(66, 68, 78)
     refreshButton.BorderSizePixel = 0
     refreshButton.Text = "Actualizar"
@@ -168,7 +168,7 @@ function AdminPanelUI.Create(parent, Theme)
 
     local pendingList = Instance.new("ScrollingFrame")
     pendingList.Name = "PendingList"
-    pendingList.Size = UDim2.new(0, 246, 0, 284)
+    pendingList.Size = UDim2.new(0, 246, 0, 236)
     pendingList.Position = UDim2.new(0, 292, 0, 84)
     pendingList.BackgroundColor3 = Color3.fromRGB(40, 41, 47)
     pendingList.BorderSizePixel = 0
