@@ -1279,17 +1279,17 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         local rightShadow = content:FindFirstChild("PrivateProfilePanelShadowRight")
 
         if leftShadow then
-            leftShadow.Size = UDim2.new(0, 26, 1, -8)
-            leftShadow.Position = UDim2.new(0, -16, 0, 4)
+            leftShadow.Size = UDim2.new(0, 26, 1, 2)
+            leftShadow.Position = UDim2.new(0, -16, 0, -1)
         end
 
         if rightShadow then
-            rightShadow.Size = UDim2.new(0, 30, 1, -8)
-            rightShadow.Position = UDim2.new(0.37, 2, 0, 4)
+            rightShadow.Size = UDim2.new(0, 30, 1, 2)
+            rightShadow.Position = UDim2.new(0.37, 2, 0, -1)
         end
 
-        leftPanel.Size = UDim2.new(0.37, -10, 1, 6)
-        leftPanel.Position = UDim2.new(0, 22, 0, 0)
+        leftPanel.Size = UDim2.new(0.37, -10, 1, 14)
+        leftPanel.Position = UDim2.new(0, 30, 0, -4)
         rightPanel.Size = UDim2.new(0.5, -14, 1, 0)
         rightPanel.Position = UDim2.new(0.47, 22, 0, 0)
 
