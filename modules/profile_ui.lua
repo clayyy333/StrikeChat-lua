@@ -1287,14 +1287,14 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
 
         if leftShadow then
             leftShadow.Size = UDim2.new(0, 30, 1, 14)
-            leftShadow.Position = UDim2.new(0, mobileLeftPanelX - 30, 0, -4)
+            leftShadow.Position = UDim2.new(0, mobileLeftPanelX - 24, 0, -4)
         end
 
         if rightShadow then
             rightShadow.Size = UDim2.new(0, 30, 1, 14)
             rightShadow.Position = UDim2.new(
                 mobileLeftPanelScale,
-                mobileLeftPanelX + mobileLeftPanelWidthOffset,
+                mobileLeftPanelX + mobileLeftPanelWidthOffset - 6,
                 0,
                 -4
             )
