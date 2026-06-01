@@ -256,6 +256,16 @@ function Api.LeaveClan(player)
     )
 end
 
+function Api.DeleteClan(player, clanId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/clans/delete" ..
+        "?owner_user_id=" .. Api.Encode(player.UserId) ..
+        "&clan_id=" .. Api.Encode(clanId),
+        "DELETE"
+    )
+end
+
 function Api.GetAdminNotices()
     return Api.Request(
         Api.BaseUrl .. "/admin-notices?platform=external",

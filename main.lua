@@ -1035,6 +1035,61 @@ local function showStatus(message)
     end
 end
 
+local function findOwnedClan(profile, clans)
+    local profileClanId = profile and profile.clan_id
+
+    if not profileClanId then
+        return nil
+    end
+
+    for _, clan in ipairs(clans or {}) do
+        if tostring(clan.clan_id) == tostring(profileClanId)
+            and tostring(clan.owner_user_id) == tostring(player.UserId)
+        then
+            return clan
+        end
+    end
+
+    return nil
+end
+
+local function getOwnedClan(profile)
+    local clansResult = Api.GetClans()
+
+    if not clansResult or not clansResult.clans then
+        return nil
+    end
+
+    return findOwnedClan(profile, clansResult.clans)
+end
+
+local function applyLatestProfile(applyProfile)
+    local latestProfileResult = Api.GetMyProfile(player)
+
+    if latestProfileResult
+        and latestProfileResult.status == "ok"
+        and latestProfileResult.profile
+    then
+        heartbeatResult.profile = latestProfileResult.profile
+
+        if applyProfile then
+            applyProfile(latestProfileResult.profile)
+        end
+
+        if leftPanel.DisplayName then
+            leftPanel.DisplayName.Text = tostring(latestProfileResult.profile.display_name or player.DisplayName)
+        end
+
+        if leftPanel.PointsValue then
+            leftPanel.PointsValue.Text = tostring(latestProfileResult.profile.personal_points or 0)
+        end
+
+        return latestProfileResult.profile
+    end
+
+    return nil
+end
+
 setRoom = function(roomId, roomName, roomType)
     currentRoom.id = roomId
     currentRoom.name = roomName
@@ -1135,12 +1190,18 @@ leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
         clans = clansResult.clans
     end
 
+    local ownedClan = findOwnedClan(myProfile, clans)
+
     local clanUI = ClanTableUI.Create(CoreGui, Theme, clans)
     activeClanTableUI = clanUI
     I18n.RegisterRoot(clanUI.Gui)
 
     if clanUI.SetCurrentClanId then
         clanUI.SetCurrentClanId(myProfile and myProfile.clan_id)
+    end
+
+    if clanUI.SetOwnedClanId then
+        clanUI.SetOwnedClanId(ownedClan and ownedClan.clan_id)
     end
 
     if clanUI.SetJoinActionHandler then
@@ -1152,6 +1213,46 @@ leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
             local currentClanId = myProfile and myProfile.clan_id
 
             if currentClanId and tostring(currentClanId) == tostring(clan.clan_id) then
+                if tostring(clan.owner_user_id) == tostring(player.UserId) then
+                    confirmAction = function()
+                        ensureClanRequestModal().OpenInfo("Eliminando clan...")
+
+                        local deleteResult = Api.DeleteClan(player, clan.clan_id)
+
+                        if deleteResult and deleteResult.status == "deleted" then
+                            myProfile = applyLatestProfile(nil) or myProfile
+                            ownedClan = nil
+
+                            if clanUI.SetCurrentClanId then
+                                clanUI.SetCurrentClanId(nil)
+                            end
+
+                            if clanUI.SetOwnedClanId then
+                                clanUI.SetOwnedClanId(nil)
+                            end
+
+                            ensureClanRequestModal().OpenInfo("Clan eliminado correctamente.")
+                            refreshOnlineUsers()
+                            refreshChat()
+                        else
+                            ensureClanRequestModal().OpenInfo("No se pudo eliminar el clan.")
+                        end
+                    end
+
+                    confirmSecondaryAction = function()
+                        ensureClanRequestModal().OpenInfo("Eliminacion cancelada.")
+                    end
+
+                    confirmModal.Open(
+                        "Estas seguro/a que quieres eliminar este clan? Se expulsara a todos los integrantes.",
+                        "Si",
+                        "No"
+                    )
+
+                    confirmModal.SecondaryButton.Visible = true
+                    return
+                end
+
                 local leaveResult = Api.LeaveClan(player)
 
                 if leaveResult and leaveResult.status == "left" then
@@ -1372,12 +1473,47 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
 
                 inventoryLocked = false
             end, function(itemId)
+                local ownedClanForDeletion = nil
+
+                if itemId == "clan_ticket" then
+                    ownedClanForDeletion = getOwnedClan(profile)
+                end
+
                 confirmAction = function()
                     if inventoryLocked then
                         return
                     end
 
                     inventoryLocked = true
+
+                    if ownedClanForDeletion then
+                        inventoryUI.ShowStatus("Eliminando clan...", false)
+
+                        local deleteClanResult = Api.DeleteClan(player, ownedClanForDeletion.clan_id)
+
+                        if deleteClanResult and deleteClanResult.status == "deleted" then
+                            Api.DeleteInventoryItem(player, itemId)
+
+                            local latestProfile = applyLatestProfile(function(updatedProfile)
+                                profileUI.ApplyProfile(updatedProfile)
+                            end)
+
+                            if latestProfile then
+                                profile = latestProfile
+                            end
+
+                            refreshInventory()
+                            inventoryUI.ShowStatus("Clan eliminado correctamente.", false)
+                            refreshOnlineUsers()
+                            refreshChat()
+                        else
+                            inventoryUI.ShowStatus("No se pudo eliminar el clan.", true)
+                        end
+
+                        inventoryLocked = false
+                        return
+                    end
+
                     inventoryUI.ShowStatus("Eliminando item...", false)
 
                     local deleteResult = Api.DeleteInventoryItem(player, itemId)
@@ -1404,11 +1540,19 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
                     inventoryUI.ShowStatus("Eliminacion cancelada.", false)
                 end
 
-                confirmModal.Open(
-                    "Estas seguro/a que quieres eliminar este item de tu inventario?",
-                    "Si",
-                    "No"
-                )
+                if ownedClanForDeletion then
+                    confirmModal.Open(
+                        "Estas seguro/a que quieres eliminar este clan? Se expulsara a todos los integrantes.",
+                        "Si",
+                        "No"
+                    )
+                else
+                    confirmModal.Open(
+                        "Estas seguro/a que quieres eliminar este item de tu inventario?",
+                        "Si",
+                        "No"
+                    )
+                end
 
                 confirmModal.SecondaryButton.Visible = true
             end)
@@ -1456,6 +1600,7 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
 
         if clanResult and clanResult.status == "created" then
             if clanResult.profile then
+                profile = clanResult.profile
                 profileUI.ApplyProfile(clanResult.profile)
             end
 
@@ -1950,6 +2095,14 @@ window.CloseButton.MouseButton1Click:Connect(function()
 
     if adminNoticeGui then
         adminNoticeGui:Destroy()
+    end
+
+    if confirmModal and confirmModal.Destroy then
+        confirmModal.Destroy()
+    end
+
+    if clanRequestModal and clanRequestModal.Destroy then
+        clanRequestModal.Destroy()
     end
 
     window.Gui:Destroy()

@@ -4,6 +4,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     local isMobileLayout = _G.StrikeChatLayoutMode == "mobile"
     local selectedClan = clans and clans[1] or nil
     local currentClanId = nil
+    local ownedClanId = nil
     local pendingRequestClanId = nil
     local joinActionHandler = nil
     local updateJoinButton = function() end
@@ -525,7 +526,11 @@ function ClanTableUI.Create(parent, Theme, clans)
 
         if currentClanId and tostring(currentClanId) == tostring(selectedClan.clan_id) then
             joinButton.BackgroundColor3 = Color3.fromRGB(150, 42, 42)
-            joinButton.Text = "Salir de Clan"
+            if ownedClanId and tostring(ownedClanId) == tostring(selectedClan.clan_id) then
+                joinButton.Text = "Eliminar Clan"
+            else
+                joinButton.Text = "Salir de Clan"
+            end
         elseif pendingRequestClanId and tostring(pendingRequestClanId) == tostring(selectedClan.clan_id) then
             joinButton.BackgroundColor3 = Color3.fromRGB(78, 158, 58)
             joinButton.Text = "Solicitud enviada"
@@ -734,6 +739,11 @@ function ClanTableUI.Create(parent, Theme, clans)
 
         SetCurrentClanId = function(clanId)
             currentClanId = clanId
+            updateJoinButton()
+        end,
+
+        SetOwnedClanId = function(clanId)
+            ownedClanId = clanId
             updateJoinButton()
         end,
 

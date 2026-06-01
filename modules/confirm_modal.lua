@@ -1,14 +1,36 @@
 local ConfirmModal = {}
 
 function ConfirmModal.Create(parent, Theme)
+    local function tr(text)
+        if _G.StrikeChatI18n then
+            return _G.StrikeChatI18n.TranslateText(text)
+        end
+
+        return text
+    end
+
+    local guiParent = parent
+
+    if parent and parent:IsA("ScreenGui") then
+        guiParent = parent.Parent
+    end
+
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "StrikeChatConfirmModalGui"
+    gui.ResetOnSpawn = false
+    gui.IgnoreGuiInset = true
+    gui.DisplayOrder = 10001
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    gui.Parent = guiParent or parent
+
     local overlay = Instance.new("Frame")
     overlay.Name = "ConfirmOverlay"
     overlay.Size = UDim2.new(1, 0, 1, 0)
     overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     overlay.BackgroundTransparency = 0.45
     overlay.Visible = false
-    overlay.ZIndex = 90
-    overlay.Parent = parent
+    overlay.ZIndex = 200
+    overlay.Parent = gui
 
     local modal = Instance.new("Frame")
     modal.Name = "Modal"
@@ -16,7 +38,7 @@ function ConfirmModal.Create(parent, Theme)
     modal.Position = UDim2.new(0.5, -160, 0.5, -85)
     modal.BackgroundColor3 = Theme.Colors.Panel
     modal.BorderSizePixel = 0
-    modal.ZIndex = 91
+    modal.ZIndex = 201
     modal.Parent = overlay
 
     local modalCorner = Instance.new("UICorner")
@@ -33,7 +55,7 @@ function ConfirmModal.Create(parent, Theme)
     closeButton.TextColor3 = Theme.Colors.TextMuted
     closeButton.Font = Theme.Font.Bold
     closeButton.TextSize = 12
-    closeButton.ZIndex = 92
+    closeButton.ZIndex = 202
     closeButton.Parent = modal
 
     local closeCorner = Instance.new("UICorner")
@@ -52,7 +74,7 @@ function ConfirmModal.Create(parent, Theme)
     message.TextWrapped = true
     message.TextXAlignment = Enum.TextXAlignment.Center
     message.TextYAlignment = Enum.TextYAlignment.Center
-    message.ZIndex = 92
+    message.ZIndex = 202
     message.Parent = modal
 
     local primaryButton = Instance.new("TextButton")
@@ -65,7 +87,7 @@ function ConfirmModal.Create(parent, Theme)
     primaryButton.TextColor3 = Color3.fromRGB(255, 255, 255)
     primaryButton.Font = Theme.Font.Bold
     primaryButton.TextSize = 13
-    primaryButton.ZIndex = 92
+    primaryButton.ZIndex = 202
     primaryButton.Parent = modal
 
     local primaryCorner = Instance.new("UICorner")
@@ -82,7 +104,7 @@ function ConfirmModal.Create(parent, Theme)
     secondaryButton.TextColor3 = Theme.Colors.Text
     secondaryButton.Font = Theme.Font.Bold
     secondaryButton.TextSize = 13
-    secondaryButton.ZIndex = 92
+    secondaryButton.ZIndex = 202
     secondaryButton.Parent = modal
 
     local secondaryCorner = Instance.new("UICorner")
@@ -90,6 +112,7 @@ function ConfirmModal.Create(parent, Theme)
     secondaryCorner.Parent = secondaryButton
 
     return {
+        Gui = gui,
         Overlay = overlay,
         Message = message,
         CloseButton = closeButton,
@@ -97,14 +120,18 @@ function ConfirmModal.Create(parent, Theme)
         SecondaryButton = secondaryButton,
 
         Open = function(text, primaryText, secondaryText)
-            message.Text = text or ""
-            primaryButton.Text = primaryText or "Entrar"
-            secondaryButton.Text = secondaryText or "Cancelar"
+            message.Text = tr(text or "")
+            primaryButton.Text = tr(primaryText or "Entrar")
+            secondaryButton.Text = tr(secondaryText or "Cancelar")
             overlay.Visible = true
         end,
 
         Close = function()
             overlay.Visible = false
+        end,
+
+        Destroy = function()
+            gui:Destroy()
         end
     }
 end
