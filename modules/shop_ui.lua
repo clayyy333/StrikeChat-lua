@@ -511,6 +511,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
 
         if badgeText then
             local badge = Instance.new("TextLabel")
+            badge.Name = "Badge"
             badge.Size = UDim2.new(0, 120, 0, 22)
             badge.Position = UDim2.new(0, 10, 0, 10)
             badge.BackgroundColor3 = Color3.fromRGB(245, 190, 60)
@@ -769,6 +770,16 @@ function ShopUI.Create(parent, Theme, initialPoints)
 
         itemsLayout.CellSize = UDim2.new(0.5, -10, 0, 108)
         itemsLayout.CellPadding = UDim2.new(0, 14, 0, 16)
+
+        local item6Badge = item6:FindFirstChild("Badge")
+
+        if item6Badge then
+            item6Badge.Size = UDim2.new(0, 104, 0, 22)
+            item6Badge.Position = UDim2.new(0, 8, 0, 10)
+        end
+
+        item6Remaining.Size = UDim2.new(0, 76, 0, 20)
+        item6Remaining.Position = UDim2.new(1, -84, 0, 10)
     end
 
     return {
