@@ -337,8 +337,8 @@ function ClanTableUI.Create(parent, Theme, clans)
             points.Position = UDim2.new(0, 150, 0, 0)
             points.TextSize = 10
 
-            description.Size = UDim2.new(1, -210, 1, 0)
-            description.Position = UDim2.new(0, 208, 0, 0)
+            description.Size = UDim2.new(1, -218, 1, 0)
+            description.Position = UDim2.new(0, 216, 0, 0)
             description.TextSize = 10
         end
 
@@ -581,7 +581,7 @@ function ClanTableUI.Create(parent, Theme, clans)
         mainContainer.Position = UDim2.new(0, 14, 0, 48)
 
         leftPanel.Size = UDim2.new(0.63, -8, 1, 0)
-        rightPanel.Size = UDim2.new(0.37, -6, 1, 0)
+        rightPanel.Size = UDim2.new(0.37, -6, 1, 20)
         rightPanel.Position = UDim2.new(0.63, 8, 0, 0)
 
         tableHeader.Size = UDim2.new(1, -16, 0, 28)
@@ -599,8 +599,8 @@ function ClanTableUI.Create(parent, Theme, clans)
         pointsHeader.Position = UDim2.new(0, 150, 0, 0)
         pointsHeader.TextSize = 10
 
-        descHeader.Size = UDim2.new(1, -210, 1, 0)
-        descHeader.Position = UDim2.new(0, 208, 0, 0)
+        descHeader.Size = UDim2.new(1, -218, 1, 0)
+        descHeader.Position = UDim2.new(0, 216, 0, 0)
         descHeader.TextSize = 10
 
         clanList.Size = UDim2.new(1, -20, 1, -46)
@@ -634,7 +634,7 @@ function ClanTableUI.Create(parent, Theme, clans)
         clanDescriptionTitle.Position = UDim2.new(0, 10, 0, 126)
         clanDescriptionTitle.TextSize = 11
 
-        clanDescription.Size = UDim2.new(1, -20, 0, 38)
+        clanDescription.Size = UDim2.new(1, -20, 0, 58)
         clanDescription.Position = UDim2.new(0, 10, 0, 142)
         clanDescription.TextSize = 10
         clanDescriptionPadding.PaddingTop = UDim.new(0, 5)
