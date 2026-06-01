@@ -3,6 +3,7 @@ local ProfileUI = {}
 function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, currentActivity)
     local Players = game:GetService("Players")
     local DEFAULT_PROFILE_BANNER_ID = "114828705105935"
+    local isMobileLayout = _G.StrikeChatLayoutMode == "mobile"
     local DEFAULT_PROFILE_AVATAR_IDS = {
         "79645048761895",
         "107672328050388",
@@ -188,7 +189,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         return resolvedImageCache[value]
     end
 
-    round(root, Theme.Radius.Main)
+    local rootCorner = round(root, Theme.Radius.Main)
     stroke(root, Color3.fromRGB(96, 98, 110), 0.48)
 
     local topBar = Instance.new("Frame")
@@ -1247,6 +1248,103 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
 
     local function refreshCanvas()
         return
+    end
+
+    if isMobileLayout then
+        root.AnchorPoint = Vector2.new(0, 1)
+        root.Size = UDim2.new(1, 0, 1, -64)
+        root.Position = UDim2.new(0, 0, 1, 0)
+        rootSize.MinSize = Vector2.new(0, 0)
+        rootSize.MaxSize = Vector2.new(10000, 10000)
+        rootCorner.CornerRadius = UDim.new(0, 0)
+
+        closeButton.Size = UDim2.new(0, 32, 0, 28)
+        closeButton.Position = UDim2.new(1, -42, 0, 9)
+
+        content.Size = UDim2.new(1, -28, 1, -54)
+        content.Position = UDim2.new(0, 14, 0, 42)
+
+        leftPanel.Size = UDim2.new(0.48, -8, 1, 0)
+        rightPanel.Size = UDim2.new(0.52, -6, 1, 0)
+        rightPanel.Position = UDim2.new(0.48, 8, 0, 0)
+
+        bannerClip.Size = UDim2.new(1, 0, 0, 70)
+        banner.Size = UDim2.new(1, 0, 0, 84)
+        avatarFrame.Size = UDim2.new(0, 56, 0, 56)
+        avatarFrame.Position = UDim2.new(0, 14, 0, 48)
+        displayInput.Size = UDim2.new(1, -84, 0, 22)
+        displayInput.Position = UDim2.new(0, 82, 0, 72)
+        displayInput.TextSize = 15
+        username.Size = UDim2.new(1, -84, 0, 14)
+        username.Position = UDim2.new(0, 82, 0, 95)
+        username.TextSize = 10
+
+        pointsLabel.Size = UDim2.new(1, -32, 0, 16)
+        pointsLabel.Position = UDim2.new(0, 16, 0, 114)
+        pointsLabel.TextSize = 11
+        pointsValue.Size = UDim2.new(1, -32, 0, 18)
+        pointsValue.Position = UDim2.new(0, 16, 0, 130)
+        pointsValue.TextSize = 12
+
+        clanLabel.Size = UDim2.new(1, -32, 0, 16)
+        clanLabel.Position = UDim2.new(0, 16, 0, 150)
+        clanLabel.TextSize = 11
+        clanValue.Size = UDim2.new(1, -32, 0, 16)
+        clanValue.Position = UDim2.new(0, 16, 0, 166)
+        clanValue.TextSize = 11
+
+        descriptionTitle.Size = UDim2.new(1, -32, 0, 16)
+        descriptionTitle.Position = UDim2.new(0, 16, 0, 184)
+        descriptionTitle.TextSize = 11
+        descriptionInput.Size = UDim2.new(1, -32, 0, 34)
+        descriptionInput.Position = UDim2.new(0, 16, 0, 202)
+        descriptionInput.TextSize = 10
+
+        inventoryButton.Size = UDim2.new(0, 108, 0, 24)
+        inventoryButton.Position = UDim2.new(1, -122, 0, 12)
+        inventoryButton.TextSize = 11
+        inventoryButton.ZIndex = 6
+
+        tabRow.Size = UDim2.new(1, 0, 0, 38)
+        activityTab.Size = UDim2.new(0, 74, 0, 28)
+        activityTab.Position = UDim2.new(0, 0, 0, 6)
+        activityTab.TextSize = 12
+        visibilityRow.Size = UDim2.new(0, 172, 0, 26)
+        visibilityRow.Position = UDim2.new(0, 82, 0, 7)
+        publicButton.Size = UDim2.new(0, 78, 0, 24)
+        publicButton.TextSize = 10
+        privateButton.Size = UDim2.new(0, 78, 0, 24)
+        privateButton.Position = UDim2.new(0, 86, 0, 0)
+        privateButton.TextSize = 10
+        divider.Position = UDim2.new(0, 0, 0, 38)
+
+        recentLabel.Position = UDim2.new(0, 0, 0, 52)
+        recentLabel.TextSize = 11
+        status.Size = UDim2.new(1, -12, 0, 24)
+        status.Position = UDim2.new(0, 4, 0, 72)
+        status.TextSize = 13
+        languageTitle.Position = UDim2.new(0, 0, 0, 98)
+        languageTitle.TextSize = 11
+        languageUnderline.Position = UDim2.new(0, 0, 0, 120)
+        languageButtons.Size = UDim2.new(0, 176, 0, 26)
+        languageButtons.Position = UDim2.new(0, 0, 0, 130)
+        spanishButton.Size = UDim2.new(0, 82, 0, 24)
+        spanishButton.TextSize = 10
+        englishButton.Size = UDim2.new(0, 82, 0, 24)
+        englishButton.Position = UDim2.new(0, 90, 0, 0)
+        englishButton.TextSize = 10
+
+        statusLabel.Size = UDim2.new(1, -12, 0, 24)
+        statusLabel.Position = UDim2.new(0, 6, 1, -82)
+        statusLabel.TextSize = 10
+        actions.Size = UDim2.new(1, 0, 0, 30)
+        actions.Position = UDim2.new(0, 0, 1, -44)
+        saveButton.Size = UDim2.new(0.42, -4, 1, 0)
+        saveButton.Position = UDim2.new(0.06, 0, 0, 0)
+        saveButton.TextSize = 11
+        publicProfileButton.Size = UDim2.new(0.46, -4, 1, 0)
+        publicProfileButton.Position = UDim2.new(0.5, 0, 0, 0)
+        publicProfileButton.TextSize = 10
     end
 
     refreshCanvas()

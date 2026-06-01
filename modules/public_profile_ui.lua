@@ -3,6 +3,7 @@ local PublicProfileUI = {}
 function PublicProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
     local Players = game:GetService("Players")
     local DEFAULT_PROFILE_BANNER_ID = "114828705105935"
+    local isMobileLayout = _G.StrikeChatLayoutMode == "mobile"
     local resolvedImageCache = {}
 
     profile = profile or {}
@@ -582,6 +583,59 @@ function PublicProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
     addButton.ZIndex = 96
     addButton.Parent = actions
     round(addButton, 8)
+
+    if isMobileLayout then
+        modal.Size = UDim2.new(0.52, 0, 0.86, 0)
+        modal.Position = UDim2.new(0.5, 0, 0.5, 0)
+        sizeConstraint.MinSize = Vector2.new(300, 310)
+        sizeConstraint.MaxSize = Vector2.new(430, 520)
+
+        closeButton.Size = UDim2.new(0, 32, 0, 28)
+        closeButton.Position = UDim2.new(1, -42, 0, 9)
+
+        card.Size = UDim2.new(1, -32, 1, -48)
+        card.Position = UDim2.new(0, 16, 0, 38)
+
+        bannerClip.Size = UDim2.new(1, 0, 0, 68)
+        banner.Size = UDim2.new(1, 0, 0, 82)
+        avatarFrame.Size = UDim2.new(0, 56, 0, 56)
+        avatarFrame.Position = UDim2.new(0, 14, 0, 46)
+        displayName.Size = UDim2.new(1, -88, 0, 22)
+        displayName.Position = UDim2.new(0, 82, 0, 70)
+        displayName.TextSize = 15
+        username.Size = UDim2.new(1, -88, 0, 14)
+        username.Position = UDim2.new(0, 82, 0, 94)
+        username.TextSize = 10
+
+        pointsLabel.Size = UDim2.new(1, -32, 0, 16)
+        pointsLabel.Position = UDim2.new(0, 16, 0, 114)
+        pointsLabel.TextSize = 11
+        pointsValue.Size = UDim2.new(1, -32, 0, 18)
+        pointsValue.Position = UDim2.new(0, 16, 0, 130)
+        pointsValue.TextSize = 12
+
+        clanLabel.Size = UDim2.new(1, -32, 0, 16)
+        clanLabel.Position = UDim2.new(0, 16, 0, 150)
+        clanLabel.TextSize = 11
+        clanValue.Size = UDim2.new(1, -32, 0, 16)
+        clanValue.Position = UDim2.new(0, 16, 0, 166)
+        clanValue.TextSize = 11
+
+        descriptionTitle.Size = UDim2.new(1, -32, 0, 16)
+        descriptionTitle.Position = UDim2.new(0, 16, 0, 180)
+        descriptionTitle.TextSize = 11
+        descriptionBox.Size = UDim2.new(1, -32, 0, 28)
+        descriptionBox.Position = UDim2.new(0, 16, 0, 196)
+        descriptionBox.TextSize = 10
+
+        actions.Size = UDim2.new(0, 162, 0, 28)
+        actions.Position = UDim2.new(0.5, -81, 1, -32)
+        messageButton.Size = UDim2.new(0, 86, 0, 26)
+        messageButton.TextSize = 11
+        addButton.Size = UDim2.new(0, 68, 0, 26)
+        addButton.Position = UDim2.new(0, 94, 0, 0)
+        addButton.TextSize = 11
+    end
 
     closeButton.MouseButton1Click:Connect(function()
         overlay:Destroy()
