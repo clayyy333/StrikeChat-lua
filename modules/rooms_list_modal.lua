@@ -152,29 +152,35 @@ function RoomsListModal.Create(parent, Theme)
         title.Size = UDim2.new(1, -52, 0, 28)
         title.Position = UDim2.new(0, 12, 0, 8)
         title.TextSize = 15
+        title.ZIndex = 66
 
         numberHeader.Size = UDim2.new(0, 32, 0, 16)
         numberHeader.Position = UDim2.new(0, 18, 0, 42)
         numberHeader.TextSize = 10
+        numberHeader.ZIndex = 66
 
         roomHeader.Size = UDim2.new(0, 160, 0, 16)
         roomHeader.Position = UDim2.new(0, 54, 0, 42)
         roomHeader.TextSize = 10
+        roomHeader.ZIndex = 66
 
         membersHeader.Size = UDim2.new(0, 74, 0, 16)
         membersHeader.Position = UDim2.new(1, -82, 0, 42)
         membersHeader.Text = "Usuarios"
         membersHeader.TextSize = 10
+        membersHeader.ZIndex = 66
 
         divider.Size = UDim2.new(1, -24, 0, 1)
         divider.Position = UDim2.new(0, 12, 0, 62)
+        divider.ZIndex = 66
 
         closeButton.Size = UDim2.new(0, 28, 0, 24)
         closeButton.Position = UDim2.new(1, -38, 0, 9)
         closeButton.TextSize = 12
+        closeButton.ZIndex = 67
 
-        list.Size = UDim2.new(1, -18, 1, -82)
-        list.Position = UDim2.new(0, 9, 0, 72)
+        list.Size = UDim2.new(1, -18, 1, -90)
+        list.Position = UDim2.new(0, 9, 0, 80)
         list.ScrollBarThickness = 2
 
         layout.Padding = UDim.new(0, 5)
