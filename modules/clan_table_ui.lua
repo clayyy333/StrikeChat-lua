@@ -620,14 +620,14 @@ function ClanTableUI.Create(parent, Theme, clans)
         clanPoints.Position = UDim2.new(0, 10, 0, 82)
         clanPoints.TextSize = 11
         clanPointsValue.Size = UDim2.new(0, 54, 1, 0)
-        clanPointsValue.Position = UDim2.new(1, -58, 0, 0)
+        clanPointsValue.Position = UDim2.new(1, -78, 0, 0)
         clanPointsValue.TextSize = 11
 
         clanMembers.Size = UDim2.new(1, -20, 0, 18)
         clanMembers.Position = UDim2.new(0, 10, 0, 102)
         clanMembers.TextSize = 11
         clanMembersValue.Size = UDim2.new(0, 54, 1, 0)
-        clanMembersValue.Position = UDim2.new(1, -58, 0, 0)
+        clanMembersValue.Position = UDim2.new(1, -78, 0, 0)
         clanMembersValue.TextSize = 11
 
         clanDescriptionTitle.Size = UDim2.new(1, -20, 0, 16)
