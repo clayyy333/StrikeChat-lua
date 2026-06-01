@@ -1275,21 +1275,31 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         content.Size = UDim2.new(1, -20, 1, -50)
         content.Position = UDim2.new(0, 10, 0, 30)
 
+        local mobileLeftPanelScale = 0.37
+        local mobileLeftPanelX = 30
+        local mobileLeftPanelWidthOffset = -10
+
+        leftPanel.Size = UDim2.new(mobileLeftPanelScale, mobileLeftPanelWidthOffset, 1, 14)
+        leftPanel.Position = UDim2.new(0, mobileLeftPanelX, 0, -4)
+
         local leftShadow = content:FindFirstChild("PrivateProfilePanelShadowLeft")
         local rightShadow = content:FindFirstChild("PrivateProfilePanelShadowRight")
 
         if leftShadow then
-            leftShadow.Size = UDim2.new(0, 26, 1, 2)
-            leftShadow.Position = UDim2.new(0, -16, 0, -1)
+            leftShadow.Size = UDim2.new(0, 30, 1, 14)
+            leftShadow.Position = UDim2.new(0, mobileLeftPanelX - 30, 0, -4)
         end
 
         if rightShadow then
-            rightShadow.Size = UDim2.new(0, 30, 1, 2)
-            rightShadow.Position = UDim2.new(0.37, 2, 0, -1)
+            rightShadow.Size = UDim2.new(0, 30, 1, 14)
+            rightShadow.Position = UDim2.new(
+                mobileLeftPanelScale,
+                mobileLeftPanelX + mobileLeftPanelWidthOffset,
+                0,
+                -4
+            )
         end
 
-        leftPanel.Size = UDim2.new(0.37, -10, 1, 14)
-        leftPanel.Position = UDim2.new(0, 30, 0, -4)
         rightPanel.Size = UDim2.new(0.5, -14, 1, 0)
         rightPanel.Position = UDim2.new(0.47, 22, 0, 0)
 
@@ -1321,7 +1331,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         descriptionTitle.Size = UDim2.new(1, -32, 0, 16)
         descriptionTitle.Position = UDim2.new(0, 16, 0, 184)
         descriptionTitle.TextSize = 11
-        descriptionInput.Size = UDim2.new(1, -32, 0, 34)
+        descriptionInput.Size = UDim2.new(1, -32, 1, -250)
         descriptionInput.Position = UDim2.new(0, 16, 0, 202)
         descriptionInput.TextSize = 10
 
