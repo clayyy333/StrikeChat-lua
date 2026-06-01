@@ -152,8 +152,8 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
 
     local scrollHint = Instance.new("Frame")
     scrollHint.Name = "RightScrollHint"
-    scrollHint.Size = UDim2.new(0, 1, 1, -52)
-    scrollHint.Position = UDim2.new(1, -2, 0, 42)
+    scrollHint.Size = UDim2.new(0, 1, 1, -16)
+    scrollHint.Position = UDim2.new(1, -2, 0, 8)
     scrollHint.BackgroundColor3 = Theme.Colors.TextMuted
     scrollHint.BackgroundTransparency = 0.2
     scrollHint.BorderSizePixel = 0
@@ -345,8 +345,8 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
             list.ScrollBarImageColor3 = Theme.Colors.TextMuted
             list.ScrollBarImageTransparency = 0.35
             scrollHint.Visible = true
-            scrollHint.Size = UDim2.new(0, 1, 1, -52)
-            scrollHint.Position = UDim2.new(1, -2, 0, 42)
+            scrollHint.Size = UDim2.new(0, 1, 1, -16)
+            scrollHint.Position = UDim2.new(1, -2, 0, 8)
         else
             title.Size = UDim2.new(1, -24, 0, 36)
             title.Position = UDim2.new(0, 12, 0, 8)
