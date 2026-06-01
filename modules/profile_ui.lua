@@ -233,6 +233,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
 
     local selectedVisibility = original.game_status_visibility
     local selectedProfileAvatarId = original.profile_avatar_id
+    local avatarApplyHandler = nil
 
     local function createPanelShadow(name, size, position, rotation, transparency)
         local shadow = Instance.new("Frame")
@@ -1044,6 +1045,39 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
     local avatarCandidateIsDefault = selectedProfileAvatarId == ""
     local suppressAvatarInputChange = false
     local avatarInputVersion = 0
+    local avatarOptionBorders = {}
+
+    local function getAvatarOptionKey(isDefault, assetId)
+        if isDefault then
+            return "__default"
+        end
+
+        return tostring(assetId or "")
+    end
+
+    local function registerAvatarOptionBorder(button, isDefault, assetId)
+        local optionStroke = stroke(button, Color3.fromRGB(80, 82, 92), 0.5)
+
+        avatarOptionBorders[getAvatarOptionKey(isDefault, assetId)] = {
+            Stroke = optionStroke,
+            Color = optionStroke.Color,
+            Transparency = optionStroke.Transparency
+        }
+    end
+
+    local function updateAvatarOptionBorders()
+        local selectedKey = getAvatarOptionKey(avatarCandidateIsDefault, avatarCandidateId)
+
+        for key, border in pairs(avatarOptionBorders) do
+            if key == selectedKey then
+                border.Stroke.Color = Color3.fromRGB(0, 0, 0)
+                border.Stroke.Transparency = 0
+            else
+                border.Stroke.Color = border.Color
+                border.Stroke.Transparency = border.Transparency
+            end
+        end
+    end
 
     local function setAvatarModalMode(showCustomPreview)
         avatarGrid.Visible = not showCustomPreview
@@ -1066,6 +1100,8 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         else
             setAvatarModalMode(false)
         end
+
+        updateAvatarOptionBorders()
     end
 
     local defaultOption = Instance.new("ImageButton")
@@ -1080,7 +1116,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
     defaultOption.LayoutOrder = 0
     defaultOption.Parent = avatarGrid
     round(defaultOption, 9)
-    stroke(defaultOption, Color3.fromRGB(80, 82, 92), 0.5)
+    registerAvatarOptionBorder(defaultOption, true, "")
 
     local defaultOptionLabel = Instance.new("TextLabel")
     defaultOptionLabel.Name = "Label"
@@ -1106,6 +1142,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         avatarCandidateId = ""
         avatarCandidateIsDefault = true
         setAvatarModalMode(false)
+        updateAvatarOptionBorders()
         avatarModalStatus.Text = "Avatar de Roblox seleccionado."
     end)
 
@@ -1120,7 +1157,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         option.LayoutOrder = index
         option.Parent = avatarGrid
         round(option, 9)
-        stroke(option, Color3.fromRGB(80, 82, 92), 0.5)
+        registerAvatarOptionBorder(option, false, avatarId)
 
         if AvatarRenderer and AvatarRenderer.SetAssetPreview then
             AvatarRenderer.SetAssetPreview(option, avatarId)
@@ -1154,6 +1191,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
             avatarCandidateId = selectedProfileAvatarId
             avatarCandidateIsDefault = selectedProfileAvatarId == ""
             setAvatarModalMode(false)
+            updateAvatarOptionBorders()
             avatarModalStatus.Text = ""
             return
         end
@@ -1163,6 +1201,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         avatarModalStatus.Text = ""
         customPreviewImage.Image = ""
         setAvatarModalMode(true)
+        updateAvatarOptionBorders()
 
         avatarInputVersion += 1
         local currentVersion = avatarInputVersion
@@ -1192,6 +1231,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         avatarCandidateId = selectedProfileAvatarId
         avatarCandidateIsDefault = selectedProfileAvatarId == ""
         setAvatarModalMode(false)
+        updateAvatarOptionBorders()
         avatarModalStatus.Text = ""
     end)
 
@@ -1208,6 +1248,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         suppressAvatarInputChange = false
         avatarInputVersion += 1
         setAvatarModalMode(false)
+        updateAvatarOptionBorders()
         avatarModalStatus.Text = ""
         avatarModalOverlay.Visible = true
     end)
@@ -1223,10 +1264,35 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
             return
         end
 
+        local previousProfileAvatarId = selectedProfileAvatarId
+
         selectedProfileAvatarId = avatarCandidateIsDefault and "" or avatarCandidateId
         applyProfileAvatar(selectedProfileAvatarId)
+
+        if avatarApplyHandler then
+            avatarModalStatus.Text = "Aplicando imagen..."
+
+            local ok, result = pcall(avatarApplyHandler, selectedProfileAvatarId)
+
+            if not ok or not result or result.status ~= "ok" then
+                selectedProfileAvatarId = previousProfileAvatarId
+                avatarCandidateId = previousProfileAvatarId
+                avatarCandidateIsDefault = previousProfileAvatarId == ""
+                applyProfileAvatar(selectedProfileAvatarId)
+                updateAvatarOptionBorders()
+
+                if result and result.reason == "invalid_profile_avatar" then
+                    avatarModalStatus.Text = "El ID de imagen de perfil no es valido."
+                else
+                    avatarModalStatus.Text = "No se pudo aplicar la imagen."
+                end
+
+                return
+            end
+        end
+
         closeAvatarModal()
-        statusLabel.Text = "Imagen aplicada. Guarda cambios para mantenerla."
+        statusLabel.Text = "Imagen aplicada."
         statusLabel.TextColor3 = Theme.Colors.TextMuted
     end)
 
@@ -1397,6 +1463,10 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         InventoryButton = inventoryButton,
         StatusLabel = statusLabel,
 
+        SetAvatarApplyHandler = function(handler)
+            avatarApplyHandler = handler
+        end,
+
         GetChangedData = function()
             local data = {}
             local nextDisplayName = displayInput.Text or ""
@@ -1443,11 +1513,14 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
             descriptionInput.Text = original.bio
             selectedProfileAvatarId = original.profile_avatar_id
             selectedVisibility = original.game_status_visibility
+            avatarCandidateId = selectedProfileAvatarId
+            avatarCandidateIsDefault = selectedProfileAvatarId == ""
             pointsValue.Text = tostring(profile.personal_points or 0)
             clanValue.Text = tostring(profile.clan_name or "Sin clan")
             status.Text = translateProfileText(getCurrentActivityText(profile))
             applyBannerImage(profile.profile_banner_id)
             applyProfileAvatar(selectedProfileAvatarId)
+            updateAvatarOptionBorders()
             updateVisibilityButtons()
             refreshCanvas()
         end,

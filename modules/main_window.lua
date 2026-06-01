@@ -70,6 +70,21 @@ function MainWindow.ChooseLayout(CoreGui, Theme, I18n)
     panelStroke.Transparency = 0.25
     panelStroke.Parent = panel
 
+    local betaLabel = Instance.new("TextLabel")
+    betaLabel.Name = "BetaLabel"
+    betaLabel.Size = UDim2.new(0, 180, 0, 18)
+    betaLabel.Position = UDim2.new(0, 12, 0, 6)
+    betaLabel.BackgroundTransparency = 1
+    betaLabel.Text = "Pre Lanzamiento Beta 1.0v"
+    betaLabel.TextColor3 = Theme.Colors.TextMuted
+    betaLabel.TextTransparency = 0.05
+    betaLabel.Font = Theme.Font.Bold
+    betaLabel.TextSize = 10
+    betaLabel.TextXAlignment = Enum.TextXAlignment.Left
+    betaLabel.TextYAlignment = Enum.TextYAlignment.Center
+    betaLabel.ZIndex = 6
+    betaLabel.Parent = panel
+
     local title = Instance.new("TextLabel")
     title.Name = "Title"
     title.Size = UDim2.new(1, -34, 0, 52)

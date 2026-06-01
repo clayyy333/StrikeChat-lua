@@ -1195,6 +1195,52 @@ leftPanel.Buttons.Perfil.MouseButton1Click:Connect(function()
         return messages[reason] or "No se pudo guardar el perfil."
     end
 
+    if profileUI.SetAvatarApplyHandler then
+        profileUI.SetAvatarApplyHandler(function(profileAvatarId)
+            if saveLocked then
+                return {
+                    status = "blocked",
+                    reason = "save_locked"
+                }
+            end
+
+            saveLocked = true
+
+            local ok, result = pcall(function()
+                return Api.SaveMyProfile(
+                    player,
+                    {
+                        profile_avatar_id = profileAvatarId
+                    }
+                )
+            end)
+
+            if not ok then
+                saveLocked = false
+                return nil
+            end
+
+            if result and result.status == "ok" and result.profile then
+                profileUI.ApplyProfile(result.profile)
+
+                if leftPanel.DisplayName then
+                    leftPanel.DisplayName.Text = tostring(result.profile.display_name or player.DisplayName)
+                end
+
+                if leftPanel.PointsValue then
+                    leftPanel.PointsValue.Text = tostring(result.profile.personal_points or 0)
+                end
+
+                refreshOnlineUsers()
+                refreshChat()
+            end
+
+            saveLocked = false
+
+            return result
+        end)
+    end
+
     local function refreshInventory()
         local inventoryResult = Api.GetMyInventory(player)
 
