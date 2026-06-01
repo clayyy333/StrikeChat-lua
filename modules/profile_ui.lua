@@ -1288,9 +1288,10 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
             rightShadow.Position = UDim2.new(0.43, -8, 0, 4)
         end
 
-        leftPanel.Size = UDim2.new(0.43, -4, 1, 0)
-        rightPanel.Size = UDim2.new(0.52, -14, 1, 0)
-        rightPanel.Position = UDim2.new(0.46, 14, 0, 0)
+        leftPanel.Size = UDim2.new(0.43, -10, 1, 0)
+        leftPanel.Position = UDim2.new(0, 6, 0, 0)
+        rightPanel.Size = UDim2.new(0.5, -14, 1, 0)
+        rightPanel.Position = UDim2.new(0.47, 22, 0, 0)
 
         bannerClip.Size = UDim2.new(1, 0, 0, 70)
         banner.Size = UDim2.new(1, 0, 0, 84)
@@ -1299,7 +1300,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         displayInput.Size = UDim2.new(1, -84, 0, 22)
         displayInput.Position = UDim2.new(0, 82, 0, 72)
         displayInput.TextSize = 15
-        username.Size = UDim2.new(1, -84, 0, 14)
+        username.Size = UDim2.new(1, -190, 0, 14)
         username.Position = UDim2.new(0, 82, 0, 95)
         username.TextSize = 10
 
@@ -1324,34 +1325,34 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         descriptionInput.Position = UDim2.new(0, 16, 0, 202)
         descriptionInput.TextSize = 10
 
-        inventoryButton.Size = UDim2.new(0, 108, 0, 24)
-        inventoryButton.Position = UDim2.new(1, -122, 0, 12)
-        inventoryButton.TextSize = 11
+        inventoryButton.Size = UDim2.new(0, 96, 0, 22)
+        inventoryButton.Position = UDim2.new(1, -106, 0, 91)
+        inventoryButton.TextSize = 10
         inventoryButton.ZIndex = 6
 
         tabRow.Size = UDim2.new(1, 0, 0, 38)
         activityTab.Size = UDim2.new(0, 74, 0, 28)
-        activityTab.Position = UDim2.new(0, 0, 0, 6)
+        activityTab.Position = UDim2.new(0, 6, 0, 6)
         activityTab.TextSize = 12
         visibilityRow.Size = UDim2.new(0, 172, 0, 26)
-        visibilityRow.Position = UDim2.new(0, 82, 0, 7)
+        visibilityRow.Position = UDim2.new(0, 88, 0, 7)
         publicButton.Size = UDim2.new(0, 78, 0, 24)
         publicButton.TextSize = 10
         privateButton.Size = UDim2.new(0, 78, 0, 24)
         privateButton.Position = UDim2.new(0, 86, 0, 0)
         privateButton.TextSize = 10
-        divider.Position = UDim2.new(0, 0, 0, 38)
+        divider.Position = UDim2.new(0, 6, 0, 38)
 
-        recentLabel.Position = UDim2.new(0, 0, 0, 52)
+        recentLabel.Position = UDim2.new(0, 6, 0, 52)
         recentLabel.TextSize = 11
         status.Size = UDim2.new(1, -12, 0, 24)
-        status.Position = UDim2.new(0, 4, 0, 72)
+        status.Position = UDim2.new(0, 10, 0, 72)
         status.TextSize = 13
-        languageTitle.Position = UDim2.new(0, 0, 0, 98)
+        languageTitle.Position = UDim2.new(0, 6, 0, 98)
         languageTitle.TextSize = 11
-        languageUnderline.Position = UDim2.new(0, 0, 0, 120)
+        languageUnderline.Position = UDim2.new(0, 6, 0, 120)
         languageButtons.Size = UDim2.new(0, 176, 0, 26)
-        languageButtons.Position = UDim2.new(0, 0, 0, 130)
+        languageButtons.Position = UDim2.new(0, 6, 0, 130)
         spanishButton.Size = UDim2.new(0, 82, 0, 24)
         spanishButton.TextSize = 10
         englishButton.Size = UDim2.new(0, 82, 0, 24)
@@ -1359,7 +1360,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         englishButton.TextSize = 10
 
         statusLabel.Size = UDim2.new(1, -12, 0, 24)
-        statusLabel.Position = UDim2.new(0, 6, 1, -82)
+        statusLabel.Position = UDim2.new(0, 8, 1, -82)
         statusLabel.TextSize = 10
         actions.Size = UDim2.new(0.88, 0, 0, 28)
         actions.Position = UDim2.new(0, -10, 1, -42)

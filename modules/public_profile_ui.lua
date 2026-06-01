@@ -586,7 +586,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
 
     if isMobileLayout then
         modal.AnchorPoint = Vector2.new(0.5, 1)
-        modal.Size = UDim2.new(0.42, 0, 1, -40)
+        modal.Size = UDim2.new(0.42, 0, 1, -32)
         modal.Position = UDim2.new(0.5, 0, 1, 0)
         sizeConstraint.MinSize = Vector2.new(280, 0)
         sizeConstraint.MaxSize = Vector2.new(360, 10000)
