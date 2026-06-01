@@ -547,11 +547,12 @@ function ClanTableUI.Create(parent, Theme, clans)
     footerText.Position = UDim2.new(0, 12, 0, 0)
     footerText.BackgroundTransparency = 1
     footerText.Text = "Los clanes se actualizan automáticamente. 1 Ganador por Mes"
-    footerText.TextColor3 = Color3.fromRGB(210, 210, 220)
+    footerText.TextColor3 = Color3.fromRGB(255, 255, 255)
     footerText.Font = Theme.Font.Regular
     footerText.TextSize = 13
     footerText.TextXAlignment = Enum.TextXAlignment.Left
     footerText.TextWrapped = true
+    footerText.ZIndex = 3
     footerText.Parent = footer
 
     if isMobileLayout then
