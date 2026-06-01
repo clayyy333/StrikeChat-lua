@@ -220,7 +220,7 @@ local function ensureClanRequestModal()
     end
 
     clanRequestModal = ClanRequestModal.Create(CoreGui, Theme)
-    I18n.RegisterRoot(clanRequestModal.Overlay)
+    I18n.RegisterRoot(clanRequestModal.Gui or clanRequestModal.Overlay)
 
     return clanRequestModal
 end
@@ -1167,10 +1167,23 @@ leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
                 return
             end
 
+            if pendingClanJoinRequest
+                and pendingClanJoinRequest.clan_id
+                and tostring(pendingClanJoinRequest.clan_id) == tostring(clan.clan_id)
+            then
+                ensureClanRequestModal().OpenInfo("Solicitud enviada")
+                return
+            end
+
             local requestResult = Api.RequestJoinClan(player, clan.clan_id)
 
             if requestResult and requestResult.status == "sent" and requestResult.request then
                 pendingClanJoinRequest = requestResult.request
+
+                if clanUI.SetPendingRequestClanId then
+                    clanUI.SetPendingRequestClanId(clan.clan_id)
+                end
+
                 ensureClanRequestModal().OpenInfo("Solicitud enviada")
             elseif requestResult and requestResult.reason == "leader_offline" then
                 ensureClanRequestModal().OpenInfo("Envia la solicitud cuando el Lider se encuentre En Linea")
@@ -1180,6 +1193,10 @@ leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
                 if latestProfileResult and latestProfileResult.status == "ok" and latestProfileResult.profile then
                     myProfile = latestProfileResult.profile
                     clanUI.SetCurrentClanId(myProfile.clan_id)
+
+                    if clanUI.SetPendingRequestClanId then
+                        clanUI.SetPendingRequestClanId(nil)
+                    end
                 end
             else
                 ensureClanRequestModal().OpenInfo("No se pudo enviar la solicitud.")
@@ -1991,6 +2008,10 @@ task.spawn(function()
                         activeClanTableUI.SetCurrentClanId(joinedResult.profile.clan_id)
                     end
 
+                    if activeClanTableUI and activeClanTableUI.SetPendingRequestClanId then
+                        activeClanTableUI.SetPendingRequestClanId(nil)
+                    end
+
                     refreshOnlineUsers()
                     refreshChat()
                 end
@@ -1999,9 +2020,18 @@ task.spawn(function()
                 ensureClanRequestModal().OpenInfo("Solicitud aceptada.")
             elseif requestStatus == "rejected" or requestStatus == "blocked" then
                 pendingClanJoinRequest = nil
+
+                if activeClanTableUI and activeClanTableUI.SetPendingRequestClanId then
+                    activeClanTableUI.SetPendingRequestClanId(nil)
+                end
+
                 ensureClanRequestModal().OpenInfo("Solicitud rechazada.")
             elseif result and result.status == "blocked" then
                 pendingClanJoinRequest = nil
+
+                if activeClanTableUI and activeClanTableUI.SetPendingRequestClanId then
+                    activeClanTableUI.SetPendingRequestClanId(nil)
+                end
             end
         end
 

@@ -22,6 +22,14 @@ function ClanRequestModal.Create(parent, Theme)
 
     local isMobile = _G.StrikeChatLayoutMode == "mobile"
 
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "StrikeChatClanRequestModalGui"
+    gui.ResetOnSpawn = false
+    gui.IgnoreGuiInset = true
+    gui.DisplayOrder = 10000
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    gui.Parent = parent
+
     local overlay = Instance.new("Frame")
     overlay.Name = "ClanRequestModalOverlay"
     overlay.Size = UDim2.new(1, 0, 1, 0)
@@ -29,7 +37,7 @@ function ClanRequestModal.Create(parent, Theme)
     overlay.BackgroundTransparency = 0.42
     overlay.Visible = false
     overlay.ZIndex = 120
-    overlay.Parent = parent
+    overlay.Parent = gui
 
     local modal = Instance.new("Frame")
     modal.Name = "ClanRequestModal"
@@ -126,6 +134,7 @@ function ClanRequestModal.Create(parent, Theme)
     end)
 
     return {
+        Gui = gui,
         Overlay = overlay,
         Message = message,
         AcceptButton = acceptButton,
@@ -157,7 +166,7 @@ function ClanRequestModal.Create(parent, Theme)
         Close = close,
 
         Destroy = function()
-            overlay:Destroy()
+            gui:Destroy()
         end
     }
 end
