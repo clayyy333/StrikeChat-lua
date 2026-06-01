@@ -409,7 +409,7 @@ function ShopUI.Create(parent, Theme, initialPoints)
     featuredTitle.TextXAlignment = Enum.TextXAlignment.Left
     featuredTitle.Parent = featuredCard
 
-    createPriceRow(
+    local featuredPriceRow = createPriceRow(
         featuredCard,
         1000,
         UDim2.new(1, -112, 0, 62),
@@ -747,12 +747,20 @@ function ShopUI.Create(parent, Theme, initialPoints)
         title.Size = UDim2.new(1, -220, 0, 48)
         title.Position = UDim2.new(0, 110, 0, 6)
 
-        featuredCard.Size = UDim2.new(0, 360, 0, 210)
-        featuredCard.Position = UDim2.new(0, 24, 0, 82)
+        featuredCard.Size = UDim2.new(0, 340, 0, 190)
+        featuredCard.Position = UDim2.new(0, 24, 0, 66)
+        featuredBadge.Position = UDim2.new(0, 14, 0, 10)
+        featuredRemaining.Position = UDim2.new(1, -114, 0, 10)
+        featuredTitle.Position = UDim2.new(0, 14, 0, 46)
+        featuredPriceRow.Position = UDim2.new(1, -112, 0, 54)
+        featuredSubtitle.Position = UDim2.new(0, 14, 0, 86)
+        featuredPrice.Size = UDim2.new(1, -28, 0, 38)
+        featuredPrice.Position = UDim2.new(0, 14, 1, -50)
 
-        itemsContainer.Position = UDim2.new(0, 408, 0, 82)
-        itemsContainer.Size = UDim2.new(1, -424, 1, -104)
+        itemsContainer.Position = UDim2.new(0, 408, 0, 66)
+        itemsContainer.Size = UDim2.new(1, -424, 1, -88)
         itemsContainer.ScrollBarThickness = 2
+        itemsContainer.ScrollBarImageTransparency = 0
 
         itemsPadding.PaddingTop = UDim.new(0, 3)
         itemsPadding.PaddingBottom = UDim.new(0, 12)
