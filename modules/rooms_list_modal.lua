@@ -142,7 +142,7 @@ function RoomsListModal.Create(parent, Theme)
     if isMobileLayout then
         modal.AnchorPoint = Vector2.new(0.5, 0.5)
         modal.Size = UDim2.new(0.54, 0, 0.76, 0)
-        modal.Position = UDim2.new(0.5, 0, 0.5, 0)
+        modal.Position = UDim2.new(0.5, 0, 0.58, 0)
 
         local modalSizeConstraint = Instance.new("UISizeConstraint")
         modalSizeConstraint.MinSize = Vector2.new(320, 232)

@@ -798,6 +798,8 @@ local function refreshRooms(isPrivate)
         roomsListModal.Title.Text = tr("Salas Públicas")
     end
 
+    testLabel:Destroy()
+
     if not result or not result.rooms then
         local empty = Instance.new("TextLabel")
         empty.Size = UDim2.new(1, 0, 0, 40)
