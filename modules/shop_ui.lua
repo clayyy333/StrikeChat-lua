@@ -3,6 +3,8 @@ local ShopUI = {}
 local POINTS_ICON_IMAGE = "rbxassetid://124520045081815"
 
 function ShopUI.Create(parent, Theme, initialPoints)
+    local TweenService = game:GetService("TweenService")
+
     local function animatePointsIcon(iconHolder, icon)
         task.spawn(function()
             while iconHolder.Parent do
@@ -737,6 +739,75 @@ function ShopUI.Create(parent, Theme, initialPoints)
     featuredPrice.Text = "Generar codigo de Premio"
     item6BuyButton.Text = "Generar codigo de Premio"
 
+    local function playOpeningReveal()
+        local revealZIndex = 80
+
+        local leftReveal = Instance.new("Frame")
+        leftReveal.Name = "LeftOpeningReveal"
+        leftReveal.Size = UDim2.new(0.5, 1, 1, 0)
+        leftReveal.Position = UDim2.new(0, 0, 0, 0)
+        leftReveal.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+        leftReveal.BorderSizePixel = 0
+        leftReveal.ZIndex = revealZIndex
+        leftReveal.Parent = root
+
+        local leftGradient = Instance.new("UIGradient")
+        leftGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(26, 22, 36)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(76, 24, 96))
+        })
+        leftGradient.Rotation = 0
+        leftGradient.Parent = leftReveal
+
+        local rightReveal = Instance.new("Frame")
+        rightReveal.Name = "RightOpeningReveal"
+        rightReveal.Size = UDim2.new(0.5, 1, 1, 0)
+        rightReveal.Position = UDim2.new(0.5, -1, 0, 0)
+        rightReveal.BackgroundColor3 = Color3.fromRGB(18, 18, 24)
+        rightReveal.BorderSizePixel = 0
+        rightReveal.ZIndex = revealZIndex
+        rightReveal.Parent = root
+
+        local rightGradient = Instance.new("UIGradient")
+        rightGradient.Color = ColorSequence.new({
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(76, 24, 96)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(26, 22, 36))
+        })
+        rightGradient.Rotation = 0
+        rightGradient.Parent = rightReveal
+
+        local tweenInfo = TweenInfo.new(
+            0.82,
+            Enum.EasingStyle.Quart,
+            Enum.EasingDirection.Out
+        )
+
+        task.delay(0.08, function()
+            if not root.Parent then
+                return
+            end
+
+            TweenService:Create(leftReveal, tweenInfo, {
+                Size = UDim2.new(0, 0, 1, 0)
+            }):Play()
+
+            TweenService:Create(rightReveal, tweenInfo, {
+                Position = UDim2.new(1, 0, 0, 0),
+                Size = UDim2.new(0, 0, 1, 0)
+            }):Play()
+
+            task.delay(0.92, function()
+                if leftReveal.Parent then
+                    leftReveal:Destroy()
+                end
+
+                if rightReveal.Parent then
+                    rightReveal:Destroy()
+                end
+            end)
+        end)
+    end
+
     if _G.StrikeChatLayoutMode == "mobile" then
         root.AnchorPoint = Vector2.new(0, 1)
         root.Size = UDim2.new(1, 0, 1, -64)
@@ -781,6 +852,8 @@ function ShopUI.Create(parent, Theme, initialPoints)
         item6Remaining.Size = UDim2.new(0, 76, 0, 20)
         item6Remaining.Position = UDim2.new(1, -84, 0, 10)
     end
+
+    playOpeningReveal()
 
     return {
         Gui = gui,
