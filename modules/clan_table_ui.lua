@@ -581,7 +581,7 @@ function ClanTableUI.Create(parent, Theme, clans)
         mainContainer.Position = UDim2.new(0, 14, 0, 48)
 
         leftPanel.Size = UDim2.new(0.63, -8, 1, 0)
-        rightPanel.Size = UDim2.new(0.37, -6, 1, 20)
+        rightPanel.Size = UDim2.new(0.37, -6, 1, 32)
         rightPanel.Position = UDim2.new(0.63, 8, 0, 0)
 
         tableHeader.Size = UDim2.new(1, -16, 0, 28)
