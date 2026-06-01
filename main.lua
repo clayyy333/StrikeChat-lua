@@ -811,9 +811,11 @@ local function refreshRooms(isPrivate)
     end
 
     for index, room in ipairs(result.rooms) do
+        local isMobileRoomsLayout = selectedLayoutMode == "mobile"
+        local roomRowHeight = isMobileRoomsLayout and 28 or 34
 
         local button = Instance.new("TextButton")
-        button.Size = UDim2.new(1, 0, 0, 34)
+        button.Size = UDim2.new(1, 0, 0, roomRowHeight)
         button.BackgroundColor3 = Theme.Colors.PanelLight
         button.BackgroundTransparency = 0.25
         button.BorderSizePixel = 0
@@ -866,6 +868,20 @@ local function refreshRooms(isPrivate)
         memberCount.ZIndex = 64
         memberCount.Active = false
         memberCount.Parent = button
+
+        if isMobileRoomsLayout then
+            roomNumber.Size = UDim2.new(0, 30, 1, 0)
+            roomNumber.Position = UDim2.new(0, 10, 0, 0)
+            roomNumber.TextSize = 11
+
+            roomName.Size = UDim2.new(1, -102, 1, 0)
+            roomName.Position = UDim2.new(0, 46, 0, 0)
+            roomName.TextSize = 12
+
+            memberCount.Size = UDim2.new(0, 58, 1, 0)
+            memberCount.Position = UDim2.new(1, -66, 0, 0)
+            memberCount.TextSize = 10
+        end
 
         button.MouseButton1Click:Connect(function()
 

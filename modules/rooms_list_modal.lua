@@ -1,6 +1,8 @@
 local RoomsListModal = {}
 
 function RoomsListModal.Create(parent, Theme)
+    local isMobileLayout = _G.StrikeChatLayoutMode == "mobile"
+
     local overlay = Instance.new("Frame")
     overlay.Name = "RoomsListOverlay"
     overlay.Size = UDim2.new(1, 0, 1, 0)
@@ -136,6 +138,50 @@ function RoomsListModal.Create(parent, Theme)
     padding.PaddingLeft = UDim.new(0, 8)
     padding.PaddingRight = UDim.new(0, 8)
     padding.Parent = list
+
+    if isMobileLayout then
+        modal.AnchorPoint = Vector2.new(0.5, 0.5)
+        modal.Size = UDim2.new(0.54, 0, 0.76, 0)
+        modal.Position = UDim2.new(0.5, 0, 0.5, 0)
+
+        local modalSizeConstraint = Instance.new("UISizeConstraint")
+        modalSizeConstraint.MinSize = Vector2.new(320, 232)
+        modalSizeConstraint.MaxSize = Vector2.new(420, 300)
+        modalSizeConstraint.Parent = modal
+
+        title.Size = UDim2.new(1, -52, 0, 28)
+        title.Position = UDim2.new(0, 12, 0, 8)
+        title.TextSize = 15
+
+        numberHeader.Size = UDim2.new(0, 32, 0, 16)
+        numberHeader.Position = UDim2.new(0, 18, 0, 42)
+        numberHeader.TextSize = 10
+
+        roomHeader.Size = UDim2.new(0, 160, 0, 16)
+        roomHeader.Position = UDim2.new(0, 54, 0, 42)
+        roomHeader.TextSize = 10
+
+        membersHeader.Size = UDim2.new(0, 74, 0, 16)
+        membersHeader.Position = UDim2.new(1, -82, 0, 42)
+        membersHeader.Text = "Usuarios"
+        membersHeader.TextSize = 10
+
+        divider.Size = UDim2.new(1, -24, 0, 1)
+        divider.Position = UDim2.new(0, 12, 0, 62)
+
+        closeButton.Size = UDim2.new(0, 28, 0, 24)
+        closeButton.Position = UDim2.new(1, -38, 0, 9)
+        closeButton.TextSize = 12
+
+        list.Size = UDim2.new(1, -18, 1, -74)
+        list.Position = UDim2.new(0, 9, 0, 68)
+        list.ScrollBarThickness = 2
+
+        layout.Padding = UDim.new(0, 5)
+
+        padding.PaddingLeft = UDim.new(0, 4)
+        padding.PaddingRight = UDim.new(0, 4)
+    end
 
     local function clear()
         for _, child in ipairs(list:GetChildren()) do
