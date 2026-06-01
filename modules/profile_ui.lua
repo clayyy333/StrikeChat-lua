@@ -1331,7 +1331,7 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         descriptionTitle.Size = UDim2.new(1, -32, 0, 16)
         descriptionTitle.Position = UDim2.new(0, 16, 0, 184)
         descriptionTitle.TextSize = 11
-        descriptionInput.Size = UDim2.new(1, -32, 1, -250)
+        descriptionInput.Size = UDim2.new(1, -32, 1, -222)
         descriptionInput.Position = UDim2.new(0, 16, 0, 202)
         descriptionInput.TextSize = 10
 
