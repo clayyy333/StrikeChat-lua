@@ -1,6 +1,8 @@
 local ClanTableUI = {}
 
 function ClanTableUI.Create(parent, Theme, clans)
+    local isMobileLayout = _G.StrikeChatLayoutMode == "mobile"
+
     local gui = Instance.new("ScreenGui")
     gui.Name = "ClanTableUI"
     gui.ResetOnSpawn = false
@@ -229,7 +231,7 @@ function ClanTableUI.Create(parent, Theme, clans)
 
         local row = Instance.new("TextButton")
         row.Name = "ClanRow"
-        row.Size = UDim2.new(1, 0, 0, 42)
+        row.Size = UDim2.new(1, 0, 0, isMobileLayout and 32 or 42)
         row.BackgroundColor3 = Color3.fromRGB(24, 26, 31)
         row.BackgroundTransparency = 0.1
         
@@ -321,6 +323,24 @@ function ClanTableUI.Create(parent, Theme, clans)
         description.TextXAlignment = Enum.TextXAlignment.Left
         description.TextTruncate = Enum.TextTruncate.AtEnd
         description.Parent = row
+
+        if isMobileLayout then
+            pos.Size = UDim2.new(0, 34, 1, 0)
+            pos.Position = UDim2.new(0, 8, 0, 0)
+            pos.TextSize = 11
+
+            name.Size = UDim2.new(0, 104, 1, 0)
+            name.Position = UDim2.new(0, 42, 0, 0)
+            name.TextSize = 11
+
+            points.Size = UDim2.new(0, 54, 1, 0)
+            points.Position = UDim2.new(0, 150, 0, 0)
+            points.TextSize = 10
+
+            description.Size = UDim2.new(1, -210, 1, 0)
+            description.Position = UDim2.new(0, 208, 0, 0)
+            description.TextSize = 10
+        end
 
         
 
@@ -533,6 +553,116 @@ function ClanTableUI.Create(parent, Theme, clans)
     footerText.TextXAlignment = Enum.TextXAlignment.Left
     footerText.TextWrapped = true
     footerText.Parent = footer
+
+    if isMobileLayout then
+        pcall(function()
+            gui.ScreenInsets = Enum.ScreenInsets.None
+        end)
+
+        pcall(function()
+            gui.ClipToDeviceSafeArea = false
+        end)
+
+        root.AnchorPoint = Vector2.new(0, 1)
+        root.Size = UDim2.new(1, 0, 1, -64)
+        root.Position = UDim2.new(0, 0, 1, 0)
+        rootCorner.CornerRadius = UDim.new(0, 0)
+        backgroundImageCorner.CornerRadius = UDim.new(0, 0)
+
+        titleContainer.Size = UDim2.new(1, -112, 0, 34)
+        titleContainer.Position = UDim2.new(0, 56, 0, 8)
+        title.TextSize = 16
+
+        closeButton.Size = UDim2.new(0, 32, 0, 30)
+        closeButton.Position = UDim2.new(1, -42, 0, 10)
+        closeButton.TextSize = 14
+
+        mainContainer.Size = UDim2.new(1, -28, 1, -88)
+        mainContainer.Position = UDim2.new(0, 14, 0, 48)
+
+        leftPanel.Size = UDim2.new(0.63, -8, 1, 0)
+        rightPanel.Size = UDim2.new(0.37, -6, 1, 0)
+        rightPanel.Position = UDim2.new(0.63, 8, 0, 0)
+
+        tableHeader.Size = UDim2.new(1, -16, 0, 28)
+        tableHeader.Position = UDim2.new(0, 8, 0, 8)
+
+        posHeader.Size = UDim2.new(0, 34, 1, 0)
+        posHeader.Position = UDim2.new(0, 8, 0, 0)
+        posHeader.TextSize = 10
+
+        nameHeader.Size = UDim2.new(0, 104, 1, 0)
+        nameHeader.Position = UDim2.new(0, 42, 0, 0)
+        nameHeader.TextSize = 10
+
+        pointsHeader.Size = UDim2.new(0, 54, 1, 0)
+        pointsHeader.Position = UDim2.new(0, 150, 0, 0)
+        pointsHeader.TextSize = 10
+
+        descHeader.Size = UDim2.new(1, -210, 1, 0)
+        descHeader.Position = UDim2.new(0, 208, 0, 0)
+        descHeader.TextSize = 10
+
+        clanList.Size = UDim2.new(1, -20, 1, -46)
+        clanList.Position = UDim2.new(0, 10, 0, 40)
+        clanList.ScrollBarThickness = 2
+        clanListLayout.Padding = UDim.new(0, 4)
+        clanListPadding.PaddingTop = UDim.new(0, 3)
+
+        clanTitle.Size = UDim2.new(1, -16, 0, 26)
+        clanTitle.Position = UDim2.new(0, 8, 0, 8)
+        clanTitle.TextSize = 15
+
+        clanImage.Size = UDim2.new(1, -20, 0, 40)
+        clanImage.Position = UDim2.new(0, 10, 0, 34)
+
+        clanPoints.Size = UDim2.new(1, -20, 0, 18)
+        clanPoints.Position = UDim2.new(0, 10, 0, 82)
+        clanPoints.TextSize = 11
+        clanPointsValue.Size = UDim2.new(0, 54, 1, 0)
+        clanPointsValue.Position = UDim2.new(1, -58, 0, 0)
+        clanPointsValue.TextSize = 11
+
+        clanMembers.Size = UDim2.new(1, -20, 0, 18)
+        clanMembers.Position = UDim2.new(0, 10, 0, 102)
+        clanMembers.TextSize = 11
+        clanMembersValue.Size = UDim2.new(0, 54, 1, 0)
+        clanMembersValue.Position = UDim2.new(1, -58, 0, 0)
+        clanMembersValue.TextSize = 11
+
+        clanDescriptionTitle.Size = UDim2.new(1, -20, 0, 16)
+        clanDescriptionTitle.Position = UDim2.new(0, 10, 0, 126)
+        clanDescriptionTitle.TextSize = 11
+
+        clanDescription.Size = UDim2.new(1, -20, 0, 38)
+        clanDescription.Position = UDim2.new(0, 10, 0, 142)
+        clanDescription.TextSize = 10
+        clanDescriptionPadding.PaddingTop = UDim.new(0, 5)
+        clanDescriptionPadding.PaddingLeft = UDim.new(0, 6)
+        clanDescriptionPadding.PaddingRight = UDim.new(0, 6)
+        clanDescriptionPadding.PaddingBottom = UDim.new(0, 5)
+
+        joinButton.Size = UDim2.new(0.5, -14, 0, 28)
+        joinButton.Position = UDim2.new(0, 10, 1, -34)
+        joinButton.TextSize = 10
+
+        viewButton.Size = UDim2.new(0.5, -14, 0, 28)
+        viewButton.Position = UDim2.new(0.5, 4, 1, -34)
+        viewButton.TextSize = 10
+
+        footer.Size = UDim2.new(0.63, -22, 0, 24)
+        footer.Position = UDim2.new(0, 14, 1, -32)
+        footerText.Size = UDim2.new(1, -16, 1, 0)
+        footerText.Position = UDim2.new(0, 8, 0, 0)
+        footerText.TextSize = 11
+
+        clanList.CanvasSize = UDim2.new(
+            0,
+            0,
+            0,
+            clanListLayout.AbsoluteContentSize.Y + 8
+        )
+    end
 
     return {
         Gui = gui,
