@@ -179,8 +179,8 @@ function RoomsListModal.Create(parent, Theme)
         closeButton.TextSize = 12
         closeButton.ZIndex = 67
 
-        list.Size = UDim2.new(1, -18, 1, -90)
-        list.Position = UDim2.new(0, 9, 0, 80)
+        list.Size = UDim2.new(1, -18, 1, -76)
+        list.Position = UDim2.new(0, 9, 0, 66)
         list.ScrollBarThickness = 2
 
         layout.Padding = UDim.new(0, 5)
