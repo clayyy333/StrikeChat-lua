@@ -117,7 +117,9 @@ adminNoticeGui.Parent = CoreGui
 local adminNotice = Instance.new("TextLabel")
 adminNotice.Name = "AdminNotice"
 adminNotice.Size = UDim2.new(0, 620, 0, 24)
-adminNotice.Position = UDim2.new(0.5, 0, 0, 92)
+adminNotice.Position = selectedLayoutMode == "mobile"
+    and UDim2.new(0.5, 0, 0, 52)
+    or UDim2.new(0.5, 0, 0, 92)
 adminNotice.AnchorPoint = Vector2.new(0.5, 0)
 adminNotice.BackgroundTransparency = 1
 adminNotice.Text = ""
