@@ -265,6 +265,10 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
             end
         end
 
+        if isMobileLandscape() then
+            name.Size = UDim2.new(1, -58, 0, 16)
+        end
+
         name.RichText = true
         name.Text =
             '<font color="' ..
@@ -283,8 +287,6 @@ function RightPanel.Create(parent, Theme, AvatarRenderer)
         name.TextXAlignment = Enum.TextXAlignment.Left
         name.TextTruncate = Enum.TextTruncate.AtEnd
         name.Parent = row
-
-        
 
         local status = Instance.new("TextLabel")
         status.Name = "Status"
