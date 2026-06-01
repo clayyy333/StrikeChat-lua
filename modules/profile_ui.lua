@@ -57,7 +57,18 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
     gui.Name = "ProfileUI"
     gui.ResetOnSpawn = false
     gui.IgnoreGuiInset = true
+    gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     gui.Parent = parent
+
+    if isMobileLayout then
+        pcall(function()
+            gui.ScreenInsets = Enum.ScreenInsets.None
+        end)
+
+        pcall(function()
+            gui.ClipToDeviceSafeArea = false
+        end)
+    end
 
     local root = Instance.new("Frame")
     root.Name = "Root"
@@ -1261,12 +1272,12 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         closeButton.Size = UDim2.new(0, 32, 0, 28)
         closeButton.Position = UDim2.new(1, -42, 0, 9)
 
-        content.Size = UDim2.new(1, -28, 1, -54)
-        content.Position = UDim2.new(0, 14, 0, 42)
+        content.Size = UDim2.new(1, 0, 1, -50)
+        content.Position = UDim2.new(0, 0, 0, 36)
 
-        leftPanel.Size = UDim2.new(0.48, -8, 1, 0)
-        rightPanel.Size = UDim2.new(0.52, -6, 1, 0)
-        rightPanel.Position = UDim2.new(0.48, 8, 0, 0)
+        leftPanel.Size = UDim2.new(0.48, -3, 1, 0)
+        rightPanel.Size = UDim2.new(0.52, -3, 1, 0)
+        rightPanel.Position = UDim2.new(0.48, 6, 0, 0)
 
         bannerClip.Size = UDim2.new(1, 0, 0, 70)
         banner.Size = UDim2.new(1, 0, 0, 84)
