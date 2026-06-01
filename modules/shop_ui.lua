@@ -842,6 +842,12 @@ function ShopUI.Create(parent, Theme, initialPoints)
         itemsLayout.CellSize = UDim2.new(0.5, -10, 0, 108)
         itemsLayout.CellPadding = UDim2.new(0, 14, 0, 16)
 
+        local item3Title = item3:FindFirstChild("ItemTitle")
+
+        if item3Title then
+            item3Title.Text = "PERS. CHAT"
+        end
+
         local item6Badge = item6:FindFirstChild("Badge")
 
         if item6Badge then

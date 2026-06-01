@@ -207,6 +207,55 @@ function Api.CreateClan(player, name, tag, color, tagStyle)
     )
 end
 
+function Api.RequestJoinClan(player, clanId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/clans/join-requests" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId) ..
+        "&clan_id=" .. Api.Encode(clanId),
+        "POST"
+    )
+end
+
+function Api.GetClanJoinRequests(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/clans/join-requests" ..
+        "?owner_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+function Api.GetClanJoinRequestStatus(player, requestId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/clans/join-requests/status" ..
+        "?request_id=" .. Api.Encode(requestId) ..
+        "&roblox_user_id=" .. Api.Encode(player.UserId),
+        "GET"
+    )
+end
+
+function Api.RespondClanJoinRequest(player, requestId, decision)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/clans/join-requests/respond" ..
+        "?owner_user_id=" .. Api.Encode(player.UserId) ..
+        "&request_id=" .. Api.Encode(requestId) ..
+        "&decision=" .. Api.Encode(decision),
+        "POST"
+    )
+end
+
+function Api.LeaveClan(player)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/clans/leave" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
 function Api.GetAdminNotices()
     return Api.Request(
         Api.BaseUrl .. "/admin-notices?platform=external",

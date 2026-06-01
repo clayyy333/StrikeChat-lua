@@ -2,6 +2,10 @@ local ClanTableUI = {}
 
 function ClanTableUI.Create(parent, Theme, clans)
     local isMobileLayout = _G.StrikeChatLayoutMode == "mobile"
+    local selectedClan = clans and clans[1] or nil
+    local currentClanId = nil
+    local joinActionHandler = nil
+    local updateJoinButton = function() end
 
     local gui = Instance.new("ScreenGui")
     gui.Name = "ClanTableUI"
@@ -251,6 +255,8 @@ function ClanTableUI.Create(parent, Theme, clans)
         rowStroke.Parent = row
 
         row.MouseButton1Click:Connect(function()
+            selectedClan = clan
+
             for _, child in ipairs(clanList:GetChildren()) do
                 if child:IsA("TextButton") then
                     local stroke = child:FindFirstChildOfClass("UIStroke")
@@ -276,6 +282,7 @@ function ClanTableUI.Create(parent, Theme, clans)
             clanDescription.Text =
                 tostring(descriptionText)
 
+            updateJoinButton()
         end)
 
         local pos = Instance.new("TextLabel")
@@ -474,6 +481,7 @@ function ClanTableUI.Create(parent, Theme, clans)
     if firstClan then
         local memberCount = #(firstClan.members or {})
 
+        selectedClan = firstClan
         clanTitle.Text = tostring(firstClan.name or "Clan")
         clanPointsValue.Text = tostring(firstClan.total_points_earned or 0)
         clanMembersValue.Text = tostring(memberCount)
@@ -501,6 +509,37 @@ function ClanTableUI.Create(parent, Theme, clans)
     local joinCorner = Instance.new("UICorner")
     joinCorner.CornerRadius = UDim.new(0, 8)
     joinCorner.Parent = joinButton
+
+    updateJoinButton = function()
+        if not selectedClan then
+            joinButton.Active = false
+            joinButton.AutoButtonColor = false
+            joinButton.BackgroundColor3 = Color3.fromRGB(72, 72, 78)
+            joinButton.Text = "Solicitar unirse"
+            return
+        end
+
+        joinButton.Active = true
+        joinButton.AutoButtonColor = true
+
+        if currentClanId and tostring(currentClanId) == tostring(selectedClan.clan_id) then
+            joinButton.BackgroundColor3 = Color3.fromRGB(150, 42, 42)
+            joinButton.Text = "Salir de Clan"
+        else
+            joinButton.BackgroundColor3 = Color3.fromRGB(78, 158, 58)
+            joinButton.Text = "Solicitar unirse"
+        end
+
+        if _G.StrikeChatI18n then
+            joinButton.Text = _G.StrikeChatI18n.TranslateText(joinButton.Text)
+        end
+    end
+
+    joinButton.MouseButton1Click:Connect(function()
+        if joinActionHandler and selectedClan then
+            joinActionHandler(selectedClan)
+        end
+    end)
 
     local viewButton = Instance.new("TextButton")
     viewButton.Name = "ViewButton"
@@ -665,6 +704,8 @@ function ClanTableUI.Create(parent, Theme, clans)
         )
     end
 
+    updateJoinButton()
+
     return {
         Gui = gui,
         Root = root,
@@ -682,6 +723,21 @@ function ClanTableUI.Create(parent, Theme, clans)
 
         JoinButton = joinButton,
         ViewButton = viewButton,
+
+        GetSelectedClan = function()
+            return selectedClan
+        end,
+
+        SetCurrentClanId = function(clanId)
+            currentClanId = clanId
+            updateJoinButton()
+        end,
+
+        SetJoinActionHandler = function(handler)
+            joinActionHandler = handler
+        end,
+
+        UpdateJoinButton = updateJoinButton,
 
         Footer = footer,
 

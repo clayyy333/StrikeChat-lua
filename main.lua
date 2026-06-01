@@ -32,6 +32,7 @@ local RoomsListModal = loadstring(game:HttpGet(BASE_RAW .. "modules/rooms_list_m
 local PasswordModal = loadstring(game:HttpGet(BASE_RAW .. "modules/password_modal.lua"))()
 local ConfirmModal = loadstring(game:HttpGet(BASE_RAW .. "modules/confirm_modal.lua"))()
 local ClanTableUI = loadstring(game:HttpGet(BASE_RAW .. "modules/clan_table_ui.lua"))()
+local ClanRequestModal = loadstring(game:HttpGet(BASE_RAW .. "modules/clan_request_modal.lua"))()
 local ShopUI = loadstring(game:HttpGet(BASE_RAW .. "modules/shop_ui.lua"))()
 local RewardModal = loadstring(game:HttpGet(BASE_RAW .. "modules/reward_modal.lua"))()
 local ProfileUI = loadstring(game:HttpGet(BASE_RAW .. "modules/profile_ui.lua"))()
@@ -207,6 +208,22 @@ local selectedPrivateRoom = nil
 local confirmAction = nil
 local confirmSecondaryAction = nil
 local activePublicProfileUI = nil
+local clanRequestModal = nil
+local activeClanTableUI = nil
+local pendingClanJoinRequest = nil
+local shownClanJoinRequests = {}
+local clanRequestModalBusy = false
+
+local function ensureClanRequestModal()
+    if clanRequestModal then
+        return clanRequestModal
+    end
+
+    clanRequestModal = ClanRequestModal.Create(CoreGui, Theme)
+    I18n.RegisterRoot(clanRequestModal.Overlay)
+
+    return clanRequestModal
+end
 
 local clanColorMap = {
     white = Color3.fromRGB(245, 245, 245),
@@ -1107,16 +1124,72 @@ leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
 
     local clansResult = Api.GetClans()
     local clans = {}
+    local myProfile = heartbeatResult.profile
+    local profileResult = Api.GetMyProfile(player)
+
+    if profileResult and profileResult.status == "ok" and profileResult.profile then
+        myProfile = profileResult.profile
+    end
 
     if clansResult and clansResult.clans then
         clans = clansResult.clans
     end
 
     local clanUI = ClanTableUI.Create(CoreGui, Theme, clans)
+    activeClanTableUI = clanUI
     I18n.RegisterRoot(clanUI.Gui)
+
+    if clanUI.SetCurrentClanId then
+        clanUI.SetCurrentClanId(myProfile and myProfile.clan_id)
+    end
+
+    if clanUI.SetJoinActionHandler then
+        clanUI.SetJoinActionHandler(function(clan)
+            if not clan or not clan.clan_id then
+                return
+            end
+
+            local currentClanId = myProfile and myProfile.clan_id
+
+            if currentClanId and tostring(currentClanId) == tostring(clan.clan_id) then
+                local leaveResult = Api.LeaveClan(player)
+
+                if leaveResult and leaveResult.status == "left" then
+                    myProfile = leaveResult.profile or myProfile
+                    clanUI.SetCurrentClanId(nil)
+                    ensureClanRequestModal().OpenInfo("Saliste del clan.")
+                    refreshOnlineUsers()
+                    refreshChat()
+                else
+                    ensureClanRequestModal().OpenInfo("No se pudo salir del clan.")
+                end
+
+                return
+            end
+
+            local requestResult = Api.RequestJoinClan(player, clan.clan_id)
+
+            if requestResult and requestResult.status == "sent" and requestResult.request then
+                pendingClanJoinRequest = requestResult.request
+                ensureClanRequestModal().OpenInfo("Solicitud enviada")
+            elseif requestResult and requestResult.reason == "leader_offline" then
+                ensureClanRequestModal().OpenInfo("Envia la solicitud cuando el Lider se encuentre En Linea")
+            elseif requestResult and requestResult.reason == "user_already_in_clan" then
+                local latestProfileResult = Api.GetMyProfile(player)
+
+                if latestProfileResult and latestProfileResult.status == "ok" and latestProfileResult.profile then
+                    myProfile = latestProfileResult.profile
+                    clanUI.SetCurrentClanId(myProfile.clan_id)
+                end
+            else
+                ensureClanRequestModal().OpenInfo("No se pudo enviar la solicitud.")
+            end
+        end)
+    end
 
     clanUI.CloseButton.MouseButton1Click:Connect(function()
         clanUI.Destroy()
+        activeClanTableUI = nil
         window.Gui.Enabled = true
     end)
 end)
@@ -1863,6 +1936,77 @@ window.CloseButton.MouseButton1Click:Connect(function()
     end
 
     window.Gui:Destroy()
+end)
+
+task.spawn(function()
+    while running do
+        local result = Api.GetClanJoinRequests(player)
+
+        if result and result.status == "ok" and result.requests and not clanRequestModalBusy then
+            for _, joinRequest in ipairs(result.requests) do
+                local requestId = joinRequest.request_id
+
+                if requestId and not shownClanJoinRequests[requestId] then
+                    shownClanJoinRequests[requestId] = true
+                    clanRequestModalBusy = true
+
+                    ensureClanRequestModal().OpenJoinRequest(
+                        joinRequest,
+                        function()
+                            Api.RespondClanJoinRequest(player, requestId, "accept")
+                            clanRequestModalBusy = false
+                        end,
+                        function()
+                            Api.RespondClanJoinRequest(player, requestId, "reject")
+                            clanRequestModalBusy = false
+                        end
+                    )
+
+                    break
+                end
+            end
+        end
+
+        task.wait(5)
+    end
+end)
+
+task.spawn(function()
+    while running do
+        if pendingClanJoinRequest and pendingClanJoinRequest.request_id then
+            local result = Api.GetClanJoinRequestStatus(player, pendingClanJoinRequest.request_id)
+            local requestStatus = result and result.request and result.request.status
+
+            if requestStatus == "accepted" then
+                local joinedResult = result.result
+
+                if joinedResult and joinedResult.profile then
+                    heartbeatResult.profile = joinedResult.profile
+
+                    if leftPanel.DisplayName then
+                        leftPanel.DisplayName.Text = tostring(joinedResult.profile.display_name or player.DisplayName)
+                    end
+
+                    if activeClanTableUI and activeClanTableUI.SetCurrentClanId then
+                        activeClanTableUI.SetCurrentClanId(joinedResult.profile.clan_id)
+                    end
+
+                    refreshOnlineUsers()
+                    refreshChat()
+                end
+
+                pendingClanJoinRequest = nil
+                ensureClanRequestModal().OpenInfo("Solicitud aceptada.")
+            elseif requestStatus == "rejected" or requestStatus == "blocked" then
+                pendingClanJoinRequest = nil
+                ensureClanRequestModal().OpenInfo("Solicitud rechazada.")
+            elseif result and result.status == "blocked" then
+                pendingClanJoinRequest = nil
+            end
+        end
+
+        task.wait(4)
+    end
 end)
 
 task.spawn(function()
