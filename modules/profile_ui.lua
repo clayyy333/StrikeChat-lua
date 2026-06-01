@@ -1285,11 +1285,11 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
 
         if rightShadow then
             rightShadow.Size = UDim2.new(0, 30, 1, -8)
-            rightShadow.Position = UDim2.new(0.43, -8, 0, 4)
+            rightShadow.Position = UDim2.new(0.39, 0, 0, 4)
         end
 
-        leftPanel.Size = UDim2.new(0.43, -10, 1, 0)
-        leftPanel.Position = UDim2.new(0, 6, 0, 0)
+        leftPanel.Size = UDim2.new(0.39, -10, 1, 0)
+        leftPanel.Position = UDim2.new(0, 14, 0, 0)
         rightPanel.Size = UDim2.new(0.5, -14, 1, 0)
         rightPanel.Position = UDim2.new(0.47, 22, 0, 0)
 
@@ -1332,27 +1332,27 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
 
         tabRow.Size = UDim2.new(1, 0, 0, 38)
         activityTab.Size = UDim2.new(0, 74, 0, 28)
-        activityTab.Position = UDim2.new(0, 6, 0, 6)
+        activityTab.Position = UDim2.new(0, 14, 0, 6)
         activityTab.TextSize = 12
         visibilityRow.Size = UDim2.new(0, 172, 0, 26)
-        visibilityRow.Position = UDim2.new(0, 88, 0, 7)
+        visibilityRow.Position = UDim2.new(0, 96, 0, 7)
         publicButton.Size = UDim2.new(0, 78, 0, 24)
         publicButton.TextSize = 10
         privateButton.Size = UDim2.new(0, 78, 0, 24)
         privateButton.Position = UDim2.new(0, 86, 0, 0)
         privateButton.TextSize = 10
-        divider.Position = UDim2.new(0, 6, 0, 38)
+        divider.Position = UDim2.new(0, 14, 0, 38)
 
-        recentLabel.Position = UDim2.new(0, 6, 0, 52)
+        recentLabel.Position = UDim2.new(0, 14, 0, 52)
         recentLabel.TextSize = 11
         status.Size = UDim2.new(1, -12, 0, 24)
-        status.Position = UDim2.new(0, 10, 0, 72)
+        status.Position = UDim2.new(0, 14, 0, 72)
         status.TextSize = 13
-        languageTitle.Position = UDim2.new(0, 6, 0, 98)
+        languageTitle.Position = UDim2.new(0, 14, 0, 98)
         languageTitle.TextSize = 11
-        languageUnderline.Position = UDim2.new(0, 6, 0, 120)
+        languageUnderline.Position = UDim2.new(0, 14, 0, 120)
         languageButtons.Size = UDim2.new(0, 176, 0, 26)
-        languageButtons.Position = UDim2.new(0, 6, 0, 130)
+        languageButtons.Position = UDim2.new(0, 14, 0, 130)
         spanishButton.Size = UDim2.new(0, 82, 0, 24)
         spanishButton.TextSize = 10
         englishButton.Size = UDim2.new(0, 82, 0, 24)
