@@ -1272,12 +1272,25 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         closeButton.Size = UDim2.new(0, 32, 0, 28)
         closeButton.Position = UDim2.new(1, -42, 0, 9)
 
-        content.Size = UDim2.new(1, 0, 1, -50)
-        content.Position = UDim2.new(0, 0, 0, 36)
+        content.Size = UDim2.new(1, -20, 1, -50)
+        content.Position = UDim2.new(0, 10, 0, 30)
 
-        leftPanel.Size = UDim2.new(0.48, -3, 1, 0)
-        rightPanel.Size = UDim2.new(0.52, -3, 1, 0)
-        rightPanel.Position = UDim2.new(0.48, 6, 0, 0)
+        local leftShadow = content:FindFirstChild("PrivateProfilePanelShadowLeft")
+        local rightShadow = content:FindFirstChild("PrivateProfilePanelShadowRight")
+
+        if leftShadow then
+            leftShadow.Size = UDim2.new(0, 26, 1, -8)
+            leftShadow.Position = UDim2.new(0, -16, 0, 4)
+        end
+
+        if rightShadow then
+            rightShadow.Size = UDim2.new(0, 30, 1, -8)
+            rightShadow.Position = UDim2.new(0.43, -8, 0, 4)
+        end
+
+        leftPanel.Size = UDim2.new(0.43, -4, 1, 0)
+        rightPanel.Size = UDim2.new(0.52, -14, 1, 0)
+        rightPanel.Position = UDim2.new(0.46, 14, 0, 0)
 
         bannerClip.Size = UDim2.new(1, 0, 0, 70)
         banner.Size = UDim2.new(1, 0, 0, 84)
@@ -1348,13 +1361,13 @@ function ProfileUI.Create(parent, Theme, profile, player, AvatarRenderer, curren
         statusLabel.Size = UDim2.new(1, -12, 0, 24)
         statusLabel.Position = UDim2.new(0, 6, 1, -82)
         statusLabel.TextSize = 10
-        actions.Size = UDim2.new(1, 0, 0, 30)
-        actions.Position = UDim2.new(0, 0, 1, -44)
-        saveButton.Size = UDim2.new(0.42, -4, 1, 0)
-        saveButton.Position = UDim2.new(0.06, 0, 0, 0)
-        saveButton.TextSize = 11
-        publicProfileButton.Size = UDim2.new(0.46, -4, 1, 0)
-        publicProfileButton.Position = UDim2.new(0.5, 0, 0, 0)
+        actions.Size = UDim2.new(0.88, 0, 0, 28)
+        actions.Position = UDim2.new(0, -10, 1, -42)
+        saveButton.Size = UDim2.new(0.41, -4, 1, 0)
+        saveButton.Position = UDim2.new(0.07, 0, 0, 0)
+        saveButton.TextSize = 10
+        publicProfileButton.Size = UDim2.new(0.44, -4, 1, 0)
+        publicProfileButton.Position = UDim2.new(0.51, 0, 0, 0)
         publicProfileButton.TextSize = 10
     end
 

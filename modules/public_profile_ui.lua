@@ -586,16 +586,16 @@ function PublicProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
 
     if isMobileLayout then
         modal.AnchorPoint = Vector2.new(0.5, 1)
-        modal.Size = UDim2.new(0.42, 0, 1, -64)
+        modal.Size = UDim2.new(0.42, 0, 1, -40)
         modal.Position = UDim2.new(0.5, 0, 1, 0)
         sizeConstraint.MinSize = Vector2.new(280, 0)
         sizeConstraint.MaxSize = Vector2.new(360, 10000)
 
         closeButton.Size = UDim2.new(0, 32, 0, 28)
-        closeButton.Position = UDim2.new(1, -42, 0, 9)
+        closeButton.Position = UDim2.new(1, -42, 0, 5)
 
-        card.Size = UDim2.new(1, -28, 1, -46)
-        card.Position = UDim2.new(0, 14, 0, 38)
+        card.Size = UDim2.new(1, -28, 1, -38)
+        card.Position = UDim2.new(0, 14, 0, 30)
 
         bannerClip.Size = UDim2.new(1, 0, 0, 68)
         banner.Size = UDim2.new(1, 0, 0, 82)
@@ -630,7 +630,7 @@ function PublicProfileUI.Create(parent, Theme, profile, player, AvatarRenderer)
         descriptionBox.TextSize = 10
 
         actions.Size = UDim2.new(0, 162, 0, 28)
-        actions.Position = UDim2.new(0.5, -81, 1, -32)
+        actions.Position = UDim2.new(0.5, -81, 1, -34)
         messageButton.Size = UDim2.new(0, 86, 0, 26)
         messageButton.TextSize = 11
         addButton.Size = UDim2.new(0, 68, 0, 26)
