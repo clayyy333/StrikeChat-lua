@@ -18,6 +18,12 @@ function ShopUI.Create(parent, Theme, initialPoints)
     gui.Name = "ShopUI"
     gui.ResetOnSpawn = false
     gui.IgnoreGuiInset = true
+    pcall(function()
+        gui.ScreenInsets = Enum.ScreenInsets.None
+    end)
+    pcall(function()
+        gui.ClipToDeviceSafeArea = false
+    end)
     gui.Parent = parent
 
     local function createPriceRow(parentInstance, amount, position, size, textSize, zIndex)
@@ -729,6 +735,33 @@ function ShopUI.Create(parent, Theme, initialPoints)
 
     featuredPrice.Text = "Generar codigo de Premio"
     item6BuyButton.Text = "Generar codigo de Premio"
+
+    if _G.StrikeChatLayoutMode == "mobile" then
+        root.AnchorPoint = Vector2.new(0, 1)
+        root.Size = UDim2.new(1, 0, 1, -64)
+        root.Position = UDim2.new(0, 0, 1, 0)
+        rootCorner.CornerRadius = UDim.new(0, 0)
+
+        closeButton.Position = UDim2.new(1, -50, 0, 8)
+        pointsBadge.Position = UDim2.new(0, 14, 0, 12)
+        title.Size = UDim2.new(1, -220, 0, 48)
+        title.Position = UDim2.new(0, 110, 0, 6)
+
+        featuredCard.Size = UDim2.new(0, 360, 0, 210)
+        featuredCard.Position = UDim2.new(0, 24, 0, 82)
+
+        itemsContainer.Position = UDim2.new(0, 408, 0, 82)
+        itemsContainer.Size = UDim2.new(1, -424, 1, -104)
+        itemsContainer.ScrollBarThickness = 2
+
+        itemsPadding.PaddingTop = UDim.new(0, 3)
+        itemsPadding.PaddingBottom = UDim.new(0, 12)
+        itemsPadding.PaddingLeft = UDim.new(0, 3)
+        itemsPadding.PaddingRight = UDim.new(0, 6)
+
+        itemsLayout.CellSize = UDim2.new(0.5, -10, 0, 108)
+        itemsLayout.CellPadding = UDim2.new(0, 14, 0, 16)
+    end
 
     return {
         Gui = gui,

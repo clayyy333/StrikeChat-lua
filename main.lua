@@ -1055,6 +1055,10 @@ end
 
 chatPanel.SendButton.MouseButton1Click:Connect(sendCurrentMessage)
 
+chatPanel.EmojiButton.MouseButton1Click:Connect(function()
+    chatPanel.Input:CaptureFocus()
+end)
+
 chatPanel.Input.FocusLost:Connect(function(enterPressed)
     if enterPressed then
         sendCurrentMessage()
