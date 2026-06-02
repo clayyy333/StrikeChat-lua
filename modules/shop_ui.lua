@@ -451,8 +451,8 @@ function ShopUI.Create(parent, Theme, initialPoints)
     purchaseNotice.Name = "PurchaseNotice"
     purchaseNotice.Size = UDim2.new(0, 360, 0, 38)
     purchaseNotice.Position = UDim2.new(0, 28, 0, 304)
-    purchaseNotice.BackgroundColor3 = Color3.fromRGB(22, 24, 30)
-    purchaseNotice.BackgroundTransparency = 0.08
+    purchaseNotice.BackgroundColor3 = Color3.fromRGB(14, 12, 22)
+    purchaseNotice.BackgroundTransparency = 0.42
     purchaseNotice.BorderSizePixel = 0
     purchaseNotice.Parent = root
 
@@ -461,9 +461,9 @@ function ShopUI.Create(parent, Theme, initialPoints)
     purchaseNoticeCorner.Parent = purchaseNotice
 
     local purchaseNoticeStroke = Instance.new("UIStroke")
-    purchaseNoticeStroke.Color = Color3.fromRGB(255, 220, 90)
+    purchaseNoticeStroke.Color = Color3.fromRGB(24, 22, 34)
     purchaseNoticeStroke.Thickness = 1
-    purchaseNoticeStroke.Transparency = 0.25
+    purchaseNoticeStroke.Transparency = 0.35
     purchaseNoticeStroke.Parent = purchaseNotice
 
     local purchaseNoticeText = Instance.new("TextLabel")
