@@ -41,6 +41,9 @@ local InventoryUI = loadstring(game:HttpGet(BASE_RAW .. "modules/inventory_ui.lu
 local ChatStyles = loadstring(game:HttpGet(BASE_RAW .. "modules/chat_styles.lua"))()
 local AvatarRenderer = loadstring(game:HttpGet(BASE_RAW .. "modules/avatar_renderer.lua"))()
 local AdminPanelUI = loadstring(game:HttpGet(BASE_RAW .. "modules/admin_panel_ui.lua"))()
+local StrikeMusicStorage = loadstring(game:HttpGet(BASE_RAW .. "modules/strikemusic_storage.lua"))()
+local StrikeMusicClient = loadstring(game:HttpGet(BASE_RAW .. "modules/strikemusic_client.lua"))()
+local StrikeMusicUI = loadstring(game:HttpGet(BASE_RAW .. "modules/strikemusic_ui.lua"))()
 
 local function getCurrentGameActivity()
     local placeName = nil
@@ -94,6 +97,7 @@ local window = MainWindow.Create(CoreGui, Theme, selectedLayoutMode)
 local chatPanel = ChatPanel.Create(window.ChatPanel, Theme)
 local leftPanel = LeftPanel.Create(window.LeftPanel, Theme, heartbeatResult.profile, player)
 local rightPanel = RightPanel.Create(window.RightPanel, Theme, AvatarRenderer)
+local strikeMusicClient = StrikeMusicClient.Create(Api, StrikeMusicStorage)
 local adminPanel = nil
 local adminSecurityPrompt = nil
 local adminAccessVerified = false
@@ -210,6 +214,7 @@ local confirmSecondaryAction = nil
 local activePublicProfileUI = nil
 local clanRequestModal = nil
 local activeClanTableUI = nil
+local activeStrikeMusicUI = nil
 local pendingClanJoinRequest = nil
 local shownClanJoinRequests = {}
 local clanRequestModalBusy = false
@@ -1173,6 +1178,32 @@ leftPanel.Buttons.SalasPrivadas.MouseButton1Click:Connect(function()
     roomsListModal.Open()
 end)
 
+if leftPanel.Buttons.StrikeMusic then
+    leftPanel.Buttons.StrikeMusic.MouseButton1Click:Connect(function()
+        if activeStrikeMusicUI then
+            return
+        end
+
+        window.Gui.Enabled = false
+
+        activeStrikeMusicUI = StrikeMusicUI.Create(CoreGui, Theme)
+
+        task.spawn(function()
+            strikeMusicClient.Open(player)
+        end)
+
+        activeStrikeMusicUI.CloseButton.MouseButton1Click:Connect(function()
+            task.spawn(function()
+                strikeMusicClient.Close(player)
+            end)
+
+            activeStrikeMusicUI.Destroy()
+            activeStrikeMusicUI = nil
+            window.Gui.Enabled = true
+        end)
+    end)
+end
+
 
 leftPanel.Buttons.TablaClanes.MouseButton1Click:Connect(function()
     window.Gui.Enabled = false
@@ -2103,6 +2134,11 @@ window.CloseButton.MouseButton1Click:Connect(function()
 
     if clanRequestModal and clanRequestModal.Destroy then
         clanRequestModal.Destroy()
+    end
+
+    if activeStrikeMusicUI then
+        activeStrikeMusicUI.Destroy()
+        activeStrikeMusicUI = nil
     end
 
     window.Gui:Destroy()
