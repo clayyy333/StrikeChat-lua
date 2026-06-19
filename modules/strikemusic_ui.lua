@@ -496,6 +496,18 @@ function StrikeMusicUI.Create(parent, Theme)
     local sideBar = createPanel(root, "Sidebar", UDim2.new(0, 242, 1, -94), UDim2.new(0, 10, 0, 72))
     sideBar.BackgroundTransparency = 0.14
 
+    local sideBarScroll = Instance.new("ScrollingFrame")
+    sideBarScroll.Name = "ContentScroll"
+    sideBarScroll.Size = UDim2.new(1, 0, 1, 0)
+    sideBarScroll.BackgroundTransparency = 1
+    sideBarScroll.BorderSizePixel = 0
+    sideBarScroll.CanvasSize = UDim2.new(0, 0, 0, 620)
+    sideBarScroll.ScrollBarThickness = 3
+    sideBarScroll.ScrollBarImageColor3 = COLORS.Purple
+    sideBarScroll.ScrollingDirection = Enum.ScrollingDirection.Y
+    sideBarScroll.Active = true
+    sideBarScroll.Parent = sideBar
+
     local logoMark = createLabel(
         root,
         "LogoMark",
@@ -582,7 +594,7 @@ function StrikeMusicUI.Create(parent, Theme)
         button.Font = theme.Font.Bold or Enum.Font.GothamBold
         button.TextSize = 13
         button.TextXAlignment = Enum.TextXAlignment.Left
-        button.Parent = sideBar
+        button.Parent = sideBarScroll
         createCorner(button, 9)
 
         local icon = createLabel(button, "Icon", navIcons[index] or "", UDim2.new(0, 32, 1, 0), UDim2.new(0, 14, 0, 0), 15, Enum.Font.GothamBold, COLORS.Text)
@@ -601,9 +613,9 @@ function StrikeMusicUI.Create(parent, Theme)
     divider.BackgroundColor3 = COLORS.Border
     divider.BackgroundTransparency = 0.55
     divider.BorderSizePixel = 0
-    divider.Parent = sideBar
+    divider.Parent = sideBarScroll
 
-    createLabel(sideBar, "PlaylistLabel", "PLAYLISTS", UDim2.new(1, -42, 0, 18), UDim2.new(0, 28, 0, navY + 22), 10, Enum.Font.GothamBold, COLORS.Muted)
+    createLabel(sideBarScroll, "PlaylistLabel", "PLAYLISTS", UDim2.new(1, -42, 0, 18), UDim2.new(0, 28, 0, navY + 22), 10, Enum.Font.GothamBold, COLORS.Muted)
 
     local playlistNames = {
         "My Favorites",
@@ -616,8 +628,8 @@ function StrikeMusicUI.Create(parent, Theme)
     local playlistY = navY + 58
 
     for index, name in ipairs(playlistNames) do
-        local label = createLabel(sideBar, "Playlist" .. tostring(index), name, UDim2.new(1, -48, 0, 28), UDim2.new(0, 54, 0, playlistY), 13, Enum.Font.Gotham, COLORS.Text)
-        createLabel(sideBar, "PlaylistIcon" .. tostring(index), index == 1 and "<3" or "+", UDim2.new(0, 30, 0, 28), UDim2.new(0, 28, 0, playlistY), 14, Enum.Font.GothamBold, index == 1 and COLORS.PurpleBright or COLORS.Muted).TextXAlignment = Enum.TextXAlignment.Center
+        local label = createLabel(sideBarScroll, "Playlist" .. tostring(index), name, UDim2.new(1, -48, 0, 28), UDim2.new(0, 54, 0, playlistY), 13, Enum.Font.Gotham, COLORS.Text)
+        createLabel(sideBarScroll, "PlaylistIcon" .. tostring(index), index == 1 and "<3" or "+", UDim2.new(0, 30, 0, 28), UDim2.new(0, 28, 0, playlistY), 14, Enum.Font.GothamBold, index == 1 and COLORS.PurpleBright or COLORS.Muted).TextXAlignment = Enum.TextXAlignment.Center
         playlistY += 44
     end
 
@@ -638,6 +650,18 @@ function StrikeMusicUI.Create(parent, Theme)
 
     local rightPanel = createPanel(root, "RightPanel", UDim2.new(0, 242, 1, -94), UDim2.new(1, -252, 0, 72))
     rightPanel.BackgroundTransparency = 0.08
+
+    local rightScroll = Instance.new("ScrollingFrame")
+    rightScroll.Name = "ContentScroll"
+    rightScroll.Size = UDim2.new(1, 0, 1, 0)
+    rightScroll.BackgroundTransparency = 1
+    rightScroll.BorderSizePixel = 0
+    rightScroll.CanvasSize = UDim2.new(0, 0, 0, 620)
+    rightScroll.ScrollBarThickness = 3
+    rightScroll.ScrollBarImageColor3 = COLORS.Purple
+    rightScroll.ScrollingDirection = Enum.ScrollingDirection.Y
+    rightScroll.Active = true
+    rightScroll.Parent = rightPanel
 
     local bottomPlayer = createPanel(root, "BottomPlayer", UDim2.new(1, -20, 0, 72), UDim2.new(0, 10, 1, -82))
     bottomPlayer.BackgroundTransparency = 0.02
@@ -680,21 +704,21 @@ function StrikeMusicUI.Create(parent, Theme)
     recentLayout.SortOrder = Enum.SortOrder.LayoutOrder
     recentLayout.Parent = recentList
 
-    local rightTitle = createLabel(rightPanel, "Title", "Now Playing", UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 4), 15, SECTION_TITLE_FONT, COLORS.Text)
+    local rightTitle = createLabel(rightScroll, "Title", "Now Playing", UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 4), 15, SECTION_TITLE_FONT, COLORS.Text)
 
-    local nowArt = createArtFrame(rightPanel, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 30), nil)
-    local nowTitle = createLabel(rightPanel, "NowTitle", "Nada reproduciendose", UDim2.new(1, -60, 0, 26), UDim2.new(0, 16, 0, 208), 17, TITLE_FONT, COLORS.Text)
-    local heartButton = createIconButton(rightPanel, "HeartButton", "♥", UDim2.new(0, 38, 0, 38), UDim2.new(1, -60, 0, 312))
+    local nowArt = createArtFrame(rightScroll, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 30), nil)
+    local nowTitle = createLabel(rightScroll, "NowTitle", "Nada reproduciendose", UDim2.new(1, -60, 0, 26), UDim2.new(0, 16, 0, 208), 17, TITLE_FONT, COLORS.Text)
+    local heartButton = createIconButton(rightScroll, "HeartButton", "♥", UDim2.new(0, 38, 0, 38), UDim2.new(1, -60, 0, 312))
     heartButton.BackgroundTransparency = 0.82
     heartButton.TextColor3 = COLORS.PurpleBright
     heartButton.TextSize = 17
     heartButton.Size = UDim2.new(0, 32, 0, 32)
     heartButton.Position = UDim2.new(1, -48, 0, 204)
-    local nowArtist = createLabel(rightPanel, "NowArtist", "Selecciona una cancion", UDim2.new(1, -32, 0, 20), UDim2.new(0, 16, 0, 236), 12, Enum.Font.Gotham, COLORS.Muted)
+    local nowArtist = createLabel(rightScroll, "NowArtist", "Selecciona una cancion", UDim2.new(1, -32, 0, 20), UDim2.new(0, 16, 0, 236), 12, Enum.Font.Gotham, COLORS.Muted)
 
-    local nowProgress, nowProgressFill = createProgress(rightPanel, UDim2.new(0, 16, 0, 272), UDim2.new(1, -32, 0, 4), 0)
-    local currentTime = createLabel(rightPanel, "CurrentTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(0, 16, 0, 280), 10, Enum.Font.Gotham, COLORS.Muted)
-    local totalTime = createLabel(rightPanel, "TotalTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(1, -66, 0, 280), 10, Enum.Font.Gotham, COLORS.Muted)
+    local nowProgress, nowProgressFill = createProgress(rightScroll, UDim2.new(0, 16, 0, 272), UDim2.new(1, -32, 0, 4), 0)
+    local currentTime = createLabel(rightScroll, "CurrentTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(0, 16, 0, 280), 10, Enum.Font.Gotham, COLORS.Muted)
+    local totalTime = createLabel(rightScroll, "TotalTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(1, -66, 0, 280), 10, Enum.Font.Gotham, COLORS.Muted)
     totalTime.TextXAlignment = Enum.TextXAlignment.Right
 
     local controls = Instance.new("Frame")
@@ -702,7 +726,7 @@ function StrikeMusicUI.Create(parent, Theme)
     controls.Size = UDim2.new(1, -32, 0, 52)
     controls.Position = UDim2.new(0, 16, 0, 308)
     controls.BackgroundTransparency = 1
-    controls.Parent = rightPanel
+    controls.Parent = rightScroll
 
     local shuffleButton = createIconButton(controls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 0, 0.5, -15))
     local previousButton = createIconButton(controls, "PreviousButton", "|<", UDim2.new(0, 34, 0, 34), UDim2.new(0.25, -17, 0.5, -17))
@@ -725,10 +749,10 @@ function StrikeMusicUI.Create(parent, Theme)
     queueDivider.BackgroundColor3 = COLORS.Border
     queueDivider.BackgroundTransparency = 0.72
     queueDivider.BorderSizePixel = 0
-    queueDivider.Parent = rightPanel
+    queueDivider.Parent = rightScroll
 
-    createLabel(rightPanel, "UpNextTitle", "Up Next", UDim2.new(1, -100, 0, 24), UDim2.new(0, 16, 0, 394), 13, SECTION_TITLE_FONT, COLORS.Text)
-    local clearQueueButton = createIconButton(rightPanel, "ClearQueueButton", "Clear", UDim2.new(0, 50, 0, 24), UDim2.new(1, -66, 0, 393))
+    createLabel(rightScroll, "UpNextTitle", "Up Next", UDim2.new(1, -100, 0, 24), UDim2.new(0, 16, 0, 394), 13, SECTION_TITLE_FONT, COLORS.Text)
+    local clearQueueButton = createIconButton(rightScroll, "ClearQueueButton", "Clear", UDim2.new(0, 50, 0, 24), UDim2.new(1, -66, 0, 393))
     clearQueueButton.TextSize = 11
     clearQueueButton.BackgroundColor3 = COLORS.PanelLight
     clearQueueButton.BackgroundTransparency = 0.2
@@ -738,7 +762,7 @@ function StrikeMusicUI.Create(parent, Theme)
     queueList.Size = UDim2.new(1, -32, 1, -456)
     queueList.Position = UDim2.new(0, 16, 0, 424)
     queueList.BackgroundTransparency = 1
-    queueList.Parent = rightPanel
+    queueList.Parent = rightScroll
 
     local queueLayout = Instance.new("UIListLayout")
     queueLayout.FillDirection = Enum.FillDirection.Vertical
