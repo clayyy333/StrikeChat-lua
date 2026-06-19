@@ -419,11 +419,11 @@ function StrikeMusicUI.Create(parent, Theme)
     local gui = Instance.new("ScreenGui")
     gui.Name = "StrikeMusicGui"
     gui.ResetOnSpawn = false
-    gui.IgnoreGuiInset = false
+    gui.IgnoreGuiInset = true
     gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    gui.DisplayOrder = 20
+    gui.DisplayOrder = 1
     pcall(function()
-        gui.ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets
+        gui.ScreenInsets = Enum.ScreenInsets.None
     end)
     gui.Parent = parent
 
@@ -455,11 +455,11 @@ function StrikeMusicUI.Create(parent, Theme)
     backgroundGradient.Rotation = 20
     backgroundGradient.Parent = root
 
-    local closeButton = createIconButton(root, "CloseButton", "x", UDim2.new(0, 28, 0, 28), UDim2.new(1, -40, 0, 10))
+    local closeButton = createIconButton(root, "CloseButton", "x", UDim2.new(0, 28, 0, 28), UDim2.new(1, -40, 0, 48))
     closeButton.BackgroundTransparency = 0.35
     closeButton.TextColor3 = Color3.fromRGB(255, 223, 187)
 
-    local minimizeButton = createIconButton(root, "MinimizeButton", "-", UDim2.new(0, 28, 0, 28), UDim2.new(1, -76, 0, 10))
+    local minimizeButton = createIconButton(root, "MinimizeButton", "-", UDim2.new(0, 28, 0, 28), UDim2.new(1, -76, 0, 48))
     minimizeButton.BackgroundTransparency = 0.35
     minimizeButton.TextColor3 = Color3.fromRGB(255, 223, 187)
 
@@ -470,7 +470,7 @@ function StrikeMusicUI.Create(parent, Theme)
     minimizedButton.BackgroundTransparency = 0.02
     minimizedButton.ZIndex = 20
 
-    local sideBar = createPanel(root, "Sidebar", UDim2.new(0, 242, 1, -108), UDim2.new(0, 10, 0, 86))
+    local sideBar = createPanel(root, "Sidebar", UDim2.new(0, 242, 1, -146), UDim2.new(0, 10, 0, 124))
     sideBar.BackgroundTransparency = 0.14
 
     local logoMark = createLabel(
@@ -478,7 +478,7 @@ function StrikeMusicUI.Create(parent, Theme)
         "LogoMark",
         "",
         UDim2.new(0, 34, 0, 34),
-        UDim2.new(0, 32, 0, 34),
+        UDim2.new(0, 32, 0, 58),
         31,
         Enum.Font.GothamBlack,
         Color3.fromRGB(170, 75, 255)
@@ -491,7 +491,7 @@ function StrikeMusicUI.Create(parent, Theme)
         "LogoTitle",
         "StrikeMusic",
         UDim2.new(0, 170, 0, 26),
-        UDim2.new(0, 34, 0, 34),
+        UDim2.new(0, 34, 0, 58),
         23,
         Enum.Font.GothamBold,
         COLORS.Text
@@ -502,13 +502,13 @@ function StrikeMusicUI.Create(parent, Theme)
         "LogoSubtitle",
         "PERSONAL",
         UDim2.new(0, 110, 0, 14),
-        UDim2.new(0, 36, 0, 64),
+        UDim2.new(0, 36, 0, 88),
         10,
         Enum.Font.GothamBold,
         COLORS.PurpleBright
     )
 
-    local searchHolder = createPanel(root, "SearchHolder", UDim2.new(0.52, 0, 0, 46), UDim2.new(0, 282, 0, 22))
+    local searchHolder = createPanel(root, "SearchHolder", UDim2.new(0.52, 0, 0, 46), UDim2.new(0, 282, 0, 58))
     searchHolder.BackgroundColor3 = Color3.fromRGB(14, 18, 26)
     searchHolder.BackgroundTransparency = 0
     createLabel(searchHolder, "SearchIcon", "O", UDim2.new(0, 28, 1, 0), UDim2.new(0, 14, 0, 0), 14, Enum.Font.GothamBold, COLORS.Muted)
@@ -598,10 +598,10 @@ function StrikeMusicUI.Create(parent, Theme)
         playlistY += 44
     end
 
-    local centerPanel = createPanel(root, "CenterPanel", UDim2.new(1, -666, 1, -206), UDim2.new(0, 260, 0, 86))
+    local centerPanel = createPanel(root, "CenterPanel", UDim2.new(1, -666, 1, -244), UDim2.new(0, 260, 0, 124))
     centerPanel.BackgroundTransparency = 0.19
 
-    local rightPanel = createPanel(root, "RightPanel", UDim2.new(0, 382, 1, -108), UDim2.new(1, -392, 0, 86))
+    local rightPanel = createPanel(root, "RightPanel", UDim2.new(0, 382, 1, -146), UDim2.new(1, -392, 0, 124))
     rightPanel.BackgroundTransparency = 0.08
 
     local bottomPlayer = createPanel(root, "BottomPlayer", UDim2.new(1, -20, 0, 96), UDim2.new(0, 10, 1, -106))
@@ -881,14 +881,15 @@ function StrikeMusicUI.Create(parent, Theme)
     api.SetNowPlaying(nil, 0)
 
     if _G.StrikeChatLayoutMode == "mobile" then
-        sideBar.Size = UDim2.new(0, 210, 1, -100)
-        centerPanel.Position = UDim2.new(0, 226, 0, 76)
-        centerPanel.Size = UDim2.new(1, -590, 1, -190)
-        rightPanel.Size = UDim2.new(0, 350, 1, -100)
-        rightPanel.Position = UDim2.new(1, -360, 0, 76)
+        sideBar.Size = UDim2.new(0, 210, 1, -138)
+        sideBar.Position = UDim2.new(0, 8, 0, 114)
+        centerPanel.Position = UDim2.new(0, 226, 0, 114)
+        centerPanel.Size = UDim2.new(1, -590, 1, -228)
+        rightPanel.Size = UDim2.new(0, 350, 1, -138)
+        rightPanel.Position = UDim2.new(1, -360, 0, 114)
         bottomPlayer.Size = UDim2.new(1, -16, 0, 86)
         bottomPlayer.Position = UDim2.new(0, 8, 1, -94)
-        searchHolder.Position = UDim2.new(0, 258, 0, 18)
+        searchHolder.Position = UDim2.new(0, 258, 0, 54)
         searchHolder.Size = UDim2.new(0.5, 0, 0, 42)
     end
 
