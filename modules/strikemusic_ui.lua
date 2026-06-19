@@ -522,7 +522,7 @@ function StrikeMusicUI.Create(parent, Theme)
     searchInput.Size = UDim2.new(1, -92, 1, 0)
     searchInput.Position = UDim2.new(0, 48, 0, 0)
     searchInput.BackgroundTransparency = 1
-    searchInput.PlaceholderText = "Search for songs, artists, albums or videos..."
+    searchInput.PlaceholderText = "Busca musica o pega link para ver resultados"
     searchInput.Text = ""
     searchInput.TextColor3 = COLORS.Text
     searchInput.PlaceholderColor3 = COLORS.Muted
@@ -615,7 +615,7 @@ function StrikeMusicUI.Create(parent, Theme)
         centerPanel,
         "SearchResultsSection",
         "RESULTADOS DE BUSQUEDA :",
-        UDim2.new(0, 24, 0, 36),
+        UDim2.new(0, 24, 0, 14),
         UDim2.new(1, -48, 0, 250)
     )
 
@@ -623,11 +623,11 @@ function StrikeMusicUI.Create(parent, Theme)
         centerPanel,
         "PopularSection",
         "MAS ESCUCHADAS EN STRIKE MUSIC:",
-        UDim2.new(0, 24, 0, 302),
+        UDim2.new(0, 24, 0, 280),
         UDim2.new(1, -48, 0, 236)
     )
 
-    local recentPanel = createPanel(centerPanel, "RecentPanel", UDim2.new(1, -48, 0, 166), UDim2.new(0, 24, 1, -188))
+    local recentPanel = createPanel(centerPanel, "RecentPanel", UDim2.new(1, -48, 0, 166), UDim2.new(0, 24, 1, -180))
     recentPanel.BackgroundTransparency = 0.62
     createLabel(recentPanel, "Title", "Recently Played", UDim2.new(1, -100, 0, 30), UDim2.new(0, 0, 0, -34), 17, TITLE_FONT, COLORS.Text)
 
@@ -649,27 +649,27 @@ function StrikeMusicUI.Create(parent, Theme)
     recentLayout.SortOrder = Enum.SortOrder.LayoutOrder
     recentLayout.Parent = recentList
 
-    local rightTitle = createLabel(rightPanel, "Title", "Now Playing", UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 14), 15, SECTION_TITLE_FONT, COLORS.Text)
+    local rightTitle = createLabel(rightPanel, "Title", "Now Playing", UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 8), 15, SECTION_TITLE_FONT, COLORS.Text)
 
-    local nowArt = createArtFrame(rightPanel, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 48), nil)
-    local nowTitle = createLabel(rightPanel, "NowTitle", "Nada reproduciendose", UDim2.new(1, -60, 0, 26), UDim2.new(0, 16, 0, 230), 17, TITLE_FONT, COLORS.Text)
+    local nowArt = createArtFrame(rightPanel, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 38), nil)
+    local nowTitle = createLabel(rightPanel, "NowTitle", "Nada reproduciendose", UDim2.new(1, -60, 0, 26), UDim2.new(0, 16, 0, 218), 17, TITLE_FONT, COLORS.Text)
     local heartButton = createIconButton(rightPanel, "HeartButton", "♥", UDim2.new(0, 38, 0, 38), UDim2.new(1, -60, 0, 312))
     heartButton.BackgroundTransparency = 0.82
     heartButton.TextColor3 = COLORS.PurpleBright
     heartButton.TextSize = 17
     heartButton.Size = UDim2.new(0, 32, 0, 32)
-    heartButton.Position = UDim2.new(1, -48, 0, 226)
-    local nowArtist = createLabel(rightPanel, "NowArtist", "Selecciona una cancion", UDim2.new(1, -32, 0, 20), UDim2.new(0, 16, 0, 258), 12, Enum.Font.Gotham, COLORS.Muted)
+    heartButton.Position = UDim2.new(1, -48, 0, 214)
+    local nowArtist = createLabel(rightPanel, "NowArtist", "Selecciona una cancion", UDim2.new(1, -32, 0, 20), UDim2.new(0, 16, 0, 246), 12, Enum.Font.Gotham, COLORS.Muted)
 
-    local nowProgress, nowProgressFill = createProgress(rightPanel, UDim2.new(0, 16, 0, 298), UDim2.new(1, -32, 0, 4), 0)
-    local currentTime = createLabel(rightPanel, "CurrentTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(0, 16, 0, 306), 10, Enum.Font.Gotham, COLORS.Muted)
-    local totalTime = createLabel(rightPanel, "TotalTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(1, -66, 0, 306), 10, Enum.Font.Gotham, COLORS.Muted)
+    local nowProgress, nowProgressFill = createProgress(rightPanel, UDim2.new(0, 16, 0, 284), UDim2.new(1, -32, 0, 4), 0)
+    local currentTime = createLabel(rightPanel, "CurrentTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(0, 16, 0, 292), 10, Enum.Font.Gotham, COLORS.Muted)
+    local totalTime = createLabel(rightPanel, "TotalTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(1, -66, 0, 292), 10, Enum.Font.Gotham, COLORS.Muted)
     totalTime.TextXAlignment = Enum.TextXAlignment.Right
 
     local controls = Instance.new("Frame")
     controls.Name = "Controls"
     controls.Size = UDim2.new(1, -32, 0, 52)
-    controls.Position = UDim2.new(0, 16, 0, 334)
+    controls.Position = UDim2.new(0, 16, 0, 320)
     controls.BackgroundTransparency = 1
     controls.Parent = rightPanel
 
@@ -690,14 +690,14 @@ function StrikeMusicUI.Create(parent, Theme)
 
     local queueDivider = Instance.new("Frame")
     queueDivider.Size = UDim2.new(1, -32, 0, 1)
-    queueDivider.Position = UDim2.new(0, 16, 0, 408)
+    queueDivider.Position = UDim2.new(0, 16, 0, 394)
     queueDivider.BackgroundColor3 = COLORS.Border
     queueDivider.BackgroundTransparency = 0.72
     queueDivider.BorderSizePixel = 0
     queueDivider.Parent = rightPanel
 
-    createLabel(rightPanel, "UpNextTitle", "Up Next", UDim2.new(1, -100, 0, 24), UDim2.new(0, 16, 0, 420), 13, SECTION_TITLE_FONT, COLORS.Text)
-    local clearQueueButton = createIconButton(rightPanel, "ClearQueueButton", "Clear", UDim2.new(0, 50, 0, 24), UDim2.new(1, -66, 0, 419))
+    createLabel(rightPanel, "UpNextTitle", "Up Next", UDim2.new(1, -100, 0, 24), UDim2.new(0, 16, 0, 406), 13, SECTION_TITLE_FONT, COLORS.Text)
+    local clearQueueButton = createIconButton(rightPanel, "ClearQueueButton", "Clear", UDim2.new(0, 50, 0, 24), UDim2.new(1, -66, 0, 405))
     clearQueueButton.TextSize = 11
     clearQueueButton.BackgroundColor3 = COLORS.PanelLight
     clearQueueButton.BackgroundTransparency = 0.2
@@ -705,7 +705,7 @@ function StrikeMusicUI.Create(parent, Theme)
     local queueList = Instance.new("Frame")
     queueList.Name = "QueueList"
     queueList.Size = UDim2.new(1, -32, 1, -456)
-    queueList.Position = UDim2.new(0, 16, 0, 450)
+    queueList.Position = UDim2.new(0, 16, 0, 436)
     queueList.BackgroundTransparency = 1
     queueList.Parent = rightPanel
 
