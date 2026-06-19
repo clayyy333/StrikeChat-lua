@@ -77,6 +77,7 @@ local function createPanel(parent, name, size, position)
     panel.BackgroundTransparency = 0.08
     panel.BorderSizePixel = 0
     panel.ClipsDescendants = true
+    panel.Active = true
     panel.Parent = parent
     createCorner(panel, 10)
     createStroke(panel, COLORS.Border, 0.72, 1)
@@ -418,11 +419,11 @@ function StrikeMusicUI.Create(parent, Theme)
     local gui = Instance.new("ScreenGui")
     gui.Name = "StrikeMusicGui"
     gui.ResetOnSpawn = false
-    gui.IgnoreGuiInset = true
+    gui.IgnoreGuiInset = false
     gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    gui.DisplayOrder = 60
+    gui.DisplayOrder = 20
     pcall(function()
-        gui.ScreenInsets = Enum.ScreenInsets.None
+        gui.ScreenInsets = Enum.ScreenInsets.CoreUISafeInsets
     end)
     gui.Parent = parent
 
@@ -431,7 +432,19 @@ function StrikeMusicUI.Create(parent, Theme)
     root.Size = UDim2.new(1, 0, 1, 0)
     root.BackgroundColor3 = COLORS.Background
     root.BorderSizePixel = 0
+    root.Active = true
     root.Parent = gui
+
+    local inputBlocker = Instance.new("TextButton")
+    inputBlocker.Name = "InputBlocker"
+    inputBlocker.Size = UDim2.new(1, 0, 1, 0)
+    inputBlocker.BackgroundTransparency = 1
+    inputBlocker.BorderSizePixel = 0
+    inputBlocker.Text = ""
+    inputBlocker.Active = true
+    inputBlocker.AutoButtonColor = false
+    inputBlocker.ZIndex = 0
+    inputBlocker.Parent = root
 
     local backgroundGradient = Instance.new("UIGradient")
     backgroundGradient.Color = ColorSequence.new({
@@ -463,21 +476,22 @@ function StrikeMusicUI.Create(parent, Theme)
     local logoMark = createLabel(
         root,
         "LogoMark",
-        "S",
+        "",
         UDim2.new(0, 34, 0, 34),
-        UDim2.new(0, 32, 0, 24),
+        UDim2.new(0, 32, 0, 34),
         31,
         Enum.Font.GothamBlack,
         Color3.fromRGB(170, 75, 255)
     )
     logoMark.TextXAlignment = Enum.TextXAlignment.Center
+    logoMark.Visible = false
 
     local logoTitle = createLabel(
         root,
         "LogoTitle",
         "StrikeMusic",
         UDim2.new(0, 170, 0, 26),
-        UDim2.new(0, 70, 0, 22),
+        UDim2.new(0, 34, 0, 34),
         23,
         Enum.Font.GothamBold,
         COLORS.Text
@@ -488,7 +502,7 @@ function StrikeMusicUI.Create(parent, Theme)
         "LogoSubtitle",
         "PERSONAL",
         UDim2.new(0, 110, 0, 14),
-        UDim2.new(0, 72, 0, 52),
+        UDim2.new(0, 36, 0, 64),
         10,
         Enum.Font.GothamBold,
         COLORS.PurpleBright
