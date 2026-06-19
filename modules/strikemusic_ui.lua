@@ -548,7 +548,7 @@ function StrikeMusicUI.Create(parent, Theme)
 
     local navButtons = {}
     local navIcons = {"H", "S", "L", "D", "P", "♥", "R"}
-    local navY = 16
+    local navY = 8
 
     for index, item in ipairs(navItems) do
         local button = Instance.new("TextButton")
@@ -754,13 +754,35 @@ function StrikeMusicUI.Create(parent, Theme)
         Queue = queueList
     }
 
+    local function renderPlaceholderCards(container, cardWidth, cardHeight, count)
+        local layout = Instance.new("UIGridLayout")
+        layout.CellSize = UDim2.new(0, cardWidth, 0, cardHeight)
+        layout.CellPadding = UDim2.new(0, 12, 0, 12)
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.Parent = container
+
+        for _ = 1, count or 4 do
+            createCard(
+                container,
+                {
+                    title = "Nombre de Musica",
+                    artist = "Artista"
+                },
+                cardWidth,
+                cardHeight
+            )
+        end
+    end
+
     local function renderCards(container, items, emptyText, cardWidth, cardHeight, maxItems)
         clearContainer(container)
 
         items = items or {}
 
         if #items == 0 then
-            if emptyText and emptyText ~= "" then
+            if emptyText == "__placeholder_cards" then
+                renderPlaceholderCards(container, cardWidth, cardHeight, maxItems or 4)
+            elseif emptyText and emptyText ~= "" then
                 createEmptyState(container, emptyText)
             end
             return
@@ -842,10 +864,10 @@ function StrikeMusicUI.Create(parent, Theme)
         },
         Lists = lists,
         RenderSearchResults = function(items)
-            renderCards(searchList, items, "", 210, 198, 4)
+            renderCards(searchList, items, "__placeholder_cards", 210, 198, 4)
         end,
         RenderPopular = function(items)
-            renderCards(popularList, items, "Aun no hay canciones destacadas.", 156, 208, 5)
+            renderCards(popularList, items, "__placeholder_cards", 156, 208, 4)
         end,
         RenderRecent = function(items)
             renderRows(recentList, items, "Aun no hay reproducciones recientes.", 3)
