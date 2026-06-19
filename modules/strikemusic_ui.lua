@@ -621,7 +621,7 @@ function StrikeMusicUI.Create(parent, Theme)
         playlistY += 44
     end
 
-    local centerPanel = createPanel(root, "CenterPanel", UDim2.new(1, -526, 1, -164), UDim2.new(0, 260, 0, 72))
+    local centerPanel = createPanel(root, "CenterPanel", UDim2.new(1, -526, 1, -156), UDim2.new(0, 260, 0, 72))
     centerPanel.BackgroundTransparency = 0.19
 
     local centerScroll = Instance.new("ScrollingFrame")
@@ -1062,7 +1062,7 @@ function StrikeMusicUI.Create(parent, Theme)
         sideBar.Size = UDim2.new(0, 210, 1, -90)
         sideBar.Position = UDim2.new(0, 8, 0, 66)
         centerPanel.Position = UDim2.new(0, 226, 0, 66)
-        centerPanel.Size = UDim2.new(1, -454, 1, -154)
+        centerPanel.Size = UDim2.new(1, -454, 1, -146)
         rightPanel.Size = UDim2.new(0, 210, 1, -90)
         rightPanel.Position = UDim2.new(1, -218, 0, 66)
         bottomPlayer.Size = UDim2.new(1, -16, 0, 68)
