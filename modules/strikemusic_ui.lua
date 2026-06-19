@@ -493,7 +493,7 @@ function StrikeMusicUI.Create(parent, Theme)
     minimizedButton.BackgroundTransparency = 0.02
     minimizedButton.ZIndex = 20
 
-    local sideBar = createPanel(root, "Sidebar", UDim2.new(0, 242, 1, -94), UDim2.new(0, 10, 0, 72))
+    local sideBar = createPanel(root, "Sidebar", UDim2.new(0, 242, 1, -160), UDim2.new(0, 10, 0, 72))
     sideBar.BackgroundTransparency = 0.14
 
     local sideBarScroll = Instance.new("ScrollingFrame")
@@ -648,7 +648,7 @@ function StrikeMusicUI.Create(parent, Theme)
     centerScroll.Active = true
     centerScroll.Parent = centerPanel
 
-    local rightPanel = createPanel(root, "RightPanel", UDim2.new(0, 242, 1, -94), UDim2.new(1, -252, 0, 72))
+    local rightPanel = createPanel(root, "RightPanel", UDim2.new(0, 242, 1, -160), UDim2.new(1, -252, 0, 72))
     rightPanel.BackgroundTransparency = 0.08
 
     local rightScroll = Instance.new("ScrollingFrame")
@@ -1083,11 +1083,11 @@ function StrikeMusicUI.Create(parent, Theme)
     api.SetNowPlaying(nil, 0)
 
     if _G.StrikeChatLayoutMode == "mobile" then
-        sideBar.Size = UDim2.new(0, 210, 1, -90)
+        sideBar.Size = UDim2.new(0, 210, 1, -146)
         sideBar.Position = UDim2.new(0, 8, 0, 66)
         centerPanel.Position = UDim2.new(0, 226, 0, 66)
         centerPanel.Size = UDim2.new(1, -454, 1, -146)
-        rightPanel.Size = UDim2.new(0, 210, 1, -90)
+        rightPanel.Size = UDim2.new(0, 210, 1, -146)
         rightPanel.Position = UDim2.new(1, -218, 0, 66)
         bottomPlayer.Size = UDim2.new(1, -16, 0, 68)
         bottomPlayer.Position = UDim2.new(0, 8, 1, -76)
