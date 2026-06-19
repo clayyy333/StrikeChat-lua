@@ -320,6 +320,8 @@ local function createSection(parent, name, title, position, size)
     list.CanvasSize = UDim2.new(0, 0, 0, 0)
     list.ScrollBarThickness = 0
     list.ScrollingDirection = Enum.ScrollingDirection.X
+    list.ScrollingEnabled = true
+    list.Active = true
     list.Parent = section
 
     return section, list, titleLabel, prevButton, nextButton
@@ -622,6 +624,18 @@ function StrikeMusicUI.Create(parent, Theme)
     local centerPanel = createPanel(root, "CenterPanel", UDim2.new(1, -526, 1, -192), UDim2.new(0, 260, 0, 72))
     centerPanel.BackgroundTransparency = 0.19
 
+    local centerScroll = Instance.new("ScrollingFrame")
+    centerScroll.Name = "ContentScroll"
+    centerScroll.Size = UDim2.new(1, 0, 1, 0)
+    centerScroll.BackgroundTransparency = 1
+    centerScroll.BorderSizePixel = 0
+    centerScroll.CanvasSize = UDim2.new(0, 0, 0, 610)
+    centerScroll.ScrollBarThickness = 3
+    centerScroll.ScrollBarImageColor3 = COLORS.Purple
+    centerScroll.ScrollingDirection = Enum.ScrollingDirection.Y
+    centerScroll.Active = true
+    centerScroll.Parent = centerPanel
+
     local rightPanel = createPanel(root, "RightPanel", UDim2.new(0, 242, 1, -94), UDim2.new(1, -252, 0, 72))
     rightPanel.BackgroundTransparency = 0.08
 
@@ -629,7 +643,7 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomPlayer.BackgroundTransparency = 0.02
 
     local searchSection, searchList, searchTitle, searchPrevButton, searchNextButton = createSection(
-        centerPanel,
+        centerScroll,
         "SearchResultsSection",
         "RESULTADOS DE BUSQUEDA :",
         UDim2.new(0, 24, 0, 6),
@@ -637,14 +651,14 @@ function StrikeMusicUI.Create(parent, Theme)
     )
 
     local popularSection, popularList, popularTitle, popularPrevButton, popularNextButton = createSection(
-        centerPanel,
+        centerScroll,
         "PopularSection",
         "MAS ESCUCHADAS EN STRIKE MUSIC:",
         UDim2.new(0, 24, 0, 216),
         UDim2.new(1, -48, 0, 200)
     )
 
-    local recentPanel = createPanel(centerPanel, "RecentPanel", UDim2.new(1, -48, 0, 140), UDim2.new(0, 24, 1, -148))
+    local recentPanel = createPanel(centerScroll, "RecentPanel", UDim2.new(1, -48, 0, 150), UDim2.new(0, 24, 0, 432))
     recentPanel.BackgroundTransparency = 0.62
     createLabel(recentPanel, "Title", "Recently Played", UDim2.new(1, -100, 0, 30), UDim2.new(0, 0, 0, -34), 17, TITLE_FONT, COLORS.Text)
 
@@ -772,11 +786,13 @@ function StrikeMusicUI.Create(parent, Theme)
     }
 
     local function attachCardCarousel(container, count, cardWidth, cardHeight, prevButton, nextButton)
+        local UserInputService = game:GetService("UserInputService")
         local padding = 12
         local contentWidth = math.max((count * cardWidth) + (math.max(count - 1, 0) * padding), 0)
 
         container.CanvasPosition = Vector2.new(0, 0)
         container.CanvasSize = UDim2.new(0, contentWidth, 0, cardHeight)
+        container:SetAttribute("StrikeMusicCarouselContentWidth", contentWidth)
 
         local function getVisibleWidth()
             return math.max(container.AbsoluteSize.X, 1)
@@ -817,6 +833,50 @@ function StrikeMusicUI.Create(parent, Theme)
             nextButton:SetAttribute("StrikeMusicCarouselBound", true)
             nextButton.MouseButton1Click:Connect(function()
                 move(1)
+            end)
+        end
+
+        if not container:GetAttribute("StrikeMusicDragBound") then
+            container:SetAttribute("StrikeMusicDragBound", true)
+
+            local dragging = false
+            local dragStartX = 0
+            local dragStartCanvasX = 0
+
+            local function getMaxCanvasX()
+                local latestContentWidth = tonumber(container:GetAttribute("StrikeMusicCarouselContentWidth")) or 0
+                return math.max(latestContentWidth - getVisibleWidth(), 0)
+            end
+
+            container.InputBegan:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1
+                    or input.UserInputType == Enum.UserInputType.Touch
+                then
+                    dragging = true
+                    dragStartX = input.Position.X
+                    dragStartCanvasX = container.CanvasPosition.X
+                end
+            end)
+
+            UserInputService.InputChanged:Connect(function(input)
+                if dragging
+                    and (
+                        input.UserInputType == Enum.UserInputType.MouseMovement
+                        or input.UserInputType == Enum.UserInputType.Touch
+                    )
+                then
+                    local delta = input.Position.X - dragStartX
+                    local nextX = math.clamp(dragStartCanvasX - delta, 0, getMaxCanvasX())
+                    container.CanvasPosition = Vector2.new(nextX, 0)
+                end
+            end)
+
+            UserInputService.InputEnded:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1
+                    or input.UserInputType == Enum.UserInputType.Touch
+                then
+                    dragging = false
+                end
             end)
         end
 
@@ -948,13 +1008,13 @@ function StrikeMusicUI.Create(parent, Theme)
         },
         Lists = lists,
         RenderSearchResults = function(items)
-            renderCards(searchList, items, "__placeholder_cards", 160, 150, nil, searchPrevButton, searchNextButton)
+            renderCards(searchList, items, "__placeholder_cards", 150, 150, nil, searchPrevButton, searchNextButton)
         end,
         RenderPopular = function(items)
             renderCards(popularList, items, "__placeholder_cards", 150, 150, nil, popularPrevButton, popularNextButton)
         end,
         RenderRecent = function(items)
-            renderRows(recentList, items, "Aun no hay reproducciones recientes.", 3)
+            renderRows(recentList, items, "", 3)
         end,
         RenderQueue = function(items)
             renderRows(queueList, items, "La cola esta vacia.", 5)
