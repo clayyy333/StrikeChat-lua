@@ -13,6 +13,9 @@ local COLORS = {
     ProgressBack = Color3.fromRGB(42, 48, 61)
 }
 
+local TITLE_FONT = Enum.Font.GothamBold
+local SECTION_TITLE_FONT = Enum.Font.GothamMedium
+
 local function createCorner(parent, radius)
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, radius or 10)
@@ -289,10 +292,11 @@ local function createSection(parent, name, title, position, size)
         title,
         UDim2.new(1, -24, 0, 24),
         UDim2.new(0, 4, 0, 0),
-        15,
-        Enum.Font.GothamBold,
+        13,
+        SECTION_TITLE_FONT,
         COLORS.Text
     )
+    titleLabel.TextColor3 = Color3.fromRGB(232, 236, 246)
 
     local list = Instance.new("Frame")
     list.Name = "List"
@@ -625,7 +629,7 @@ function StrikeMusicUI.Create(parent, Theme)
 
     local recentPanel = createPanel(centerPanel, "RecentPanel", UDim2.new(1, -48, 0, 166), UDim2.new(0, 24, 1, -188))
     recentPanel.BackgroundTransparency = 0.62
-    createLabel(recentPanel, "Title", "Recently Played", UDim2.new(1, -100, 0, 30), UDim2.new(0, 0, 0, -34), 18, Enum.Font.GothamBold, COLORS.Text)
+    createLabel(recentPanel, "Title", "Recently Played", UDim2.new(1, -100, 0, 30), UDim2.new(0, 0, 0, -34), 17, TITLE_FONT, COLORS.Text)
 
     local seeAllButton = createIconButton(recentPanel, "SeeAllButton", "See all", UDim2.new(0, 76, 0, 28), UDim2.new(1, -80, 0, -34))
     seeAllButton.TextSize = 11
@@ -645,10 +649,10 @@ function StrikeMusicUI.Create(parent, Theme)
     recentLayout.SortOrder = Enum.SortOrder.LayoutOrder
     recentLayout.Parent = recentList
 
-    local rightTitle = createLabel(rightPanel, "Title", "Now Playing", UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 14), 15, Enum.Font.GothamBold, COLORS.Text)
+    local rightTitle = createLabel(rightPanel, "Title", "Now Playing", UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 14), 15, SECTION_TITLE_FONT, COLORS.Text)
 
     local nowArt = createArtFrame(rightPanel, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 48), nil)
-    local nowTitle = createLabel(rightPanel, "NowTitle", "Nada reproduciendose", UDim2.new(1, -60, 0, 26), UDim2.new(0, 16, 0, 230), 16, Enum.Font.GothamBold, COLORS.Text)
+    local nowTitle = createLabel(rightPanel, "NowTitle", "Nada reproduciendose", UDim2.new(1, -60, 0, 26), UDim2.new(0, 16, 0, 230), 17, TITLE_FONT, COLORS.Text)
     local heartButton = createIconButton(rightPanel, "HeartButton", "♥", UDim2.new(0, 38, 0, 38), UDim2.new(1, -60, 0, 312))
     heartButton.BackgroundTransparency = 0.82
     heartButton.TextColor3 = COLORS.PurpleBright
@@ -692,7 +696,7 @@ function StrikeMusicUI.Create(parent, Theme)
     queueDivider.BorderSizePixel = 0
     queueDivider.Parent = rightPanel
 
-    createLabel(rightPanel, "UpNextTitle", "Up Next", UDim2.new(1, -100, 0, 24), UDim2.new(0, 16, 0, 420), 13, Enum.Font.GothamBold, COLORS.Text)
+    createLabel(rightPanel, "UpNextTitle", "Up Next", UDim2.new(1, -100, 0, 24), UDim2.new(0, 16, 0, 420), 13, SECTION_TITLE_FONT, COLORS.Text)
     local clearQueueButton = createIconButton(rightPanel, "ClearQueueButton", "Clear", UDim2.new(0, 50, 0, 24), UDim2.new(1, -66, 0, 419))
     clearQueueButton.TextSize = 11
     clearQueueButton.BackgroundColor3 = COLORS.PanelLight
@@ -712,7 +716,7 @@ function StrikeMusicUI.Create(parent, Theme)
     queueLayout.Parent = queueList
 
     local bottomArt = createArtFrame(bottomPlayer, "Art", UDim2.new(0, 70, 0, 70), UDim2.new(0, 18, 0.5, -35), nil)
-    local bottomTitle = createLabel(bottomPlayer, "Title", "Nada reproduciendose", UDim2.new(0, 280, 0, 24), UDim2.new(0, 108, 0, 24), 15, Enum.Font.GothamBold, COLORS.Text)
+    local bottomTitle = createLabel(bottomPlayer, "Title", "Nada reproduciendose", UDim2.new(0, 280, 0, 24), UDim2.new(0, 108, 0, 24), 15, TITLE_FONT, COLORS.Text)
     local bottomArtist = createLabel(bottomPlayer, "Artist", "Selecciona una cancion", UDim2.new(0, 260, 0, 20), UDim2.new(0, 108, 0, 50), 12, Enum.Font.Gotham, COLORS.Muted)
     local bottomHeart = createIconButton(bottomPlayer, "HeartButton", "♥", UDim2.new(0, 30, 0, 30), UDim2.new(0, 230, 0, 45))
     bottomHeart.BackgroundTransparency = 0.82
