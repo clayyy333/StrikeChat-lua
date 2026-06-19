@@ -455,11 +455,11 @@ function StrikeMusicUI.Create(parent, Theme)
     backgroundGradient.Rotation = 20
     backgroundGradient.Parent = root
 
-    local closeButton = createIconButton(root, "CloseButton", "x", UDim2.new(0, 28, 0, 28), UDim2.new(1, -38, 0, 30))
+    local closeButton = createIconButton(root, "CloseButton", "x", UDim2.new(0, 28, 0, 28), UDim2.new(1, -34, 0, 18))
     closeButton.BackgroundTransparency = 0.35
     closeButton.TextColor3 = Color3.fromRGB(255, 223, 187)
 
-    local minimizeButton = createIconButton(root, "MinimizeButton", "-", UDim2.new(0, 28, 0, 28), UDim2.new(1, -74, 0, 30))
+    local minimizeButton = createIconButton(root, "MinimizeButton", "-", UDim2.new(0, 28, 0, 28), UDim2.new(1, -70, 0, 18))
     minimizeButton.BackgroundTransparency = 0.35
     minimizeButton.TextColor3 = Color3.fromRGB(255, 223, 187)
 
@@ -470,7 +470,7 @@ function StrikeMusicUI.Create(parent, Theme)
     minimizedButton.BackgroundTransparency = 0.02
     minimizedButton.ZIndex = 20
 
-    local sideBar = createPanel(root, "Sidebar", UDim2.new(0, 242, 1, -116), UDim2.new(0, 10, 0, 94))
+    local sideBar = createPanel(root, "Sidebar", UDim2.new(0, 242, 1, -102), UDim2.new(0, 10, 0, 80))
     sideBar.BackgroundTransparency = 0.14
 
     local logoMark = createLabel(
@@ -491,7 +491,7 @@ function StrikeMusicUI.Create(parent, Theme)
         "LogoTitle",
         "StrikeMusic",
         UDim2.new(0, 170, 0, 26),
-        UDim2.new(1, -324, 0, 28),
+        UDim2.new(1, -220, 0, 22),
         23,
         Enum.Font.GothamBold,
         COLORS.Text
@@ -502,13 +502,13 @@ function StrikeMusicUI.Create(parent, Theme)
         "LogoSubtitle",
         "PERSONAL",
         UDim2.new(0, 110, 0, 14),
-        UDim2.new(1, -322, 0, 56),
+        UDim2.new(1, -218, 0, 50),
         10,
         Enum.Font.GothamBold,
         COLORS.PurpleBright
     )
 
-    local searchHolder = createPanel(root, "SearchHolder", UDim2.new(0.48, 0, 0, 46), UDim2.new(0, 282, 0, 30))
+    local searchHolder = createPanel(root, "SearchHolder", UDim2.new(0.48, 0, 0, 46), UDim2.new(0, 260, 0, 22))
     searchHolder.BackgroundColor3 = Color3.fromRGB(14, 18, 26)
     searchHolder.BackgroundTransparency = 0
     createLabel(searchHolder, "SearchIcon", "O", UDim2.new(0, 28, 1, 0), UDim2.new(0, 14, 0, 0), 14, Enum.Font.GothamBold, COLORS.Muted)
@@ -598,10 +598,10 @@ function StrikeMusicUI.Create(parent, Theme)
         playlistY += 44
     end
 
-    local centerPanel = createPanel(root, "CenterPanel", UDim2.new(1, -610, 1, -214), UDim2.new(0, 260, 0, 94))
+    local centerPanel = createPanel(root, "CenterPanel", UDim2.new(1, -526, 1, -200), UDim2.new(0, 260, 0, 80))
     centerPanel.BackgroundTransparency = 0.19
 
-    local rightPanel = createPanel(root, "RightPanel", UDim2.new(0, 326, 1, -116), UDim2.new(1, -336, 0, 94))
+    local rightPanel = createPanel(root, "RightPanel", UDim2.new(0, 242, 1, -102), UDim2.new(1, -252, 0, 80))
     rightPanel.BackgroundTransparency = 0.08
 
     local bottomPlayer = createPanel(root, "BottomPlayer", UDim2.new(1, -20, 0, 96), UDim2.new(0, 10, 1, -106))
@@ -645,33 +645,35 @@ function StrikeMusicUI.Create(parent, Theme)
     recentLayout.SortOrder = Enum.SortOrder.LayoutOrder
     recentLayout.Parent = recentList
 
-    local rightTitle = createLabel(rightPanel, "Title", "Now Playing", UDim2.new(1, -40, 0, 32), UDim2.new(0, 22, 0, 16), 17, Enum.Font.GothamBold, COLORS.Text)
+    local rightTitle = createLabel(rightPanel, "Title", "Now Playing", UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 14), 15, Enum.Font.GothamBold, COLORS.Text)
 
-    local nowArt = createArtFrame(rightPanel, "NowArt", UDim2.new(1, -44, 0, 248), UDim2.new(0, 22, 0, 54), nil)
-    local nowTitle = createLabel(rightPanel, "NowTitle", "Nada reproduciendose", UDim2.new(1, -74, 0, 26), UDim2.new(0, 22, 0, 318), 20, Enum.Font.GothamBold, COLORS.Text)
+    local nowArt = createArtFrame(rightPanel, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 48), nil)
+    local nowTitle = createLabel(rightPanel, "NowTitle", "Nada reproduciendose", UDim2.new(1, -60, 0, 26), UDim2.new(0, 16, 0, 230), 16, Enum.Font.GothamBold, COLORS.Text)
     local heartButton = createIconButton(rightPanel, "HeartButton", "♥", UDim2.new(0, 38, 0, 38), UDim2.new(1, -60, 0, 312))
     heartButton.BackgroundTransparency = 0.82
     heartButton.TextColor3 = COLORS.PurpleBright
     heartButton.TextSize = 17
-    local nowArtist = createLabel(rightPanel, "NowArtist", "Selecciona una cancion", UDim2.new(1, -44, 0, 20), UDim2.new(0, 22, 0, 348), 13, Enum.Font.Gotham, COLORS.Muted)
+    heartButton.Size = UDim2.new(0, 32, 0, 32)
+    heartButton.Position = UDim2.new(1, -48, 0, 226)
+    local nowArtist = createLabel(rightPanel, "NowArtist", "Selecciona una cancion", UDim2.new(1, -32, 0, 20), UDim2.new(0, 16, 0, 258), 12, Enum.Font.Gotham, COLORS.Muted)
 
-    local nowProgress, nowProgressFill = createProgress(rightPanel, UDim2.new(0, 22, 0, 392), UDim2.new(1, -44, 0, 4), 0)
-    local currentTime = createLabel(rightPanel, "CurrentTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(0, 22, 0, 400), 11, Enum.Font.Gotham, COLORS.Muted)
-    local totalTime = createLabel(rightPanel, "TotalTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(1, -72, 0, 400), 11, Enum.Font.Gotham, COLORS.Muted)
+    local nowProgress, nowProgressFill = createProgress(rightPanel, UDim2.new(0, 16, 0, 298), UDim2.new(1, -32, 0, 4), 0)
+    local currentTime = createLabel(rightPanel, "CurrentTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(0, 16, 0, 306), 10, Enum.Font.Gotham, COLORS.Muted)
+    local totalTime = createLabel(rightPanel, "TotalTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(1, -66, 0, 306), 10, Enum.Font.Gotham, COLORS.Muted)
     totalTime.TextXAlignment = Enum.TextXAlignment.Right
 
     local controls = Instance.new("Frame")
     controls.Name = "Controls"
-    controls.Size = UDim2.new(1, -44, 0, 66)
-    controls.Position = UDim2.new(0, 22, 0, 430)
+    controls.Size = UDim2.new(1, -32, 0, 52)
+    controls.Position = UDim2.new(0, 16, 0, 334)
     controls.BackgroundTransparency = 1
     controls.Parent = rightPanel
 
-    local shuffleButton = createIconButton(controls, "ShuffleButton", "x", UDim2.new(0, 38, 0, 38), UDim2.new(0, 0, 0.5, -19))
-    local previousButton = createIconButton(controls, "PreviousButton", "|<", UDim2.new(0, 44, 0, 44), UDim2.new(0.24, -22, 0.5, -22))
-    local playButton = createIconButton(controls, "PlayButton", "||", UDim2.new(0, 66, 0, 66), UDim2.new(0.5, -33, 0.5, -33))
-    local nextButton = createIconButton(controls, "NextButton", ">|", UDim2.new(0, 44, 0, 44), UDim2.new(0.76, -22, 0.5, -22))
-    local repeatButton = createIconButton(controls, "RepeatButton", "o", UDim2.new(0, 38, 0, 38), UDim2.new(1, -38, 0.5, -19))
+    local shuffleButton = createIconButton(controls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 0, 0.5, -15))
+    local previousButton = createIconButton(controls, "PreviousButton", "|<", UDim2.new(0, 34, 0, 34), UDim2.new(0.25, -17, 0.5, -17))
+    local playButton = createIconButton(controls, "PlayButton", "||", UDim2.new(0, 52, 0, 52), UDim2.new(0.5, -26, 0.5, -26))
+    local nextButton = createIconButton(controls, "NextButton", ">|", UDim2.new(0, 34, 0, 34), UDim2.new(0.75, -17, 0.5, -17))
+    local repeatButton = createIconButton(controls, "RepeatButton", "o", UDim2.new(0, 30, 0, 30), UDim2.new(1, -30, 0.5, -15))
 
     for _, button in ipairs({shuffleButton, previousButton, nextButton, repeatButton}) do
         button.BackgroundTransparency = 1
@@ -680,26 +682,26 @@ function StrikeMusicUI.Create(parent, Theme)
 
     playButton.BackgroundColor3 = COLORS.Purple
     playButton.TextSize = 22
-    createCorner(playButton, 34)
+    createCorner(playButton, 26)
 
     local queueDivider = Instance.new("Frame")
-    queueDivider.Size = UDim2.new(1, -44, 0, 1)
-    queueDivider.Position = UDim2.new(0, 22, 0, 516)
+    queueDivider.Size = UDim2.new(1, -32, 0, 1)
+    queueDivider.Position = UDim2.new(0, 16, 0, 408)
     queueDivider.BackgroundColor3 = COLORS.Border
     queueDivider.BackgroundTransparency = 0.72
     queueDivider.BorderSizePixel = 0
     queueDivider.Parent = rightPanel
 
-    createLabel(rightPanel, "UpNextTitle", "Up Next", UDim2.new(1, -120, 0, 24), UDim2.new(0, 22, 0, 530), 15, Enum.Font.GothamBold, COLORS.Text)
-    local clearQueueButton = createIconButton(rightPanel, "ClearQueueButton", "Clear", UDim2.new(0, 54, 0, 26), UDim2.new(1, -76, 0, 529))
+    createLabel(rightPanel, "UpNextTitle", "Up Next", UDim2.new(1, -100, 0, 24), UDim2.new(0, 16, 0, 420), 13, Enum.Font.GothamBold, COLORS.Text)
+    local clearQueueButton = createIconButton(rightPanel, "ClearQueueButton", "Clear", UDim2.new(0, 50, 0, 24), UDim2.new(1, -66, 0, 419))
     clearQueueButton.TextSize = 11
     clearQueueButton.BackgroundColor3 = COLORS.PanelLight
     clearQueueButton.BackgroundTransparency = 0.2
 
     local queueList = Instance.new("Frame")
     queueList.Name = "QueueList"
-    queueList.Size = UDim2.new(1, -44, 1, -570)
-    queueList.Position = UDim2.new(0, 22, 0, 564)
+    queueList.Size = UDim2.new(1, -32, 1, -456)
+    queueList.Position = UDim2.new(0, 16, 0, 450)
     queueList.BackgroundTransparency = 1
     queueList.Parent = rightPanel
 
@@ -881,15 +883,15 @@ function StrikeMusicUI.Create(parent, Theme)
     api.SetNowPlaying(nil, 0)
 
     if _G.StrikeChatLayoutMode == "mobile" then
-        sideBar.Size = UDim2.new(0, 210, 1, -108)
-        sideBar.Position = UDim2.new(0, 8, 0, 84)
-        centerPanel.Position = UDim2.new(0, 226, 0, 84)
-        centerPanel.Size = UDim2.new(1, -542, 1, -198)
-        rightPanel.Size = UDim2.new(0, 302, 1, -108)
-        rightPanel.Position = UDim2.new(1, -312, 0, 84)
+        sideBar.Size = UDim2.new(0, 210, 1, -96)
+        sideBar.Position = UDim2.new(0, 8, 0, 72)
+        centerPanel.Position = UDim2.new(0, 226, 0, 72)
+        centerPanel.Size = UDim2.new(1, -454, 1, -186)
+        rightPanel.Size = UDim2.new(0, 210, 1, -96)
+        rightPanel.Position = UDim2.new(1, -218, 0, 72)
         bottomPlayer.Size = UDim2.new(1, -16, 0, 86)
         bottomPlayer.Position = UDim2.new(0, 8, 1, -94)
-        searchHolder.Position = UDim2.new(0, 258, 0, 26)
+        searchHolder.Position = UDim2.new(0, 226, 0, 20)
         searchHolder.Size = UDim2.new(0.46, 0, 0, 42)
     end
 
