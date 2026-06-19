@@ -106,7 +106,10 @@ end
 
 local function clearContainer(container)
     for _, child in ipairs(container:GetChildren()) do
-        if child:IsA("GuiObject") then
+        if child:IsA("GuiObject")
+            or child:IsA("UIListLayout")
+            or child:IsA("UIGridLayout")
+        then
             child:Destroy()
         end
     end
@@ -298,14 +301,28 @@ local function createSection(parent, name, title, position, size)
     )
     titleLabel.TextColor3 = Color3.fromRGB(232, 236, 246)
 
-    local list = Instance.new("Frame")
+    local prevButton = createIconButton(section, "PrevButton", "<", UDim2.new(0, 30, 0, 28), UDim2.new(1, -70, 0, -2))
+    prevButton.BackgroundTransparency = 0.42
+    prevButton.TextSize = 13
+    prevButton.Visible = false
+
+    local nextButton = createIconButton(section, "NextButton", ">", UDim2.new(0, 30, 0, 28), UDim2.new(1, -34, 0, -2))
+    nextButton.BackgroundTransparency = 0.42
+    nextButton.TextSize = 13
+    nextButton.Visible = false
+
+    local list = Instance.new("ScrollingFrame")
     list.Name = "List"
     list.Size = UDim2.new(1, 0, 1, -34)
     list.Position = UDim2.new(0, 0, 0, 34)
     list.BackgroundTransparency = 1
+    list.BorderSizePixel = 0
+    list.CanvasSize = UDim2.new(0, 0, 0, 0)
+    list.ScrollBarThickness = 0
+    list.ScrollingDirection = Enum.ScrollingDirection.X
     list.Parent = section
 
-    return section, list, titleLabel
+    return section, list, titleLabel, prevButton, nextButton
 end
 
 local function createCard(parent, item, width, height)
@@ -320,12 +337,12 @@ local function createCard(parent, item, width, height)
     createCorner(card, 8)
     createStroke(card, COLORS.Border, 0.55, 1)
 
-    createArtFrame(card, "Art", UDim2.new(1, 0, 0, math.max(height - 72, 80)), UDim2.new(), item)
+    createArtFrame(card, "Art", UDim2.new(1, 0, 0, math.max(height - 70, 72)), UDim2.new(), item)
 
     local play = createIconButton(
         card,
         "PlayButton",
-        ">",
+        "▶",
         UDim2.new(0, 28, 0, 28),
         UDim2.new(1, -36, 0, math.max(height - 100, 52))
     )
@@ -339,8 +356,8 @@ local function createCard(parent, item, width, height)
         "Name",
         tostring(item and item.title or "Sin titulo"),
         UDim2.new(1, -18, 0, 20),
-        UDim2.new(0, 10, 1, -58),
-        12,
+        UDim2.new(0, 10, 1, -56),
+        11,
         Enum.Font.GothamBold,
         COLORS.Text
     )
@@ -350,8 +367,8 @@ local function createCard(parent, item, width, height)
         "Artist",
         tostring(item and item.artist or "Desconocido"),
         UDim2.new(1, -18, 0, 18),
-        UDim2.new(0, 10, 1, -38),
-        11,
+        UDim2.new(0, 10, 1, -36),
+        10,
         Enum.Font.Gotham,
         COLORS.Muted
     )
@@ -611,23 +628,23 @@ function StrikeMusicUI.Create(parent, Theme)
     local bottomPlayer = createPanel(root, "BottomPlayer", UDim2.new(1, -20, 0, 96), UDim2.new(0, 10, 1, -106))
     bottomPlayer.BackgroundTransparency = 0.02
 
-    local searchSection, searchList = createSection(
+    local searchSection, searchList, searchTitle, searchPrevButton, searchNextButton = createSection(
         centerPanel,
         "SearchResultsSection",
         "RESULTADOS DE BUSQUEDA :",
         UDim2.new(0, 24, 0, 6),
-        UDim2.new(1, -48, 0, 250)
+        UDim2.new(1, -48, 0, 200)
     )
 
-    local popularSection, popularList = createSection(
+    local popularSection, popularList, popularTitle, popularPrevButton, popularNextButton = createSection(
         centerPanel,
         "PopularSection",
         "MAS ESCUCHADAS EN STRIKE MUSIC:",
-        UDim2.new(0, 24, 0, 268),
-        UDim2.new(1, -48, 0, 236)
+        UDim2.new(0, 24, 0, 216),
+        UDim2.new(1, -48, 0, 200)
     )
 
-    local recentPanel = createPanel(centerPanel, "RecentPanel", UDim2.new(1, -48, 0, 166), UDim2.new(0, 24, 1, -174))
+    local recentPanel = createPanel(centerPanel, "RecentPanel", UDim2.new(1, -48, 0, 140), UDim2.new(0, 24, 1, -148))
     recentPanel.BackgroundTransparency = 0.62
     createLabel(recentPanel, "Title", "Recently Played", UDim2.new(1, -100, 0, 30), UDim2.new(0, 0, 0, -34), 17, TITLE_FONT, COLORS.Text)
 
@@ -754,12 +771,72 @@ function StrikeMusicUI.Create(parent, Theme)
         Queue = queueList
     }
 
-    local function renderPlaceholderCards(container, cardWidth, cardHeight, count)
-        local layout = Instance.new("UIGridLayout")
-        layout.CellSize = UDim2.new(0, cardWidth, 0, cardHeight)
-        layout.CellPadding = UDim2.new(0, 12, 0, 12)
+    local function attachCardCarousel(container, count, cardWidth, cardHeight, prevButton, nextButton)
+        local padding = 12
+        local contentWidth = math.max((count * cardWidth) + (math.max(count - 1, 0) * padding), 0)
+
+        container.CanvasPosition = Vector2.new(0, 0)
+        container.CanvasSize = UDim2.new(0, contentWidth, 0, cardHeight)
+
+        local function getVisibleWidth()
+            return math.max(container.AbsoluteSize.X, 1)
+        end
+
+        local function refreshButtons()
+            local visibleWidth = getVisibleWidth()
+            local hasOverflow = visibleWidth > 1 and contentWidth > visibleWidth + 2
+
+            if prevButton then
+                prevButton.Visible = hasOverflow
+            end
+
+            if nextButton then
+                nextButton.Visible = hasOverflow
+            end
+        end
+
+        refreshButtons()
+        task.defer(refreshButtons)
+
+        local function move(direction)
+            local visibleWidth = getVisibleWidth()
+            local maxX = math.max(contentWidth - visibleWidth, 0)
+            local step = math.max(cardWidth + padding, 1)
+            local nextX = math.clamp(container.CanvasPosition.X + (direction * step), 0, maxX)
+            container.CanvasPosition = Vector2.new(nextX, 0)
+        end
+
+        if prevButton and not prevButton:GetAttribute("StrikeMusicCarouselBound") then
+            prevButton:SetAttribute("StrikeMusicCarouselBound", true)
+            prevButton.MouseButton1Click:Connect(function()
+                move(-1)
+            end)
+        end
+
+        if nextButton and not nextButton:GetAttribute("StrikeMusicCarouselBound") then
+            nextButton:SetAttribute("StrikeMusicCarouselBound", true)
+            nextButton.MouseButton1Click:Connect(function()
+                move(1)
+            end)
+        end
+
+        return padding
+    end
+
+    local function createCardLayout(container, padding)
+        local layout = Instance.new("UIListLayout")
+        layout.FillDirection = Enum.FillDirection.Horizontal
+        layout.Padding = UDim.new(0, padding)
         layout.SortOrder = Enum.SortOrder.LayoutOrder
         layout.Parent = container
+
+        return layout
+    end
+
+    local function renderPlaceholderCards(container, cardWidth, cardHeight, count, prevButton, nextButton)
+        count = count or 4
+        local padding = attachCardCarousel(container, count, cardWidth, cardHeight, prevButton, nextButton)
+        createCardLayout(container, padding)
 
         for _ = 1, count or 4 do
             createCard(
@@ -774,25 +851,32 @@ function StrikeMusicUI.Create(parent, Theme)
         end
     end
 
-    local function renderCards(container, items, emptyText, cardWidth, cardHeight, maxItems)
+    local function renderCards(container, items, emptyText, cardWidth, cardHeight, maxItems, prevButton, nextButton)
         clearContainer(container)
 
         items = items or {}
 
         if #items == 0 then
             if emptyText == "__placeholder_cards" then
-                renderPlaceholderCards(container, cardWidth, cardHeight, maxItems or 4)
+                renderPlaceholderCards(container, cardWidth, cardHeight, maxItems or 4, prevButton, nextButton)
             elseif emptyText and emptyText ~= "" then
+                if prevButton then
+                    prevButton.Visible = false
+                end
+
+                if nextButton then
+                    nextButton.Visible = false
+                end
+
+                container.CanvasSize = UDim2.new(0, 0, 0, 0)
                 createEmptyState(container, emptyText)
             end
             return
         end
 
-        local layout = Instance.new("UIGridLayout")
-        layout.CellSize = UDim2.new(0, cardWidth, 0, cardHeight)
-        layout.CellPadding = UDim2.new(0, 12, 0, 12)
-        layout.SortOrder = Enum.SortOrder.LayoutOrder
-        layout.Parent = container
+        local count = maxItems and math.min(#items, maxItems) or #items
+        local padding = attachCardCarousel(container, count, cardWidth, cardHeight, prevButton, nextButton)
+        createCardLayout(container, padding)
 
         for index, item in ipairs(items) do
             if maxItems and index > maxItems then
@@ -864,10 +948,10 @@ function StrikeMusicUI.Create(parent, Theme)
         },
         Lists = lists,
         RenderSearchResults = function(items)
-            renderCards(searchList, items, "__placeholder_cards", 210, 198, 4)
+            renderCards(searchList, items, "__placeholder_cards", 160, 150, nil, searchPrevButton, searchNextButton)
         end,
         RenderPopular = function(items)
-            renderCards(popularList, items, "__placeholder_cards", 156, 208, 4)
+            renderCards(popularList, items, "__placeholder_cards", 150, 150, nil, popularPrevButton, popularNextButton)
         end,
         RenderRecent = function(items)
             renderRows(recentList, items, "Aun no hay reproducciones recientes.", 3)
