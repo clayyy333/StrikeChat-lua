@@ -325,9 +325,9 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     createMenuButton("StrikeMusic", "StrikeMusic", "SM", 204)
     createMenuButton("CrearSalas", "Crear Sala", "+", 244)
-    createMenuButton("SalasPublicas", "Salas Publicas", "SP", 284)
-    createMenuButton("SalasPrivadas", "Salas Privadas", "PR", 324)
-    createMenuButton("TablaClanes", "Tabla de Clanes", "TC", 364)
+    createMenuButton("SalasPublicas", "Salas PÃºblicas", "ðŸŒ", 284)
+    createMenuButton("SalasPrivadas", "Salas Privadas", "ðŸ”’", 324)
+    createMenuButton("TablaClanes", "Tabla de Clanes", "ðŸ†", 364)
 
     local function setButtonLayout(button, y)
         if not button then

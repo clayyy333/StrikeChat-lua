@@ -115,6 +115,7 @@ local function createProgress(parent, position, size, value)
     back.Position = position
     back.BackgroundColor3 = COLORS.ProgressBack
     back.BorderSizePixel = 0
+    back.Active = true
     back.Parent = parent
     createCorner(back, 4)
 
@@ -127,6 +128,107 @@ local function createProgress(parent, position, size, value)
     createCorner(fill, 4)
 
     return back, fill
+end
+
+local function createVolumeSlider(parent, position, size, initialValue)
+    local UserInputService = game:GetService("UserInputService")
+    local changed = Instance.new("BindableEvent")
+    local value = math.clamp(initialValue or 0.52, 0, 1)
+    local dragging = false
+
+    local back = Instance.new("Frame")
+    back.Name = "VolumeSlider"
+    back.Size = size
+    back.Position = position
+    back.BackgroundColor3 = COLORS.ProgressBack
+    back.BorderSizePixel = 0
+    back.Parent = parent
+    createCorner(back, 4)
+
+    local fill = Instance.new("Frame")
+    fill.Name = "Fill"
+    fill.Size = UDim2.new(value, 0, 1, 0)
+    fill.BackgroundColor3 = COLORS.Purple
+    fill.BorderSizePixel = 0
+    fill.Parent = back
+    createCorner(fill, 4)
+
+    local knob = Instance.new("TextButton")
+    knob.Name = "Knob"
+    knob.Size = UDim2.new(0, 14, 0, 14)
+    knob.Position = UDim2.new(value, -7, 0.5, -7)
+    knob.BackgroundColor3 = COLORS.Text
+    knob.BorderSizePixel = 0
+    knob.Text = ""
+    knob.AutoButtonColor = true
+    knob.Active = true
+    knob.Parent = back
+    createCorner(knob, 7)
+
+    local function setValue(nextValue, fireChanged)
+        value = math.clamp(nextValue or 0, 0, 1)
+        fill.Size = UDim2.new(value, 0, 1, 0)
+        knob.Position = UDim2.new(value, -7, 0.5, -7)
+
+        if fireChanged then
+            changed:Fire(value)
+        end
+    end
+
+    local function setFromX(x)
+        local absoluteX = back.AbsolutePosition.X
+        local width = math.max(back.AbsoluteSize.X, 1)
+        setValue((x - absoluteX) / width, true)
+    end
+
+    back.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch
+        then
+            dragging = true
+            setFromX(input.Position.X)
+        end
+    end)
+
+    knob.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch
+        then
+            dragging = true
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging
+            and (
+                input.UserInputType == Enum.UserInputType.MouseMovement
+                or input.UserInputType == Enum.UserInputType.Touch
+            )
+        then
+            setFromX(input.Position.X)
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch
+        then
+            dragging = false
+        end
+    end)
+
+    return {
+        Root = back,
+        Fill = fill,
+        Knob = knob,
+        Changed = changed.Event,
+        SetValue = function(nextValue)
+            setValue(nextValue, false)
+        end,
+        GetValue = function()
+            return value
+        end
+    }
 end
 
 local function applyThumbnail(target, item)
@@ -341,12 +443,19 @@ function StrikeMusicUI.Create(parent, Theme)
     backgroundGradient.Parent = root
 
     local closeButton = createIconButton(root, "CloseButton", "x", UDim2.new(0, 28, 0, 28), UDim2.new(1, -40, 0, 10))
-    closeButton.BackgroundTransparency = 1
+    closeButton.BackgroundTransparency = 0.35
     closeButton.TextColor3 = Color3.fromRGB(255, 223, 187)
 
     local minimizeButton = createIconButton(root, "MinimizeButton", "-", UDim2.new(0, 28, 0, 28), UDim2.new(1, -76, 0, 10))
-    minimizeButton.BackgroundTransparency = 1
+    minimizeButton.BackgroundTransparency = 0.35
     minimizeButton.TextColor3 = Color3.fromRGB(255, 223, 187)
+
+    local minimizedButton = createIconButton(gui, "MinimizedButton", "StrikeMusic", UDim2.new(0, 156, 0, 42), UDim2.new(0, 18, 1, -60))
+    minimizedButton.Visible = false
+    minimizedButton.TextSize = 13
+    minimizedButton.BackgroundColor3 = COLORS.PanelLight
+    minimizedButton.BackgroundTransparency = 0.02
+    minimizedButton.ZIndex = 20
 
     local sideBar = createPanel(root, "Sidebar", UDim2.new(0, 242, 1, -108), UDim2.new(0, 10, 0, 86))
     sideBar.BackgroundTransparency = 0.14
@@ -420,6 +529,7 @@ function StrikeMusicUI.Create(parent, Theme)
     }
 
     local navButtons = {}
+    local navIcons = {"H", "S", "L", "D", "P", "♥", "R"}
     local navY = 16
 
     for index, item in ipairs(navItems) do
@@ -430,7 +540,7 @@ function StrikeMusicUI.Create(parent, Theme)
         button.BackgroundColor3 = index == 1 and COLORS.Purple or COLORS.Panel
         button.BackgroundTransparency = index == 1 and 0.15 or 1
         button.BorderSizePixel = 0
-        button.Text = item[2]
+        button.Text = ""
         button.TextColor3 = COLORS.Text
         button.Font = theme.Font.Bold or Enum.Font.GothamBold
         button.TextSize = 13
@@ -438,12 +548,11 @@ function StrikeMusicUI.Create(parent, Theme)
         button.Parent = sideBar
         createCorner(button, 9)
 
-        local padding = Instance.new("UIPadding")
-        padding.PaddingLeft = UDim.new(0, 50)
-        padding.Parent = button
-
-        local icon = createLabel(button, "Icon", index == 1 and "H" or "*", UDim2.new(0, 28, 1, 0), UDim2.new(0, 14, 0, 0), 15, Enum.Font.GothamBold, COLORS.Text)
+        local icon = createLabel(button, "Icon", navIcons[index] or "", UDim2.new(0, 32, 1, 0), UDim2.new(0, 14, 0, 0), 15, Enum.Font.GothamBold, COLORS.Text)
         icon.TextXAlignment = Enum.TextXAlignment.Center
+
+        local text = createLabel(button, "Label", item[2], UDim2.new(1, -62, 1, 0), UDim2.new(0, 62, 0, 0), 13, theme.Font.Bold or Enum.Font.GothamBold, COLORS.Text)
+        text.TextXAlignment = Enum.TextXAlignment.Left
 
         navButtons[item[1]] = button
         navY += 49
@@ -526,9 +635,10 @@ function StrikeMusicUI.Create(parent, Theme)
 
     local nowArt = createArtFrame(rightPanel, "NowArt", UDim2.new(1, -44, 0, 248), UDim2.new(0, 22, 0, 54), nil)
     local nowTitle = createLabel(rightPanel, "NowTitle", "Nada reproduciendose", UDim2.new(1, -74, 0, 26), UDim2.new(0, 22, 0, 318), 20, Enum.Font.GothamBold, COLORS.Text)
-    local heartButton = createIconButton(rightPanel, "HeartButton", "<3", UDim2.new(0, 34, 0, 34), UDim2.new(1, -56, 0, 314))
-    heartButton.BackgroundTransparency = 1
+    local heartButton = createIconButton(rightPanel, "HeartButton", "♥", UDim2.new(0, 38, 0, 38), UDim2.new(1, -60, 0, 312))
+    heartButton.BackgroundTransparency = 0.82
     heartButton.TextColor3 = COLORS.PurpleBright
+    heartButton.TextSize = 17
     local nowArtist = createLabel(rightPanel, "NowArtist", "Selecciona una cancion", UDim2.new(1, -44, 0, 20), UDim2.new(0, 22, 0, 348), 13, Enum.Font.Gotham, COLORS.Muted)
 
     local nowProgress, nowProgressFill = createProgress(rightPanel, UDim2.new(0, 22, 0, 392), UDim2.new(1, -44, 0, 4), 0)
@@ -588,9 +698,10 @@ function StrikeMusicUI.Create(parent, Theme)
     local bottomArt = createArtFrame(bottomPlayer, "Art", UDim2.new(0, 70, 0, 70), UDim2.new(0, 18, 0.5, -35), nil)
     local bottomTitle = createLabel(bottomPlayer, "Title", "Nada reproduciendose", UDim2.new(0, 280, 0, 24), UDim2.new(0, 108, 0, 24), 15, Enum.Font.GothamBold, COLORS.Text)
     local bottomArtist = createLabel(bottomPlayer, "Artist", "Selecciona una cancion", UDim2.new(0, 260, 0, 20), UDim2.new(0, 108, 0, 50), 12, Enum.Font.Gotham, COLORS.Muted)
-    local bottomHeart = createIconButton(bottomPlayer, "HeartButton", "<3", UDim2.new(0, 34, 0, 34), UDim2.new(0, 230, 0.5, -17))
-    bottomHeart.BackgroundTransparency = 1
+    local bottomHeart = createIconButton(bottomPlayer, "HeartButton", "♥", UDim2.new(0, 38, 0, 38), UDim2.new(0, 230, 0.5, -19))
+    bottomHeart.BackgroundTransparency = 0.82
     bottomHeart.TextColor3 = COLORS.PurpleBright
+    bottomHeart.TextSize = 17
 
     local bottomControls = Instance.new("Frame")
     bottomControls.Name = "Controls"
@@ -614,7 +725,7 @@ function StrikeMusicUI.Create(parent, Theme)
 
     local volumeIcon = createLabel(bottomPlayer, "VolumeIcon", "V", UDim2.new(0, 26, 0, 26), UDim2.new(0.82, 0, 0.5, -13), 15, Enum.Font.GothamBold, COLORS.Muted)
     volumeIcon.TextXAlignment = Enum.TextXAlignment.Center
-    createProgress(bottomPlayer, UDim2.new(0.86, 0, 0.5, -2), UDim2.new(0.1, 0, 0, 4), 0.52)
+    local volumeSlider = createVolumeSlider(bottomPlayer, UDim2.new(0.86, 0, 0.5, -2), UDim2.new(0.1, 0, 0, 4), 0.52)
 
     local lists = {
         Search = searchList,
@@ -673,23 +784,37 @@ function StrikeMusicUI.Create(parent, Theme)
         end
     end
 
+    minimizeButton.MouseButton1Click:Connect(function()
+        root.Visible = false
+        minimizedButton.Visible = true
+    end)
+
+    minimizedButton.MouseButton1Click:Connect(function()
+        minimizedButton.Visible = false
+        root.Visible = true
+    end)
+
     local api = {
         Gui = gui,
         Root = root,
         CloseButton = closeButton,
         MinimizeButton = minimizeButton,
+        MinimizedButton = minimizedButton,
         SearchInput = searchInput,
         FilterButton = filterButton,
         NavButtons = navButtons,
         SeeAllButton = seeAllButton,
         ClearQueueButton = clearQueueButton,
+        VolumeSlider = volumeSlider,
         Buttons = {
             Play = playButton,
             Previous = previousButton,
             Next = nextButton,
             Shuffle = shuffleButton,
             Repeat = repeatButton,
-            BottomPlay = bottomPlay
+            BottomPlay = bottomPlay,
+            Heart = heartButton,
+            BottomHeart = bottomHeart
         },
         Lists = lists,
         RenderSearchResults = function(items)

@@ -1192,6 +1192,20 @@ if leftPanel.Buttons.StrikeMusic then
             strikeMusicClient.Open(player)
         end)
 
+        activeStrikeMusicUI.MinimizeButton.MouseButton1Click:Connect(function()
+            task.spawn(function()
+                strikeMusicClient.Minimize(player)
+            end)
+        end)
+
+        if activeStrikeMusicUI.MinimizedButton then
+            activeStrikeMusicUI.MinimizedButton.MouseButton1Click:Connect(function()
+                task.spawn(function()
+                    strikeMusicClient.Restore(player)
+                end)
+            end)
+        end
+
         activeStrikeMusicUI.CloseButton.MouseButton1Click:Connect(function()
             task.spawn(function()
                 strikeMusicClient.Close(player)
