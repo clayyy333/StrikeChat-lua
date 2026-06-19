@@ -508,7 +508,7 @@ function StrikeMusicUI.Create(parent, Theme)
         COLORS.PurpleBright
     )
 
-    local searchHolder = createPanel(root, "SearchHolder", UDim2.new(0.4, 0, 0, 46), UDim2.new(0.39, 0, 0, 16))
+    local searchHolder = createPanel(root, "SearchHolder", UDim2.new(0.4, 0, 0, 46), UDim2.new(0.3, -3, 0, 16))
     searchHolder.BackgroundColor3 = Color3.fromRGB(14, 18, 26)
     searchHolder.BackgroundTransparency = 0
     createLabel(searchHolder, "SearchIcon", "O", UDim2.new(0, 28, 1, 0), UDim2.new(0, 14, 0, 0), 14, Enum.Font.GothamBold, COLORS.Muted)
@@ -891,7 +891,7 @@ function StrikeMusicUI.Create(parent, Theme)
         rightPanel.Position = UDim2.new(1, -218, 0, 66)
         bottomPlayer.Size = UDim2.new(1, -16, 0, 86)
         bottomPlayer.Position = UDim2.new(0, 8, 1, -94)
-        searchHolder.Position = UDim2.new(0.39, 0, 0, 14)
+        searchHolder.Position = UDim2.new(0.31, -1, 0, 14)
         searchHolder.Size = UDim2.new(0.38, 0, 0, 42)
     end
 
