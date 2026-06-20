@@ -71,49 +71,30 @@ local function createIconButton(parent, name, text, size, position)
     return button
 end
 
-local function createControlLine(parent, name, x, y, length, rotation)
-    local line = Instance.new("Frame")
-    line.Name = name
-    line.Size = UDim2.new(0, length, 0, 2)
-    line.Position = UDim2.new(0, x, 0, y)
-    line.AnchorPoint = Vector2.new(0.5, 0.5)
-    line.Rotation = rotation or 0
-    line.BackgroundColor3 = COLORS.Muted
-    line.BorderSizePixel = 0
-    line.Parent = parent
-    createCorner(line, 2)
+local function addButtonImage(button, name, assetId, pixelSize)
+    local icon = Instance.new("ImageLabel")
+    icon.Name = name
+    icon.Size = UDim2.new(0, pixelSize, 0, pixelSize)
+    icon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    icon.AnchorPoint = Vector2.new(0.5, 0.5)
+    icon.BackgroundTransparency = 1
+    icon.BorderSizePixel = 0
+    icon.Image = assetId
+    icon.ScaleType = Enum.ScaleType.Fit
+    icon.ZIndex = button.ZIndex + 1
+    icon.Parent = button
 
-    return line
-end
-
-local function createControlChevron(parent, name, x, y, direction)
-    if direction == "left" then
-        createControlLine(parent, name .. "Top", x + 2, y - 3, 7, -45)
-        createControlLine(parent, name .. "Bottom", x + 2, y + 3, 7, 45)
-    else
-        createControlLine(parent, name .. "Top", x - 2, y - 3, 7, 45)
-        createControlLine(parent, name .. "Bottom", x - 2, y + 3, 7, -45)
+    local function hideFallback()
+        button.TextTransparency = 1
     end
-end
 
-local function drawShuffleIcon(button)
-    button.Text = ""
-    createControlLine(button, "ShuffleTopStart", 8, 9, 8, 0)
-    createControlLine(button, "ShuffleTopCross", 16, 13, 13, 42)
-    createControlChevron(button, "ShuffleTopArrow", 24, 21, "right")
-    createControlLine(button, "ShuffleBottomStart", 8, 21, 8, 0)
-    createControlLine(button, "ShuffleBottomCross", 16, 17, 13, -42)
-    createControlChevron(button, "ShuffleBottomArrow", 24, 9, "right")
-end
+    if icon.IsLoaded then
+        hideFallback()
+    else
+        icon.Loaded:Connect(hideFallback)
+    end
 
-local function drawRepeatIcon(button)
-    button.Text = ""
-    createControlLine(button, "RepeatTop", 14, 8, 12, 0)
-    createControlLine(button, "RepeatRight", 20, 13, 8, 90)
-    createControlChevron(button, "RepeatTopArrow", 24, 8, "right")
-    createControlLine(button, "RepeatBottom", 16, 22, 12, 0)
-    createControlLine(button, "RepeatLeft", 10, 17, 8, 90)
-    createControlChevron(button, "RepeatBottomArrow", 6, 22, "left")
+    return icon
 end
 
 local function createPanel(parent, name, size, position)
@@ -801,16 +782,14 @@ function StrikeMusicUI.Create(parent, Theme)
     controls.BackgroundTransparency = 1
     controls.Parent = rightScroll
 
-    local shuffleButton = createIconButton(controls, "ShuffleButton", "", UDim2.new(0, 30, 0, 30), UDim2.new(0, 0, 0.5, -15))
+    local shuffleButton = createIconButton(controls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 0, 0.5, -15))
+    addButtonImage(shuffleButton, "Icon", "rbxassetid://103989052956263", 20)
     local previousButton = createIconButton(controls, "PreviousButton", "|◀", UDim2.new(0, 34, 0, 34), UDim2.new(0.25, -17, 0.5, -17))
     local playButton = createIconButton(controls, "PlayButton", "||", UDim2.new(0, 52, 0, 52), UDim2.new(0.5, -26, 0.5, -26))
     local nextButton = createIconButton(controls, "NextButton", "▶|", UDim2.new(0, 34, 0, 34), UDim2.new(0.75, -17, 0.5, -17))
-    local repeatButton = createIconButton(controls, "RepeatButton", "", UDim2.new(0, 30, 0, 30), UDim2.new(1, -30, 0.5, -15))
+    local repeatButton = createIconButton(controls, "RepeatButton", "o", UDim2.new(0, 30, 0, 30), UDim2.new(1, -30, 0.5, -15))
 
-    drawShuffleIcon(shuffleButton)
-    drawRepeatIcon(repeatButton)
-
-    for _, button in ipairs({shuffleButton, previousButton, nextButton, repeatButton}) do
+   for _, button in ipairs({shuffleButton, previousButton, nextButton, repeatButton}) do
         button.BackgroundTransparency = 1
         button.BorderSizePixel = 0
         button.TextColor3 = COLORS.Muted
@@ -864,16 +843,14 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomControls.BackgroundTransparency = 1
     bottomControls.Parent = bottomPlayer
 
-    local bottomShuffle = createIconButton(bottomControls, "ShuffleButton", "", UDim2.new(0, 30, 0, 30), UDim2.new(0, 42, 0.5, -15))
+    local bottomShuffle = createIconButton(bottomControls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 42, 0.5, -15))
+    addButtonImage(bottomShuffle, "Icon", "rbxassetid://103989052956263", 20)
     local bottomPrevious = createIconButton(bottomControls, "PreviousButton", "|◀", UDim2.new(0, 32, 0, 32), UDim2.new(0, 96, 0.5, -16))
     local bottomPlay = createIconButton(bottomControls, "PlayButton", "||", UDim2.new(0, 38, 0, 38), UDim2.new(0.5, -19, 0, 0))
     local bottomNext = createIconButton(bottomControls, "NextButton", "▶|", UDim2.new(0, 32, 0, 32), UDim2.new(1, -128, 0.5, -16))
-    local bottomRepeat = createIconButton(bottomControls, "RepeatButton", "", UDim2.new(0, 30, 0, 30), UDim2.new(1, -72, 0.5, -15))
+    local bottomRepeat = createIconButton(bottomControls, "RepeatButton", "o", UDim2.new(0, 30, 0, 30), UDim2.new(1, -72, 0.5, -15))
 
-    drawShuffleIcon(bottomShuffle)
-    drawRepeatIcon(bottomRepeat)
-
-    for _, button in ipairs({bottomShuffle, bottomPrevious, bottomNext, bottomRepeat}) do
+   for _, button in ipairs({bottomShuffle, bottomPrevious, bottomNext, bottomRepeat}) do
         button.BackgroundTransparency = 1
         button.BorderSizePixel = 0
         button.TextColor3 = COLORS.Muted
