@@ -546,11 +546,33 @@ function StrikeMusicUI.Create(parent, Theme)
     local searchHolder = createPanel(root, "SearchHolder", UDim2.new(0.4, 0, 0, 46), UDim2.new(0.3, -3, 0, 16))
     searchHolder.BackgroundColor3 = Color3.fromRGB(14, 18, 26)
     searchHolder.BackgroundTransparency = 0
-    createLabel(searchHolder, "SearchIcon", "O", UDim2.new(0, 28, 1, 0), UDim2.new(0, 14, 0, 0), 14, Enum.Font.GothamBold, COLORS.Muted)
+    local searchLens = Instance.new("Frame")
+    searchLens.Name = "SearchLens"
+    searchLens.Size = UDim2.new(0, 12, 0, 12)
+    searchLens.Position = UDim2.new(0, 18, 0, 15)
+    searchLens.BackgroundTransparency = 1
+    searchLens.BorderSizePixel = 0
+    searchLens.Parent = searchHolder
+    createCorner(searchLens, 12)
+
+    local searchLensStroke = Instance.new("UIStroke")
+    searchLensStroke.Thickness = 1.5
+    searchLensStroke.Color = COLORS.Muted
+    searchLensStroke.Parent = searchLens
+
+    local searchHandle = Instance.new("Frame")
+    searchHandle.Name = "SearchHandle"
+    searchHandle.Size = UDim2.new(0, 2, 0, 7)
+    searchHandle.Position = UDim2.new(0, 30, 0, 26)
+    searchHandle.Rotation = -45
+    searchHandle.BackgroundColor3 = COLORS.Muted
+    searchHandle.BorderSizePixel = 0
+    searchHandle.Parent = searchHolder
+    createCorner(searchHandle, 2)
 
     local searchInput = Instance.new("TextBox")
     searchInput.Name = "SearchInput"
-    searchInput.Size = UDim2.new(1, -92, 1, 0)
+    searchInput.Size = UDim2.new(1, -64, 1, 0)
     searchInput.Position = UDim2.new(0, 48, 0, 0)
     searchInput.BackgroundTransparency = 1
     searchInput.PlaceholderText = "Busca musica o pega link para ver resultados"
@@ -563,9 +585,6 @@ function StrikeMusicUI.Create(parent, Theme)
     searchInput.ClearTextOnFocus = false
     searchInput.Parent = searchHolder
 
-    local filterButton = createIconButton(searchHolder, "FilterButton", "+", UDim2.new(0, 38, 0, 34), UDim2.new(1, -44, 0.5, -17))
-    filterButton.BackgroundTransparency = 1
-    filterButton.TextColor3 = COLORS.Muted
 
     local navItems = {
         {"Home", "Home"},
@@ -619,9 +638,6 @@ function StrikeMusicUI.Create(parent, Theme)
 
     local playlistNames = {
         "My Favorites",
-        "Workout Mix",
-        "Chill Vibes",
-        "Gaming Mix",
         "New Playlist"
     }
 
@@ -629,7 +645,16 @@ function StrikeMusicUI.Create(parent, Theme)
 
     for index, name in ipairs(playlistNames) do
         local label = createLabel(sideBarScroll, "Playlist" .. tostring(index), name, UDim2.new(1, -48, 0, 28), UDim2.new(0, 54, 0, playlistY), 13, Enum.Font.Gotham, COLORS.Text)
-        createLabel(sideBarScroll, "PlaylistIcon" .. tostring(index), index == 1 and "<3" or "+", UDim2.new(0, 30, 0, 28), UDim2.new(0, 28, 0, playlistY), 14, Enum.Font.GothamBold, index == 1 and COLORS.PurpleBright or COLORS.Muted).TextXAlignment = Enum.TextXAlignment.Center
+
+        if index == 1 then
+            local favoriteButton = createIconButton(sideBarScroll, "FavoritesButton", "♥", UDim2.new(0, 30, 0, 28), UDim2.new(0, 28, 0, playlistY))
+            favoriteButton.BackgroundTransparency = 1
+            favoriteButton.TextColor3 = COLORS.PurpleBright
+            favoriteButton.TextSize = 15
+        else
+            createLabel(sideBarScroll, "PlaylistIcon" .. tostring(index), "+", UDim2.new(0, 30, 0, 28), UDim2.new(0, 28, 0, playlistY), 14, Enum.Font.GothamBold, COLORS.Muted).TextXAlignment = Enum.TextXAlignment.Center
+        end
+
         playlistY += 44
     end
 
@@ -1017,7 +1042,8 @@ function StrikeMusicUI.Create(parent, Theme)
         MinimizeButton = minimizeButton,
         MinimizedButton = minimizedButton,
         SearchInput = searchInput,
-        FilterButton = filterButton,
+
+
         NavButtons = navButtons,
         SeeAllButton = seeAllButton,
         ClearQueueButton = clearQueueButton,
