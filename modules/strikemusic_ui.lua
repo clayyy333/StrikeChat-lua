@@ -846,7 +846,7 @@ function StrikeMusicUI.Create(parent, Theme)
     local bottomRepeat = createIconButton(bottomControls, "RepeatButton", "o", UDim2.new(0, 30, 0, 30), UDim2.new(1, -72, 0.5, -15))
     local bottomRepeatIcon = Instance.new("ImageLabel")
     bottomRepeatIcon.Name = "RepeatIcon"
-    bottomRepeatIcon.Size = UDim2.new(0, 20, 0, 20)
+    bottomRepeatIcon.Size = UDim2.new(0, 22, 0, 22)
     bottomRepeatIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     bottomRepeatIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     bottomRepeatIcon.BackgroundTransparency = 1
@@ -857,7 +857,18 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomRepeatIcon.ZIndex = bottomRepeat.ZIndex + 1
     bottomRepeatIcon.Parent = bottomRepeat
     bottomRepeat.TextTransparency = 1
-   for _, button in ipairs({bottomShuffle, bottomPrevious, bottomNext, bottomRepeat}) do
+    bottomRepeatIcon.ImageColor3 = Color3.fromRGB(245, 247, 255)
+
+    local bottomRepeatEnabled = false
+
+    bottomRepeat.MouseButton1Click:Connect(function()
+        bottomRepeatEnabled = not bottomRepeatEnabled
+        bottomRepeatIcon.ImageColor3 = bottomRepeatEnabled
+            and Color3.fromRGB(78, 190, 92)
+            or Color3.fromRGB(245, 247, 255)
+    end)
+
+    for _, button in ipairs({bottomShuffle, bottomPrevious, bottomNext, bottomRepeat}) do
         button.BackgroundTransparency = 1
         button.BorderSizePixel = 0
         button.TextColor3 = COLORS.Muted
