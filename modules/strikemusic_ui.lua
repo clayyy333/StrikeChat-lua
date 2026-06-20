@@ -756,14 +756,15 @@ function StrikeMusicUI.Create(parent, Theme)
     controls.BackgroundTransparency = 1
     controls.Parent = rightScroll
 
-    local shuffleButton = createIconButton(controls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 0, 0.5, -15))
-    local previousButton = createIconButton(controls, "PreviousButton", "|<", UDim2.new(0, 34, 0, 34), UDim2.new(0.25, -17, 0.5, -17))
+    local shuffleButton = createIconButton(controls, "ShuffleButton", "⤨", UDim2.new(0, 30, 0, 30), UDim2.new(0, 0, 0.5, -15))
+    local previousButton = createIconButton(controls, "PreviousButton", "|◀", UDim2.new(0, 34, 0, 34), UDim2.new(0.25, -17, 0.5, -17))
     local playButton = createIconButton(controls, "PlayButton", "||", UDim2.new(0, 52, 0, 52), UDim2.new(0.5, -26, 0.5, -26))
-    local nextButton = createIconButton(controls, "NextButton", ">|", UDim2.new(0, 34, 0, 34), UDim2.new(0.75, -17, 0.5, -17))
-    local repeatButton = createIconButton(controls, "RepeatButton", "o", UDim2.new(0, 30, 0, 30), UDim2.new(1, -30, 0.5, -15))
+    local nextButton = createIconButton(controls, "NextButton", "▶|", UDim2.new(0, 34, 0, 34), UDim2.new(0.75, -17, 0.5, -17))
+    local repeatButton = createIconButton(controls, "RepeatButton", "↻", UDim2.new(0, 30, 0, 30), UDim2.new(1, -30, 0.5, -15))
 
     for _, button in ipairs({shuffleButton, previousButton, nextButton, repeatButton}) do
         button.BackgroundTransparency = 1
+        button.BorderSizePixel = 0
         button.TextColor3 = COLORS.Muted
     end
 
@@ -815,13 +816,20 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomControls.BackgroundTransparency = 1
     bottomControls.Parent = bottomPlayer
 
-    createIconButton(bottomControls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 42, 0.5, -15)).BackgroundTransparency = 1
-    createIconButton(bottomControls, "PreviousButton", "|<", UDim2.new(0, 32, 0, 32), UDim2.new(0, 96, 0.5, -16)).BackgroundTransparency = 1
+    local bottomShuffle = createIconButton(bottomControls, "ShuffleButton", "⤨", UDim2.new(0, 30, 0, 30), UDim2.new(0, 42, 0.5, -15))
+    local bottomPrevious = createIconButton(bottomControls, "PreviousButton", "|◀", UDim2.new(0, 32, 0, 32), UDim2.new(0, 96, 0.5, -16))
     local bottomPlay = createIconButton(bottomControls, "PlayButton", "||", UDim2.new(0, 38, 0, 38), UDim2.new(0.5, -19, 0, 0))
+    local bottomNext = createIconButton(bottomControls, "NextButton", "▶|", UDim2.new(0, 32, 0, 32), UDim2.new(1, -128, 0.5, -16))
+    local bottomRepeat = createIconButton(bottomControls, "RepeatButton", "↻", UDim2.new(0, 30, 0, 30), UDim2.new(1, -72, 0.5, -15))
+
+    for _, button in ipairs({bottomShuffle, bottomPrevious, bottomNext, bottomRepeat}) do
+        button.BackgroundTransparency = 1
+        button.BorderSizePixel = 0
+        button.TextColor3 = COLORS.Muted
+    end
+
     bottomPlay.BackgroundColor3 = COLORS.Purple
     createCorner(bottomPlay, 19)
-    createIconButton(bottomControls, "NextButton", ">|", UDim2.new(0, 32, 0, 32), UDim2.new(1, -128, 0.5, -16)).BackgroundTransparency = 1
-    createIconButton(bottomControls, "RepeatButton", "o", UDim2.new(0, 30, 0, 30), UDim2.new(1, -72, 0.5, -15)).BackgroundTransparency = 1
 
     local bottomProgress, bottomProgressFill = createProgress(bottomPlayer, UDim2.new(0.31, 0, 0, 54), UDim2.new(0.38, 0, 0, 4), 0)
     local bottomCurrent = createLabel(bottomPlayer, "CurrentTime", "0:00", UDim2.new(0, 48, 0, 20), UDim2.new(0.28, 0, 0, 46), 10, Enum.Font.Gotham, COLORS.Muted)
@@ -1057,7 +1065,11 @@ function StrikeMusicUI.Create(parent, Theme)
             Next = nextButton,
             Shuffle = shuffleButton,
             Repeat = repeatButton,
+            BottomShuffle = bottomShuffle,
+            BottomPrevious = bottomPrevious,
             BottomPlay = bottomPlay,
+            BottomNext = bottomNext,
+            BottomRepeat = bottomRepeat,
             Heart = heartButton,
             BottomHeart = bottomHeart
         },
