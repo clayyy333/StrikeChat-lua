@@ -350,7 +350,7 @@ local function createCard(parent, item, width, height)
     )
     play.BackgroundColor3 = Color3.fromRGB(235, 238, 246)
     play.TextColor3 = Color3.fromRGB(15, 16, 22)
-    play.TextSize = 16
+    play.TextSize = 18
     local playCorner = play:FindFirstChildOfClass("UICorner")
     if playCorner then
         playCorner.CornerRadius = UDim.new(1, 0)
