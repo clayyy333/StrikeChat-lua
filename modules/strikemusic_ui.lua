@@ -731,7 +731,7 @@ function StrikeMusicUI.Create(parent, Theme)
 
     local rightTitle = createLabel(rightScroll, "Title", "Now Playing", UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 4), 15, SECTION_TITLE_FONT, COLORS.Text)
 
-    local nowArt = createArtFrame(rightScroll, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 30), nil)
+    local nowArt = createArtFrame(rightScroll, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 36), nil)
     local nowTitle = createLabel(rightScroll, "NowTitle", "Nada reproduciendose", UDim2.new(1, -60, 0, 26), UDim2.new(0, 16, 0, 208), 17, TITLE_FONT, COLORS.Text)
     local heartButton = createIconButton(rightScroll, "HeartButton", "♥", UDim2.new(0, 38, 0, 38), UDim2.new(1, -60, 0, 312))
     heartButton.BackgroundTransparency = 0.82
@@ -1117,6 +1117,10 @@ function StrikeMusicUI.Create(parent, Theme)
         rightPanel.Position = UDim2.new(1, -218, 0, 66)
         bottomPlayer.Size = UDim2.new(1, -16, 0, 68)
         bottomPlayer.Position = UDim2.new(0, 8, 1, -76)
+        bottomTitle.Position = UDim2.new(0, 78, 0, 13)
+        bottomTitle.TextSize = 14
+        bottomArtist.Position = UDim2.new(0, 78, 0, 39)
+        bottomArtist.TextSize = 11
         searchHolder.Position = UDim2.new(0.31, -1, 0, 14)
         searchHolder.Size = UDim2.new(0.38, 0, 0, 42)
     end
