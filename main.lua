@@ -1187,6 +1187,7 @@ if leftPanel.Buttons.StrikeMusic then
         window.Gui.Enabled = false
 
         activeStrikeMusicUI = StrikeMusicUI.Create(CoreGui, Theme)
+        I18n.RegisterRoot(activeStrikeMusicUI.Gui)
 
         task.spawn(function()
             strikeMusicClient.Open(player)

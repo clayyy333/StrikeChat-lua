@@ -16,6 +16,16 @@ local COLORS = {
 local TITLE_FONT = Enum.Font.GothamBold
 local SECTION_TITLE_FONT = Enum.Font.GothamMedium
 
+local function tr(text)
+    local i18n = _G.StrikeChatI18n
+
+    if i18n and i18n.TranslateText then
+        return i18n.TranslateText(text)
+    end
+
+    return text
+end
+
 local function createCorner(parent, radius)
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, radius or 10)
@@ -359,7 +369,7 @@ local function createCard(parent, item, width, height)
     createLabel(
         card,
         "Name",
-        tostring(item and item.title or "Sin titulo"),
+        tostring(item and item.title or tr("Sin titulo")),
         UDim2.new(1, -18, 0, 20),
         UDim2.new(0, 10, 1, -56),
         11,
@@ -370,7 +380,7 @@ local function createCard(parent, item, width, height)
     createLabel(
         card,
         "Artist",
-        tostring(item and item.artist or "Desconocido"),
+        tostring(item and item.artist or tr("Desconocido")),
         UDim2.new(1, -18, 0, 18),
         UDim2.new(0, 10, 1, -36),
         10,
@@ -397,7 +407,7 @@ local function createWideRow(parent, item)
     createLabel(
         row,
         "Name",
-        tostring(item and item.title or "Sin titulo"),
+        tostring(item and item.title or tr("Sin titulo")),
         UDim2.new(1, -150, 0, 20),
         UDim2.new(0, 52, 0, 4),
         12,
@@ -408,7 +418,7 @@ local function createWideRow(parent, item)
     createLabel(
         row,
         "Artist",
-        tostring(item and item.artist or "Desconocido"),
+        tostring(item and item.artist or tr("Desconocido")),
         UDim2.new(1, -150, 0, 18),
         UDim2.new(0, 52, 0, 25),
         11,
@@ -578,7 +588,7 @@ function StrikeMusicUI.Create(parent, Theme)
     searchInput.Size = UDim2.new(1, -64, 1, 0)
     searchInput.Position = UDim2.new(0, 48, 0, 0)
     searchInput.BackgroundTransparency = 1
-    searchInput.PlaceholderText = "Busca musica o pega link para ver resultados"
+    searchInput.PlaceholderText = tr("Busca musica o pega link para ver resultados")
     searchInput.Text = ""
     searchInput.TextColor3 = COLORS.Text
     searchInput.PlaceholderColor3 = COLORS.Muted
@@ -590,13 +600,13 @@ function StrikeMusicUI.Create(parent, Theme)
 
 
     local navItems = {
-        {"Home", "Home"},
-        {"Search", "Search"},
-        {"YourLibrary", "Your Library"},
-        {"Downloads", "Downloads"},
-        {"Playlists", "Playlists"},
-        {"LikedSongs", "Liked Songs"},
-        {"RecentlyPlayed", "Recently Played"}
+        {"Home", tr("Inicio")},
+        {"Search", tr("Buscar")},
+        {"YourLibrary", tr("Tu biblioteca")},
+        {"Downloads", tr("Descargas")},
+        {"Playlists", tr("Listas")},
+        {"LikedSongs", tr("Canciones favoritas")},
+        {"RecentlyPlayed", tr("Reproducido recientemente")}
     }
 
     local navButtons = {}
@@ -637,11 +647,11 @@ function StrikeMusicUI.Create(parent, Theme)
     divider.BorderSizePixel = 0
     divider.Parent = sideBarScroll
 
-    createLabel(sideBarScroll, "PlaylistLabel", "PLAYLISTS", UDim2.new(1, -42, 0, 18), UDim2.new(0, 28, 0, navY + 22), 10, Enum.Font.GothamBold, COLORS.Muted)
+    createLabel(sideBarScroll, "PlaylistLabel", tr("LISTAS"), UDim2.new(1, -42, 0, 18), UDim2.new(0, 28, 0, navY + 22), 10, Enum.Font.GothamBold, COLORS.Muted)
 
     local playlistNames = {
-        "My Favorites",
-        "New Playlist"
+        tr("Mis favoritos"),
+        tr("Nueva lista")
     }
 
     local playlistY = navY + 58
@@ -697,7 +707,7 @@ function StrikeMusicUI.Create(parent, Theme)
     local searchSection, searchList, searchTitle, searchPrevButton, searchNextButton = createSection(
         centerScroll,
         "SearchResultsSection",
-        "RESULTADOS DE BUSQUEDA :",
+        tr("RESULTADOS DE BUSQUEDA :"),
         UDim2.new(0, 24, 0, 6),
         UDim2.new(1, -48, 0, 200)
     )
@@ -705,16 +715,16 @@ function StrikeMusicUI.Create(parent, Theme)
     local popularSection, popularList, popularTitle, popularPrevButton, popularNextButton = createSection(
         centerScroll,
         "PopularSection",
-        "MAS ESCUCHADAS EN STRIKE MUSIC:",
+        tr("MAS ESCUCHADAS EN STRIKE MUSIC:"),
         UDim2.new(0, 24, 0, 216),
         UDim2.new(1, -48, 0, 200)
     )
 
     local recentPanel = createPanel(centerScroll, "RecentPanel", UDim2.new(1, -48, 0, 150), UDim2.new(0, 24, 0, 432))
     recentPanel.BackgroundTransparency = 0.62
-    createLabel(recentPanel, "Title", "Recently Played", UDim2.new(1, -100, 0, 30), UDim2.new(0, 0, 0, -34), 17, TITLE_FONT, COLORS.Text)
+    createLabel(recentPanel, "Title", tr("Reproducido recientemente"), UDim2.new(1, -100, 0, 30), UDim2.new(0, 0, 0, -34), 17, TITLE_FONT, COLORS.Text)
 
-    local seeAllButton = createIconButton(recentPanel, "SeeAllButton", "See all", UDim2.new(0, 76, 0, 28), UDim2.new(1, -80, 0, -34))
+    local seeAllButton = createIconButton(recentPanel, "SeeAllButton", tr("Ver todo"), UDim2.new(0, 76, 0, 28), UDim2.new(1, -80, 0, -34))
     seeAllButton.TextSize = 11
     seeAllButton.BackgroundColor3 = COLORS.PanelLight
     seeAllButton.BackgroundTransparency = 0.28
@@ -732,7 +742,7 @@ function StrikeMusicUI.Create(parent, Theme)
     recentLayout.SortOrder = Enum.SortOrder.LayoutOrder
     recentLayout.Parent = recentList
 
-    local rightTitle = createLabel(rightScroll, "Title", "Now Playing", UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 4), 15, SECTION_TITLE_FONT, COLORS.Text)
+    local rightTitle = createLabel(rightScroll, "Title", tr("Reproduciendo ahora"), UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 4), 15, SECTION_TITLE_FONT, COLORS.Text)
 
     local nowArt = createArtFrame(rightScroll, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 36), nil)
     local nowTitle = createLabel(rightScroll, "NowTitle", "Nada reproduciendose", UDim2.new(1, -60, 0, 26), UDim2.new(0, 16, 0, 208), 17, TITLE_FONT, COLORS.Text)
@@ -780,8 +790,8 @@ function StrikeMusicUI.Create(parent, Theme)
     queueDivider.BorderSizePixel = 0
     queueDivider.Parent = rightScroll
 
-    createLabel(rightScroll, "UpNextTitle", "Up Next", UDim2.new(1, -100, 0, 24), UDim2.new(0, 16, 0, 394), 13, SECTION_TITLE_FONT, COLORS.Text)
-    local clearQueueButton = createIconButton(rightScroll, "ClearQueueButton", "Clear", UDim2.new(0, 50, 0, 24), UDim2.new(1, -66, 0, 393))
+    createLabel(rightScroll, "UpNextTitle", tr("Siguiente"), UDim2.new(1, -100, 0, 24), UDim2.new(0, 16, 0, 394), 13, SECTION_TITLE_FONT, COLORS.Text)
+    local clearQueueButton = createIconButton(rightScroll, "ClearQueueButton", tr("Limpiar"), UDim2.new(0, 50, 0, 24), UDim2.new(1, -66, 0, 393))
     clearQueueButton.TextSize = 11
     clearQueueButton.BackgroundColor3 = COLORS.PanelLight
     clearQueueButton.BackgroundTransparency = 0.2
@@ -964,8 +974,8 @@ function StrikeMusicUI.Create(parent, Theme)
             createCard(
                 container,
                 {
-                    title = "Nombre de Musica",
-                    artist = "Artista"
+                    title = tr("Nombre de musica"),
+                    artist = tr("Artista")
                 },
                 cardWidth,
                 cardHeight
@@ -1084,11 +1094,11 @@ function StrikeMusicUI.Create(parent, Theme)
             renderRows(recentList, items, "", 3)
         end,
         RenderQueue = function(items)
-            renderRows(queueList, items, "La cola esta vacia.", 5)
+            renderRows(queueList, items, tr("La cola esta vacia."), 5)
         end,
         SetNowPlaying = function(item, progress, currentText, totalText)
-            local title = item and item.title or "Nada reproduciendose"
-            local artist = item and item.artist or "Selecciona una cancion"
+            local title = item and item.title or tr("Nada reproduciendose")
+            local artist = item and item.artist or tr("Selecciona una cancion")
 
             nowTitle.Text = title
             nowArtist.Text = artist
