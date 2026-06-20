@@ -339,18 +339,18 @@ local function createCard(parent, item, width, height)
     createCorner(card, 8)
     createStroke(card, COLORS.Border, 0.55, 1)
 
-    createArtFrame(card, "Art", UDim2.new(1, 0, 0, math.max(height - 64, 78)), UDim2.new(), item)
+    createArtFrame(card, "Art", UDim2.new(1, 0, 0, math.max(height - 60, 82)), UDim2.new(), item)
 
     local play = createIconButton(
         card,
         "PlayButton",
         "▶",
         UDim2.new(0, 28, 0, 28),
-        UDim2.new(1, -36, 0, math.max(height - 94, 58))
+        UDim2.new(1, -36, 0, math.max(height - 88, 62))
     )
     play.BackgroundColor3 = Color3.fromRGB(235, 238, 246)
     play.TextColor3 = Color3.fromRGB(15, 16, 22)
-    play.TextSize = 14
+    play.TextSize = 16
     local playCorner = play:FindFirstChildOfClass("UICorner")
     if playCorner then
         playCorner.CornerRadius = UDim.new(1, 0)
