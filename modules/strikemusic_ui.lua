@@ -829,7 +829,7 @@ function StrikeMusicUI.Create(parent, Theme)
     local bottomShuffle = createIconButton(bottomControls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 42, 0.5, -15))
     local bottomShuffleIcon = Instance.new("ImageLabel")
     bottomShuffleIcon.Name = "ShuffleIcon"
-    bottomShuffleIcon.Size = UDim2.new(0, 20, 0, 20)
+    bottomShuffleIcon.Size = UDim2.new(0, 22, 0, 22)
     bottomShuffleIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
     bottomShuffleIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     bottomShuffleIcon.BackgroundTransparency = 1
