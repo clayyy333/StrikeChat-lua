@@ -71,32 +71,6 @@ local function createIconButton(parent, name, text, size, position)
     return button
 end
 
-local function addButtonImage(button, name, assetId, pixelSize)
-    local icon = Instance.new("ImageLabel")
-    icon.Name = name
-    icon.Size = UDim2.new(0, pixelSize, 0, pixelSize)
-    icon.Position = UDim2.new(0.5, 0, 0.5, 0)
-    icon.AnchorPoint = Vector2.new(0.5, 0.5)
-    icon.BackgroundTransparency = 1
-    icon.BorderSizePixel = 0
-    icon.Image = assetId
-    icon.ScaleType = Enum.ScaleType.Fit
-    icon.ZIndex = button.ZIndex + 1
-    icon.Parent = button
-
-    local function hideFallback()
-        button.TextTransparency = 1
-    end
-
-    if icon.IsLoaded then
-        hideFallback()
-    else
-        icon.Loaded:Connect(hideFallback)
-    end
-
-    return icon
-end
-
 local function createPanel(parent, name, size, position)
     local panel = Instance.new("Frame")
     panel.Name = name
@@ -783,7 +757,6 @@ function StrikeMusicUI.Create(parent, Theme)
     controls.Parent = rightScroll
 
     local shuffleButton = createIconButton(controls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 0, 0.5, -15))
-    addButtonImage(shuffleButton, "Icon", "rbxassetid://103989052956263", 20)
     local previousButton = createIconButton(controls, "PreviousButton", "|◀", UDim2.new(0, 34, 0, 34), UDim2.new(0.25, -17, 0.5, -17))
     local playButton = createIconButton(controls, "PlayButton", "||", UDim2.new(0, 52, 0, 52), UDim2.new(0.5, -26, 0.5, -26))
     local nextButton = createIconButton(controls, "NextButton", "▶|", UDim2.new(0, 34, 0, 34), UDim2.new(0.75, -17, 0.5, -17))
@@ -844,7 +817,6 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomControls.Parent = bottomPlayer
 
     local bottomShuffle = createIconButton(bottomControls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 42, 0.5, -15))
-    addButtonImage(bottomShuffle, "Icon", "rbxassetid://103989052956263", 20)
     local bottomPrevious = createIconButton(bottomControls, "PreviousButton", "|◀", UDim2.new(0, 32, 0, 32), UDim2.new(0, 96, 0.5, -16))
     local bottomPlay = createIconButton(bottomControls, "PlayButton", "||", UDim2.new(0, 38, 0, 38), UDim2.new(0.5, -19, 0, 0))
     local bottomNext = createIconButton(bottomControls, "NextButton", "▶|", UDim2.new(0, 32, 0, 32), UDim2.new(1, -128, 0.5, -16))
