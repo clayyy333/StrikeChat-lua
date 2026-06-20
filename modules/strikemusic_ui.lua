@@ -834,7 +834,7 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomShuffleIcon.AnchorPoint = Vector2.new(0.5, 0.5)
     bottomShuffleIcon.BackgroundTransparency = 1
     bottomShuffleIcon.BorderSizePixel = 0
-    bottomShuffleIcon.Image = "rbxassetid://104578917205637"
+    bottomShuffleIcon.Image = "rbxthumb://type=Asset&id=104578917205637&w=150&h=150"
     bottomShuffleIcon.ScaleType = Enum.ScaleType.Fit
     bottomShuffleIcon.Active = false
     bottomShuffleIcon.ZIndex = bottomShuffle.ZIndex + 1
