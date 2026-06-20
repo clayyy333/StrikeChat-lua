@@ -337,7 +337,7 @@ local function createSection(parent, name, title, position, size)
     return section, list, titleLabel, prevButton, nextButton
 end
 
-local function createCard(parent, item, width, height)
+local function createCard(parent, item, width, height, onPlay)
     local card = Instance.new("Frame")
     card.Name = "MusicCard"
     card.Size = UDim2.new(0, width, 0, height)
@@ -389,6 +389,14 @@ local function createCard(parent, item, width, height)
     )
 
     createProgress(card, UDim2.new(0, 10, 1, -14), UDim2.new(1, -20, 0, 3), 0.18)
+
+    if item and item.playable == false then
+        play.Visible = false
+    elseif onPlay then
+        play.MouseButton1Click:Connect(function()
+            onPlay(item)
+        end)
+    end
 
     return card, play
 end
@@ -742,6 +750,38 @@ function StrikeMusicUI.Create(parent, Theme)
     recentLayout.SortOrder = Enum.SortOrder.LayoutOrder
     recentLayout.Parent = recentList
 
+    local downloadsView = Instance.new("Frame")
+    downloadsView.Name = "DownloadsView"
+    downloadsView.Size = UDim2.new(1, -48, 0, 560)
+    downloadsView.Position = UDim2.new(0, 24, 0, 6)
+    downloadsView.BackgroundTransparency = 1
+    downloadsView.BorderSizePixel = 0
+    downloadsView.Visible = false
+    downloadsView.Parent = centerScroll
+
+    createLabel(
+        downloadsView,
+        "Title",
+        tr("Descargas"),
+        UDim2.new(1, 0, 0, 30),
+        UDim2.new(0, 0, 0, 0),
+        17,
+        TITLE_FONT,
+        COLORS.Text
+    )
+
+    local downloadsList = Instance.new("ScrollingFrame")
+    downloadsList.Name = "List"
+    downloadsList.Size = UDim2.new(1, 0, 1, -42)
+    downloadsList.Position = UDim2.new(0, 0, 0, 42)
+    downloadsList.BackgroundTransparency = 1
+    downloadsList.BorderSizePixel = 0
+    downloadsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+    downloadsList.ScrollBarThickness = 3
+    downloadsList.ScrollBarImageColor3 = COLORS.Purple
+    downloadsList.ScrollingDirection = Enum.ScrollingDirection.Y
+    downloadsList.Active = true
+    downloadsList.Parent = downloadsView
     local rightTitle = createLabel(rightScroll, "Title", tr("Reproduciendo ahora"), UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 4), 15, SECTION_TITLE_FONT, COLORS.Text)
 
     local nowArt = createArtFrame(rightScroll, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 36), nil)
@@ -1089,7 +1129,7 @@ function StrikeMusicUI.Create(parent, Theme)
         end
     end
 
-    local function renderCards(container, items, emptyText, cardWidth, cardHeight, maxItems, prevButton, nextButton)
+    local function renderCards(container, items, emptyText, cardWidth, cardHeight, maxItems, prevButton, nextButton, onPlay)
         clearContainer(container)
 
         items = items or {}
@@ -1121,7 +1161,7 @@ function StrikeMusicUI.Create(parent, Theme)
                 break
             end
 
-            createCard(container, item, cardWidth, cardHeight)
+            createCard(container, item, cardWidth, cardHeight, onPlay)
         end
     end
 
@@ -1152,6 +1192,60 @@ function StrikeMusicUI.Create(parent, Theme)
         end
     end
 
+    local function renderDownloads(jobs)
+        clearContainer(downloadsList)
+        jobs = jobs or {}
+
+        if #jobs == 0 then
+            createEmptyState(downloadsList, tr("No hay descargas."))
+            downloadsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+            return
+        end
+
+        local layout = Instance.new("UIListLayout")
+        layout.FillDirection = Enum.FillDirection.Vertical
+        layout.Padding = UDim.new(0, 6)
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.Parent = downloadsList
+
+        for _, job in ipairs(jobs) do
+            local status = tostring(job.status or "pending")
+            local progress = math.clamp(tonumber(job.progress) or 0, 0, 100)
+            local item = {
+                title = job.title or tr("Sin titulo"),
+                artist = job.artist or status,
+                duration_text = status .. " " .. tostring(progress) .. "%",
+                thumbnail_url = job.thumbnail_url
+            }
+            local row = createWideRow(downloadsList, item)
+            row.Size = UDim2.new(1, -6, 0, 48)
+        end
+
+        task.defer(function()
+            downloadsList.CanvasSize = UDim2.new(
+                0,
+                0,
+                0,
+                layout.AbsoluteContentSize.Y + 8
+            )
+        end)
+    end
+
+    local function setContentView(view)
+        local showDownloads = view == "downloads"
+        searchSection.Visible = not showDownloads
+        popularSection.Visible = not showDownloads
+        recentPanel.Visible = not showDownloads
+        downloadsView.Visible = showDownloads
+        centerScroll.CanvasPosition = Vector2.new(0, 0)
+
+        for name, button in pairs(navButtons) do
+            local selected = (showDownloads and name == "Downloads")
+                or (not showDownloads and name == "Home")
+            button.BackgroundColor3 = selected and COLORS.Purple or COLORS.Panel
+            button.BackgroundTransparency = selected and 0.15 or 1
+        end
+    end
     minimizeButton.MouseButton1Click:Connect(function()
         root.Visible = false
         minimizedButton.Visible = true
@@ -1190,17 +1284,48 @@ function StrikeMusicUI.Create(parent, Theme)
             BottomHeart = bottomHeart
         },
         Lists = lists,
-        RenderSearchResults = function(items)
-            renderCards(searchList, items, "__placeholder_cards", 150, 150, nil, searchPrevButton, searchNextButton)
+        RenderSearchResults = function(items, onPlay, showEmptyState)
+            renderCards(
+                searchList,
+                items,
+                showEmptyState and tr("No hay resultados.") or "__placeholder_cards",
+                150,
+                150,
+                nil,
+                searchPrevButton,
+                searchNextButton,
+                onPlay
+            )
         end,
-        RenderPopular = function(items)
-            renderCards(popularList, items, "__placeholder_cards", 150, 150, nil, popularPrevButton, popularNextButton)
+        RenderPopular = function(items, onPlay)
+            renderCards(
+                popularList,
+                items,
+                "__placeholder_cards",
+                150,
+                150,
+                nil,
+                popularPrevButton,
+                popularNextButton,
+                onPlay
+            )
         end,
         RenderRecent = function(items)
             renderRows(recentList, items, "", 3)
         end,
+        RenderDownloads = function(jobs)
+            renderDownloads(jobs)
+        end,
+        SetContentView = function(view)
+            setContentView(view)
+        end,
         RenderQueue = function(items)
             renderRows(queueList, items, tr("La cola esta vacia."), 5)
+        end,
+        SetPlaybackState = function(isPlaying)
+            local symbol = isPlaying and "||" or ">"
+            playButton.Text = symbol
+            bottomPlay.Text = symbol
         end,
         SetNowPlaying = function(item, progress, currentText, totalText)
             local title = item and item.title or tr("Nada reproduciendose")
@@ -1236,7 +1361,9 @@ function StrikeMusicUI.Create(parent, Theme)
     api.RenderSearchResults({})
     api.RenderPopular({})
     api.RenderRecent({})
+    api.RenderDownloads({})
     api.RenderQueue({})
+    api.SetContentView("home")
     api.SetNowPlaying(nil, 0)
 
     if _G.StrikeChatLayoutMode == "mobile" then

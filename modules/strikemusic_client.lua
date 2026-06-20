@@ -145,6 +145,10 @@ function StrikeMusicClient.Create(Api, Storage)
         return Api.GetPersonalMusicLibrary(player)
     end
 
+    function client.GetDownloads(player)
+        return Api.GetPersonalMusicDownloads(player)
+    end
+
     function client.GetQueue(player)
         return Api.GetPersonalMusicQueue(player)
     end
@@ -403,6 +407,157 @@ function StrikeMusicClient.Create(Api, Storage)
         return Api.DeletePersonalMusicFavorite(player, libraryItemId)
     end
 
+    function client.GetPopular(limit)
+        return Api.GetStrikeMusicPopular(limit or 4)
+    end
+
+    function client.AddRobloxAudio(player, track)
+        if not track or not track.roblox_audio_id then
+            return {
+                status = "blocked",
+                reason = "roblox_audio_id_required"
+            }
+        end
+
+        return Api.AddPersonalRobloxAudio(
+            player,
+            track.roblox_audio_id,
+            track.title,
+            track.artist
+        )
+    end
+
+    local activeRobloxSound = nil
+    local robloxAudioEndedHandler = nil
+
+    function client.PlayRobloxAudio(audioId, volume)
+        audioId = tonumber(audioId)
+
+        if not audioId or audioId <= 0 then
+            return {
+                status = "blocked",
+                reason = "invalid_roblox_audio_id"
+            }
+        end
+
+        if activeRobloxSound then
+            local previousSound = activeRobloxSound
+            activeRobloxSound = nil
+            previousSound:Stop()
+            previousSound:Destroy()
+        end
+
+        local soundService = game:GetService("SoundService")
+        local sound = Instance.new("Sound")
+        sound.Name = "StrikeMusicRobloxAudio"
+        sound.SoundId = "rbxassetid://" .. tostring(math.floor(audioId))
+        sound.Volume = math.clamp(tonumber(volume) or 0.5, 0, 1)
+        sound.Parent = soundService
+        activeRobloxSound = sound
+
+        sound.Ended:Connect(function()
+            if activeRobloxSound ~= sound then
+                return
+            end
+
+            activeRobloxSound = nil
+            sound:Destroy()
+
+            if robloxAudioEndedHandler then
+                robloxAudioEndedHandler()
+            end
+        end)
+
+        sound:Play()
+
+        return {
+            status = "playing",
+            sound = sound
+        }
+    end
+
+    function client.StopRobloxAudio()
+        if activeRobloxSound then
+            local sound = activeRobloxSound
+            activeRobloxSound = nil
+            sound:Stop()
+            sound:Destroy()
+        end
+    end
+
+    function client.PauseRobloxAudio()
+        if not activeRobloxSound or not activeRobloxSound.IsPlaying then
+            return {
+                status = "idle"
+            }
+        end
+
+        activeRobloxSound:Pause()
+
+        return {
+            status = "paused",
+            position_seconds = activeRobloxSound.TimePosition
+        }
+    end
+
+    function client.ResumeRobloxAudio()
+        if not activeRobloxSound then
+            return {
+                status = "idle"
+            }
+        end
+
+        activeRobloxSound:Resume()
+
+        return {
+            status = "playing",
+            position_seconds = activeRobloxSound.TimePosition
+        }
+    end
+
+    function client.SetRobloxAudioVolume(volume)
+        local safeVolume = math.clamp(tonumber(volume) or 0.5, 0, 1)
+
+        if activeRobloxSound then
+            activeRobloxSound.Volume = safeVolume
+        end
+
+        return safeVolume
+    end
+
+    function client.SetRobloxAudioTimePosition(positionSeconds)
+        if not activeRobloxSound then
+            return false
+        end
+
+        local safePosition = math.max(tonumber(positionSeconds) or 0, 0)
+        local ok = pcall(function()
+            activeRobloxSound.TimePosition = safePosition
+        end)
+
+        return ok
+    end
+
+    function client.GetRobloxAudioState()
+        if not activeRobloxSound then
+            return {
+                status = "idle",
+                position_seconds = 0,
+                duration_seconds = 0
+            }
+        end
+
+        return {
+            status = activeRobloxSound.IsPlaying and "playing" or "paused",
+            position_seconds = activeRobloxSound.TimePosition,
+            duration_seconds = activeRobloxSound.TimeLength,
+            volume = activeRobloxSound.Volume
+        }
+    end
+
+    function client.SetRobloxAudioEndedHandler(handler)
+        robloxAudioEndedHandler = handler
+    end
     return client
 end
 

@@ -565,6 +565,38 @@ function Api.FailPersonalMusicDownload(player, downloadJobId, reason)
 end
 
 
+function Api.GetStrikeMusicPopular(limit)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/popular" ..
+        "?limit=" .. Api.Encode(limit or 4),
+        "GET"
+    )
+end
+
+function Api.RegisterStrikeMusicPopularPlay(player, catalogTrackId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/popular/" .. Api.Encode(catalogTrackId) ..
+        "/play" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST"
+    )
+end
+
+function Api.AddPersonalRobloxAudio(player, audioId, title, artist)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/library/roblox-audio" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        {
+            roblox_audio_id = audioId,
+            title = title,
+            artist = artist
+        }
+    )
+end
 function Api.GetPersonalMusicLibrary(player)
     return Api.Request(
         Api.BaseUrl ..

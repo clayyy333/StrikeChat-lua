@@ -1189,10 +1189,322 @@ if leftPanel.Buttons.StrikeMusic then
         activeStrikeMusicUI = StrikeMusicUI.Create(CoreGui, Theme)
         I18n.RegisterRoot(activeStrikeMusicUI.Gui)
 
-        task.spawn(function()
-            strikeMusicClient.Open(player)
+        local musicUI = activeStrikeMusicUI
+        local popularTracks = {}
+        local currentPopularTrack = nil
+        local shuffleEnabled = false
+        local repeatEnabled = false
+
+        local function formatMusicTime(seconds)
+            local safeSeconds = math.max(math.floor(tonumber(seconds) or 0), 0)
+            return string.format(
+                "%d:%02d",
+                math.floor(safeSeconds / 60),
+                safeSeconds % 60
+            )
+        end
+
+        local function extractRobloxAudioId(query)
+            local text = tostring(query or "")
+            local directId = text:match("^%s*(%d+)%s*$")
+            local linkedId = text:match("[?&]id=(%d+)")
+                or text:match("rbxassetid://(%d+)")
+                or text:match("/library/(%d+)")
+                or text:match("/audio/(%d+)")
+
+            return tonumber(directId or linkedId)
+        end
+
+        local function getRobloxAudioTrack(audioId)
+            for _, track in ipairs(popularTracks) do
+                if tonumber(track.roblox_audio_id) == audioId then
+                    return track
+                end
+            end
+
+            return {
+                roblox_audio_id = audioId,
+                title = "Audio Roblox " .. tostring(audioId),
+                artist = nil
+            }
+        end
+        local function refreshRecentMusic()
+            task.spawn(function()
+                local historyResult = strikeMusicClient.GetHistory(player, 3)
+
+                if not musicUI or not historyResult or historyResult.status ~= "ok" then
+                    return
+                end
+
+                local items = {}
+
+                for _, historyItem in ipairs(historyResult.items or {}) do
+                    table.insert(items, historyItem.media or historyItem)
+                end
+
+                musicUI.RenderRecent(items)
+            end)
+        end
+
+        local function refreshMusicDownloads()
+            task.spawn(function()
+                strikeMusicClient.SyncExistingFiles(player)
+
+                local downloadsResult = strikeMusicClient.GetDownloads(player)
+
+                if downloadsResult
+                    and downloadsResult.status == "ok"
+                    and activeStrikeMusicUI == musicUI
+                then
+                    musicUI.RenderDownloads(downloadsResult.jobs or {})
+                end
+            end)
+        end
+        local playPopularRobloxTrack
+
+        local function getAdjacentPopularTrack(direction)
+            if #popularTracks == 0 then
+                return nil
+            end
+
+            if shuffleEnabled and #popularTracks > 1 then
+                local currentId = currentPopularTrack and currentPopularTrack.catalog_track_id
+                local nextTrack = popularTracks[math.random(1, #popularTracks)]
+
+                while nextTrack.catalog_track_id == currentId do
+                    nextTrack = popularTracks[math.random(1, #popularTracks)]
+                end
+
+                return nextTrack
+            end
+
+            local currentIndex = 1
+
+            for index, track in ipairs(popularTracks) do
+                if currentPopularTrack
+                    and track.catalog_track_id == currentPopularTrack.catalog_track_id
+                then
+                    currentIndex = index
+                    break
+                end
+            end
+
+            local nextIndex = ((currentIndex - 1 + direction) % #popularTracks) + 1
+            return popularTracks[nextIndex]
+        end
+
+        playPopularRobloxTrack = function(track)
+            if not musicUI or activeStrikeMusicUI ~= musicUI
+                or not track or not track.roblox_audio_id
+            then
+                return
+            end
+
+            task.spawn(function()
+                local libraryResult = strikeMusicClient.AddRobloxAudio(player, track)
+                local libraryItem = libraryResult and libraryResult.item
+
+                if not libraryItem then
+                    return
+                end
+
+                local playbackResult = strikeMusicClient.PlayRobloxAudio(
+                    track.roblox_audio_id,
+                    musicUI.VolumeSlider.GetValue()
+                )
+
+                if playbackResult and playbackResult.status == "playing"
+                    and activeStrikeMusicUI == musicUI
+                then
+                    currentPopularTrack = track
+                    musicUI.SetPlaybackState(true)
+                    musicUI.SetNowPlaying(track, 0, "0:00", "0:00")
+                    strikeMusicClient.StartPlayback(
+                        player,
+                        libraryItem.library_item_id,
+                        "manual",
+                        0
+                    )
+                    if track.catalog_track_id then
+                        Api.RegisterStrikeMusicPopularPlay(player, track.catalog_track_id)
+                    end
+
+                    refreshRecentMusic()
+                end
+            end)
+        end
+
+        local function searchMusic(query)
+            local normalizedQuery = tostring(query or ""):gsub("^%s+", ""):gsub("%s+$", "")
+
+            if normalizedQuery == "" then
+                return
+            end
+
+            local audioId = extractRobloxAudioId(normalizedQuery)
+
+            if audioId and audioId > 0 then
+                local track = getRobloxAudioTrack(audioId)
+                musicUI.RenderSearchResults({track}, playPopularRobloxTrack)
+                return
+            end
+
+            task.spawn(function()
+                local searchResult = strikeMusicClient.Search(player, normalizedQuery, 10)
+
+                if not searchResult
+                    or searchResult.status ~= "ok"
+                    or activeStrikeMusicUI ~= musicUI
+                then
+                    return
+                end
+
+                local results = {}
+
+                for _, result in ipairs(searchResult.results or {}) do
+                    result.playable = false
+                    table.insert(results, result)
+                end
+
+                musicUI.RenderSearchResults(results, nil, true)
+            end)
+        end
+
+        musicUI.SearchInput.FocusLost:Connect(function(enterPressed)
+            if enterPressed then
+                searchMusic(musicUI.SearchInput.Text)
+            end
+        end)
+        local function playAdjacentPopularTrack(direction)
+            local track = getAdjacentPopularTrack(direction)
+
+            if track then
+                playPopularRobloxTrack(track)
+            end
+        end
+
+        local function togglePlayback()
+            local state = strikeMusicClient.GetRobloxAudioState()
+
+            if state.status == "playing" then
+                local paused = strikeMusicClient.PauseRobloxAudio()
+                musicUI.SetPlaybackState(false)
+
+                task.spawn(function()
+                    strikeMusicClient.PausePlayback(player, paused.position_seconds or 0)
+                end)
+            elseif state.status == "paused" then
+                strikeMusicClient.ResumeRobloxAudio()
+                musicUI.SetPlaybackState(true)
+
+                task.spawn(function()
+                    strikeMusicClient.ResumePlayback(player)
+                end)
+            elseif currentPopularTrack then
+                playPopularRobloxTrack(currentPopularTrack)
+            end
+        end
+
+        strikeMusicClient.SetRobloxAudioEndedHandler(function()
+            if activeStrikeMusicUI ~= musicUI then
+                return
+            end
+
+            if repeatEnabled and currentPopularTrack then
+                playPopularRobloxTrack(currentPopularTrack)
+            else
+                playAdjacentPopularTrack(1)
+            end
         end)
 
+        musicUI.Buttons.Play.MouseButton1Click:Connect(togglePlayback)
+        musicUI.Buttons.BottomPlay.MouseButton1Click:Connect(togglePlayback)
+
+        local function playPrevious()
+            local state = strikeMusicClient.GetRobloxAudioState()
+
+            if state.status ~= "idle" and (state.position_seconds or 0) > 3 then
+                strikeMusicClient.SetRobloxAudioTimePosition(0)
+                return
+            end
+
+            playAdjacentPopularTrack(-1)
+        end
+
+        musicUI.Buttons.Previous.MouseButton1Click:Connect(playPrevious)
+        musicUI.Buttons.BottomPrevious.MouseButton1Click:Connect(playPrevious)
+        musicUI.Buttons.Next.MouseButton1Click:Connect(function()
+            playAdjacentPopularTrack(1)
+        end)
+        musicUI.Buttons.BottomNext.MouseButton1Click:Connect(function()
+            playAdjacentPopularTrack(1)
+        end)
+        musicUI.Buttons.Shuffle.MouseButton1Click:Connect(function()
+            shuffleEnabled = not shuffleEnabled
+        end)
+        musicUI.Buttons.BottomShuffle.MouseButton1Click:Connect(function()
+            shuffleEnabled = not shuffleEnabled
+        end)
+        musicUI.Buttons.Repeat.MouseButton1Click:Connect(function()
+            repeatEnabled = not repeatEnabled
+        end)
+        musicUI.Buttons.BottomRepeat.MouseButton1Click:Connect(function()
+            repeatEnabled = not repeatEnabled
+        end)
+        musicUI.VolumeSlider.Changed:Connect(function(value)
+            strikeMusicClient.SetRobloxAudioVolume(value)
+        end)
+
+        if musicUI.NavButtons.Downloads then
+            musicUI.NavButtons.Downloads.MouseButton1Click:Connect(function()
+                musicUI.SetContentView("downloads")
+                refreshMusicDownloads()
+            end)
+        end
+
+        if musicUI.NavButtons.Home then
+            musicUI.NavButtons.Home.MouseButton1Click:Connect(function()
+                musicUI.SetContentView("home")
+            end)
+        end
+
+        task.spawn(function()
+            while activeStrikeMusicUI == musicUI and musicUI.Gui.Parent do
+                local state = strikeMusicClient.GetRobloxAudioState()
+
+                if currentPopularTrack and state.status ~= "idle" then
+                    local duration = state.duration_seconds or 0
+                    local progress = duration > 0
+                        and (state.position_seconds or 0) / duration
+                        or 0
+
+                    musicUI.SetNowPlaying(
+                        currentPopularTrack,
+                        progress,
+                        formatMusicTime(state.position_seconds),
+                        formatMusicTime(duration)
+                    )
+                    musicUI.SetPlaybackState(state.status == "playing")
+                end
+
+                task.wait(0.25)
+            end
+        end)
+
+        task.spawn(function()
+            strikeMusicClient.Open(player)
+
+            local popularResult = strikeMusicClient.GetPopular(4)
+
+            if popularResult
+                and popularResult.status == "ok"
+                and popularResult.items
+                and activeStrikeMusicUI == musicUI
+            then
+                popularTracks = popularResult.items
+                musicUI.RenderPopular(popularTracks, playPopularRobloxTrack)
+            end
+        end)
         activeStrikeMusicUI.MinimizeButton.MouseButton1Click:Connect(function()
             task.spawn(function()
                 strikeMusicClient.Minimize(player)
@@ -1208,6 +1520,8 @@ if leftPanel.Buttons.StrikeMusic then
         end
 
         activeStrikeMusicUI.CloseButton.MouseButton1Click:Connect(function()
+            strikeMusicClient.StopRobloxAudio()
+
             task.spawn(function()
                 strikeMusicClient.Close(player)
             end)
@@ -2152,6 +2466,7 @@ window.CloseButton.MouseButton1Click:Connect(function()
     end
 
     if activeStrikeMusicUI then
+        strikeMusicClient.StopRobloxAudio()
         activeStrikeMusicUI.Destroy()
         activeStrikeMusicUI = nil
     end
