@@ -767,10 +767,42 @@ function StrikeMusicUI.Create(parent, Theme)
     controls.Parent = rightScroll
 
     local shuffleButton = createIconButton(controls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 0, 0.5, -15))
+    local shuffleIcon = Instance.new("ImageLabel")
+    shuffleIcon.Name = "ShuffleIcon"
+    shuffleIcon.Size = UDim2.new(0, 22, 0, 22)
+    shuffleIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    shuffleIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    shuffleIcon.BackgroundTransparency = 1
+    shuffleIcon.BorderSizePixel = 0
+    shuffleIcon.Image = "rbxthumb://type=Asset&id=104578917205637&w=150&h=150"
+    shuffleIcon.ScaleType = Enum.ScaleType.Fit
+    shuffleIcon.Active = false
+    shuffleIcon.ZIndex = shuffleButton.ZIndex + 1
+    shuffleIcon.Parent = shuffleButton
+    shuffleButton.TextTransparency = 1
+    shuffleIcon.ImageColor3 = Color3.fromRGB(245, 247, 255)
+
+
     local previousButton = createIconButton(controls, "PreviousButton", "|◀", UDim2.new(0, 34, 0, 34), UDim2.new(0.25, -17, 0.5, -17))
     local playButton = createIconButton(controls, "PlayButton", "||", UDim2.new(0, 52, 0, 52), UDim2.new(0.5, -26, 0.5, -26))
     local nextButton = createIconButton(controls, "NextButton", "▶|", UDim2.new(0, 34, 0, 34), UDim2.new(0.75, -17, 0.5, -17))
     local repeatButton = createIconButton(controls, "RepeatButton", "o", UDim2.new(0, 30, 0, 30), UDim2.new(1, -30, 0.5, -15))
+    local repeatIcon = Instance.new("ImageLabel")
+    repeatIcon.Name = "RepeatIcon"
+    repeatIcon.Size = UDim2.new(0, 24, 0, 24)
+    repeatIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    repeatIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    repeatIcon.BackgroundTransparency = 1
+    repeatIcon.BorderSizePixel = 0
+    repeatIcon.Image = "rbxthumb://type=Asset&id=107048339150841&w=150&h=150"
+    repeatIcon.ScaleType = Enum.ScaleType.Fit
+    repeatIcon.Active = false
+    repeatIcon.ZIndex = repeatButton.ZIndex + 1
+    repeatIcon.Parent = repeatButton
+    repeatButton.TextTransparency = 1
+    repeatIcon.ImageColor3 = Color3.fromRGB(245, 247, 255)
+
+
 
    for _, button in ipairs({shuffleButton, previousButton, nextButton, repeatButton}) do
         button.BackgroundTransparency = 1
@@ -842,14 +874,7 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomShuffle.TextTransparency = 1
     bottomShuffleIcon.ImageColor3 = Color3.fromRGB(245, 247, 255)
 
-    local bottomShuffleEnabled = false
 
-    bottomShuffle.MouseButton1Click:Connect(function()
-        bottomShuffleEnabled = not bottomShuffleEnabled
-        bottomShuffleIcon.ImageColor3 = bottomShuffleEnabled
-            and Color3.fromRGB(78, 190, 92)
-            or Color3.fromRGB(245, 247, 255)
-    end)
 
     local bottomPrevious = createIconButton(bottomControls, "PreviousButton", "|◀", UDim2.new(0, 32, 0, 32), UDim2.new(0, 96, 0.5, -16))
     local bottomPlay = createIconButton(bottomControls, "PlayButton", "||", UDim2.new(0, 38, 0, 38), UDim2.new(0.5, -19, 0, 0))
@@ -870,14 +895,48 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomRepeat.TextTransparency = 1
     bottomRepeatIcon.ImageColor3 = Color3.fromRGB(245, 247, 255)
 
-    local bottomRepeatEnabled = false
+    local shuffleEnabled = false
+    local repeatEnabled = false
 
-    bottomRepeat.MouseButton1Click:Connect(function()
-        bottomRepeatEnabled = not bottomRepeatEnabled
-        bottomRepeatIcon.ImageColor3 = bottomRepeatEnabled
+    local function setShuffleEnabled(enabled)
+        shuffleEnabled = enabled
+
+        local color = enabled
             and Color3.fromRGB(78, 190, 92)
             or Color3.fromRGB(245, 247, 255)
+
+        shuffleIcon.ImageColor3 = color
+        bottomShuffleIcon.ImageColor3 = color
+    end
+
+    local function setRepeatEnabled(enabled)
+        repeatEnabled = enabled
+
+        local color = enabled
+            and Color3.fromRGB(78, 190, 92)
+            or Color3.fromRGB(245, 247, 255)
+
+        repeatIcon.ImageColor3 = color
+        bottomRepeatIcon.ImageColor3 = color
+    end
+
+    shuffleButton.MouseButton1Click:Connect(function()
+        setShuffleEnabled(not shuffleEnabled)
     end)
+
+    bottomShuffle.MouseButton1Click:Connect(function()
+        setShuffleEnabled(not shuffleEnabled)
+    end)
+
+    repeatButton.MouseButton1Click:Connect(function()
+        setRepeatEnabled(not repeatEnabled)
+    end)
+
+    bottomRepeat.MouseButton1Click:Connect(function()
+        setRepeatEnabled(not repeatEnabled)
+    end)
+
+
 
     for _, button in ipairs({bottomShuffle, bottomPrevious, bottomNext, bottomRepeat}) do
         button.BackgroundTransparency = 1
