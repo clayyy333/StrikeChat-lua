@@ -844,7 +844,19 @@ function StrikeMusicUI.Create(parent, Theme)
     local bottomPlay = createIconButton(bottomControls, "PlayButton", "||", UDim2.new(0, 38, 0, 38), UDim2.new(0.5, -19, 0, 0))
     local bottomNext = createIconButton(bottomControls, "NextButton", "▶|", UDim2.new(0, 32, 0, 32), UDim2.new(1, -128, 0.5, -16))
     local bottomRepeat = createIconButton(bottomControls, "RepeatButton", "o", UDim2.new(0, 30, 0, 30), UDim2.new(1, -72, 0.5, -15))
-
+    local bottomRepeatIcon = Instance.new("ImageLabel")
+    bottomRepeatIcon.Name = "RepeatIcon"
+    bottomRepeatIcon.Size = UDim2.new(0, 20, 0, 20)
+    bottomRepeatIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    bottomRepeatIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    bottomRepeatIcon.BackgroundTransparency = 1
+    bottomRepeatIcon.BorderSizePixel = 0
+    bottomRepeatIcon.Image = "rbxthumb://type=Asset&id=107048339150841&w=150&h=150"
+    bottomRepeatIcon.ScaleType = Enum.ScaleType.Fit
+    bottomRepeatIcon.Active = false
+    bottomRepeatIcon.ZIndex = bottomRepeat.ZIndex + 1
+    bottomRepeatIcon.Parent = bottomRepeat
+    bottomRepeat.TextTransparency = 1
    for _, button in ipairs({bottomShuffle, bottomPrevious, bottomNext, bottomRepeat}) do
         button.BackgroundTransparency = 1
         button.BorderSizePixel = 0
