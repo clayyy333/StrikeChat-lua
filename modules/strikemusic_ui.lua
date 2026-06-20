@@ -827,6 +827,19 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomControls.Parent = bottomPlayer
 
     local bottomShuffle = createIconButton(bottomControls, "ShuffleButton", "x", UDim2.new(0, 30, 0, 30), UDim2.new(0, 42, 0.5, -15))
+    local bottomShuffleIcon = Instance.new("ImageLabel")
+    bottomShuffleIcon.Name = "ShuffleIcon"
+    bottomShuffleIcon.Size = UDim2.new(0, 20, 0, 20)
+    bottomShuffleIcon.Position = UDim2.new(0.5, 0, 0.5, 0)
+    bottomShuffleIcon.AnchorPoint = Vector2.new(0.5, 0.5)
+    bottomShuffleIcon.BackgroundTransparency = 1
+    bottomShuffleIcon.BorderSizePixel = 0
+    bottomShuffleIcon.Image = "rbxassetid://104578917205637"
+    bottomShuffleIcon.ScaleType = Enum.ScaleType.Fit
+    bottomShuffleIcon.Active = false
+    bottomShuffleIcon.ZIndex = bottomShuffle.ZIndex + 1
+    bottomShuffleIcon.Parent = bottomShuffle
+    bottomShuffle.TextTransparency = 1
     local bottomPrevious = createIconButton(bottomControls, "PreviousButton", "|◀", UDim2.new(0, 32, 0, 32), UDim2.new(0, 96, 0.5, -16))
     local bottomPlay = createIconButton(bottomControls, "PlayButton", "||", UDim2.new(0, 38, 0, 38), UDim2.new(0.5, -19, 0, 0))
     local bottomNext = createIconButton(bottomControls, "NextButton", "▶|", UDim2.new(0, 32, 0, 32), UDim2.new(1, -128, 0.5, -16))
