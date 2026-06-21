@@ -1469,6 +1469,14 @@ if leftPanel.Buttons.StrikeMusic then
                 musicDownloadLocked = false
             end)
         end
+        local function getSearchProviderErrorMessage(providerStatus)
+            local messages = {
+                yt_dlp_not_installed = "El buscador yt-dlp no esta instalado en el backend.",
+                provider_request_failed = "El buscador no pudo conectarse a YouTube."
+            }
+
+            return tr(messages[providerStatus] or "No se pudo consultar el buscador.")
+        end
         local function searchMusic(query)
             local normalizedQuery = tostring(query or ""):gsub("^%s+", ""):gsub("%s+$", "")
 
@@ -1508,7 +1516,7 @@ if leftPanel.Buttons.StrikeMusic then
                         nil,
                         true,
                         nil,
-                        tr("No se pudo consultar el buscador.")
+                        getSearchProviderErrorMessage(searchResult.provider_status)
                     )
                     return
                 end
