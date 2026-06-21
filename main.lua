@@ -1525,9 +1525,19 @@ if leftPanel.Buttons.StrikeMusic then
 
                 local results = {}
 
+                local thumbnailMessages = {
+                    thumbnail_url_missing = "Portada no disponible",
+                    filesystem_not_supported = "Sin almacenamiento local",
+                    local_asset_loader_not_supported = "Sin cargador local de imagen",
+                    thumbnail_folder_failed = "No se pudo crear caché de portada",
+                    thumbnail_download_failed = "No se pudo descargar portada",
+                    thumbnail_asset_load_failed = "Delta no pudo cargar portada"
+                }
+
                 for _, result in ipairs(searchResult.results or {}) do
                     result.downloadable = true
                     strikeMusicClient.CacheThumbnail(result)
+                    result.thumbnail_debug_text = thumbnailMessages[result.thumbnail_debug]
                     table.insert(results, result)
                 end
 

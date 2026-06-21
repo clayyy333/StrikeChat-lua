@@ -576,22 +576,29 @@ function StrikeMusicClient.Create(Api, Storage)
 
     function client.CacheThumbnail(item)
         if not item or not item.thumbnail_url or tostring(item.thumbnail_url) == "" then
+            if item then
+                item.thumbnail_debug = "thumbnail_url_missing"
+            end
+
             return item
         end
 
         local thumbnailUrl = tostring(item.thumbnail_url)
 
         if thumbnailUrl:match("^rbxasset") then
+            item.thumbnail_debug = "ready"
             return item
         end
 
         if not Storage.HasFilesystem() then
+            item.thumbnail_debug = "filesystem_not_supported"
             return item
         end
 
         local assetLoader = getLocalAssetLoader()
 
         if not assetLoader then
+            item.thumbnail_debug = "local_asset_loader_not_supported"
             return item
         end
 
@@ -602,6 +609,7 @@ function StrikeMusicClient.Create(Api, Storage)
         local folderResult = Storage.EnsureFolders()
 
         if folderResult.status ~= "ok" then
+            item.thumbnail_debug = folderResult.reason or "thumbnail_folder_failed"
             return item
         end
 
@@ -609,6 +617,7 @@ function StrikeMusicClient.Create(Api, Storage)
             local imageBody = rawGet(thumbnailUrl)
 
             if not imageBody then
+                item.thumbnail_debug = "thumbnail_download_failed"
                 return item
             end
 
@@ -621,6 +630,9 @@ function StrikeMusicClient.Create(Api, Storage)
 
         if loaded and type(assetId) == "string" and assetId ~= "" then
             item.thumbnail_url = assetId
+            item.thumbnail_debug = "ready"
+        else
+            item.thumbnail_debug = "thumbnail_asset_load_failed"
         end
 
         return item

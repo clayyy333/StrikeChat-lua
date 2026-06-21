@@ -287,6 +287,22 @@ local function createArtFrame(parent, name, size, position, item)
     image.Parent = holder
     applyThumbnail(image, item)
 
+    if item and item.thumbnail_debug_text then
+        local debugLabel = createLabel(
+            holder,
+            "ThumbnailDebug",
+            tostring(item.thumbnail_debug_text),
+            UDim2.new(1, -16, 0, 32),
+            UDim2.new(0, 8, 0.5, -16),
+            9,
+            Enum.Font.GothamBold,
+            COLORS.Muted
+        )
+        debugLabel.TextXAlignment = Enum.TextXAlignment.Center
+        debugLabel.TextYAlignment = Enum.TextYAlignment.Center
+        debugLabel.TextWrapped = true
+    end
+
     return holder, image
 end
 
