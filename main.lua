@@ -1263,7 +1263,21 @@ if leftPanel.Buttons.StrikeMusic then
                     and downloadsResult.status == "ok"
                     and activeStrikeMusicUI == musicUI
                 then
+                    local downloadErrorMessages = {
+                        youtube_automation_blocked = "YouTube bloqueó la descarga automática.",
+                        media_download_failed = "No se pudo procesar la descarga.",
+                        source_url_required = "La descarga no tiene una URL válida.",
+                        ffmpeg_not_installed = "El conversor de audio no está disponible."
+                    }
+
                     for _, job in ipairs(downloadsResult.jobs or {}) do
+                        if job.status == "failed" then
+                            job.display_status = tr(
+                                downloadErrorMessages[job.error_reason]
+                                    or "La descarga falló."
+                            )
+                        end
+
                         if job.status == "completed" and job.media_type == "mp3" then
                             for _, metadata in ipairs(metadataItems) do
                                 if metadata.source_id == job.source_id

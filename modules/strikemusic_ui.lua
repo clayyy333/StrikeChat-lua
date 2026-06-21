@@ -1261,7 +1261,8 @@ function StrikeMusicUI.Create(parent, Theme)
             local item = {
                 title = job.title or tr("Sin titulo"),
                 artist = job.artist or status,
-                duration_text = job.local_playback_label
+                duration_text = job.display_status
+                    or job.local_playback_label
                     or status .. " " .. tostring(progress) .. "%",
                 thumbnail_url = job.thumbnail_url
             }
