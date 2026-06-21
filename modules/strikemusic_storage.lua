@@ -6,6 +6,7 @@ Storage.RootFolder = "StrikeChat"
 Storage.MusicFolder = Storage.RootFolder .. "/StrikeMusic"
 Storage.MediaFolder = Storage.MusicFolder .. "/media"
 Storage.MetadataFolder = Storage.MusicFolder .. "/metadata"
+Storage.ThumbnailFolder = Storage.MusicFolder .. "/thumbnails"
 
 local function hasFilesystem()
     return type(isfolder) == "function"
@@ -75,7 +76,8 @@ function Storage.EnsureFolders()
         Storage.RootFolder,
         Storage.MusicFolder,
         Storage.MediaFolder,
-        Storage.MetadataFolder
+        Storage.MetadataFolder,
+        Storage.ThumbnailFolder
     }
 
     for _, folder in ipairs(folders) do
@@ -128,6 +130,13 @@ function Storage.GetMetadataPath(fileKey)
         "/" ..
         encodeFileName(fileKey) ..
         ".json"
+end
+
+function Storage.GetThumbnailPath(sourceId)
+    return Storage.ThumbnailFolder ..
+        "/" ..
+        encodeFileName(sourceId) ..
+        ".jpg"
 end
 
 function Storage.MediaExists(metadata)

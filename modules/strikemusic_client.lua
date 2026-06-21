@@ -574,6 +574,57 @@ function StrikeMusicClient.Create(Api, Storage)
         return nil, nil
     end
 
+    function client.CacheThumbnail(item)
+        if not item or not item.thumbnail_url or tostring(item.thumbnail_url) == "" then
+            return item
+        end
+
+        local thumbnailUrl = tostring(item.thumbnail_url)
+
+        if thumbnailUrl:match("^rbxasset") then
+            return item
+        end
+
+        if not Storage.HasFilesystem() then
+            return item
+        end
+
+        local assetLoader = getLocalAssetLoader()
+
+        if not assetLoader then
+            return item
+        end
+
+        local cacheKey = "thumbnail_" .. tostring(
+            item.source_id or item.roblox_audio_id or item.title or "unknown"
+        )
+        local thumbnailPath = Storage.GetThumbnailPath(cacheKey)
+        local folderResult = Storage.EnsureFolders()
+
+        if folderResult.status ~= "ok" then
+            return item
+        end
+
+        if not isfile(thumbnailPath) then
+            local imageBody = rawGet(thumbnailUrl)
+
+            if not imageBody then
+                return item
+            end
+
+            writefile(thumbnailPath, imageBody)
+        end
+
+        local loaded, assetId = pcall(function()
+            return assetLoader(thumbnailPath)
+        end)
+
+        if loaded and type(assetId) == "string" and assetId ~= "" then
+            item.thumbnail_url = assetId
+        end
+
+        return item
+    end
     function client.GetLocalAudioSupport()
         if not Storage.HasFilesystem() then
             return {

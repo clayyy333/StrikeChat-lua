@@ -1527,6 +1527,7 @@ if leftPanel.Buttons.StrikeMusic then
 
                 for _, result in ipairs(searchResult.results or {}) do
                     result.downloadable = true
+                    strikeMusicClient.CacheThumbnail(result)
                     table.insert(results, result)
                 end
 
