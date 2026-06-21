@@ -1269,7 +1269,11 @@ if leftPanel.Buttons.StrikeMusic then
                         youtube_automation_blocked = "YouTube bloqueó la descarga automática.",
                         media_download_failed = "No se pudo procesar la descarga.",
                         source_url_required = "La descarga no tiene una URL válida.",
-                        ffmpeg_not_installed = "El conversor de audio no está disponible."
+                        ffmpeg_not_installed = "El conversor de audio no está disponible.",
+                        direct_media_url_required = "La fuente no tiene un enlace directo de descarga.",
+                        direct_media_content_invalid = "La fuente devolvio una pagina, no un archivo multimedia.",
+                        direct_media_type_mismatch = "La fuente no entrego el formato solicitado.",
+                        download_complete_failed = "No se pudo registrar la descarga local."
                     }
 
                     for _, job in ipairs(downloadsResult.jobs or {}) do
@@ -1442,63 +1446,29 @@ if leftPanel.Buttons.StrikeMusic then
 
             task.spawn(function()
                 pcall(function()
-                    local createResult = strikeMusicClient.CreateDownload(
+                    local downloadedResult = strikeMusicClient.DownloadDirectResult(
                         player,
                         result,
                         mediaType
                     )
-                    local job = createResult and createResult.job
+                    local completedItem = downloadedResult
+                        and downloadedResult.complete
+                        and downloadedResult.complete.item
 
-                    if not job then
-                        return
-                    end
-
-                    refreshMusicDownloads()
-
-                    local prepareResult = strikeMusicClient.PrepareDownload(
-                        player,
-                        job.download_job_id
-                    )
-                    local preparedJob = prepareResult and prepareResult.job
-
-                    if preparedJob and preparedJob.status ~= "ready" then
-                        local waitResult = strikeMusicClient.WaitForReadyDownload(
-                            player,
-                            preparedJob.download_job_id,
-                            120
-                        )
-
-                        if waitResult.status == "ready" then
-                            preparedJob = waitResult.job
-                        else
-                            preparedJob = nil
-                        end
-                    end
-
-                    if preparedJob and preparedJob.status == "ready" then
-                        local downloadedResult = strikeMusicClient.DownloadReadyJob(
-                            player,
-                            preparedJob
-                        )
-                        local completedItem = downloadedResult
-                            and downloadedResult.complete
-                            and downloadedResult.complete.item
-
-                        if downloadedResult
-                            and downloadedResult.status == "downloaded"
-                            and downloadedResult.metadata
-                        then
-                            playLocalDownload({
-                                title = downloadedResult.metadata.title,
-                                artist = downloadedResult.metadata.artist,
-                                media_type = downloadedResult.metadata.media_type,
-                                source_id = downloadedResult.metadata.source_id,
-                                local_metadata = downloadedResult.metadata,
-                                local_playback_supported = true,
-                                library_item_id = completedItem
-                                    and completedItem.library_item_id
-                            })
-                        end
+                    if downloadedResult
+                        and downloadedResult.status == "downloaded"
+                        and downloadedResult.metadata
+                    then
+                        playLocalDownload({
+                            title = downloadedResult.metadata.title,
+                            artist = downloadedResult.metadata.artist,
+                            media_type = downloadedResult.metadata.media_type,
+                            source_id = downloadedResult.metadata.source_id,
+                            local_metadata = downloadedResult.metadata,
+                            local_playback_supported = true,
+                            library_item_id = completedItem
+                                and completedItem.library_item_id
+                        })
                     end
                 end)
 
