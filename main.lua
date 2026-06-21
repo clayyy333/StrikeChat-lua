@@ -1529,9 +1529,11 @@ if leftPanel.Buttons.StrikeMusic then
             end)
         end
 
-        musicUI.SearchInput.FocusLost:Connect(function(enterPressed)
-            if enterPressed then
-                searchMusic(musicUI.SearchInput.Text)
+        musicUI.SearchInput.FocusLost:Connect(function()
+            local query = tostring(musicUI.SearchInput.Text or "")
+
+            if query:gsub("%s+", "") ~= "" then
+                searchMusic(query)
             end
         end)
         local function playAdjacentPopularTrack(direction)
