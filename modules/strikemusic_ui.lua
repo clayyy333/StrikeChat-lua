@@ -406,7 +406,7 @@ local function createCard(parent, item, width, height, onPlay, onDownload)
 
     createProgress(card, UDim2.new(0, 10, 1, -14), UDim2.new(1, -20, 0, 3), 0.18)
 
-    if item and item.downloadable and onDownload then
+    if item and item.downloadable and onDownload and not item.local_playback_supported then
         play.Visible = false
 
         local mp3Button = createIconButton(

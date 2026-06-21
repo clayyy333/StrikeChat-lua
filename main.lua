@@ -1249,6 +1249,8 @@ if leftPanel.Buttons.StrikeMusic then
         end
 
         local playLocalDownload
+        local currentMusicSearchResults = {}
+        local renderCurrentMusicSearchResults
 
         local function refreshMusicDownloads()
             task.spawn(function()
@@ -1294,10 +1296,31 @@ if leftPanel.Buttons.StrikeMusic then
                         end
                     end
 
+                    for _, result in ipairs(currentMusicSearchResults) do
+                        result.local_download = nil
+                        result.local_playback_supported = false
+
+                        for _, job in ipairs(downloadsResult.jobs or {}) do
+                            if job.status == "completed"
+                                and job.media_type == "mp3"
+                                and job.local_playback_supported
+                                and tostring(job.source_id) == tostring(result.source_id)
+                            then
+                                result.local_download = job
+                                result.local_playback_supported = true
+                                break
+                            end
+                        end
+                    end
+
                     musicUI.RenderDownloads(
                         downloadsResult.jobs or {},
                         playLocalDownload
                     )
+
+                    if renderCurrentMusicSearchResults then
+                        renderCurrentMusicSearchResults()
+                    end
                 end
             end)
         end
@@ -1483,6 +1506,23 @@ if leftPanel.Buttons.StrikeMusic then
                 musicDownloadLocked = false
             end)
         end
+        renderCurrentMusicSearchResults = function()
+            if activeStrikeMusicUI ~= musicUI then
+                return
+            end
+
+            musicUI.RenderSearchResults(
+                currentMusicSearchResults,
+                function(result)
+                    if result and result.local_download then
+                        playLocalDownload(result.local_download)
+                    end
+                end,
+                true,
+                downloadSearchResult
+            )
+        end
+
         local function getSearchProviderErrorMessage(providerStatus)
             local messages = {
                 youtube_api_key_not_configured = "La clave de YouTube API no esta configurada en el backend.",
@@ -1555,12 +1595,8 @@ if leftPanel.Buttons.StrikeMusic then
                     table.insert(results, result)
                 end
 
-                musicUI.RenderSearchResults(
-                    results,
-                    nil,
-                    true,
-                    downloadSearchResult
-                )
+                currentMusicSearchResults = results
+                renderCurrentMusicSearchResults()
             end)
         end
 
