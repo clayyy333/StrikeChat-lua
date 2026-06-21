@@ -10,6 +10,7 @@ local esToEn = {
     ["Descargas"] = "Downloads",
     ["No hay descargas."] = "There are no downloads.",
     ["No hay resultados."] = "There are no results.",
+    ["No se pudo consultar el buscador."] = "The search provider could not be reached.",
     ["Listo para reproducir"] = "Ready to play",
     ["Audio local no compatible"] = "Local audio is not supported",
     ["Listas"] = "Playlists",

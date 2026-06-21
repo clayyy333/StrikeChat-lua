@@ -1325,11 +1325,11 @@ function StrikeMusicUI.Create(parent, Theme)
             BottomHeart = bottomHeart
         },
         Lists = lists,
-        RenderSearchResults = function(items, onPlay, showEmptyState, onDownload)
+        RenderSearchResults = function(items, onPlay, showEmptyState, onDownload, emptyText)
             renderCards(
                 searchList,
                 items,
-                showEmptyState and tr("No hay resultados.") or "__placeholder_cards",
+                showEmptyState and (emptyText or tr("No hay resultados.")) or "__placeholder_cards",
                 150,
                 150,
                 nil,

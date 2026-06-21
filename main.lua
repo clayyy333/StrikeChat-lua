@@ -1487,10 +1487,29 @@ if leftPanel.Buttons.StrikeMusic then
             task.spawn(function()
                 local searchResult = strikeMusicClient.Search(player, normalizedQuery, 10)
 
-                if not searchResult
-                    or searchResult.status ~= "ok"
-                    or activeStrikeMusicUI ~= musicUI
-                then
+                if activeStrikeMusicUI ~= musicUI then
+                    return
+                end
+
+                if not searchResult or searchResult.status ~= "ok" then
+                    musicUI.RenderSearchResults(
+                        {},
+                        nil,
+                        true,
+                        nil,
+                        tr("No se pudo consultar el buscador.")
+                    )
+                    return
+                end
+
+                if searchResult.provider_status ~= "ok" then
+                    musicUI.RenderSearchResults(
+                        {},
+                        nil,
+                        true,
+                        nil,
+                        tr("No se pudo consultar el buscador.")
+                    )
                     return
                 end
 
