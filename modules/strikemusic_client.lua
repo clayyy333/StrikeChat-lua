@@ -558,6 +558,115 @@ function StrikeMusicClient.Create(Api, Storage)
     function client.SetRobloxAudioEndedHandler(handler)
         robloxAudioEndedHandler = handler
     end
+    local function getLocalAssetLoader()
+        if type(getsynasset) == "function" then
+            return getsynasset, "getsynasset"
+        end
+
+        if type(getcustomasset) == "function" then
+            return getcustomasset, "getcustomasset"
+        end
+
+        if type(getasset) == "function" then
+            return getasset, "getasset"
+        end
+
+        return nil, nil
+    end
+
+    function client.GetLocalAudioSupport()
+        if not Storage.HasFilesystem() then
+            return {
+                supported = false,
+                reason = "filesystem_not_supported"
+            }
+        end
+
+        local _, loaderName = getLocalAssetLoader()
+
+        if not loaderName then
+            return {
+                supported = false,
+                reason = "local_asset_loader_not_supported"
+            }
+        end
+
+        return {
+            supported = true,
+            loader = loaderName
+        }
+    end
+
+    function client.PlayLocalAudio(metadata, volume)
+        if not metadata or metadata.media_type ~= "mp3" then
+            return {
+                status = "blocked",
+                reason = "local_audio_mp3_required"
+            }
+        end
+
+        if not Storage.MediaExists(metadata) then
+            return {
+                status = "blocked",
+                reason = "local_audio_file_not_found"
+            }
+        end
+
+        local assetLoader, loaderName = getLocalAssetLoader()
+
+        if not assetLoader then
+            return {
+                status = "blocked",
+                reason = "local_asset_loader_not_supported"
+            }
+        end
+
+        local localPath = metadata.local_path or Storage.GetMediaPath(
+            metadata.file_key,
+            metadata.media_type
+        )
+        local loaded, assetId = pcall(function()
+            return assetLoader(localPath)
+        end)
+
+        if not loaded or type(assetId) ~= "string" or assetId == "" then
+            return {
+                status = "blocked",
+                reason = "local_asset_load_failed",
+                loader = loaderName
+            }
+        end
+
+        client.StopRobloxAudio()
+
+        local sound = Instance.new("Sound")
+        sound.Name = "StrikeMusicLocalAudio"
+        sound.SoundId = assetId
+        sound.Volume = math.clamp(tonumber(volume) or 0.5, 0, 1)
+        sound.Parent = game:GetService("SoundService")
+        activeRobloxSound = sound
+
+        sound.Ended:Connect(function()
+            if activeRobloxSound ~= sound then
+                return
+            end
+
+            activeRobloxSound = nil
+            sound:Destroy()
+
+            if robloxAudioEndedHandler then
+                robloxAudioEndedHandler()
+            end
+        end)
+
+        sound:Play()
+
+        return {
+            status = "playing",
+            sound = sound,
+            loader = loaderName
+        }
+    end
     return client
 end
 

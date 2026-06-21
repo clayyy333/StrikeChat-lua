@@ -1192,6 +1192,8 @@ if leftPanel.Buttons.StrikeMusic then
         local musicUI = activeStrikeMusicUI
         local popularTracks = {}
         local currentPopularTrack = nil
+        local currentPlaybackKind = nil
+        local currentLocalDownload = nil
         local shuffleEnabled = false
         local repeatEnabled = false
 
@@ -1246,17 +1248,42 @@ if leftPanel.Buttons.StrikeMusic then
             end)
         end
 
+        local playLocalDownload
+
         local function refreshMusicDownloads()
             task.spawn(function()
                 strikeMusicClient.SyncExistingFiles(player)
 
                 local downloadsResult = strikeMusicClient.GetDownloads(player)
+                local metadataResult = StrikeMusicStorage.ListMetadata()
+                local metadataItems = metadataResult and metadataResult.items or {}
+                local localSupport = strikeMusicClient.GetLocalAudioSupport()
 
                 if downloadsResult
                     and downloadsResult.status == "ok"
                     and activeStrikeMusicUI == musicUI
                 then
-                    musicUI.RenderDownloads(downloadsResult.jobs or {})
+                    for _, job in ipairs(downloadsResult.jobs or {}) do
+                        if job.status == "completed" and job.media_type == "mp3" then
+                            for _, metadata in ipairs(metadataItems) do
+                                if metadata.source_id == job.source_id
+                                    and metadata.media_type == job.media_type
+                                then
+                                    job.local_metadata = metadata
+                                    job.local_playback_supported = localSupport.supported == true
+                                    job.local_playback_label = localSupport.supported
+                                        and tr("Listo para reproducir")
+                                        or tr("Audio local no compatible")
+                                    break
+                                end
+                            end
+                        end
+                    end
+
+                    musicUI.RenderDownloads(
+                        downloadsResult.jobs or {},
+                        playLocalDownload
+                    )
                 end
             end)
         end
@@ -1317,6 +1344,8 @@ if leftPanel.Buttons.StrikeMusic then
                     and activeStrikeMusicUI == musicUI
                 then
                     currentPopularTrack = track
+                    currentPlaybackKind = "popular"
+                    currentLocalDownload = nil
                     musicUI.SetPlaybackState(true)
                     musicUI.SetNowPlaying(track, 0, "0:00", "0:00")
                     strikeMusicClient.StartPlayback(
@@ -1334,6 +1363,112 @@ if leftPanel.Buttons.StrikeMusic then
             end)
         end
 
+        playLocalDownload = function(job)
+            if not job or not job.local_metadata then
+                return
+            end
+
+            local playbackResult = strikeMusicClient.PlayLocalAudio(
+                job.local_metadata,
+                musicUI.VolumeSlider.GetValue()
+            )
+
+            if playbackResult and playbackResult.status == "playing" then
+                currentPopularTrack = job.local_metadata
+                currentPlaybackKind = "local"
+                currentLocalDownload = job
+                musicUI.SetPlaybackState(true)
+                musicUI.SetNowPlaying(job.local_metadata, 0, "0:00", "0:00")
+
+                if job.library_item_id then
+                    task.spawn(function()
+                        strikeMusicClient.StartPlayback(
+                            player,
+                            job.library_item_id,
+                            "manual",
+                            0
+                        )
+                        refreshRecentMusic()
+                    end)
+                end
+            end
+        end
+
+        local musicDownloadLocked = false
+
+        local function downloadSearchResult(result, mediaType)
+            if musicDownloadLocked or not result then
+                return
+            end
+
+            musicDownloadLocked = true
+
+            task.spawn(function()
+                pcall(function()
+                    local createResult = strikeMusicClient.CreateDownload(
+                        player,
+                        result,
+                        mediaType
+                    )
+                    local job = createResult and createResult.job
+
+                    if not job then
+                        return
+                    end
+
+                    refreshMusicDownloads()
+
+                    local prepareResult = strikeMusicClient.PrepareDownload(
+                        player,
+                        job.download_job_id
+                    )
+                    local preparedJob = prepareResult and prepareResult.job
+
+                    if preparedJob and preparedJob.status ~= "ready" then
+                        local waitResult = strikeMusicClient.WaitForReadyDownload(
+                            player,
+                            preparedJob.download_job_id,
+                            120
+                        )
+
+                        if waitResult.status == "ready" then
+                            preparedJob = waitResult.job
+                        else
+                            preparedJob = nil
+                        end
+                    end
+
+                    if preparedJob and preparedJob.status == "ready" then
+                        local downloadedResult = strikeMusicClient.DownloadReadyJob(
+                            player,
+                            preparedJob
+                        )
+                        local completedItem = downloadedResult
+                            and downloadedResult.complete
+                            and downloadedResult.complete.item
+
+                        if downloadedResult
+                            and downloadedResult.status == "downloaded"
+                            and downloadedResult.metadata
+                        then
+                            playLocalDownload({
+                                title = downloadedResult.metadata.title,
+                                artist = downloadedResult.metadata.artist,
+                                media_type = downloadedResult.metadata.media_type,
+                                source_id = downloadedResult.metadata.source_id,
+                                local_metadata = downloadedResult.metadata,
+                                local_playback_supported = true,
+                                library_item_id = completedItem
+                                    and completedItem.library_item_id
+                            })
+                        end
+                    end
+                end)
+
+                refreshMusicDownloads()
+                musicDownloadLocked = false
+            end)
+        end
         local function searchMusic(query)
             local normalizedQuery = tostring(query or ""):gsub("^%s+", ""):gsub("%s+$", "")
 
@@ -1362,11 +1497,16 @@ if leftPanel.Buttons.StrikeMusic then
                 local results = {}
 
                 for _, result in ipairs(searchResult.results or {}) do
-                    result.playable = false
+                    result.downloadable = true
                     table.insert(results, result)
                 end
 
-                musicUI.RenderSearchResults(results, nil, true)
+                musicUI.RenderSearchResults(
+                    results,
+                    nil,
+                    true,
+                    downloadSearchResult
+                )
             end)
         end
 
@@ -1400,6 +1540,8 @@ if leftPanel.Buttons.StrikeMusic then
                 task.spawn(function()
                     strikeMusicClient.ResumePlayback(player)
                 end)
+            elseif currentPlaybackKind == "local" and currentLocalDownload then
+                playLocalDownload(currentLocalDownload)
             elseif currentPopularTrack then
                 playPopularRobloxTrack(currentPopularTrack)
             end
@@ -1407,6 +1549,20 @@ if leftPanel.Buttons.StrikeMusic then
 
         strikeMusicClient.SetRobloxAudioEndedHandler(function()
             if activeStrikeMusicUI ~= musicUI then
+                return
+            end
+
+            if currentPlaybackKind == "local" then
+                if repeatEnabled and currentLocalDownload then
+                    playLocalDownload(currentLocalDownload)
+                else
+                    musicUI.SetPlaybackState(false)
+
+                    task.spawn(function()
+                        strikeMusicClient.StopPlayback(player)
+                    end)
+                end
+
                 return
             end
 

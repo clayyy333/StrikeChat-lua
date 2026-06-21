@@ -337,7 +337,7 @@ local function createSection(parent, name, title, position, size)
     return section, list, titleLabel, prevButton, nextButton
 end
 
-local function createCard(parent, item, width, height, onPlay)
+local function createCard(parent, item, width, height, onPlay, onDownload)
     local card = Instance.new("Frame")
     card.Name = "MusicCard"
     card.Size = UDim2.new(0, width, 0, height)
@@ -390,7 +390,38 @@ local function createCard(parent, item, width, height, onPlay)
 
     createProgress(card, UDim2.new(0, 10, 1, -14), UDim2.new(1, -20, 0, 3), 0.18)
 
-    if item and item.playable == false then
+    if item and item.downloadable and onDownload then
+        play.Visible = false
+
+        local mp3Button = createIconButton(
+            card,
+            "DownloadMp3Button",
+            "MP3",
+            UDim2.new(0, 34, 0, 22),
+            UDim2.new(1, -78, 0, math.max(height - 88, 62))
+        )
+        mp3Button.TextSize = 9
+        mp3Button.BackgroundColor3 = COLORS.Purple
+        mp3Button.BackgroundTransparency = 0.08
+
+        local mp4Button = createIconButton(
+            card,
+            "DownloadMp4Button",
+            "MP4",
+            UDim2.new(0, 34, 0, 22),
+            UDim2.new(1, -40, 0, math.max(height - 88, 62))
+        )
+        mp4Button.TextSize = 9
+        mp4Button.BackgroundColor3 = COLORS.PanelLight
+        mp4Button.BackgroundTransparency = 0.08
+
+        mp3Button.MouseButton1Click:Connect(function()
+            onDownload(item, "mp3")
+        end)
+        mp4Button.MouseButton1Click:Connect(function()
+            onDownload(item, "mp4")
+        end)
+    elseif item and item.playable == false then
         play.Visible = false
     elseif onPlay then
         play.MouseButton1Click:Connect(function()
@@ -1129,7 +1160,7 @@ function StrikeMusicUI.Create(parent, Theme)
         end
     end
 
-    local function renderCards(container, items, emptyText, cardWidth, cardHeight, maxItems, prevButton, nextButton, onPlay)
+    local function renderCards(container, items, emptyText, cardWidth, cardHeight, maxItems, prevButton, nextButton, onPlay, onDownload)
         clearContainer(container)
 
         items = items or {}
@@ -1161,7 +1192,7 @@ function StrikeMusicUI.Create(parent, Theme)
                 break
             end
 
-            createCard(container, item, cardWidth, cardHeight, onPlay)
+            createCard(container, item, cardWidth, cardHeight, onPlay, onDownload)
         end
     end
 
@@ -1192,7 +1223,7 @@ function StrikeMusicUI.Create(parent, Theme)
         end
     end
 
-    local function renderDownloads(jobs)
+    local function renderDownloads(jobs, onPlay)
         clearContainer(downloadsList)
         jobs = jobs or {}
 
@@ -1214,11 +1245,21 @@ function StrikeMusicUI.Create(parent, Theme)
             local item = {
                 title = job.title or tr("Sin titulo"),
                 artist = job.artist or status,
-                duration_text = status .. " " .. tostring(progress) .. "%",
+                duration_text = job.local_playback_label
+                    or status .. " " .. tostring(progress) .. "%",
                 thumbnail_url = job.thumbnail_url
             }
-            local row = createWideRow(downloadsList, item)
+            local row, actionButton = createWideRow(downloadsList, item)
             row.Size = UDim2.new(1, -6, 0, 48)
+
+            if job.local_playback_supported and onPlay then
+                actionButton.Text = ">"
+                actionButton.TextSize = 16
+                actionButton.TextColor3 = COLORS.PurpleBright
+                actionButton.MouseButton1Click:Connect(function()
+                    onPlay(job)
+                end)
+            end
         end
 
         task.defer(function()
@@ -1284,7 +1325,7 @@ function StrikeMusicUI.Create(parent, Theme)
             BottomHeart = bottomHeart
         },
         Lists = lists,
-        RenderSearchResults = function(items, onPlay, showEmptyState)
+        RenderSearchResults = function(items, onPlay, showEmptyState, onDownload)
             renderCards(
                 searchList,
                 items,
@@ -1294,7 +1335,8 @@ function StrikeMusicUI.Create(parent, Theme)
                 nil,
                 searchPrevButton,
                 searchNextButton,
-                onPlay
+                onPlay,
+                onDownload
             )
         end,
         RenderPopular = function(items, onPlay)
@@ -1313,8 +1355,8 @@ function StrikeMusicUI.Create(parent, Theme)
         RenderRecent = function(items)
             renderRows(recentList, items, "", 3)
         end,
-        RenderDownloads = function(jobs)
-            renderDownloads(jobs)
+        RenderDownloads = function(jobs, onPlay)
+            renderDownloads(jobs, onPlay)
         end,
         SetContentView = function(view)
             setContentView(view)
