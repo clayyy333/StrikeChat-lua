@@ -1471,6 +1471,8 @@ if leftPanel.Buttons.StrikeMusic then
         end
         local function getSearchProviderErrorMessage(providerStatus)
             local messages = {
+                youtube_api_key_not_configured = "La clave de YouTube API no esta configurada en el backend.",
+                youtube_api_request_failed = "La API oficial de YouTube no pudo responder.",
                 yt_dlp_not_installed = "El buscador yt-dlp no esta instalado en el backend.",
                 provider_request_failed = "El buscador no pudo conectarse a YouTube."
             }
