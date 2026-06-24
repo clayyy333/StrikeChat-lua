@@ -178,14 +178,22 @@ function StrikeMusicClient.Create(Api, Storage)
     end
 
     function client.CreateDownload(player, result, mediaType)
-        return Api.CreatePersonalMusicDownload(
+        print("StrikeMusic: creating job", tostring(mediaType), tostring(result and result.source_id or "unknown"))
+
+        local createResult = Api.CreatePersonalMusicDownload(
             player,
             client.BuildDownloadData(result, mediaType)
         )
+
+        print("StrikeMusic: job created", tostring(createResult and createResult.status or "nil"), tostring(createResult and createResult.reason or ""))
+        return createResult
     end
 
     function client.PrepareDownload(player, downloadJobId)
-        return Api.PreparePersonalMusicDownload(player, downloadJobId)
+        print("StrikeMusic: preparing job", tostring(downloadJobId))
+        local prepareResult = Api.PreparePersonalMusicDownload(player, downloadJobId)
+        print("StrikeMusic: job prepared", tostring(prepareResult and prepareResult.status or "nil"), tostring(prepareResult and prepareResult.reason or ""))
+        return prepareResult
     end
 
     function client.WaitForReadyDownload(player, downloadJobId, timeoutSeconds)
@@ -243,6 +251,8 @@ function StrikeMusicClient.Create(Api, Storage)
                 job = job
             }
         end
+
+        print("StrikeMusic: downloading prepared file", tostring(job.download_job_id))
 
         local body, downloadError = rawGet(job.download_url)
 

@@ -432,9 +432,11 @@ local function createCard(parent, item, width, height, onPlay, onDownload)
         mp4Button.BackgroundTransparency = 0.08
 
         mp3Button.MouseButton1Click:Connect(function()
+            print("StrikeMusic: MP3 pressed", tostring(item and item.source_id or "unknown"))
             onDownload(item, "mp3")
         end)
         mp4Button.MouseButton1Click:Connect(function()
+            print("StrikeMusic: MP4 pressed", tostring(item and item.source_id or "unknown"))
             onDownload(item, "mp4")
         end)
     elseif item and item.playable == false then
