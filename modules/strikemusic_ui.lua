@@ -501,6 +501,28 @@ local function createWideRow(parent, item)
     return row, more
 end
 
+local function createDownloadPlayButton(parent)
+    local button = createIconButton(
+        parent,
+        "DownloadPlayButton",
+        "▶",
+        UDim2.new(0, 30, 0, 30),
+        UDim2.new(1, -86, 0.5, -15)
+    )
+    button.BackgroundColor3 = Color3.fromRGB(235, 238, 246)
+    button.BackgroundTransparency = 0
+    button.TextColor3 = Color3.fromRGB(15, 16, 22)
+    button.TextSize = 18
+    button.ZIndex = 5
+
+    local corner = button:FindFirstChildOfClass("UICorner")
+    if corner then
+        corner.CornerRadius = UDim.new(1, 0)
+    end
+
+    return button
+end
+
 function StrikeMusicUI.Create(parent, Theme)
     local theme = Theme or {
         Font = {
@@ -538,6 +560,79 @@ function StrikeMusicUI.Create(parent, Theme)
     inputBlocker.AutoButtonColor = false
     inputBlocker.ZIndex = 0
     inputBlocker.Parent = root
+
+    local downloadOptionsMenu = createPanel(
+        root,
+        "DownloadOptionsMenu",
+        UDim2.new(0, 220, 0, 170),
+        UDim2.new(0, 0, 0, 0)
+    )
+    downloadOptionsMenu.Visible = false
+    downloadOptionsMenu.ZIndex = 40
+    downloadOptionsMenu.BackgroundTransparency = 0.02
+
+    local optionsLayout = Instance.new("UIListLayout")
+    optionsLayout.FillDirection = Enum.FillDirection.Vertical
+    optionsLayout.Padding = UDim.new(0, 3)
+    optionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    optionsLayout.Parent = downloadOptionsMenu
+
+    local optionsPadding = Instance.new("UIPadding")
+    optionsPadding.PaddingTop = UDim.new(0, 8)
+    optionsPadding.PaddingBottom = UDim.new(0, 8)
+    optionsPadding.PaddingLeft = UDim.new(0, 8)
+    optionsPadding.PaddingRight = UDim.new(0, 8)
+    optionsPadding.Parent = downloadOptionsMenu
+
+    local function createOptionButton(name, text, color)
+        local button = Instance.new("TextButton")
+        button.Name = name
+        button.Size = UDim2.new(1, 0, 0, 34)
+        button.BackgroundColor3 = COLORS.PanelLight
+        button.BackgroundTransparency = 0.62
+        button.BorderSizePixel = 0
+        button.Text = tr(text)
+        button.TextColor3 = color or COLORS.Text
+        button.Font = Enum.Font.GothamMedium
+        button.TextSize = 12
+        button.TextXAlignment = Enum.TextXAlignment.Left
+        button.AutoButtonColor = true
+        button.ZIndex = 41
+        button.Parent = downloadOptionsMenu
+        createCorner(button, 8)
+        return button
+    end
+
+    createOptionButton("AddPlaylistButton", "Agregar a playlist")
+    createOptionButton("AddQueueButton", "Añadir a la fila de reproduccion")
+    createOptionButton("FavoriteButton", "Guardar en tus canciones favoritas")
+    createOptionButton("DeleteFileButton", "Eliminar archivo", Color3.fromRGB(224, 92, 92))
+
+    local function hideDownloadOptions()
+        downloadOptionsMenu.Visible = false
+    end
+
+    local function showDownloadOptions(anchor)
+        local rootPosition = root.AbsolutePosition
+        local rootSize = root.AbsoluteSize
+        local menuSize = downloadOptionsMenu.AbsoluteSize
+        local anchorPosition = anchor.AbsolutePosition
+        local anchorSize = anchor.AbsoluteSize
+        local x = anchorPosition.X - rootPosition.X + anchorSize.X + 8
+        local y = anchorPosition.Y - rootPosition.Y - 8
+
+        if x + menuSize.X > rootSize.X - 8 then
+            x = anchorPosition.X - rootPosition.X - menuSize.X - 8
+        end
+
+        x = math.clamp(x, 8, math.max(rootSize.X - menuSize.X - 8, 8))
+        y = math.clamp(y, 8, math.max(rootSize.Y - menuSize.Y - 8, 8))
+
+        downloadOptionsMenu.Position = UDim2.new(0, x, 0, y)
+        downloadOptionsMenu.Visible = true
+    end
+
+    inputBlocker.MouseButton1Click:Connect(hideDownloadOptions)
 
     local backgroundGradient = Instance.new("UIGradient")
     backgroundGradient.Color = ColorSequence.new({
@@ -1242,6 +1337,7 @@ function StrikeMusicUI.Create(parent, Theme)
     end
 
     local function renderDownloads(jobs, onPlay)
+        hideDownloadOptions()
         clearContainer(downloadsList)
         jobs = jobs or {}
 
@@ -1268,17 +1364,50 @@ function StrikeMusicUI.Create(parent, Theme)
                     or status .. " " .. tostring(progress) .. "%",
                 thumbnail_url = job.thumbnail_url
             }
-            local row, actionButton = createWideRow(downloadsList, item)
+            local row, optionsButton = createWideRow(downloadsList, item)
             row.Size = UDim2.new(1, -6, 0, 48)
 
-            if job.local_playback_supported and onPlay then
-                actionButton.Text = ">"
-                actionButton.TextSize = 16
-                actionButton.TextColor3 = COLORS.PurpleBright
-                actionButton.MouseButton1Click:Connect(function()
+            local statusLabel = row:FindFirstChild("Duration")
+            if statusLabel then
+                statusLabel.Size = UDim2.new(0, 150, 1, 0)
+                statusLabel.Position = UDim2.new(1, -270, 0, 0)
+            end
+
+            optionsButton.Position = UDim2.new(1, -34, 0.5, -14)
+            optionsButton.ZIndex = 6
+            optionsButton.Text = "..."
+            optionsButton.TextSize = 15
+            optionsButton.TextColor3 = COLORS.Muted
+
+            local canPlay = job.local_playback_supported and onPlay
+
+            if canPlay then
+                local rowButton = Instance.new("TextButton")
+                rowButton.Name = "RowPlayButton"
+                rowButton.Size = UDim2.new(1, -112, 1, 0)
+                rowButton.Position = UDim2.new(0, 0, 0, 0)
+                rowButton.BackgroundTransparency = 1
+                rowButton.BorderSizePixel = 0
+                rowButton.Text = ""
+                rowButton.AutoButtonColor = false
+                rowButton.Active = true
+                rowButton.ZIndex = 3
+                rowButton.Parent = row
+                rowButton.MouseButton1Click:Connect(function()
+                    hideDownloadOptions()
+                    onPlay(job)
+                end)
+
+                local playButton = createDownloadPlayButton(row)
+                playButton.MouseButton1Click:Connect(function()
+                    hideDownloadOptions()
                     onPlay(job)
                 end)
             end
+
+            optionsButton.MouseButton1Click:Connect(function()
+                showDownloadOptions(optionsButton)
+            end)
         end
 
         task.defer(function()

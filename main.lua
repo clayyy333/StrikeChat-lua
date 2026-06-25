@@ -1194,6 +1194,7 @@ if leftPanel.Buttons.StrikeMusic then
         local currentPopularTrack = nil
         local currentPlaybackKind = nil
         local currentLocalDownload = nil
+        local localDownloadQueue = {}
         local shuffleEnabled = false
         local repeatEnabled = false
 
@@ -1364,6 +1365,17 @@ if leftPanel.Buttons.StrikeMusic then
                     end
                 end
 
+                localDownloadQueue = {}
+
+                for _, job in ipairs(jobsToRender or {}) do
+                    if job.status == "completed"
+                        and job.media_type == "mp3"
+                        and job.local_playback_supported
+                    then
+                        table.insert(localDownloadQueue, job)
+                    end
+                end
+
                 musicUI.RenderDownloads(
                     jobsToRender or {},
                     playLocalDownload
@@ -1373,6 +1385,55 @@ if leftPanel.Buttons.StrikeMusic then
                     renderCurrentMusicSearchResults()
                 end
             end)
+        end
+        local function getLocalDownloadKey(job)
+            if not job then
+                return nil
+            end
+
+            return tostring(
+                job.file_key
+                    or (job.local_metadata and job.local_metadata.file_key)
+                    or job.source_id
+                    or ""
+            )
+        end
+
+        local function getLocalDownloadIndex(job)
+            local currentKey = getLocalDownloadKey(job)
+
+            if currentKey == "" then
+                return nil
+            end
+
+            for index, queuedJob in ipairs(localDownloadQueue) do
+                if getLocalDownloadKey(queuedJob) == currentKey then
+                    return index
+                end
+            end
+
+            return nil
+        end
+
+        local function playAdjacentLocalDownload(direction)
+            if #localDownloadQueue == 0 then
+                return false
+            end
+
+            local currentIndex = getLocalDownloadIndex(currentLocalDownload)
+
+            if not currentIndex then
+                return false
+            end
+
+            local nextIndex = currentIndex + direction
+
+            if nextIndex < 1 or nextIndex > #localDownloadQueue then
+                return false
+            end
+
+            playLocalDownload(localDownloadQueue[nextIndex])
+            return true
         end
         local playPopularRobloxTrack
 
@@ -1677,8 +1738,11 @@ if leftPanel.Buttons.StrikeMusic then
             if currentPlaybackKind == "local" then
                 if repeatEnabled and currentLocalDownload then
                     playLocalDownload(currentLocalDownload)
+                elseif playAdjacentLocalDownload(1) then
+                    return
                 else
                     musicUI.SetPlaybackState(false)
+                    currentLocalDownload = nil
 
                     task.spawn(function()
                         strikeMusicClient.StopPlayback(player)
@@ -1706,17 +1770,27 @@ if leftPanel.Buttons.StrikeMusic then
                 return
             end
 
+            if currentPlaybackKind == "local" then
+                playAdjacentLocalDownload(-1)
+                return
+            end
+
             playAdjacentPopularTrack(-1)
+        end
+
+        local function playNext()
+            if currentPlaybackKind == "local" then
+                playAdjacentLocalDownload(1)
+                return
+            end
+
+            playAdjacentPopularTrack(1)
         end
 
         musicUI.Buttons.Previous.MouseButton1Click:Connect(playPrevious)
         musicUI.Buttons.BottomPrevious.MouseButton1Click:Connect(playPrevious)
-        musicUI.Buttons.Next.MouseButton1Click:Connect(function()
-            playAdjacentPopularTrack(1)
-        end)
-        musicUI.Buttons.BottomNext.MouseButton1Click:Connect(function()
-            playAdjacentPopularTrack(1)
-        end)
+        musicUI.Buttons.Next.MouseButton1Click:Connect(playNext)
+        musicUI.Buttons.BottomNext.MouseButton1Click:Connect(playNext)
         musicUI.Buttons.Shuffle.MouseButton1Click:Connect(function()
             shuffleEnabled = not shuffleEnabled
         end)
