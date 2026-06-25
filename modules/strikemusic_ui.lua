@@ -506,13 +506,13 @@ local function createDownloadPlayButton(parent)
         parent,
         "DownloadPlayButton",
         "▶",
-        UDim2.new(0, 30, 0, 30),
-        UDim2.new(1, -86, 0.5, -15)
+        UDim2.new(0, 24, 0, 24),
+        UDim2.new(1, -72, 0.5, -12)
     )
-    button.BackgroundColor3 = Color3.fromRGB(235, 238, 246)
+    button.BackgroundColor3 = COLORS.Purple
     button.BackgroundTransparency = 0
-    button.TextColor3 = Color3.fromRGB(15, 16, 22)
-    button.TextSize = 18
+    button.TextColor3 = COLORS.Text
+    button.TextSize = 14
     button.ZIndex = 5
 
     local corner = button:FindFirstChildOfClass("UICorner")
@@ -588,18 +588,23 @@ function StrikeMusicUI.Create(parent, Theme)
         local button = Instance.new("TextButton")
         button.Name = name
         button.Size = UDim2.new(1, 0, 0, 34)
-        button.BackgroundColor3 = COLORS.PanelLight
-        button.BackgroundTransparency = 0.62
+        button.BackgroundColor3 = COLORS.Panel
+        button.BackgroundTransparency = 1
         button.BorderSizePixel = 0
         button.Text = tr(text)
         button.TextColor3 = color or COLORS.Text
         button.Font = Enum.Font.GothamMedium
         button.TextSize = 12
         button.TextXAlignment = Enum.TextXAlignment.Left
-        button.AutoButtonColor = true
+        button.AutoButtonColor = false
         button.ZIndex = 41
         button.Parent = downloadOptionsMenu
-        createCorner(button, 8)
+        button.MouseEnter:Connect(function()
+            button.TextColor3 = color or Color3.fromRGB(224, 228, 240)
+        end)
+        button.MouseLeave:Connect(function()
+            button.TextColor3 = color or COLORS.Text
+        end)
         return button
     end
 
@@ -1369,8 +1374,8 @@ function StrikeMusicUI.Create(parent, Theme)
 
             local statusLabel = row:FindFirstChild("Duration")
             if statusLabel then
-                statusLabel.Size = UDim2.new(0, 150, 1, 0)
-                statusLabel.Position = UDim2.new(1, -270, 0, 0)
+                statusLabel.Size = UDim2.new(0, 140, 0, 20)
+                statusLabel.Position = UDim2.new(1, -236, 0, 20)
             end
 
             optionsButton.Position = UDim2.new(1, -34, 0.5, -14)
@@ -1384,7 +1389,7 @@ function StrikeMusicUI.Create(parent, Theme)
             if canPlay then
                 local rowButton = Instance.new("TextButton")
                 rowButton.Name = "RowPlayButton"
-                rowButton.Size = UDim2.new(1, -112, 1, 0)
+                rowButton.Size = UDim2.new(1, -88, 1, 0)
                 rowButton.Position = UDim2.new(0, 0, 0, 0)
                 rowButton.BackgroundTransparency = 1
                 rowButton.BorderSizePixel = 0
