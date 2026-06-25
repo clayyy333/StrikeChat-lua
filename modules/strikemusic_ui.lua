@@ -542,17 +542,7 @@ local function cleanDownloadTitle(title, artist)
 
     local function cleanExtraInfo(value)
         value = tostring(value or "")
-        value = value:gsub("%b()", function(group)
-            local lowerGroup = group:lower()
-
-            if lowerGroup:find("official", 1, true)
-                or lowerGroup:find("oficcial", 1, true)
-            then
-                return ""
-            end
-
-            return group
-        end)
+        value = value:gsub("%b()", "")
 
         return value:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
     end
@@ -1608,7 +1598,7 @@ function StrikeMusicUI.Create(parent, Theme)
         end
     end
 
-    local function renderDownloads(jobs, onPlay, onDelete)
+    local function renderDownloads(jobs, onPlay, onDelete, onReadyDownload)
         hideDownloadOptions()
         clearContainer(downloadsList)
         jobs = jobs or {}
@@ -1678,8 +1668,11 @@ function StrikeMusicUI.Create(parent, Theme)
             optionsButton.TextColor3 = COLORS.Muted
 
             local canPlay = job.local_playback_supported and onPlay
+            local canSaveReadyDownload = status == "ready"
+                and job.download_url
+                and onReadyDownload
 
-            if canPlay then
+            if canPlay or canSaveReadyDownload then
                 local rowButton = Instance.new("TextButton")
                 rowButton.Name = "RowPlayButton"
                 rowButton.Size = UDim2.new(1, -88, 1, 0)
@@ -1693,13 +1686,28 @@ function StrikeMusicUI.Create(parent, Theme)
                 rowButton.Parent = row
                 rowButton.MouseButton1Click:Connect(function()
                     hideDownloadOptions()
-                    onPlay(job)
+
+                    if canPlay then
+                        onPlay(job)
+                    else
+                        onReadyDownload(job)
+                    end
                 end)
 
                 local playButton = createDownloadPlayButton(row)
+
+                if canSaveReadyDownload and not canPlay then
+                    playButton.Text = "↓"
+                end
+
                 playButton.MouseButton1Click:Connect(function()
                     hideDownloadOptions()
-                    onPlay(job)
+
+                    if canPlay then
+                        onPlay(job)
+                    else
+                        onReadyDownload(job)
+                    end
                 end)
             end
 
@@ -1804,8 +1812,8 @@ function StrikeMusicUI.Create(parent, Theme)
         RenderRecent = function(items)
             renderRows(recentList, items, "", 3)
         end,
-        RenderDownloads = function(jobs, onPlay, onDelete)
-            renderDownloads(jobs, onPlay, onDelete)
+        RenderDownloads = function(jobs, onPlay, onDelete, onReadyDownload)
+            renderDownloads(jobs, onPlay, onDelete, onReadyDownload)
         end,
         SetContentView = function(view)
             setContentView(view)

@@ -565,6 +565,15 @@ function Api.FailPersonalMusicDownload(player, downloadJobId, reason)
 end
 
 
+function Api.DeletePersonalMusicDownload(player, downloadJobId)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/personal/downloads/" .. Api.Encode(downloadJobId) ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "DELETE"
+    )
+end
+
 function Api.GetStrikeMusicPopular(limit)
     return Api.Request(
         Api.BaseUrl ..

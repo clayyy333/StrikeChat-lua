@@ -1251,6 +1251,7 @@ if leftPanel.Buttons.StrikeMusic then
 
         local playLocalDownload
         local deleteLocalDownload
+        local saveReadyDownload
         local function getLocalDownloadKey(job)
             if not job then
                 return nil
@@ -1403,7 +1404,8 @@ if leftPanel.Buttons.StrikeMusic then
                 musicUI.RenderDownloads(
                     jobsToRender or {},
                     playLocalDownload,
-                    deleteLocalDownload
+                    deleteLocalDownload,
+                    saveReadyDownload
                 )
 
                 if renderCurrentMusicSearchResults then
@@ -1557,7 +1559,27 @@ if leftPanel.Buttons.StrikeMusic then
         end
 
         deleteLocalDownload = function(job)
-            if not job or not job.local_metadata then
+            if not job then
+                return
+            end
+
+            if not job.local_metadata then
+                if job.download_job_id then
+                    local deleteJobResult = strikeMusicClient.DeleteDownloadJob(
+                        player,
+                        job.download_job_id
+                    )
+
+                    if deleteJobResult and deleteJobResult.status ~= "deleted" then
+                        warn(
+                            "StrikeMusic: download job delete failed",
+                            tostring(deleteJobResult.reason or "unknown")
+                        )
+                    end
+
+                    refreshMusicDownloads()
+                end
+
                 return
             end
 
@@ -1591,6 +1613,63 @@ if leftPanel.Buttons.StrikeMusic then
             refreshMusicDownloads()
         end
         local musicDownloadLocked = false
+
+        saveReadyDownload = function(job)
+            if musicDownloadLocked then
+                print("StrikeMusic: ready download ignored because another download is active")
+                return
+            end
+
+            if not job or job.status ~= "ready" then
+                return
+            end
+
+            musicDownloadLocked = true
+
+            task.spawn(function()
+                local ok, downloadedResult = pcall(function()
+                    return strikeMusicClient.DownloadReadyJob(player, job)
+                end)
+
+                if not ok then
+                    warn("StrikeMusic: ready download flow crashed", tostring(downloadedResult))
+                else
+                    print(
+                        "StrikeMusic: ready download result",
+                        tostring(downloadedResult and downloadedResult.status or "nil"),
+                        tostring(downloadedResult and downloadedResult.reason or "")
+                    )
+
+                    local completedItem = downloadedResult
+                        and downloadedResult.complete
+                        and downloadedResult.complete.item
+
+                    if downloadedResult
+                        and downloadedResult.status == "downloaded"
+                        and downloadedResult.metadata
+                    then
+                        strikeMusicClient.CacheThumbnail(downloadedResult.metadata)
+
+                        playLocalDownload({
+                            title = downloadedResult.metadata.title,
+                            artist = downloadedResult.metadata.artist,
+                            media_type = downloadedResult.metadata.media_type,
+                            source_id = downloadedResult.metadata.source_id,
+                            thumbnail_url = downloadedResult.metadata.thumbnail_url,
+                            thumbnail_original_url = downloadedResult.metadata.thumbnail_original_url,
+                            local_thumbnail_path = downloadedResult.metadata.local_thumbnail_path,
+                            local_metadata = downloadedResult.metadata,
+                            local_playback_supported = true,
+                            library_item_id = completedItem
+                                and completedItem.library_item_id
+                        })
+                    end
+                end
+
+                refreshMusicDownloads()
+                musicDownloadLocked = false
+            end)
+        end
 
         local function downloadSearchResult(result, mediaType)
             if musicDownloadLocked then

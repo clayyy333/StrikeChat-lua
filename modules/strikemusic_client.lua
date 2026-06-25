@@ -354,6 +354,16 @@ function StrikeMusicClient.Create(Api, Storage)
         return client.DownloadReadyJob(player, preparedJob)
     end
 
+    function client.DeleteDownloadJob(player, downloadJobId)
+        if not downloadJobId or tostring(downloadJobId) == "" then
+            return {
+                status = "blocked",
+                reason = "download_job_not_found"
+            }
+        end
+
+        return Api.DeletePersonalMusicDownload(player, downloadJobId)
+    end
     function client.DeleteLocalItem(player, metadata)
         local deleteResult = Storage.DeleteMedia(metadata)
 
