@@ -1250,6 +1250,18 @@ if leftPanel.Buttons.StrikeMusic then
         end
 
         local playLocalDownload
+        local function getLocalDownloadKey(job)
+            if not job then
+                return nil
+            end
+
+            return tostring(
+                job.file_key
+                    or (job.local_metadata and job.local_metadata.file_key)
+                    or job.source_id
+                    or ""
+            )
+        end
         local currentMusicSearchResults = {}
         local renderCurrentMusicSearchResults
 
@@ -1366,13 +1378,20 @@ if leftPanel.Buttons.StrikeMusic then
                 end
 
                 localDownloadQueue = {}
+                local currentLocalKey = getLocalDownloadKey(currentLocalDownload)
 
                 for _, job in ipairs(jobsToRender or {}) do
                     if job.status == "completed"
                         and job.media_type == "mp3"
                         and job.local_playback_supported
                     then
+                        job.is_playing = currentPlaybackKind == "local"
+                            and currentLocalKey ~= nil
+                            and currentLocalKey ~= ""
+                            and getLocalDownloadKey(job) == currentLocalKey
                         table.insert(localDownloadQueue, job)
+                    else
+                        job.is_playing = false
                     end
                 end
 
@@ -1385,18 +1404,6 @@ if leftPanel.Buttons.StrikeMusic then
                     renderCurrentMusicSearchResults()
                 end
             end)
-        end
-        local function getLocalDownloadKey(job)
-            if not job then
-                return nil
-            end
-
-            return tostring(
-                job.file_key
-                    or (job.local_metadata and job.local_metadata.file_key)
-                    or job.source_id
-                    or ""
-            )
         end
 
         local function getLocalDownloadIndex(job)
@@ -1527,6 +1534,7 @@ if leftPanel.Buttons.StrikeMusic then
                 currentLocalDownload = job
                 musicUI.SetPlaybackState(true)
                 musicUI.SetNowPlaying(job.local_metadata, 0, "0:00", "0:00")
+                refreshMusicDownloads()
 
                 if job.library_item_id then
                     task.spawn(function()

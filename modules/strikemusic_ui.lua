@@ -454,8 +454,10 @@ local function createWideRow(parent, item)
     local row = Instance.new("Frame")
     row.Name = "MusicRow"
     row.Size = UDim2.new(1, 0, 0, 48)
-    row.BackgroundColor3 = COLORS.PanelSoft
-    row.BackgroundTransparency = 0.78
+    row.BackgroundColor3 = item and item.is_playing
+        and Color3.fromRGB(50, 55, 64)
+        or COLORS.PanelSoft
+    row.BackgroundTransparency = item and item.is_playing and 0.18 or 0.78
     row.BorderSizePixel = 0
     row.Parent = parent
 
@@ -599,11 +601,24 @@ function StrikeMusicUI.Create(parent, Theme)
         button.AutoButtonColor = false
         button.ZIndex = 41
         button.Parent = downloadOptionsMenu
+        local function setOptionHover(active)
+            button.BackgroundTransparency = active and 0.18 or 1
+            button.TextColor3 = active
+                and (color or Color3.fromRGB(224, 228, 240))
+                or (color or COLORS.Text)
+        end
+
         button.MouseEnter:Connect(function()
-            button.TextColor3 = color or Color3.fromRGB(224, 228, 240)
+            setOptionHover(true)
         end)
         button.MouseLeave:Connect(function()
-            button.TextColor3 = color or COLORS.Text
+            setOptionHover(false)
+        end)
+        button.MouseButton1Down:Connect(function()
+            setOptionHover(true)
+        end)
+        button.MouseButton1Up:Connect(function()
+            setOptionHover(false)
         end)
         return button
     end
@@ -1367,7 +1382,8 @@ function StrikeMusicUI.Create(parent, Theme)
                 duration_text = job.display_status
                     or job.local_playback_label
                     or status .. " " .. tostring(progress) .. "%",
-                thumbnail_url = job.thumbnail_url
+                thumbnail_url = job.thumbnail_url,
+                is_playing = job.is_playing == true
             }
             local row, optionsButton = createWideRow(downloadsList, item)
             row.Size = UDim2.new(1, -6, 0, 48)
