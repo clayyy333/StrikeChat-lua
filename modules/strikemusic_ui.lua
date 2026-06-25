@@ -285,6 +285,7 @@ local function createArtFrame(parent, name, size, position, item)
     image.BackgroundTransparency = 1
     image.ScaleType = Enum.ScaleType.Crop
     image.Parent = holder
+    createCorner(image, 8)
     applyThumbnail(image, item)
 
     if item and item.thumbnail_debug_text then
@@ -472,14 +473,14 @@ local function createWideRow(parent, item)
     rowBackground.Parent = row
     createCorner(rowBackground, 6)
 
-    createArtFrame(row, "Art", UDim2.new(0, 38, 0, 38), UDim2.new(0, 0, 0.5, -19), item)
+    createArtFrame(row, "Art", UDim2.new(0, 38, 0, 38), UDim2.new(0, 8, 0.5, -19), item)
 
     createLabel(
         row,
         "Name",
         tostring(item and item.title or tr("Sin titulo")),
         UDim2.new(1, -246, 0, 20),
-        UDim2.new(0, 52, 0, 4),
+        UDim2.new(0, 60, 0, 4),
         12,
         Enum.Font.GothamBold,
         COLORS.Text
@@ -490,7 +491,7 @@ local function createWideRow(parent, item)
         "Artist",
         tostring(item and item.artist or tr("Desconocido")),
         UDim2.new(1, -246, 0, 18),
-        UDim2.new(0, 52, 0, 25),
+        UDim2.new(0, 60, 0, 25),
         11,
         Enum.Font.Gotham,
         COLORS.Muted
