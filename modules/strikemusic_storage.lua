@@ -317,6 +317,8 @@ function Storage.GetLocalLibraryItems()
     for _, metadata in ipairs(listResult.items) do
         if Storage.MediaExists(metadata) then
             table.insert(items, {
+                local_path = metadata.local_path,
+                local_thumbnail_path = metadata.local_thumbnail_path,
                 media_type = metadata.media_type,
                 title = metadata.title,
                 artist = metadata.artist,
@@ -324,6 +326,7 @@ function Storage.GetLocalLibraryItems()
                 file_size_bytes = metadata.file_size_bytes,
                 quality = metadata.quality,
                 thumbnail_url = metadata.thumbnail_url,
+                thumbnail_original_url = metadata.thumbnail_original_url,
                 source_id = metadata.source_id,
                 source_url = metadata.source_url,
                 file_key = metadata.file_key
@@ -359,6 +362,8 @@ function Storage.SaveDownloadedMetadata(downloadJob, fileKey, localPath, fileSiz
         file_size_bytes = fileSizeBytes,
         quality = downloadJob.quality,
         thumbnail_url = downloadJob.thumbnail_url,
+        thumbnail_original_url = downloadJob.thumbnail_original_url or downloadJob.thumbnail_url,
+        local_thumbnail_path = downloadJob.local_thumbnail_path,
         source_id = downloadJob.source_id,
         source_url = downloadJob.source_url,
         saved_at = os.time()

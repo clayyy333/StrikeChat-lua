@@ -283,6 +283,7 @@ function StrikeMusicClient.Create(Api, Storage)
         end
 
         writefile(localPath, body)
+        client.CacheThumbnail(job)
 
         local fileSizeBytes = #body
         local metadataResult = Storage.SaveDownloadedMetadata(
@@ -584,19 +585,36 @@ function StrikeMusicClient.Create(Api, Storage)
         return nil, nil
     end
 
-    function client.CacheThumbnail(item)
-        if not item or not item.thumbnail_url or tostring(item.thumbnail_url) == "" then
-            if item then
-                item.thumbnail_debug = "thumbnail_url_missing"
-            end
-
-            return item
+    local function loadLocalThumbnail(item, thumbnailPath)
+        if not thumbnailPath or thumbnailPath == "" or not isfile(thumbnailPath) then
+            return false
         end
 
-        local thumbnailUrl = tostring(item.thumbnail_url)
+        item.local_thumbnail_path = thumbnailPath
 
-        if thumbnailUrl:match("^rbxasset") then
+        local assetLoader = getLocalAssetLoader()
+
+        if not assetLoader then
+            item.thumbnail_debug = "local_asset_loader_not_supported"
+            return true
+        end
+
+        local loaded, assetId = pcall(function()
+            return assetLoader(thumbnailPath)
+        end)
+
+        if loaded and type(assetId) == "string" and assetId ~= "" then
+            item.thumbnail_url = assetId
             item.thumbnail_debug = "ready"
+        else
+            item.thumbnail_debug = "thumbnail_asset_load_failed"
+        end
+
+        return true
+    end
+
+    function client.CacheThumbnail(item)
+        if not item then
             return item
         end
 
@@ -605,10 +623,21 @@ function StrikeMusicClient.Create(Api, Storage)
             return item
         end
 
-        local assetLoader = getLocalAssetLoader()
+        if item.local_thumbnail_path
+            and loadLocalThumbnail(item, tostring(item.local_thumbnail_path))
+        then
+            return item
+        end
 
-        if not assetLoader then
-            item.thumbnail_debug = "local_asset_loader_not_supported"
+        local thumbnailUrl = tostring(item.thumbnail_original_url or item.thumbnail_url or "")
+
+        if thumbnailUrl == "" then
+            item.thumbnail_debug = "thumbnail_url_missing"
+            return item
+        end
+
+        if thumbnailUrl:match("^rbxasset") then
+            item.thumbnail_debug = "ready"
             return item
         end
 
@@ -634,16 +663,8 @@ function StrikeMusicClient.Create(Api, Storage)
             writefile(thumbnailPath, imageBody)
         end
 
-        local loaded, assetId = pcall(function()
-            return assetLoader(thumbnailPath)
-        end)
-
-        if loaded and type(assetId) == "string" and assetId ~= "" then
-            item.thumbnail_url = assetId
-            item.thumbnail_debug = "ready"
-        else
-            item.thumbnail_debug = "thumbnail_asset_load_failed"
-        end
+        item.thumbnail_original_url = thumbnailUrl
+        loadLocalThumbnail(item, thumbnailPath)
 
         return item
     end

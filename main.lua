@@ -1254,12 +1254,43 @@ if leftPanel.Buttons.StrikeMusic then
 
         local function refreshMusicDownloads()
             task.spawn(function()
-                strikeMusicClient.SyncExistingFiles(player)
-
-                local downloadsResult = strikeMusicClient.GetDownloads(player)
                 local metadataResult = StrikeMusicStorage.ListMetadata()
                 local metadataItems = metadataResult and metadataResult.items or {}
                 local localSupport = strikeMusicClient.GetLocalAudioSupport()
+                local localJobs = {}
+
+                for _, metadata in ipairs(metadataItems) do
+                    if StrikeMusicStorage.MediaExists(metadata) then
+                        strikeMusicClient.CacheThumbnail(metadata)
+
+                        table.insert(localJobs, {
+                            status = "completed",
+                            media_type = metadata.media_type,
+                            title = metadata.title,
+                            artist = metadata.artist,
+                            duration_seconds = metadata.duration_seconds,
+                            file_size_bytes = metadata.file_size_bytes,
+                            quality = metadata.quality,
+                            thumbnail_url = metadata.thumbnail_url,
+                            thumbnail_original_url = metadata.thumbnail_original_url,
+                            local_thumbnail_path = metadata.local_thumbnail_path,
+                            source_id = metadata.source_id,
+                            source_url = metadata.source_url,
+                            file_key = metadata.file_key,
+                            local_metadata = metadata,
+                            local_playback_supported = metadata.media_type == "mp3"
+                                and localSupport.supported == true,
+                            local_playback_label = localSupport.supported
+                                and tr("Listo para reproducir")
+                                or tr("Audio local no compatible")
+                        })
+                    end
+                end
+
+                strikeMusicClient.SyncExistingFiles(player)
+
+                local downloadsResult = strikeMusicClient.GetDownloads(player)
+                local jobsToRender = localJobs
 
                 if downloadsResult
                     and downloadsResult.status == "ok"
@@ -1271,6 +1302,8 @@ if leftPanel.Buttons.StrikeMusic then
                         source_url_required = "La descarga no tiene una URL válida.",
                         ffmpeg_not_installed = "El conversor de audio no está disponible.",
                     }
+                    local mergedJobs = {}
+                    local seenLocalKeys = {}
 
                     for _, job in ipairs(downloadsResult.jobs or {}) do
                         if job.status == "failed" then
@@ -1281,46 +1314,63 @@ if leftPanel.Buttons.StrikeMusic then
                         end
 
                         if job.status == "completed" and job.media_type == "mp3" then
-                            for _, metadata in ipairs(metadataItems) do
-                                if metadata.source_id == job.source_id
+                            for _, localJob in ipairs(localJobs) do
+                                local metadata = localJob.local_metadata
+
+                                if metadata
+                                    and tostring(metadata.source_id) == tostring(job.source_id)
                                     and metadata.media_type == job.media_type
                                 then
+                                    job.thumbnail_url = metadata.thumbnail_url or job.thumbnail_url
+                                    job.thumbnail_original_url = metadata.thumbnail_original_url
+                                    job.local_thumbnail_path = metadata.local_thumbnail_path
                                     job.local_metadata = metadata
-                                    job.local_playback_supported = localSupport.supported == true
-                                    job.local_playback_label = localSupport.supported
-                                        and tr("Listo para reproducir")
-                                        or tr("Audio local no compatible")
+                                    job.local_playback_supported = localJob.local_playback_supported
+                                    job.local_playback_label = localJob.local_playback_label
+                                    seenLocalKeys[tostring(metadata.file_key)] = true
                                     break
                                 end
                             end
                         end
+
+                        table.insert(mergedJobs, job)
                     end
 
-                    for _, result in ipairs(currentMusicSearchResults) do
-                        result.local_download = nil
-                        result.local_playback_supported = false
-
-                        for _, job in ipairs(downloadsResult.jobs or {}) do
-                            if job.status == "completed"
-                                and job.media_type == "mp3"
-                                and job.local_playback_supported
-                                and tostring(job.source_id) == tostring(result.source_id)
-                            then
-                                result.local_download = job
-                                result.local_playback_supported = true
-                                break
-                            end
+                    for _, localJob in ipairs(localJobs) do
+                        if not seenLocalKeys[tostring(localJob.file_key)] then
+                            table.insert(mergedJobs, localJob)
                         end
                     end
 
-                    musicUI.RenderDownloads(
-                        downloadsResult.jobs or {},
-                        playLocalDownload
-                    )
+                    jobsToRender = mergedJobs
+                elseif activeStrikeMusicUI ~= musicUI then
+                    return
+                end
 
-                    if renderCurrentMusicSearchResults then
-                        renderCurrentMusicSearchResults()
+                for _, result in ipairs(currentMusicSearchResults) do
+                    result.local_download = nil
+                    result.local_playback_supported = false
+
+                    for _, job in ipairs(jobsToRender or {}) do
+                        if job.status == "completed"
+                            and job.media_type == "mp3"
+                            and job.local_playback_supported
+                            and tostring(job.source_id) == tostring(result.source_id)
+                        then
+                            result.local_download = job
+                            result.local_playback_supported = true
+                            break
+                        end
                     end
+                end
+
+                musicUI.RenderDownloads(
+                    jobsToRender or {},
+                    playLocalDownload
+                )
+
+                if renderCurrentMusicSearchResults then
+                    renderCurrentMusicSearchResults()
                 end
             end)
         end
