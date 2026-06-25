@@ -540,6 +540,23 @@ local function cleanDownloadTitle(title, artist)
     local text = tostring(title or "")
     local artistText = tostring(artist or "")
 
+    local function cleanExtraInfo(value)
+        value = tostring(value or "")
+        value = value:gsub("%b()", function(group)
+            local lowerGroup = group:lower()
+
+            if lowerGroup:find("official", 1, true)
+                or lowerGroup:find("oficcial", 1, true)
+            then
+                return ""
+            end
+
+            return group
+        end)
+
+        return value:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
+    end
+
     if text == "" then
         return tr("Sin titulo")
     end
@@ -548,7 +565,7 @@ local function cleanDownloadTitle(title, artist)
         local startIndex = text:find(separator, 1, true)
 
         if startIndex then
-            local candidate = text:sub(startIndex + #separator):gsub("^%s+", ""):gsub("%s+$", "")
+            local candidate = cleanExtraInfo(text:sub(startIndex + #separator))
 
             if candidate ~= "" then
                 return candidate
@@ -561,6 +578,8 @@ local function cleanDownloadTitle(title, artist)
         text = text:gsub("^%s*" .. escapedArtist .. "%s*", "")
         text = text:gsub("^[-–—|:/,%s]+", "")
     end
+
+    text = cleanExtraInfo(text)
 
     if text == "" then
         return tostring(title or tr("Sin titulo"))
@@ -1800,8 +1819,8 @@ function StrikeMusicUI.Create(parent, Theme)
             bottomPlay.Text = symbol
         end,
         SetNowPlaying = function(item, progress, currentText, totalText)
-            local title = item and item.title or tr("Nada reproduciendose")
             local artist = item and item.artist or tr("Selecciona una cancion")
+            local title = item and cleanDownloadTitle(item.title, artist) or tr("Nada reproduciendose")
 
             nowTitle.Text = title
             nowArtist.Text = artist
@@ -1853,8 +1872,10 @@ function StrikeMusicUI.Create(parent, Theme)
         bottomPlayer.Size = UDim2.new(1, -16, 0, 68)
         bottomPlayer.Position = UDim2.new(0, 8, 1, -76)
         bottomTitle.Position = UDim2.new(0, 78, 0, 13)
+        bottomTitle.Size = UDim2.new(0, 116, 0, 22)
         bottomTitle.TextSize = 14
         bottomArtist.Position = UDim2.new(0, 78, 0, 39)
+        bottomArtist.Size = UDim2.new(0, 116, 0, 18)
         bottomArtist.TextSize = 11
         bottomHeart.Position = UDim2.new(0, 198, 0, 35)
         searchHolder.Position = UDim2.new(0.31, -1, 0, 14)
