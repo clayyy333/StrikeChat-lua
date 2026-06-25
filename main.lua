@@ -1250,6 +1250,7 @@ if leftPanel.Buttons.StrikeMusic then
         end
 
         local playLocalDownload
+        local deleteLocalDownload
         local function getLocalDownloadKey(job)
             if not job then
                 return nil
@@ -1397,7 +1398,8 @@ if leftPanel.Buttons.StrikeMusic then
 
                 musicUI.RenderDownloads(
                     jobsToRender or {},
-                    playLocalDownload
+                    playLocalDownload,
+                    deleteLocalDownload
                 )
 
                 if renderCurrentMusicSearchResults then
@@ -1550,6 +1552,40 @@ if leftPanel.Buttons.StrikeMusic then
             end
         end
 
+        deleteLocalDownload = function(job)
+            if not job or not job.local_metadata then
+                return
+            end
+
+            local deletedKey = getLocalDownloadKey(job)
+            local currentKey = getLocalDownloadKey(currentLocalDownload)
+
+            if currentPlaybackKind == "local"
+                and deletedKey ~= ""
+                and deletedKey == currentKey
+            then
+                strikeMusicClient.StopRobloxAudio()
+                strikeMusicClient.StopPlayback(player)
+                currentLocalDownload = nil
+                currentPlaybackKind = nil
+                musicUI.SetPlaybackState(false)
+                musicUI.SetNowPlaying(nil, 0, "0:00", "0:00")
+            end
+
+            local deleteResult = strikeMusicClient.DeleteLocalItem(
+                player,
+                job.local_metadata
+            )
+
+            if deleteResult and deleteResult.status ~= "deleted" then
+                warn(
+                    "StrikeMusic: local delete failed",
+                    tostring(deleteResult.reason or "unknown")
+                )
+            end
+
+            refreshMusicDownloads()
+        end
         local musicDownloadLocked = false
 
         local function downloadSearchResult(result, mediaType)

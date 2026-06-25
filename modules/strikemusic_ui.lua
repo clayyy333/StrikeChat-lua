@@ -594,14 +594,14 @@ function StrikeMusicUI.Create(parent, Theme)
     local optionsPadding = Instance.new("UIPadding")
     optionsPadding.PaddingTop = UDim.new(0, 8)
     optionsPadding.PaddingBottom = UDim.new(0, 8)
-    optionsPadding.PaddingLeft = UDim.new(0, 8)
-    optionsPadding.PaddingRight = UDim.new(0, 8)
+    optionsPadding.PaddingLeft = UDim.new(0, 16)
+    optionsPadding.PaddingRight = UDim.new(0, 12)
     optionsPadding.Parent = downloadOptionsMenu
 
     local function createOptionButton(name, text, color)
         local button = Instance.new("TextButton")
         button.Name = name
-        button.Size = UDim2.new(1, 0, 0, 34)
+        button.Size = UDim2.new(1, 0, 0, 36)
         button.BackgroundColor3 = COLORS.Panel
         button.BackgroundTransparency = 1
         button.BorderSizePixel = 0
@@ -614,7 +614,7 @@ function StrikeMusicUI.Create(parent, Theme)
         button.ZIndex = 41
         button.Parent = downloadOptionsMenu
         local function setOptionHover(active)
-            button.BackgroundTransparency = active and 0.18 or 1
+            button.BackgroundTransparency = active and 0.12 or 1
             button.TextColor3 = active
                 and (color or Color3.fromRGB(224, 228, 240))
                 or (color or COLORS.Text)
@@ -635,16 +635,83 @@ function StrikeMusicUI.Create(parent, Theme)
         return button
     end
 
-    createOptionButton("AddPlaylistButton", "Agregar a playlist")
-    createOptionButton("AddQueueButton", "Añadir a la fila de reproduccion")
-    createOptionButton("FavoriteButton", "Guardar en tus canciones favoritas")
-    createOptionButton("DeleteFileButton", "Eliminar archivo", Color3.fromRGB(224, 92, 92))
+    local selectedDownloadJob = nil
+    local selectedDeleteHandler = nil
+    local addPlaylistButton = createOptionButton("AddPlaylistButton", "Agregar a playlist")
+    local addQueueButton = createOptionButton("AddQueueButton", "Añadir a la fila de reproduccion")
+    local favoriteButton = createOptionButton("FavoriteButton", "Guardar en tus canciones favoritas")
+    local deleteFileButton = createOptionButton("DeleteFileButton", "Eliminar archivo", Color3.fromRGB(224, 92, 92))
+
+    local deleteConfirmModal = createPanel(
+        root,
+        "DeleteConfirmModal",
+        UDim2.new(0, 300, 0, 156),
+        UDim2.new(0.5, -150, 0.5, -78)
+    )
+    deleteConfirmModal.Visible = false
+    deleteConfirmModal.ZIndex = 60
+    deleteConfirmModal.BackgroundTransparency = 0.02
+
+    local deleteTitle = createLabel(
+        deleteConfirmModal,
+        "Title",
+        tr("Estas seguro de eliminar este archivo?"),
+        UDim2.new(1, -28, 0, 28),
+        UDim2.new(0, 14, 0, 14),
+        13,
+        Enum.Font.GothamBold,
+        COLORS.Text
+    )
+
+    local deleteSongName = createLabel(
+        deleteConfirmModal,
+        "SongName",
+        "",
+        UDim2.new(1, -28, 0, 40),
+        UDim2.new(0, 14, 0, 48),
+        12,
+        Enum.Font.Gotham,
+        COLORS.Muted
+    )
+    deleteSongName.TextWrapped = true
+    deleteSongName.TextYAlignment = Enum.TextYAlignment.Top
+    deleteTitle.ZIndex = 61
+    deleteSongName.ZIndex = 61
+
+    local confirmDeleteButton = createIconButton(
+        deleteConfirmModal,
+        "ConfirmDeleteButton",
+        tr("Eliminar"),
+        UDim2.new(0, 118, 0, 34),
+        UDim2.new(1, -266, 1, -48)
+    )
+    confirmDeleteButton.BackgroundColor3 = Color3.fromRGB(155, 46, 56)
+    confirmDeleteButton.TextSize = 12
+    confirmDeleteButton.ZIndex = 61
+
+    local cancelDeleteButton = createIconButton(
+        deleteConfirmModal,
+        "CancelDeleteButton",
+        tr("Cancelar"),
+        UDim2.new(0, 118, 0, 34),
+        UDim2.new(1, -136, 1, -48)
+    )
+    cancelDeleteButton.BackgroundTransparency = 0.35
+    cancelDeleteButton.TextSize = 12
+    cancelDeleteButton.ZIndex = 61
+
+    local function hideDeleteConfirm()
+        deleteConfirmModal.Visible = false
+    end
 
     local function hideDownloadOptions()
         downloadOptionsMenu.Visible = false
+        hideDeleteConfirm()
     end
 
     local function showDownloadOptions(anchor)
+        hideDeleteConfirm()
+
         local rootPosition = root.AbsolutePosition
         local rootSize = root.AbsoluteSize
         local menuSize = downloadOptionsMenu.AbsoluteSize
@@ -663,6 +730,47 @@ function StrikeMusicUI.Create(parent, Theme)
         downloadOptionsMenu.Position = UDim2.new(0, x, 0, y)
         downloadOptionsMenu.Visible = true
     end
+
+    local function showDeleteConfirm()
+        if not selectedDownloadJob then
+            return
+        end
+
+        deleteSongName.Text = tostring(selectedDownloadJob.title or tr("Sin titulo"))
+
+        local rootSize = root.AbsoluteSize
+        local menuPosition = downloadOptionsMenu.AbsolutePosition - root.AbsolutePosition
+        local modalWidth = 300
+        local modalHeight = 156
+        local x = menuPosition.X
+        local y = menuPosition.Y - modalHeight - 10
+
+        if y < 8 then
+            y = menuPosition.Y + downloadOptionsMenu.AbsoluteSize.Y + 10
+        end
+
+        x = math.clamp(x, 8, math.max(rootSize.X - modalWidth - 8, 8))
+        y = math.clamp(y, 8, math.max(rootSize.Y - modalHeight - 8, 8))
+
+        deleteConfirmModal.Position = UDim2.new(0, x, 0, y)
+        deleteConfirmModal.Visible = true
+    end
+
+    deleteFileButton.MouseButton1Click:Connect(showDeleteConfirm)
+
+    cancelDeleteButton.MouseButton1Click:Connect(function()
+        hideDownloadOptions()
+    end)
+
+    confirmDeleteButton.MouseButton1Click:Connect(function()
+        local job = selectedDownloadJob
+        local handler = selectedDeleteHandler
+        hideDownloadOptions()
+
+        if handler and job then
+            handler(job)
+        end
+    end)
 
     inputBlocker.MouseButton1Click:Connect(hideDownloadOptions)
 
@@ -1368,7 +1476,7 @@ function StrikeMusicUI.Create(parent, Theme)
         end
     end
 
-    local function renderDownloads(jobs, onPlay)
+    local function renderDownloads(jobs, onPlay, onDelete)
         hideDownloadOptions()
         clearContainer(downloadsList)
         jobs = jobs or {}
@@ -1439,6 +1547,8 @@ function StrikeMusicUI.Create(parent, Theme)
             end
 
             optionsButton.MouseButton1Click:Connect(function()
+                selectedDownloadJob = job
+                selectedDeleteHandler = onDelete
                 showDownloadOptions(optionsButton)
             end)
         end
@@ -1536,8 +1646,8 @@ function StrikeMusicUI.Create(parent, Theme)
         RenderRecent = function(items)
             renderRows(recentList, items, "", 3)
         end,
-        RenderDownloads = function(jobs, onPlay)
-            renderDownloads(jobs, onPlay)
+        RenderDownloads = function(jobs, onPlay, onDelete)
+            renderDownloads(jobs, onPlay, onDelete)
         end,
         SetContentView = function(view)
             setContentView(view)
