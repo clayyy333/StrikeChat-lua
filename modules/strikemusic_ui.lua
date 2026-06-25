@@ -454,12 +454,23 @@ local function createWideRow(parent, item)
     local row = Instance.new("Frame")
     row.Name = "MusicRow"
     row.Size = UDim2.new(1, 0, 0, 48)
-    row.BackgroundColor3 = item and item.is_playing
+    row.BackgroundTransparency = 1
+    row.BorderSizePixel = 0
+    row.ClipsDescendants = false
+    row.Parent = parent
+
+    local rowBackground = Instance.new("Frame")
+    rowBackground.Name = "RowBackground"
+    rowBackground.Size = UDim2.new(1, 0, 1, 0)
+    rowBackground.Position = UDim2.new(0, 0, 0, 0)
+    rowBackground.BackgroundColor3 = item and item.is_playing
         and Color3.fromRGB(50, 55, 64)
         or COLORS.PanelSoft
-    row.BackgroundTransparency = item and item.is_playing and 0.18 or 0.78
-    row.BorderSizePixel = 0
-    row.Parent = parent
+    rowBackground.BackgroundTransparency = item and item.is_playing and 0.18 or 0.78
+    rowBackground.BorderSizePixel = 0
+    rowBackground.ZIndex = 0
+    rowBackground.Parent = row
+    createCorner(rowBackground, 6)
 
     createArtFrame(row, "Art", UDim2.new(0, 38, 0, 38), UDim2.new(0, 0, 0.5, -19), item)
 
