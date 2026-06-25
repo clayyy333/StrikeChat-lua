@@ -352,6 +352,12 @@ function Storage.SaveDownloadedMetadata(downloadJob, fileKey, localPath, fileSiz
         }
     end
 
+    local thumbnailOriginalUrl = downloadJob.thumbnail_original_url or downloadJob.thumbnail_url
+
+    if thumbnailOriginalUrl and tostring(thumbnailOriginalUrl):match("^rbxasset") then
+        thumbnailOriginalUrl = ""
+    end
+
     local metadata = {
         file_key = fileKey,
         local_path = localPath,
@@ -361,8 +367,8 @@ function Storage.SaveDownloadedMetadata(downloadJob, fileKey, localPath, fileSiz
         duration_seconds = downloadJob.duration_seconds,
         file_size_bytes = fileSizeBytes,
         quality = downloadJob.quality,
-        thumbnail_url = downloadJob.thumbnail_url,
-        thumbnail_original_url = downloadJob.thumbnail_original_url or downloadJob.thumbnail_url,
+        thumbnail_url = thumbnailOriginalUrl,
+        thumbnail_original_url = thumbnailOriginalUrl,
         local_thumbnail_path = downloadJob.local_thumbnail_path,
         source_id = downloadJob.source_id,
         source_url = downloadJob.source_url,

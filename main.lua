@@ -1277,6 +1277,10 @@ if leftPanel.Buttons.StrikeMusic then
                     if StrikeMusicStorage.MediaExists(metadata) then
                         strikeMusicClient.CacheThumbnail(metadata)
 
+                        if metadata.local_thumbnail_path then
+                            StrikeMusicStorage.SaveMetadata(metadata)
+                        end
+
                         table.insert(localJobs, {
                             status = "completed",
                             media_type = metadata.media_type,

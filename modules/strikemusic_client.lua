@@ -631,13 +631,20 @@ function StrikeMusicClient.Create(Api, Storage)
 
         local thumbnailUrl = tostring(item.thumbnail_original_url or item.thumbnail_url or "")
 
+        if (thumbnailUrl == "" or thumbnailUrl:match("^rbxasset"))
+            and item.source_id
+            and tostring(item.source_id) ~= ""
+        then
+            thumbnailUrl = "https://i.ytimg.com/vi/" .. tostring(item.source_id) .. "/hqdefault.jpg"
+        end
+
         if thumbnailUrl == "" then
             item.thumbnail_debug = "thumbnail_url_missing"
             return item
         end
 
         if thumbnailUrl:match("^rbxasset") then
-            item.thumbnail_debug = "ready"
+            item.thumbnail_debug = "thumbnail_url_stale"
             return item
         end
 
