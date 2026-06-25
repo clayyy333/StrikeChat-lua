@@ -1624,11 +1624,16 @@ if leftPanel.Buttons.StrikeMusic then
                         and downloadedResult.status == "downloaded"
                         and downloadedResult.metadata
                     then
+                        strikeMusicClient.CacheThumbnail(downloadedResult.metadata)
+
                         playLocalDownload({
                             title = downloadedResult.metadata.title,
                             artist = downloadedResult.metadata.artist,
                             media_type = downloadedResult.metadata.media_type,
                             source_id = downloadedResult.metadata.source_id,
+                            thumbnail_url = downloadedResult.metadata.thumbnail_url,
+                            thumbnail_original_url = downloadedResult.metadata.thumbnail_original_url,
+                            local_thumbnail_path = downloadedResult.metadata.local_thumbnail_path,
                             local_metadata = downloadedResult.metadata,
                             local_playback_supported = true,
                             library_item_id = completedItem

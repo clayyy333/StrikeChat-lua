@@ -1541,12 +1541,23 @@ function StrikeMusicUI.Create(parent, Theme)
         for _, job in ipairs(jobs) do
             local status = tostring(job.status or "pending")
             local progress = math.clamp(tonumber(job.progress) or 0, 0, 100)
+            local displayStatus = job.display_status
+                or job.local_playback_label
+                or status .. " " .. tostring(progress) .. "%"
+
+            local hideMobileReadyStatus = _G.StrikeChatLayoutMode == "mobile"
+                and status == "completed"
+                and job.local_playback_supported == true
+                and job.display_status == nil
+
+            if hideMobileReadyStatus then
+                displayStatus = ""
+            end
+
             local item = {
                 title = job.title or tr("Sin titulo"),
                 artist = job.artist or status,
-                duration_text = job.display_status
-                    or job.local_playback_label
-                    or status .. " " .. tostring(progress) .. "%",
+                duration_text = displayStatus,
                 thumbnail_url = job.thumbnail_url,
                 is_playing = job.is_playing == true
             }
@@ -1557,6 +1568,20 @@ function StrikeMusicUI.Create(parent, Theme)
             if statusLabel then
                 statusLabel.Size = UDim2.new(0, 140, 0, 20)
                 statusLabel.Position = UDim2.new(1, -236, 0, 20)
+                statusLabel.Visible = not hideMobileReadyStatus
+            end
+
+            if hideMobileReadyStatus then
+                local nameLabel = row:FindFirstChild("Name")
+                local artistLabel = row:FindFirstChild("Artist")
+
+                if nameLabel then
+                    nameLabel.Size = UDim2.new(1, -162, 0, 20)
+                end
+
+                if artistLabel then
+                    artistLabel.Size = UDim2.new(1, -162, 0, 18)
+                end
             end
 
             optionsButton.Position = UDim2.new(1, -34, 0.5, -14)
