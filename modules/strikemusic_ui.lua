@@ -125,9 +125,11 @@ local function clearContainer(container)
     end
 end
 
-local function createProgress(parent, position, size, value)
+local function createProgress(parent, position, size, value, interactive)
     local UserInputService = game:GetService("UserInputService")
     local changed = Instance.new("BindableEvent")
+    local progressValue = math.clamp(value or 0.18, 0, 1)
+    local previewValue = progressValue
     local dragging = false
 
     local back = Instance.new("Frame")
@@ -142,58 +144,92 @@ local function createProgress(parent, position, size, value)
 
     local fill = Instance.new("Frame")
     fill.Name = "ProgressFill"
-    fill.Size = UDim2.new(math.clamp(value or 0.18, 0, 1), 0, 1, 0)
+    fill.Size = UDim2.new(progressValue, 0, 1, 0)
     fill.BackgroundColor3 = COLORS.Purple
     fill.BorderSizePixel = 0
     fill.Parent = back
     createCorner(fill, 4)
 
-    local hitArea = Instance.new("TextButton")
-    hitArea.Name = "ProgressHitArea"
-    hitArea.Size = UDim2.new(1, 0, 0, 18)
-    hitArea.Position = UDim2.new(0, 0, 0.5, -9)
-    hitArea.BackgroundTransparency = 1
-    hitArea.BorderSizePixel = 0
-    hitArea.Text = ""
-    hitArea.AutoButtonColor = false
-    hitArea.Active = true
-    hitArea.Parent = back
+    local knob = Instance.new("Frame")
+    knob.Name = "ProgressKnob"
+    knob.Size = UDim2.new(0, 12, 0, 12)
+    knob.Position = UDim2.new(progressValue, -6, 0.5, -6)
+    knob.BackgroundColor3 = COLORS.Text
+    knob.BorderSizePixel = 0
+    knob.Visible = false
+    knob.ZIndex = (back.ZIndex or 1) + 2
+    knob.Parent = back
+    createCorner(knob, 6)
+
+    local function setVisual(nextValue)
+        previewValue = math.clamp(nextValue or 0, 0, 1)
+        fill.Size = UDim2.new(previewValue, 0, 1, 0)
+        knob.Position = UDim2.new(previewValue, -6, 0.5, -6)
+    end
+
+    local function setValue(nextValue)
+        progressValue = math.clamp(nextValue or 0, 0, 1)
+        setVisual(progressValue)
+    end
 
     local function setFromX(x)
         local absoluteX = back.AbsolutePosition.X
         local width = math.max(back.AbsoluteSize.X, 1)
-        changed:Fire(math.clamp((x - absoluteX) / width, 0, 1))
+        setVisual((x - absoluteX) / width)
     end
 
-    hitArea.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1
-            or input.UserInputType == Enum.UserInputType.Touch
-        then
-            dragging = true
-            setFromX(input.Position.X)
-        end
-    end)
+    if interactive then
+        local hitArea = Instance.new("TextButton")
+        hitArea.Name = "ProgressHitArea"
+        hitArea.Size = UDim2.new(1, 0, 0, 18)
+        hitArea.Position = UDim2.new(0, 0, 0.5, -9)
+        hitArea.BackgroundTransparency = 1
+        hitArea.BorderSizePixel = 0
+        hitArea.Text = ""
+        hitArea.AutoButtonColor = false
+        hitArea.Active = true
+        hitArea.ZIndex = (back.ZIndex or 1) + 3
+        hitArea.Parent = back
 
-    UserInputService.InputChanged:Connect(function(input)
-        if dragging
-            and (
-                input.UserInputType == Enum.UserInputType.MouseMovement
+        hitArea.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1
                 or input.UserInputType == Enum.UserInputType.Touch
-            )
-        then
-            setFromX(input.Position.X)
-        end
-    end)
+            then
+                dragging = true
+                knob.Visible = true
+                setFromX(input.Position.X)
+            end
+        end)
 
-    UserInputService.InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1
-            or input.UserInputType == Enum.UserInputType.Touch
-        then
-            dragging = false
-        end
-    end)
+        UserInputService.InputChanged:Connect(function(input)
+            if dragging
+                and (
+                    input.UserInputType == Enum.UserInputType.MouseMovement
+                    or input.UserInputType == Enum.UserInputType.Touch
+                )
+            then
+                setFromX(input.Position.X)
+            end
+        end)
 
-    return back, fill, changed.Event
+        UserInputService.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch
+            then
+                if dragging then
+                    progressValue = previewValue
+                    changed:Fire(progressValue)
+                end
+
+                dragging = false
+                knob.Visible = false
+            end
+        end)
+    end
+
+    return back, fill, changed.Event, function()
+        return dragging
+    end, setValue
 end
 
 local function createVolumeSlider(parent, position, size, initialValue)
@@ -500,6 +536,38 @@ local function createCard(parent, item, width, height, onPlay, onDownload)
     return card, play
 end
 
+local function cleanDownloadTitle(title, artist)
+    local text = tostring(title or "")
+    local artistText = tostring(artist or "")
+
+    if text == "" then
+        return tr("Sin titulo")
+    end
+
+    for _, separator in ipairs({" - ", " – ", " — "}) do
+        local startIndex = text:find(separator, 1, true)
+
+        if startIndex then
+            local candidate = text:sub(startIndex + #separator):gsub("^%s+", ""):gsub("%s+$", "")
+
+            if candidate ~= "" then
+                return candidate
+            end
+        end
+    end
+
+    if artistText ~= "" then
+        local escapedArtist = artistText:gsub("([^%w])", "%%%1")
+        text = text:gsub("^%s*" .. escapedArtist .. "%s*", "")
+        text = text:gsub("^[-–—|:/,%s]+", "")
+    end
+
+    if text == "" then
+        return tostring(title or tr("Sin titulo"))
+    end
+
+    return text
+end
 local function createWideRow(parent, item)
     local row = Instance.new("Frame")
     row.Name = "MusicRow"
@@ -1113,7 +1181,7 @@ function StrikeMusicUI.Create(parent, Theme)
     heartButton.Position = UDim2.new(1, -48, 0, 204)
     local nowArtist = createLabel(rightScroll, "NowArtist", "Selecciona una cancion", UDim2.new(1, -32, 0, 20), UDim2.new(0, 16, 0, 236), 12, Enum.Font.Gotham, COLORS.Muted)
 
-    local nowProgress, nowProgressFill, nowProgressChanged = createProgress(rightScroll, UDim2.new(0, 16, 0, 272), UDim2.new(1, -32, 0, 4), 0)
+    local nowProgress, nowProgressFill, nowProgressChanged, nowProgressDragging, setNowProgress = createProgress(rightScroll, UDim2.new(0, 16, 0, 272), UDim2.new(1, -32, 0, 4), 0, true)
     local currentTime = createLabel(rightScroll, "CurrentTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(0, 16, 0, 280), 10, Enum.Font.Gotham, COLORS.Muted)
     local totalTime = createLabel(rightScroll, "TotalTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(1, -66, 0, 280), 10, Enum.Font.Gotham, COLORS.Muted)
     totalTime.TextXAlignment = Enum.TextXAlignment.Right
@@ -1306,7 +1374,7 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomPlay.BackgroundColor3 = COLORS.Purple
     createCorner(bottomPlay, 19)
 
-    local bottomProgress, bottomProgressFill, bottomProgressChanged = createProgress(bottomPlayer, UDim2.new(0.31, 0, 0, 54), UDim2.new(0.38, 0, 0, 4), 0)
+    local bottomProgress, bottomProgressFill, bottomProgressChanged, bottomProgressDragging, setBottomProgress = createProgress(bottomPlayer, UDim2.new(0.31, 0, 0, 54), UDim2.new(0.38, 0, 0, 4), 0, true)
     local bottomCurrent = createLabel(bottomPlayer, "CurrentTime", "0:00", UDim2.new(0, 48, 0, 20), UDim2.new(0.28, 0, 0, 46), 10, Enum.Font.Gotham, COLORS.Muted)
     local bottomTotal = createLabel(bottomPlayer, "TotalTime", "0:00", UDim2.new(0, 48, 0, 20), UDim2.new(0.69, 0, 0, 46), 10, Enum.Font.Gotham, COLORS.Muted)
     bottomTotal.TextXAlignment = Enum.TextXAlignment.Right
@@ -1555,7 +1623,7 @@ function StrikeMusicUI.Create(parent, Theme)
             end
 
             local item = {
-                title = job.title or tr("Sin titulo"),
+                title = cleanDownloadTitle(job.title, job.artist),
                 artist = job.artist or status,
                 duration_text = displayStatus,
                 thumbnail_url = job.thumbnail_url,
@@ -1576,11 +1644,11 @@ function StrikeMusicUI.Create(parent, Theme)
                 local artistLabel = row:FindFirstChild("Artist")
 
                 if nameLabel then
-                    nameLabel.Size = UDim2.new(1, -162, 0, 20)
+                    nameLabel.Size = UDim2.new(1, -132, 0, 20)
                 end
 
                 if artistLabel then
-                    artistLabel.Size = UDim2.new(1, -162, 0, 18)
+                    artistLabel.Size = UDim2.new(1, -132, 0, 18)
                 end
             end
 
@@ -1743,8 +1811,13 @@ function StrikeMusicUI.Create(parent, Theme)
             totalTime.Text = totalText or "0:00"
             bottomCurrent.Text = currentText or "0:00"
             bottomTotal.Text = totalText or "0:00"
-            nowProgressFill.Size = UDim2.new(math.clamp(progress or 0, 0, 1), 0, 1, 0)
-            bottomProgressFill.Size = UDim2.new(math.clamp(progress or 0, 0, 1), 0, 1, 0)
+            if not nowProgressDragging() then
+                setNowProgress(progress or 0)
+            end
+
+            if not bottomProgressDragging() then
+                setBottomProgress(progress or 0)
+            end
 
             local nowImage = nowArt:FindFirstChild("Image")
             local bottomImage = bottomArt:FindFirstChild("Image")
