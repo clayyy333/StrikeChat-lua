@@ -126,6 +126,10 @@ local function clearContainer(container)
 end
 
 local function createProgress(parent, position, size, value)
+    local UserInputService = game:GetService("UserInputService")
+    local changed = Instance.new("BindableEvent")
+    local dragging = false
+
     local back = Instance.new("Frame")
     back.Name = "ProgressBack"
     back.Size = size
@@ -144,7 +148,52 @@ local function createProgress(parent, position, size, value)
     fill.Parent = back
     createCorner(fill, 4)
 
-    return back, fill
+    local hitArea = Instance.new("TextButton")
+    hitArea.Name = "ProgressHitArea"
+    hitArea.Size = UDim2.new(1, 0, 0, 18)
+    hitArea.Position = UDim2.new(0, 0, 0.5, -9)
+    hitArea.BackgroundTransparency = 1
+    hitArea.BorderSizePixel = 0
+    hitArea.Text = ""
+    hitArea.AutoButtonColor = false
+    hitArea.Active = true
+    hitArea.Parent = back
+
+    local function setFromX(x)
+        local absoluteX = back.AbsolutePosition.X
+        local width = math.max(back.AbsoluteSize.X, 1)
+        changed:Fire(math.clamp((x - absoluteX) / width, 0, 1))
+    end
+
+    hitArea.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch
+        then
+            dragging = true
+            setFromX(input.Position.X)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging
+            and (
+                input.UserInputType == Enum.UserInputType.MouseMovement
+                or input.UserInputType == Enum.UserInputType.Touch
+            )
+        then
+            setFromX(input.Position.X)
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch
+        then
+            dragging = false
+        end
+    end)
+
+    return back, fill, changed.Event
 end
 
 local function createVolumeSlider(parent, position, size, initialValue)
@@ -737,22 +786,8 @@ function StrikeMusicUI.Create(parent, Theme)
         end
 
         deleteSongName.Text = tostring(selectedDownloadJob.title or tr("Sin titulo"))
-
-        local rootSize = root.AbsoluteSize
-        local menuPosition = downloadOptionsMenu.AbsolutePosition - root.AbsolutePosition
-        local modalWidth = 300
-        local modalHeight = 156
-        local x = menuPosition.X
-        local y = menuPosition.Y - modalHeight - 10
-
-        if y < 8 then
-            y = menuPosition.Y + downloadOptionsMenu.AbsoluteSize.Y + 10
-        end
-
-        x = math.clamp(x, 8, math.max(rootSize.X - modalWidth - 8, 8))
-        y = math.clamp(y, 8, math.max(rootSize.Y - modalHeight - 8, 8))
-
-        deleteConfirmModal.Position = UDim2.new(0, x, 0, y)
+        deleteConfirmModal.AnchorPoint = Vector2.new(0.5, 0.5)
+        deleteConfirmModal.Position = UDim2.new(0.5, 0, 0.5, 0)
         deleteConfirmModal.Visible = true
     end
 
@@ -1078,7 +1113,7 @@ function StrikeMusicUI.Create(parent, Theme)
     heartButton.Position = UDim2.new(1, -48, 0, 204)
     local nowArtist = createLabel(rightScroll, "NowArtist", "Selecciona una cancion", UDim2.new(1, -32, 0, 20), UDim2.new(0, 16, 0, 236), 12, Enum.Font.Gotham, COLORS.Muted)
 
-    local nowProgress, nowProgressFill = createProgress(rightScroll, UDim2.new(0, 16, 0, 272), UDim2.new(1, -32, 0, 4), 0)
+    local nowProgress, nowProgressFill, nowProgressChanged = createProgress(rightScroll, UDim2.new(0, 16, 0, 272), UDim2.new(1, -32, 0, 4), 0)
     local currentTime = createLabel(rightScroll, "CurrentTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(0, 16, 0, 280), 10, Enum.Font.Gotham, COLORS.Muted)
     local totalTime = createLabel(rightScroll, "TotalTime", "0:00", UDim2.new(0, 50, 0, 20), UDim2.new(1, -66, 0, 280), 10, Enum.Font.Gotham, COLORS.Muted)
     totalTime.TextXAlignment = Enum.TextXAlignment.Right
@@ -1271,10 +1306,20 @@ function StrikeMusicUI.Create(parent, Theme)
     bottomPlay.BackgroundColor3 = COLORS.Purple
     createCorner(bottomPlay, 19)
 
-    local bottomProgress, bottomProgressFill = createProgress(bottomPlayer, UDim2.new(0.31, 0, 0, 54), UDim2.new(0.38, 0, 0, 4), 0)
+    local bottomProgress, bottomProgressFill, bottomProgressChanged = createProgress(bottomPlayer, UDim2.new(0.31, 0, 0, 54), UDim2.new(0.38, 0, 0, 4), 0)
     local bottomCurrent = createLabel(bottomPlayer, "CurrentTime", "0:00", UDim2.new(0, 48, 0, 20), UDim2.new(0.28, 0, 0, 46), 10, Enum.Font.Gotham, COLORS.Muted)
     local bottomTotal = createLabel(bottomPlayer, "TotalTime", "0:00", UDim2.new(0, 48, 0, 20), UDim2.new(0.69, 0, 0, 46), 10, Enum.Font.Gotham, COLORS.Muted)
     bottomTotal.TextXAlignment = Enum.TextXAlignment.Right
+
+    local seekChanged = Instance.new("BindableEvent")
+
+    nowProgressChanged:Connect(function(value)
+        seekChanged:Fire(value)
+    end)
+
+    bottomProgressChanged:Connect(function(value)
+        seekChanged:Fire(value)
+    end)
 
     local volumeIcon = createLabel(bottomPlayer, "VolumeIcon", "V", UDim2.new(0, 26, 0, 26), UDim2.new(0.82, 0, 0.5, -13), 15, Enum.Font.GothamBold, COLORS.Muted)
     volumeIcon.TextXAlignment = Enum.TextXAlignment.Center
@@ -1601,6 +1646,7 @@ function StrikeMusicUI.Create(parent, Theme)
         SeeAllButton = seeAllButton,
         ClearQueueButton = clearQueueButton,
         VolumeSlider = volumeSlider,
+        ProgressSeeked = seekChanged.Event,
         Buttons = {
             Play = playButton,
             Previous = previousButton,

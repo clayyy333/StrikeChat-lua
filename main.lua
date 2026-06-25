@@ -1851,6 +1851,20 @@ if leftPanel.Buttons.StrikeMusic then
             strikeMusicClient.SetRobloxAudioVolume(value)
         end)
 
+        if musicUI.ProgressSeeked then
+            musicUI.ProgressSeeked:Connect(function(value)
+                local state = strikeMusicClient.GetRobloxAudioState()
+                local duration = tonumber(state.duration_seconds) or 0
+
+                if duration <= 0 then
+                    return
+                end
+
+                local nextPosition = math.clamp(tonumber(value) or 0, 0, 1) * duration
+                strikeMusicClient.SetRobloxAudioTimePosition(nextPosition)
+            end)
+        end
+
         if musicUI.NavButtons.Downloads then
             musicUI.NavButtons.Downloads.MouseButton1Click:Connect(function()
                 musicUI.SetContentView("downloads")
@@ -1867,15 +1881,18 @@ if leftPanel.Buttons.StrikeMusic then
         task.spawn(function()
             while activeStrikeMusicUI == musicUI and musicUI.Gui.Parent do
                 local state = strikeMusicClient.GetRobloxAudioState()
+                local currentTrack = currentPlaybackKind == "local"
+                    and currentLocalDownload
+                    or currentPopularTrack
 
-                if currentPopularTrack and state.status ~= "idle" then
+                if currentTrack and state.status ~= "idle" then
                     local duration = state.duration_seconds or 0
                     local progress = duration > 0
                         and (state.position_seconds or 0) / duration
                         or 0
 
                     musicUI.SetNowPlaying(
-                        currentPopularTrack,
+                        currentTrack,
                         progress,
                         formatMusicTime(state.position_seconds),
                         formatMusicTime(duration)
