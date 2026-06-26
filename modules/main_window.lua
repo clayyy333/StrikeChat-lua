@@ -638,7 +638,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     local miniCurrent = Instance.new("TextLabel")
     miniCurrent.Name = "CurrentTime"
     miniCurrent.Size = UDim2.new(0, 34, 0, 12)
-    miniCurrent.Position = UDim2.new(0.48, 0, 0, 17)
+    miniCurrent.Position = UDim2.new(0.49, 0, 0, 17)
     miniCurrent.BackgroundTransparency = 1
     miniCurrent.Text = "0:00"
     miniCurrent.TextColor3 = Theme.Colors.TextMuted
@@ -650,7 +650,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
 
     local miniTotal = miniCurrent:Clone()
     miniTotal.Name = "TotalTime"
-    miniTotal.Position = UDim2.new(0.73, 2, 0, 17)
+    miniTotal.Position = UDim2.new(0.74, 2, 0, 17)
     miniTotal.Text = "0:00"
     miniTotal.TextXAlignment = Enum.TextXAlignment.Left
     miniTotal.Parent = musicPlayer

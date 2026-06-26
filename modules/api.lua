@@ -593,6 +593,16 @@ function Api.RegisterStrikeMusicPopularPlay(player, catalogTrackId)
     )
 end
 
+function Api.RegisterStrikeMusicPersonalPopularPlay(player, payload)
+    return Api.Request(
+        Api.BaseUrl ..
+        "/strikemusic/popular/play" ..
+        "?roblox_user_id=" .. Api.Encode(player.UserId),
+        "POST",
+        payload or {}
+    )
+end
+
 function Api.AddPersonalRobloxAudio(player, audioId, title, artist)
     return Api.Request(
         Api.BaseUrl ..

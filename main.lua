@@ -1204,6 +1204,8 @@ if leftPanel.Buttons.StrikeMusic then
         local currentPlaybackKind = nil
         local currentLocalDownload = nil
         local localDownloadQueue = {}
+        local playbackCountSessionIndex = 0
+        local currentPlaybackCountSession = nil
         local shuffleEnabled = false
         local repeatEnabled = false
 
@@ -1297,6 +1299,75 @@ if leftPanel.Buttons.StrikeMusic then
                     or ""
             )
         end
+        local function beginPlaybackCountSession(track)
+            playbackCountSessionIndex += 1
+            currentPlaybackCountSession = {
+                id = tostring(player.UserId) .. ":" .. tostring(os.clock()) .. ":" .. tostring(playbackCountSessionIndex),
+                track = track,
+                counted = false
+            }
+        end
+
+        local function getPopularSourceId(track)
+            if not track then
+                return nil
+            end
+
+            return track.source_id
+                or (track.local_metadata and track.local_metadata.source_id)
+                or track.catalog_track_id
+                or (track.roblox_audio_id and tostring(track.roblox_audio_id))
+        end
+        local function maybeCountPopularPlayback(state, force)
+            local session = currentPlaybackCountSession
+            local track = session and session.track
+
+            if not session or session.counted or not track then
+                return
+            end
+
+            local duration = tonumber(state and state.duration_seconds) or tonumber(track.duration_seconds) or 0
+            local position = tonumber(state and state.position_seconds) or 0
+            local shouldCount = force == true
+
+            if not shouldCount and duration > 0 then
+                shouldCount = position >= (duration * 0.5)
+            end
+
+            if not shouldCount then
+                return
+            end
+
+            session.counted = true
+
+            task.spawn(function()
+                if track.catalog_track_id then
+                    Api.RegisterStrikeMusicPopularPlay(player, track.catalog_track_id)
+                    return
+                end
+
+                local sourceId = getPopularSourceId(track)
+
+                if not sourceId or tostring(sourceId) == "" then
+                    return
+                end
+
+                strikeMusicClient.RegisterPopularPlay(
+                    player,
+                    {
+                        session_id = session.id,
+                        source = track.source or "youtube",
+                        source_id = tostring(sourceId),
+                        source_url = track.source_url,
+                        title = track.title or "Sin titulo",
+                        artist = track.artist,
+                        duration_seconds = duration > 0 and math.floor(duration) or nil,
+                        thumbnail_url = track.thumbnail_original_url or track.thumbnail_url,
+                        media_type = track.media_type or "mp3"
+                    }
+                )
+            end)
+        end
         local function markMusicItemPlaying(item)
             local media = item and (item.media or item)
 
@@ -1337,6 +1408,7 @@ if leftPanel.Buttons.StrikeMusic then
         local refreshMusicPlaylists
         local openPlaylist
         local openAddToPlaylistPicker
+        local renderCurrentPopularTracks
         local renderCurrentMusicSearchResults
         local renderCurrentPlaylist
 
@@ -1458,22 +1530,27 @@ if leftPanel.Buttons.StrikeMusic then
                     return
                 end
 
-                for _, result in ipairs(currentMusicSearchResults) do
-                    result.local_download = nil
-                    result.local_playback_supported = false
+                local function attachLocalDownloadState(results)
+                    for _, result in ipairs(results or {}) do
+                        result.local_download = nil
+                        result.local_playback_supported = false
 
-                    for _, job in ipairs(jobsToRender or {}) do
-                        if job.status == "completed"
-                            and job.media_type == "mp3"
-                            and job.local_playback_supported
-                            and tostring(job.source_id) == tostring(result.source_id)
-                        then
-                            result.local_download = job
-                            result.local_playback_supported = true
-                            break
+                        for _, job in ipairs(jobsToRender or {}) do
+                            if job.status == "completed"
+                                and job.media_type == "mp3"
+                                and job.local_playback_supported
+                                and tostring(job.source_id) == tostring(result.source_id)
+                            then
+                                result.local_download = job
+                                result.local_playback_supported = true
+                                break
+                            end
                         end
                     end
                 end
+
+                attachLocalDownloadState(currentMusicSearchResults)
+                attachLocalDownloadState(popularTracks)
 
                 localDownloadQueue = {}
                 local currentLocalKey = getLocalDownloadKey(currentLocalDownload)
@@ -1515,6 +1592,10 @@ if leftPanel.Buttons.StrikeMusic then
 
                 if renderCurrentMusicSearchResults then
                     renderCurrentMusicSearchResults()
+                end
+
+                if renderCurrentPopularTracks then
+                    renderCurrentPopularTracks()
                 end
             end)
         end
@@ -1614,6 +1695,7 @@ if leftPanel.Buttons.StrikeMusic then
                     currentPopularTrack = track
                     currentPlaybackKind = "popular"
                     currentLocalDownload = nil
+                    beginPlaybackCountSession(track)
                     track.library_item_id = libraryItem.library_item_id
                     setMusicPlaybackState(true)
                     setMusicNowPlaying(track, 0, "0:00", "0:00")
@@ -1624,9 +1706,6 @@ if leftPanel.Buttons.StrikeMusic then
                         "manual",
                         0
                     )
-                    if track.catalog_track_id then
-                        Api.RegisterStrikeMusicPopularPlay(player, track.catalog_track_id)
-                    end
 
                     refreshRecentMusic()
                 end
@@ -1647,6 +1726,7 @@ if leftPanel.Buttons.StrikeMusic then
                 currentPopularTrack = job.local_metadata
                 currentPlaybackKind = "local"
                 currentLocalDownload = job
+                beginPlaybackCountSession(job.local_metadata)
                 setMusicPlaybackState(true)
                 setMusicNowPlaying(job.local_metadata, 0, "0:00", "0:00")
                 setMusicFavoriteActive(job.library_item_id and favoriteLibraryIds[tostring(job.library_item_id)] == true)
@@ -2164,6 +2244,93 @@ if leftPanel.Buttons.StrikeMusic then
                 musicDownloadLocked = false
             end)
         end
+        local function playPopularDisplayResult(result)
+            if result and result.local_download then
+                playLocalDownload(result.local_download)
+            elseif result and result.roblox_audio_id then
+                playPopularRobloxTrack(result)
+            end
+        end
+
+        local function resolvePopularDisplayTrack(track)
+            if not track then
+                return nil
+            end
+
+            if track.source == "youtube" or track.source_url then
+                track.downloadable = true
+                strikeMusicClient.CacheThumbnail(track)
+                return track
+            end
+
+            if track.roblox_audio_id then
+                local query = tostring(track.title or "")
+
+                if track.artist and tostring(track.artist) ~= "" then
+                    query = query .. " " .. tostring(track.artist)
+                end
+
+                local searchResult = strikeMusicClient.Search(player, query, 1)
+
+                if searchResult
+                    and searchResult.status == "ok"
+                    and searchResult.provider_status == "ok"
+                    and searchResult.results
+                    and searchResult.results[1]
+                then
+                    local result = searchResult.results[1]
+                    result.downloadable = true
+                    result.fallback_catalog_track_id = track.catalog_track_id
+                    result.fallback_roblox_audio_id = track.roblox_audio_id
+                    result.play_count = track.play_count
+                    strikeMusicClient.CacheThumbnail(result)
+                    return result
+                end
+
+                track.playable = true
+                return track
+            end
+
+            return track
+        end
+
+        renderCurrentPopularTracks = function()
+            if activeStrikeMusicUI ~= musicUI then
+                return
+            end
+
+            musicUI.RenderPopular(popularTracks, playPopularDisplayResult, downloadSearchResult)
+        end
+
+        local function refreshPopularMusic()
+            task.spawn(function()
+                local popularResult = strikeMusicClient.GetPopular(4)
+
+                if activeStrikeMusicUI ~= musicUI then
+                    return
+                end
+
+                local resolvedTracks = {}
+
+                if popularResult and popularResult.status == "ok" and popularResult.items then
+                    for index, track in ipairs(popularResult.items) do
+                        if index > 4 then
+                            break
+                        end
+
+                        local resolvedTrack = resolvePopularDisplayTrack(track)
+
+                        if resolvedTrack then
+                            table.insert(resolvedTracks, resolvedTrack)
+                        end
+                    end
+                end
+
+                popularTracks = resolvedTracks
+                renderCurrentPopularTracks()
+                refreshMusicDownloads()
+            end)
+        end
         renderCurrentMusicSearchResults = function()
             if activeStrikeMusicUI ~= musicUI then
                 return
@@ -2301,6 +2468,8 @@ if leftPanel.Buttons.StrikeMusic then
             if activeStrikeMusicUI ~= musicUI then
                 return
             end
+
+            maybeCountPopularPlayback(strikeMusicClient.GetRobloxAudioState(), true)
 
             if currentPlaybackKind == "local" then
                 if repeatEnabled and currentLocalDownload then
@@ -2507,6 +2676,7 @@ if leftPanel.Buttons.StrikeMusic then
                         formatMusicTime(duration)
                     )
                     setMusicPlaybackState(state.status == "playing")
+                    maybeCountPopularPlayback(state, false)
                 end
 
                 task.wait(0.25)
@@ -2517,16 +2687,7 @@ if leftPanel.Buttons.StrikeMusic then
             strikeMusicClient.Open(player)
             refreshMusicFavorites(false)
 
-            local popularResult = strikeMusicClient.GetPopular(6)
-
-            if popularResult
-                and popularResult.status == "ok"
-                and popularResult.items
-                and activeStrikeMusicUI == musicUI
-            then
-                popularTracks = popularResult.items
-                musicUI.RenderPopular(popularTracks, playPopularRobloxTrack)
-            end
+            refreshPopularMusic()
         end)
         activeStrikeMusicUI.MinimizeButton.MouseButton1Click:Connect(function()
             window.Gui.Enabled = true

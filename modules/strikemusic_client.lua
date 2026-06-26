@@ -459,9 +459,12 @@ function StrikeMusicClient.Create(Api, Storage)
     end
 
     function client.GetPopular(limit)
-        return Api.GetStrikeMusicPopular(limit or 6)
+        return Api.GetStrikeMusicPopular(limit or 4)
     end
 
+    function client.RegisterPopularPlay(player, payload)
+        return Api.RegisterStrikeMusicPersonalPopularPlay(player, payload)
+    end
     function client.AddRobloxAudio(player, track)
         if not track or not track.roblox_audio_id then
             return {

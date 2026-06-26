@@ -791,7 +791,7 @@ function StrikeMusicUI.Create(parent, Theme)
     local selectedAddPlaylistHandler = nil
     local selectedRemovePlaylistHandler = nil
     local addPlaylistButton = createOptionButton("AddPlaylistButton", "Agregar a playlist")
-    local addQueueButton = createOptionButton("AddQueueButton", "AÃ±adir a la fila de reproduccion")
+    local addQueueButton = createOptionButton("AddQueueButton", "Agregar a la fila")
     local favoriteButton = createOptionButton("FavoriteButton", "Guardar en tus canciones favoritas")
     local removePlaylistButton = createOptionButton("RemovePlaylistButton", "Eliminar de Playlist", Color3.fromRGB(224, 92, 92))
     local deleteFileButton = createOptionButton("DeleteFileButton", "Eliminar archivo", Color3.fromRGB(224, 92, 92))
@@ -2291,7 +2291,7 @@ function StrikeMusicUI.Create(parent, Theme)
     end
     minimizeButton.MouseButton1Click:Connect(function()
         root.Visible = false
-        minimizedButton.Visible = true
+        minimizedButton.Visible = false
     end)
 
     minimizedButton.MouseButton1Click:Connect(function()
@@ -2342,7 +2342,7 @@ function StrikeMusicUI.Create(parent, Theme)
                 onDownload
             )
         end,
-        RenderPopular = function(items, onPlay)
+        RenderPopular = function(items, onPlay, onDownload)
             renderCards(
                 popularList,
                 items,
@@ -2352,7 +2352,8 @@ function StrikeMusicUI.Create(parent, Theme)
                 nil,
                 popularPrevButton,
                 popularNextButton,
-                onPlay
+                onPlay,
+                onDownload
             )
         end,
         RenderRecent = function(items)
