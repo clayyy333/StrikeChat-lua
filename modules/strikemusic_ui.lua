@@ -10,6 +10,7 @@ local COLORS = {
     Muted = Color3.fromRGB(157, 164, 180),
     Purple = Color3.fromRGB(137, 50, 235),
     PurpleBright = Color3.fromRGB(180, 80, 255),
+    Green = Color3.fromRGB(78, 190, 92),
     ProgressBack = Color3.fromRGB(42, 48, 61)
 }
 
@@ -763,9 +764,14 @@ function StrikeMusicUI.Create(parent, Theme)
 
     local selectedDownloadJob = nil
     local selectedDeleteHandler = nil
+    local selectedFavoriteHandler = nil
+    local selectedQueueHandler = nil
+    local selectedAddPlaylistHandler = nil
+    local selectedRemovePlaylistHandler = nil
     local addPlaylistButton = createOptionButton("AddPlaylistButton", "Agregar a playlist")
-    local addQueueButton = createOptionButton("AddQueueButton", "Añadir a la fila de reproduccion")
+    local addQueueButton = createOptionButton("AddQueueButton", "AÃ±adir a la fila de reproduccion")
     local favoriteButton = createOptionButton("FavoriteButton", "Guardar en tus canciones favoritas")
+    local removePlaylistButton = createOptionButton("RemovePlaylistButton", "Eliminar de Playlist", Color3.fromRGB(224, 92, 92))
     local deleteFileButton = createOptionButton("DeleteFileButton", "Eliminar archivo", Color3.fromRGB(224, 92, 92))
 
     local deleteConfirmModal = createPanel(
@@ -835,8 +841,15 @@ function StrikeMusicUI.Create(parent, Theme)
         hideDeleteConfirm()
     end
 
-    local function showDownloadOptions(anchor)
+    local function showDownloadOptions(anchor, mode)
         hideDeleteConfirm()
+
+        mode = mode or "downloads"
+        favoriteButton.Text = mode == "favorites"
+            and tr("Eliminar de favoritos")
+            or tr("Guardar en tus canciones favoritas")
+        removePlaylistButton.Visible = mode == "playlist"
+        deleteFileButton.Visible = mode == "downloads"
 
         local rootPosition = root.AbsolutePosition
         local rootSize = root.AbsoluteSize
@@ -868,6 +881,46 @@ function StrikeMusicUI.Create(parent, Theme)
         deleteConfirmModal.Visible = true
     end
 
+    addPlaylistButton.MouseButton1Click:Connect(function()
+        local job = selectedDownloadJob
+        local handler = selectedAddPlaylistHandler
+        hideDownloadOptions()
+
+        if handler and job then
+            handler(job)
+        end
+    end)
+
+    favoriteButton.MouseButton1Click:Connect(function()
+        local job = selectedDownloadJob
+        local handler = selectedFavoriteHandler
+        hideDownloadOptions()
+
+        if handler and job then
+            handler(job)
+        end
+    end)
+
+    removePlaylistButton.MouseButton1Click:Connect(function()
+        local job = selectedDownloadJob
+        local handler = selectedRemovePlaylistHandler
+        hideDownloadOptions()
+
+        if handler and job then
+            handler(job)
+        end
+    end)
+
+    addQueueButton.MouseButton1Click:Connect(function()
+        local job = selectedDownloadJob
+        local handler = selectedQueueHandler
+        hideDownloadOptions()
+
+        if handler and job then
+            handler(job)
+        end
+    end)
+
     deleteFileButton.MouseButton1Click:Connect(showDeleteConfirm)
 
     cancelDeleteButton.MouseButton1Click:Connect(function()
@@ -881,6 +934,211 @@ function StrikeMusicUI.Create(parent, Theme)
 
         if handler and job then
             handler(job)
+        end
+    end)
+
+
+
+    local createPlaylistHandler = nil
+    local createPlaylistModal = createPanel(
+        root,
+        "CreatePlaylistModal",
+        UDim2.new(0, 330, 0, 170),
+        UDim2.new(0.5, -165, 0.5, -85)
+    )
+    createPlaylistModal.Visible = false
+    createPlaylistModal.ZIndex = 60
+    createPlaylistModal.BackgroundTransparency = 0.02
+
+    local createPlaylistTitle = createLabel(
+        createPlaylistModal,
+        "Title",
+        tr("Nueva lista"),
+        UDim2.new(1, -28, 0, 28),
+        UDim2.new(0, 14, 0, 14),
+        14,
+        Enum.Font.GothamBold,
+        COLORS.Text
+    )
+    createPlaylistTitle.ZIndex = 61
+
+    local playlistNameInput = Instance.new("TextBox")
+    playlistNameInput.Name = "PlaylistNameInput"
+    playlistNameInput.Size = UDim2.new(1, -28, 0, 38)
+    playlistNameInput.Position = UDim2.new(0, 14, 0, 56)
+    playlistNameInput.BackgroundColor3 = COLORS.PanelLight
+    playlistNameInput.BackgroundTransparency = 0.05
+    playlistNameInput.BorderSizePixel = 0
+    playlistNameInput.Text = ""
+    playlistNameInput.PlaceholderText = tr("Nombre de la lista")
+    playlistNameInput.TextColor3 = COLORS.Text
+    playlistNameInput.PlaceholderColor3 = COLORS.Muted
+    playlistNameInput.Font = Enum.Font.Gotham
+    playlistNameInput.TextSize = 13
+    playlistNameInput.TextXAlignment = Enum.TextXAlignment.Left
+    playlistNameInput.ClearTextOnFocus = false
+    playlistNameInput.ZIndex = 61
+    playlistNameInput.Parent = createPlaylistModal
+    createCorner(playlistNameInput, 8)
+
+    local acceptPlaylistButton = createIconButton(
+        createPlaylistModal,
+        "AcceptPlaylistButton",
+        tr("Aceptar"),
+        UDim2.new(0, 126, 0, 34),
+        UDim2.new(1, -282, 1, -48)
+    )
+    acceptPlaylistButton.BackgroundColor3 = COLORS.Purple
+    acceptPlaylistButton.TextSize = 12
+    acceptPlaylistButton.ZIndex = 61
+
+    local cancelPlaylistButton = createIconButton(
+        createPlaylistModal,
+        "CancelPlaylistButton",
+        tr("Cancelar"),
+        UDim2.new(0, 126, 0, 34),
+        UDim2.new(1, -142, 1, -48)
+    )
+    cancelPlaylistButton.BackgroundTransparency = 0.35
+    cancelPlaylistButton.TextSize = 12
+    cancelPlaylistButton.ZIndex = 61
+
+    local playlistPickerHandler = nil
+    local playlistPickerModal = createPanel(
+        root,
+        "PlaylistPickerModal",
+        UDim2.new(0, 300, 0, 240),
+        UDim2.new(0.5, -150, 0.5, -120)
+    )
+    playlistPickerModal.Visible = false
+    playlistPickerModal.ZIndex = 60
+    playlistPickerModal.BackgroundTransparency = 0.02
+
+    local playlistPickerTitle = createLabel(
+        playlistPickerModal,
+        "Title",
+        tr("Agregar a playlist"),
+        UDim2.new(1, -28, 0, 28),
+        UDim2.new(0, 14, 0, 14),
+        14,
+        Enum.Font.GothamBold,
+        COLORS.Text
+    )
+    playlistPickerTitle.ZIndex = 61
+
+    local playlistPickerList = Instance.new("Frame")
+    playlistPickerList.Name = "List"
+    playlistPickerList.Size = UDim2.new(1, -28, 0, 136)
+    playlistPickerList.Position = UDim2.new(0, 14, 0, 50)
+    playlistPickerList.BackgroundTransparency = 1
+    playlistPickerList.ZIndex = 61
+    playlistPickerList.Parent = playlistPickerModal
+
+    local pickerLayout = Instance.new("UIListLayout")
+    pickerLayout.FillDirection = Enum.FillDirection.Vertical
+    pickerLayout.Padding = UDim.new(0, 4)
+    pickerLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    pickerLayout.Parent = playlistPickerList
+
+    local cancelPickerButton = createIconButton(
+        playlistPickerModal,
+        "CancelPickerButton",
+        tr("Cancelar"),
+        UDim2.new(0, 126, 0, 34),
+        UDim2.new(1, -142, 1, -46)
+    )
+    cancelPickerButton.BackgroundTransparency = 0.35
+    cancelPickerButton.TextSize = 12
+    cancelPickerButton.ZIndex = 61
+
+    local deletePlaylistHandler = nil
+    local deletePlaylistModal = createPanel(
+        root,
+        "DeletePlaylistModal",
+        UDim2.new(0, 330, 0, 164),
+        UDim2.new(0.5, -165, 0.5, -82)
+    )
+    deletePlaylistModal.Visible = false
+    deletePlaylistModal.ZIndex = 60
+    deletePlaylistModal.BackgroundTransparency = 0.02
+
+    local deletePlaylistTitle = createLabel(
+        deletePlaylistModal,
+        "Title",
+        tr("Estas seguro de eliminar esta playlist?"),
+        UDim2.new(1, -28, 0, 28),
+        UDim2.new(0, 14, 0, 14),
+        13,
+        Enum.Font.GothamBold,
+        COLORS.Text
+    )
+    deletePlaylistTitle.ZIndex = 61
+
+    local deletePlaylistName = createLabel(
+        deletePlaylistModal,
+        "PlaylistName",
+        "",
+        UDim2.new(1, -28, 0, 38),
+        UDim2.new(0, 14, 0, 50),
+        12,
+        Enum.Font.Gotham,
+        COLORS.Muted
+    )
+    deletePlaylistName.TextWrapped = true
+    deletePlaylistName.ZIndex = 61
+
+    local confirmDeletePlaylistButton = createIconButton(
+        deletePlaylistModal,
+        "ConfirmDeletePlaylistButton",
+        tr("Eliminar"),
+        UDim2.new(0, 126, 0, 34),
+        UDim2.new(1, -282, 1, -48)
+    )
+    confirmDeletePlaylistButton.BackgroundColor3 = Color3.fromRGB(155, 46, 56)
+    confirmDeletePlaylistButton.TextSize = 12
+    confirmDeletePlaylistButton.ZIndex = 61
+
+    local cancelDeletePlaylistButton = createIconButton(
+        deletePlaylistModal,
+        "CancelDeletePlaylistButton",
+        tr("Cancelar"),
+        UDim2.new(0, 126, 0, 34),
+        UDim2.new(1, -142, 1, -48)
+    )
+    cancelDeletePlaylistButton.BackgroundTransparency = 0.35
+    cancelDeletePlaylistButton.TextSize = 12
+    cancelDeletePlaylistButton.ZIndex = 61
+
+    local function hideCreatePlaylistModal()
+        createPlaylistModal.Visible = false
+    end
+
+    local function hidePlaylistPicker()
+        playlistPickerModal.Visible = false
+    end
+
+    local function hideDeletePlaylistModal()
+        deletePlaylistModal.Visible = false
+    end
+
+    cancelPlaylistButton.MouseButton1Click:Connect(hideCreatePlaylistModal)
+    cancelPickerButton.MouseButton1Click:Connect(hidePlaylistPicker)
+    cancelDeletePlaylistButton.MouseButton1Click:Connect(hideDeletePlaylistModal)
+
+    acceptPlaylistButton.MouseButton1Click:Connect(function()
+        local name = playlistNameInput.Text or ""
+        hideCreatePlaylistModal()
+
+        if createPlaylistHandler then
+            createPlaylistHandler(name)
+        end
+    end)
+
+    confirmDeletePlaylistButton.MouseButton1Click:Connect(function()
+        hideDeletePlaylistModal()
+
+        if deletePlaylistHandler then
+            deletePlaylistHandler()
         end
     end)
 
@@ -1061,19 +1319,38 @@ function StrikeMusicUI.Create(parent, Theme)
     local playlistY = navY + 58
 
     for index, name in ipairs(playlistNames) do
-        local label = createLabel(sideBarScroll, "Playlist" .. tostring(index), name, UDim2.new(1, -48, 0, 28), UDim2.new(0, 54, 0, playlistY), 13, Enum.Font.Gotham, COLORS.Text)
+        local rowButton = Instance.new("TextButton")
+        rowButton.Name = index == 1 and "FavoritesRowButton" or "NewPlaylistButton"
+        rowButton.Size = UDim2.new(1, -42, 0, 32)
+        rowButton.Position = UDim2.new(0, 21, 0, playlistY - 2)
+        rowButton.BackgroundTransparency = 1
+        rowButton.BorderSizePixel = 0
+        rowButton.Text = ""
+        rowButton.AutoButtonColor = false
+        rowButton.Parent = sideBarScroll
+
+        createLabel(rowButton, "Label", name, UDim2.new(1, -48, 1, 0), UDim2.new(0, 33, 0, 0), 13, Enum.Font.Gotham, COLORS.Text)
 
         if index == 1 then
-            local favoriteButton = createIconButton(sideBarScroll, "FavoritesButton", "♥", UDim2.new(0, 30, 0, 28), UDim2.new(0, 28, 0, playlistY))
+            local favoriteButton = createIconButton(rowButton, "FavoritesButton", "â™¥", UDim2.new(0, 30, 0, 28), UDim2.new(0, 0, 0.5, -14))
             favoriteButton.BackgroundTransparency = 1
             favoriteButton.TextColor3 = COLORS.PurpleBright
             favoriteButton.TextSize = 15
+            navButtons.MyFavorites = rowButton
         else
-            createLabel(sideBarScroll, "PlaylistIcon" .. tostring(index), "+", UDim2.new(0, 30, 0, 28), UDim2.new(0, 28, 0, playlistY), 14, Enum.Font.GothamBold, COLORS.Muted).TextXAlignment = Enum.TextXAlignment.Center
+            createLabel(rowButton, "PlaylistIcon" .. tostring(index), "+", UDim2.new(0, 30, 0, 28), UDim2.new(0, 0, 0.5, -14), 14, Enum.Font.GothamBold, COLORS.Muted).TextXAlignment = Enum.TextXAlignment.Center
+            navButtons.NewPlaylist = rowButton
         end
 
         playlistY += 44
     end
+
+    local playlistEntries = Instance.new("Frame")
+    playlistEntries.Name = "PlaylistEntries"
+    playlistEntries.Size = UDim2.new(1, -42, 0, 0)
+    playlistEntries.Position = UDim2.new(0, 21, 0, playlistY - 4)
+    playlistEntries.BackgroundTransparency = 1
+    playlistEntries.Parent = sideBarScroll
 
     local centerPanel = createPanel(root, "CenterPanel", UDim2.new(1, -526, 1, -160), UDim2.new(0, 260, 0, 72))
     centerPanel.BackgroundTransparency = 0.19
@@ -1155,16 +1432,28 @@ function StrikeMusicUI.Create(parent, Theme)
     downloadsView.Visible = false
     downloadsView.Parent = centerScroll
 
-    createLabel(
+    local downloadsTitle = createLabel(
         downloadsView,
         "Title",
         tr("Descargas"),
-        UDim2.new(1, 0, 0, 30),
+        UDim2.new(1, -150, 0, 30),
         UDim2.new(0, 0, 0, 0),
         17,
         TITLE_FONT,
         COLORS.Text
     )
+
+    local deletePlaylistButton = createIconButton(
+        downloadsView,
+        "DeletePlaylistButton",
+        tr("Eliminar Playlist"),
+        UDim2.new(0, 132, 0, 30),
+        UDim2.new(1, -132, 0, 0)
+    )
+    deletePlaylistButton.BackgroundColor3 = Color3.fromRGB(155, 46, 56)
+    deletePlaylistButton.BackgroundTransparency = 0.18
+    deletePlaylistButton.TextSize = 11
+    deletePlaylistButton.Visible = false
 
     local downloadsList = Instance.new("ScrollingFrame")
     downloadsList.Name = "List"
@@ -1598,7 +1887,7 @@ function StrikeMusicUI.Create(parent, Theme)
         end
     end
 
-    local function renderDownloads(jobs, onPlay, onDelete, onReadyDownload)
+    local function renderDownloads(jobs, onPlay, onDelete, onReadyDownload, onFavorite, onQueue, onAddPlaylist)
         hideDownloadOptions()
         clearContainer(downloadsList)
         jobs = jobs or {}
@@ -1714,7 +2003,11 @@ function StrikeMusicUI.Create(parent, Theme)
             optionsButton.MouseButton1Click:Connect(function()
                 selectedDownloadJob = job
                 selectedDeleteHandler = onDelete
-                showDownloadOptions(optionsButton)
+                selectedFavoriteHandler = onFavorite
+                selectedQueueHandler = onQueue
+                selectedAddPlaylistHandler = onAddPlaylist
+                selectedRemovePlaylistHandler = nil
+                showDownloadOptions(optionsButton, "downloads")
             end)
         end
 
@@ -1728,17 +2021,258 @@ function StrikeMusicUI.Create(parent, Theme)
         end)
     end
 
-    local function setContentView(view)
-        local showDownloads = view == "downloads"
-        searchSection.Visible = not showDownloads
-        popularSection.Visible = not showDownloads
-        recentPanel.Visible = not showDownloads
-        downloadsView.Visible = showDownloads
+    local function renderFavorites(items, onPlay, onRemoveFavorite, onQueue, onAddPlaylist)
+        hideDownloadOptions()
+        clearContainer(downloadsList)
+        items = items or {}
+
+        if #items == 0 then
+            createEmptyState(downloadsList, tr("No hay canciones favoritas."))
+            downloadsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+            return
+        end
+
+        local layout = Instance.new("UIListLayout")
+        layout.FillDirection = Enum.FillDirection.Vertical
+        layout.Padding = UDim.new(0, 6)
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.Parent = downloadsList
+
+        for _, item in ipairs(items) do
+            local media = item.media or item
+            media.title = cleanDownloadTitle(media.title, media.artist)
+            media.duration_text = ""
+            media.is_playing = item.is_playing == true or media.is_playing == true
+
+            local row, optionsButton = createWideRow(downloadsList, media)
+            row.Size = UDim2.new(1, -6, 0, 48)
+
+            local statusLabel = row:FindFirstChild("Duration")
+            if statusLabel then
+                statusLabel.Visible = false
+            end
+
+            local nameLabel = row:FindFirstChild("Name")
+            local artistLabel = row:FindFirstChild("Artist")
+
+            if nameLabel then
+                nameLabel.Size = UDim2.new(1, -150, 0, 20)
+            end
+
+            if artistLabel then
+                artistLabel.Size = UDim2.new(1, -150, 0, 18)
+            end
+
+            optionsButton.Position = UDim2.new(1, -34, 0.5, -14)
+            optionsButton.ZIndex = 6
+            optionsButton.Text = "..."
+            optionsButton.TextSize = 15
+            optionsButton.TextColor3 = COLORS.Muted
+
+            local rowButton = Instance.new("TextButton")
+            rowButton.Name = "RowPlayButton"
+            rowButton.Size = UDim2.new(1, -88, 1, 0)
+            rowButton.Position = UDim2.new(0, 0, 0, 0)
+            rowButton.BackgroundTransparency = 1
+            rowButton.BorderSizePixel = 0
+            rowButton.Text = ""
+            rowButton.AutoButtonColor = false
+            rowButton.Active = true
+            rowButton.ZIndex = 3
+            rowButton.Parent = row
+            rowButton.MouseButton1Click:Connect(function()
+                hideDownloadOptions()
+
+                if onPlay then
+                    onPlay(item)
+                end
+            end)
+
+            local heart = createFavoriteHeartButton(row)
+            heart.MouseButton1Click:Connect(function()
+                hideDownloadOptions()
+
+                if onRemoveFavorite then
+                    onRemoveFavorite(item)
+                end
+            end)
+
+            optionsButton.MouseButton1Click:Connect(function()
+                selectedDownloadJob = item
+                selectedFavoriteHandler = onRemoveFavorite
+                selectedQueueHandler = onQueue
+                selectedAddPlaylistHandler = onAddPlaylist
+                selectedRemovePlaylistHandler = nil
+                selectedDeleteHandler = nil
+                showDownloadOptions(optionsButton, "favorites")
+            end)
+        end
+
+        task.defer(function()
+            downloadsList.CanvasSize = UDim2.new(
+                0,
+                0,
+                0,
+                layout.AbsoluteContentSize.Y + 8
+            )
+        end)
+    end
+
+
+    local function renderPlaylistItems(items, onPlay, onRemoveFromPlaylist, onFavorite, onQueue, onAddPlaylist)
+        hideDownloadOptions()
+        clearContainer(downloadsList)
+        items = items or {}
+
+        if #items == 0 then
+            createEmptyState(downloadsList, tr("Esta playlist esta vacia."))
+            downloadsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+            return
+        end
+
+        local layout = Instance.new("UIListLayout")
+        layout.FillDirection = Enum.FillDirection.Vertical
+        layout.Padding = UDim.new(0, 6)
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.Parent = downloadsList
+
+        for _, item in ipairs(items) do
+            local media = item.media or item
+            media.title = cleanDownloadTitle(media.title, media.artist)
+            media.duration_text = ""
+            media.is_playing = item.is_playing == true or media.is_playing == true
+
+            local row, optionsButton = createWideRow(downloadsList, media)
+            row.Size = UDim2.new(1, -6, 0, 48)
+
+            local statusLabel = row:FindFirstChild("Duration")
+            if statusLabel then
+                statusLabel.Visible = false
+            end
+
+            local nameLabel = row:FindFirstChild("Name")
+            local artistLabel = row:FindFirstChild("Artist")
+
+            if nameLabel then
+                nameLabel.Size = UDim2.new(1, -150, 0, 20)
+            end
+
+            if artistLabel then
+                artistLabel.Size = UDim2.new(1, -150, 0, 18)
+            end
+
+            optionsButton.Position = UDim2.new(1, -34, 0.5, -14)
+            optionsButton.ZIndex = 6
+            optionsButton.Text = "..."
+            optionsButton.TextSize = 15
+            optionsButton.TextColor3 = COLORS.Muted
+
+            local rowButton = Instance.new("TextButton")
+            rowButton.Name = "RowPlayButton"
+            rowButton.Size = UDim2.new(1, -88, 1, 0)
+            rowButton.Position = UDim2.new(0, 0, 0, 0)
+            rowButton.BackgroundTransparency = 1
+            rowButton.BorderSizePixel = 0
+            rowButton.Text = ""
+            rowButton.AutoButtonColor = false
+            rowButton.Active = true
+            rowButton.ZIndex = 3
+            rowButton.Parent = row
+            rowButton.MouseButton1Click:Connect(function()
+                hideDownloadOptions()
+
+                if onPlay then
+                    onPlay(item)
+                end
+            end)
+
+            local playButton = createDownloadPlayButton(row)
+            playButton.MouseButton1Click:Connect(function()
+                hideDownloadOptions()
+
+                if onPlay then
+                    onPlay(item)
+                end
+            end)
+
+            optionsButton.MouseButton1Click:Connect(function()
+                selectedDownloadJob = item
+                selectedFavoriteHandler = onFavorite
+                selectedQueueHandler = onQueue
+                selectedAddPlaylistHandler = onAddPlaylist
+                selectedRemovePlaylistHandler = onRemoveFromPlaylist
+                selectedDeleteHandler = nil
+                showDownloadOptions(optionsButton, "playlist")
+            end)
+        end
+
+        task.defer(function()
+            downloadsList.CanvasSize = UDim2.new(
+                0,
+                0,
+                0,
+                layout.AbsoluteContentSize.Y + 8
+            )
+        end)
+    end
+
+
+
+    local function renderSidebarPlaylists(playlists, onOpen)
+        clearContainer(playlistEntries)
+        playlists = playlists or {}
+
+        local entryHeight = 36
+        playlistEntries.Size = UDim2.new(1, -42, 0, math.max(#playlists * entryHeight, 0))
+
+        for index, playlist in ipairs(playlists) do
+            local button = Instance.new("TextButton")
+            button.Name = "PlaylistEntryButton"
+            button.Size = UDim2.new(1, 0, 0, 32)
+            button.Position = UDim2.new(0, 0, 0, (index - 1) * entryHeight)
+            button.BackgroundTransparency = 1
+            button.BorderSizePixel = 0
+            button.Text = ""
+            button.AutoButtonColor = false
+            button.Parent = playlistEntries
+
+            createLabel(button, "Icon", "P", UDim2.new(0, 30, 1, 0), UDim2.new(0, 0, 0, 0), 12, Enum.Font.GothamBold, COLORS.Muted).TextXAlignment = Enum.TextXAlignment.Center
+            createLabel(button, "Label", tostring(playlist.name or tr("Lista")), UDim2.new(1, -36, 1, 0), UDim2.new(0, 36, 0, 0), 13, Enum.Font.Gotham, COLORS.Text)
+
+            button.MouseEnter:Connect(function()
+                button.BackgroundColor3 = COLORS.PanelLight
+                button.BackgroundTransparency = 0.45
+            end)
+            button.MouseLeave:Connect(function()
+                button.BackgroundTransparency = 1
+            end)
+            button.MouseButton1Click:Connect(function()
+                if onOpen then
+                    onOpen(playlist)
+                end
+            end)
+        end
+
+        sideBarScroll.CanvasSize = UDim2.new(0, 0, 0, playlistEntries.Position.Y.Offset + math.max(#playlists * entryHeight, 0) + 24)
+    end
+
+    local function setContentView(view, title)
+        local showList = view == "downloads" or view == "favorites" or view == "playlist"
+        searchSection.Visible = not showList
+        popularSection.Visible = not showList
+        recentPanel.Visible = not showList
+        downloadsView.Visible = showList
+        deletePlaylistButton.Visible = view == "playlist"
+        downloadsTitle.Text = view == "favorites"
+            and tr("Canciones favoritas")
+            or (view == "playlist" and tostring(title or tr("Lista")) or tr("Descargas"))
         centerScroll.CanvasPosition = Vector2.new(0, 0)
 
         for name, button in pairs(navButtons) do
-            local selected = (showDownloads and name == "Downloads")
-                or (not showDownloads and name == "Home")
+            local selected = (view == "downloads" and name == "Downloads")
+                or (view == "favorites" and name == "LikedSongs")
+                or (view == "playlist" and name == "Playlists")
+                or (not showList and name == "Home")
             button.BackgroundColor3 = selected and COLORS.Purple or COLORS.Panel
             button.BackgroundTransparency = selected and 0.15 or 1
         end
@@ -1812,14 +2346,82 @@ function StrikeMusicUI.Create(parent, Theme)
         RenderRecent = function(items)
             renderRows(recentList, items, "", 3)
         end,
-        RenderDownloads = function(jobs, onPlay, onDelete, onReadyDownload)
-            renderDownloads(jobs, onPlay, onDelete, onReadyDownload)
+        DeletePlaylistButton = deletePlaylistButton,
+        RenderDownloads = function(jobs, onPlay, onDelete, onReadyDownload, onFavorite, onQueue, onAddPlaylist)
+            renderDownloads(jobs, onPlay, onDelete, onReadyDownload, onFavorite, onQueue, onAddPlaylist)
         end,
-        SetContentView = function(view)
-            setContentView(view)
+        RenderFavorites = function(items, onPlay, onRemoveFavorite, onQueue, onAddPlaylist)
+            renderFavorites(items, onPlay, onRemoveFavorite, onQueue, onAddPlaylist)
+        end,
+        RenderPlaylistItems = function(items, onPlay, onRemoveFromPlaylist, onFavorite, onQueue, onAddPlaylist)
+            renderPlaylistItems(items, onPlay, onRemoveFromPlaylist, onFavorite, onQueue, onAddPlaylist)
+        end,
+        RenderPlaylists = function(playlists, onOpen)
+            renderSidebarPlaylists(playlists, onOpen)
+        end,
+        OpenCreatePlaylistModal = function(onCreate)
+            createPlaylistHandler = onCreate
+            playlistNameInput.Text = ""
+            createPlaylistModal.Visible = true
+            playlistNameInput:CaptureFocus()
+        end,
+        OpenPlaylistPicker = function(playlists, onSelect)
+            playlistPickerHandler = onSelect
+            clearContainer(playlistPickerList)
+
+            playlists = playlists or {}
+
+            if #playlists == 0 then
+                createEmptyState(playlistPickerList, tr("No hay playlists."))
+            else
+                local pickerLayout = Instance.new("UIListLayout")
+                pickerLayout.FillDirection = Enum.FillDirection.Vertical
+                pickerLayout.Padding = UDim.new(0, 4)
+                pickerLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                pickerLayout.Parent = playlistPickerList
+
+                for _, playlist in ipairs(playlists) do
+                    local button = createIconButton(
+                        playlistPickerList,
+                        "PlaylistOptionButton",
+                        tostring(playlist.name or tr("Lista")),
+                        UDim2.new(1, 0, 0, 32),
+                        UDim2.new(0, 0, 0, 0)
+                    )
+                    button.BackgroundTransparency = 0.25
+                    button.TextXAlignment = Enum.TextXAlignment.Left
+                    button.ZIndex = 61
+                    button.MouseButton1Click:Connect(function()
+                        hidePlaylistPicker()
+
+                        if playlistPickerHandler then
+                            playlistPickerHandler(playlist)
+                        end
+                    end)
+                end
+            end
+
+            playlistPickerModal.Visible = true
+        end,
+        OpenDeletePlaylistConfirm = function(playlist, onDelete)
+            deletePlaylistHandler = onDelete
+            deletePlaylistName.Text = tostring(playlist and playlist.name or tr("Lista"))
+            deletePlaylistModal.Visible = true
+        end,
+        SetContentView = function(view, title)
+            setContentView(view, title)
         end,
         RenderQueue = function(items)
             renderRows(queueList, items, tr("La cola esta vacia."), 5)
+        end,
+        SetFavoriteActive = function(isFavorite)
+            local active = isFavorite == true
+            local color = active and COLORS.Green or COLORS.PanelLight
+            local transparency = active and 0 or 0.82
+            heartButton.BackgroundColor3 = color
+            bottomHeart.BackgroundColor3 = color
+            heartButton.BackgroundTransparency = transparency
+            bottomHeart.BackgroundTransparency = transparency
         end,
         SetPlaybackState = function(isPlaying)
             local symbol = isPlaying and "||" or ">"
@@ -1869,6 +2471,7 @@ function StrikeMusicUI.Create(parent, Theme)
     api.RenderQueue({})
     api.SetContentView("home")
     api.SetNowPlaying(nil, 0)
+    api.SetFavoriteActive(false)
 
     if _G.StrikeChatLayoutMode == "mobile" then
         sideBar.Size = UDim2.new(0, 210, 1, -146)

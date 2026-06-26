@@ -1265,6 +1265,14 @@ if leftPanel.Buttons.StrikeMusic then
             )
         end
         local currentMusicSearchResults = {}
+        local favoriteLibraryIds = {}
+        local currentFavoriteItems = {}
+        local currentPlaylists = {}
+        local currentPlaylist = nil
+        local refreshMusicFavorites
+        local refreshMusicPlaylists
+        local openPlaylist
+        local openAddToPlaylistPicker
         local renderCurrentMusicSearchResults
 
         local function refreshMusicDownloads()
@@ -1273,9 +1281,21 @@ if leftPanel.Buttons.StrikeMusic then
                 local metadataItems = metadataResult and metadataResult.items or {}
                 local localSupport = strikeMusicClient.GetLocalAudioSupport()
                 local localJobs = {}
+                local libraryByFileKey = {}
+                local libraryResult = strikeMusicClient.GetLibrary(player)
+
+                if libraryResult and libraryResult.status == "ok" and libraryResult.items then
+                    for _, item in ipairs(libraryResult.items) do
+                        if item.file_key then
+                            libraryByFileKey[tostring(item.file_key)] = item
+                        end
+                    end
+                end
+
 
                 for _, metadata in ipairs(metadataItems) do
                     if StrikeMusicStorage.MediaExists(metadata) then
+                        local libraryItem = libraryByFileKey[tostring(metadata.file_key or "")]
                         strikeMusicClient.CacheThumbnail(metadata)
 
                         if metadata.local_thumbnail_path then
@@ -1299,6 +1319,7 @@ if leftPanel.Buttons.StrikeMusic then
                             local_metadata = metadata,
                             local_playback_supported = metadata.media_type == "mp3"
                                 and localSupport.supported == true,
+                            library_item_id = libraryItem and libraryItem.library_item_id,
                             local_playback_label = localSupport.supported
                                 and tr("Listo para reproducir")
                                 or tr("Audio local no compatible")
@@ -1405,7 +1426,20 @@ if leftPanel.Buttons.StrikeMusic then
                     jobsToRender or {},
                     playLocalDownload,
                     deleteLocalDownload,
-                    saveReadyDownload
+                    saveReadyDownload,
+                    function(job)
+                        if job and job.library_item_id then
+                            strikeMusicClient.AddFavorite(player, job.library_item_id)
+                            favoriteLibraryIds[tostring(job.library_item_id)] = true
+                            refreshMusicFavorites(false)
+                        end
+                    end,
+                    function(job)
+                        if job and job.library_item_id then
+                            strikeMusicClient.AddToQueue(player, job.library_item_id)
+                        end
+                    end,
+                    openAddToPlaylistPicker
                 )
 
                 if renderCurrentMusicSearchResults then
@@ -1509,8 +1543,10 @@ if leftPanel.Buttons.StrikeMusic then
                     currentPopularTrack = track
                     currentPlaybackKind = "popular"
                     currentLocalDownload = nil
+                    track.library_item_id = libraryItem.library_item_id
                     musicUI.SetPlaybackState(true)
                     musicUI.SetNowPlaying(track, 0, "0:00", "0:00")
+                    musicUI.SetFavoriteActive(favoriteLibraryIds[tostring(libraryItem.library_item_id)] == true)
                     strikeMusicClient.StartPlayback(
                         player,
                         libraryItem.library_item_id,
@@ -1542,6 +1578,7 @@ if leftPanel.Buttons.StrikeMusic then
                 currentLocalDownload = job
                 musicUI.SetPlaybackState(true)
                 musicUI.SetNowPlaying(job.local_metadata, 0, "0:00", "0:00")
+                musicUI.SetFavoriteActive(job.library_item_id and favoriteLibraryIds[tostring(job.library_item_id)] == true)
                 refreshMusicDownloads()
 
                 if job.library_item_id then
@@ -1596,6 +1633,7 @@ if leftPanel.Buttons.StrikeMusic then
                 currentPlaybackKind = nil
                 musicUI.SetPlaybackState(false)
                 musicUI.SetNowPlaying(nil, 0, "0:00", "0:00")
+                musicUI.SetFavoriteActive(false)
             end
 
             local deleteResult = strikeMusicClient.DeleteLocalItem(
@@ -1611,6 +1649,289 @@ if leftPanel.Buttons.StrikeMusic then
             end
 
             refreshMusicDownloads()
+        end
+        local function getLibraryItemIdFromFavorite(item)
+            if not item then
+                return nil
+            end
+
+            return item.library_item_id
+                or (item.media and item.media.library_item_id)
+        end
+
+        local function playFavoriteItem(item)
+            local media = item and (item.media or item)
+
+            if not media then
+                return
+            end
+
+            if media.media_type == "roblox_audio" and media.source_id then
+                playPopularRobloxTrack({
+                    roblox_audio_id = tonumber(media.source_id),
+                    title = media.title,
+                    artist = media.artist,
+                    library_item_id = media.library_item_id
+                })
+                return
+            end
+
+            if media.file_key then
+                local metadata = StrikeMusicStorage.ReadMetadata(media.file_key)
+
+                if metadata then
+                    strikeMusicClient.CacheThumbnail(metadata)
+                    playLocalDownload({
+                        title = metadata.title,
+                        artist = metadata.artist,
+                        media_type = metadata.media_type,
+                        source_id = metadata.source_id,
+                        thumbnail_url = metadata.thumbnail_url,
+                        thumbnail_original_url = metadata.thumbnail_original_url,
+                        local_thumbnail_path = metadata.local_thumbnail_path,
+                        local_metadata = metadata,
+                        local_playback_supported = true,
+                        library_item_id = media.library_item_id
+                    })
+                end
+            end
+        end
+
+
+        local function getLibraryItemIdFromMediaLike(item)
+            if not item then
+                return nil
+            end
+
+            return item.library_item_id
+                or (item.media and item.media.library_item_id)
+                or (item.local_metadata and item.local_metadata.library_item_id)
+        end
+
+        local function playPlaylistItem(item)
+            playFavoriteItem(item)
+        end
+
+        local function renderCurrentPlaylist()
+            if not currentPlaylist then
+                return
+            end
+
+            musicUI.SetContentView("playlist", currentPlaylist.name)
+            musicUI.RenderPlaylistItems(
+                currentPlaylist.items or {},
+                playPlaylistItem,
+                function(item)
+                    local media = item and (item.media or item)
+                    local libraryItemId = media and media.library_item_id
+
+                    if libraryItemId and currentPlaylist then
+                        strikeMusicClient.DeleteFromPlaylist(
+                            player,
+                            currentPlaylist.playlist_id,
+                            libraryItemId
+                        )
+                        openPlaylist(currentPlaylist)
+                    end
+                end,
+                function(item)
+                    local libraryItemId = getLibraryItemIdFromMediaLike(item)
+
+                    if libraryItemId then
+                        strikeMusicClient.AddFavorite(player, libraryItemId)
+                        favoriteLibraryIds[tostring(libraryItemId)] = true
+                        refreshMusicFavorites(false)
+                    end
+                end,
+                function(item)
+                    local libraryItemId = getLibraryItemIdFromMediaLike(item)
+
+                    if libraryItemId then
+                        strikeMusicClient.AddToQueue(player, libraryItemId)
+                    end
+                end,
+                openAddToPlaylistPicker
+            )
+        end
+
+        refreshMusicPlaylists = function()
+            task.spawn(function()
+                local result = strikeMusicClient.GetPlaylists(player)
+
+                if activeStrikeMusicUI ~= musicUI then
+                    return
+                end
+
+                currentPlaylists = {}
+
+                if result and result.status == "ok" and result.items then
+                    currentPlaylists = result.items
+                end
+
+                musicUI.RenderPlaylists(currentPlaylists, function(playlist)
+                    openPlaylist(playlist)
+                end)
+            end)
+        end
+
+        openPlaylist = function(playlist)
+            if not playlist or not playlist.playlist_id then
+                return
+            end
+
+            task.spawn(function()
+                local result = strikeMusicClient.GetPlaylist(player, playlist.playlist_id)
+
+                if activeStrikeMusicUI ~= musicUI then
+                    return
+                end
+
+                if result and result.status == "ok" and result.item then
+                    currentPlaylist = result.item
+                else
+                    currentPlaylist = playlist
+                end
+
+                for _, playlistItem in ipairs(currentPlaylist.items or {}) do
+                    local media = playlistItem.media or playlistItem
+
+                    if media then
+                        strikeMusicClient.CacheThumbnail(media)
+                    end
+                end
+
+                renderCurrentPlaylist()
+            end)
+        end
+
+        openAddToPlaylistPicker = function(item)
+            local libraryItemId = getLibraryItemIdFromMediaLike(item)
+
+            if not libraryItemId then
+                return
+            end
+
+            musicUI.OpenPlaylistPicker(currentPlaylists, function(playlist)
+                if playlist and playlist.playlist_id then
+                    strikeMusicClient.AddToPlaylist(
+                        player,
+                        playlist.playlist_id,
+                        libraryItemId
+                    )
+
+                    refreshMusicPlaylists()
+
+                    if currentPlaylist
+                        and tostring(currentPlaylist.playlist_id) == tostring(playlist.playlist_id)
+                    then
+                        openPlaylist(currentPlaylist)
+                    end
+                end
+            end)
+        end
+
+        refreshMusicFavorites = function(showView)
+            task.spawn(function()
+                local result = strikeMusicClient.GetFavorites(player)
+
+                if activeStrikeMusicUI ~= musicUI then
+                    return
+                end
+
+                favoriteLibraryIds = {}
+                currentFavoriteItems = {}
+
+                if result and result.status == "ok" and result.items then
+                    for _, item in ipairs(result.items) do
+                        local libraryItemId = getLibraryItemIdFromFavorite(item)
+
+                        if libraryItemId then
+                            favoriteLibraryIds[tostring(libraryItemId)] = true
+                        end
+
+                        local media = item.media or item
+                        if media then
+                            strikeMusicClient.CacheThumbnail(media)
+                        end
+
+                        table.insert(currentFavoriteItems, item)
+                    end
+                end
+
+                if showView then
+                    musicUI.SetContentView("favorites")
+                    musicUI.RenderFavorites(
+                        currentFavoriteItems,
+                        playFavoriteItem,
+                        function(item)
+                            local libraryItemId = getLibraryItemIdFromFavorite(item)
+
+                            if libraryItemId then
+                                strikeMusicClient.DeleteFavorite(player, libraryItemId)
+                                favoriteLibraryIds[tostring(libraryItemId)] = nil
+                            end
+
+                            refreshMusicFavorites(true)
+                        end,
+                        function(item)
+                            local libraryItemId = getLibraryItemIdFromFavorite(item)
+
+                            if libraryItemId then
+                                strikeMusicClient.AddToQueue(player, libraryItemId)
+                            end
+                        end,
+                        openAddToPlaylistPicker
+                    )
+                end
+
+                if currentPlaybackKind == "local"
+                    and currentLocalDownload
+                    and currentLocalDownload.library_item_id
+                then
+                    musicUI.SetFavoriteActive(
+                        favoriteLibraryIds[tostring(currentLocalDownload.library_item_id)] == true
+                    )
+                elseif currentPopularTrack and currentPopularTrack.library_item_id then
+                    musicUI.SetFavoriteActive(
+                        favoriteLibraryIds[tostring(currentPopularTrack.library_item_id)] == true
+                    )
+                else
+                    musicUI.SetFavoriteActive(false)
+                end
+            end)
+        end
+
+        local function toggleCurrentFavorite()
+            local libraryItemId = nil
+
+            if currentPlaybackKind == "local" and currentLocalDownload then
+                libraryItemId = currentLocalDownload.library_item_id
+            elseif currentPopularTrack then
+                libraryItemId = currentPopularTrack.library_item_id
+            end
+
+            if not libraryItemId then
+                return
+            end
+
+            task.spawn(function()
+                local key = tostring(libraryItemId)
+
+                if favoriteLibraryIds[key] then
+                    strikeMusicClient.DeleteFavorite(player, libraryItemId)
+                    favoriteLibraryIds[key] = nil
+                    musicUI.SetFavoriteActive(false)
+                else
+                    local result = strikeMusicClient.AddFavorite(player, libraryItemId)
+
+                    if result and (result.status == "created" or result.status == "ok") then
+                        favoriteLibraryIds[key] = true
+                        musicUI.SetFavoriteActive(true)
+                    end
+                end
+
+                refreshMusicFavorites(false)
+            end)
         end
         local musicDownloadLocked = false
 
@@ -1772,7 +2093,7 @@ if leftPanel.Buttons.StrikeMusic then
             end
 
             task.spawn(function()
-                local searchResult = strikeMusicClient.Search(player, normalizedQuery, 10)
+                local searchResult = strikeMusicClient.Search(player, normalizedQuery, 6)
 
                 if activeStrikeMusicUI ~= musicUI then
                     return
@@ -1893,6 +2214,8 @@ if leftPanel.Buttons.StrikeMusic then
 
         musicUI.Buttons.Play.MouseButton1Click:Connect(togglePlayback)
         musicUI.Buttons.BottomPlay.MouseButton1Click:Connect(togglePlayback)
+        musicUI.Buttons.Heart.MouseButton1Click:Connect(toggleCurrentFavorite)
+        musicUI.Buttons.BottomHeart.MouseButton1Click:Connect(toggleCurrentFavorite)
 
         local function playPrevious()
             local state = strikeMusicClient.GetRobloxAudioState()
@@ -1966,6 +2289,56 @@ if leftPanel.Buttons.StrikeMusic then
             end)
         end
 
+        if musicUI.NavButtons.LikedSongs then
+            musicUI.NavButtons.LikedSongs.MouseButton1Click:Connect(function()
+                refreshMusicFavorites(true)
+            end)
+        end
+
+        if musicUI.NavButtons.MyFavorites then
+            musicUI.NavButtons.MyFavorites.MouseButton1Click:Connect(function()
+                refreshMusicFavorites(true)
+            end)
+        end
+
+        if musicUI.NavButtons.NewPlaylist then
+            musicUI.NavButtons.NewPlaylist.MouseButton1Click:Connect(function()
+                musicUI.OpenCreatePlaylistModal(function(name)
+                    local cleanName = tostring(name or ""):gsub("^%s+", ""):gsub("%s+$", "")
+
+                    if cleanName == "" then
+                        return
+                    end
+
+                    local result = strikeMusicClient.CreatePlaylist(player, cleanName)
+
+                    if result and result.status == "created" and result.item then
+                        refreshMusicPlaylists()
+                        openPlaylist(result.item)
+                    end
+                end)
+            end)
+        end
+
+        if musicUI.DeletePlaylistButton then
+            musicUI.DeletePlaylistButton.MouseButton1Click:Connect(function()
+                if not currentPlaylist then
+                    return
+                end
+
+                local playlistToDelete = currentPlaylist
+
+                musicUI.OpenDeletePlaylistConfirm(playlistToDelete, function()
+                    strikeMusicClient.DeletePlaylist(player, playlistToDelete.playlist_id)
+                    currentPlaylist = nil
+                    refreshMusicPlaylists()
+                    musicUI.SetContentView("home")
+                end)
+            end)
+        end
+
+        refreshMusicPlaylists()
+
         task.spawn(function()
             while activeStrikeMusicUI == musicUI and musicUI.Gui.Parent do
                 local state = strikeMusicClient.GetRobloxAudioState()
@@ -1994,8 +2367,9 @@ if leftPanel.Buttons.StrikeMusic then
 
         task.spawn(function()
             strikeMusicClient.Open(player)
+            refreshMusicFavorites(false)
 
-            local popularResult = strikeMusicClient.GetPopular(4)
+            local popularResult = strikeMusicClient.GetPopular(6)
 
             if popularResult
                 and popularResult.status == "ok"

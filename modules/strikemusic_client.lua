@@ -138,7 +138,7 @@ function StrikeMusicClient.Create(Api, Storage)
     end
 
     function client.Search(player, query, limit)
-        return Api.SearchPersonalMusic(player, query, limit or 10)
+        return Api.SearchPersonalMusic(player, query, limit or 6)
     end
 
     function client.GetLibrary(player)
@@ -428,8 +428,33 @@ function StrikeMusicClient.Create(Api, Storage)
         return Api.DeletePersonalMusicFavorite(player, libraryItemId)
     end
 
+
+    function client.GetPlaylists(player)
+        return Api.GetPersonalMusicPlaylists(player)
+    end
+
+    function client.CreatePlaylist(player, name)
+        return Api.CreatePersonalMusicPlaylist(player, name)
+    end
+
+    function client.GetPlaylist(player, playlistId)
+        return Api.GetPersonalMusicPlaylist(player, playlistId)
+    end
+
+    function client.DeletePlaylist(player, playlistId)
+        return Api.DeletePersonalMusicPlaylist(player, playlistId)
+    end
+
+    function client.AddToPlaylist(player, playlistId, libraryItemId)
+        return Api.AddPersonalMusicPlaylistItem(player, playlistId, libraryItemId)
+    end
+
+    function client.DeleteFromPlaylist(player, playlistId, libraryItemId)
+        return Api.DeletePersonalMusicPlaylistItem(player, playlistId, libraryItemId)
+    end
+
     function client.GetPopular(limit)
-        return Api.GetStrikeMusicPopular(limit or 4)
+        return Api.GetStrikeMusicPopular(limit or 6)
     end
 
     function client.AddRobloxAudio(player, track)
