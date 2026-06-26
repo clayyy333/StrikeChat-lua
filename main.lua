@@ -1198,6 +1198,22 @@ if leftPanel.Buttons.StrikeMusic then
         local shuffleEnabled = false
         local repeatEnabled = false
 
+        local function setMusicPlaybackState(isPlaying)
+            musicUI.SetPlaybackState(isPlaying)
+
+            if window.MusicPlayer then
+                window.MusicPlayer.SetPlaybackState(isPlaying)
+            end
+        end
+
+        local function setMusicNowPlaying(item, progress, currentText, totalText)
+            musicUI.SetNowPlaying(item, progress, currentText, totalText)
+
+            if window.MusicPlayer then
+                window.MusicPlayer.SetNowPlaying(item, progress)
+            end
+        end
+
         local function formatMusicTime(seconds)
             local safeSeconds = math.max(math.floor(tonumber(seconds) or 0), 0)
             return string.format(
@@ -1582,8 +1598,8 @@ if leftPanel.Buttons.StrikeMusic then
                     currentPlaybackKind = "popular"
                     currentLocalDownload = nil
                     track.library_item_id = libraryItem.library_item_id
-                    musicUI.SetPlaybackState(true)
-                    musicUI.SetNowPlaying(track, 0, "0:00", "0:00")
+                    setMusicPlaybackState(true)
+                    setMusicNowPlaying(track, 0, "0:00", "0:00")
                     musicUI.SetFavoriteActive(favoriteLibraryIds[tostring(libraryItem.library_item_id)] == true)
                     strikeMusicClient.StartPlayback(
                         player,
@@ -1614,8 +1630,8 @@ if leftPanel.Buttons.StrikeMusic then
                 currentPopularTrack = job.local_metadata
                 currentPlaybackKind = "local"
                 currentLocalDownload = job
-                musicUI.SetPlaybackState(true)
-                musicUI.SetNowPlaying(job.local_metadata, 0, "0:00", "0:00")
+                setMusicPlaybackState(true)
+                setMusicNowPlaying(job.local_metadata, 0, "0:00", "0:00")
                 musicUI.SetFavoriteActive(job.library_item_id and favoriteLibraryIds[tostring(job.library_item_id)] == true)
 
                 if currentMusicContentView == "favorites" then
@@ -1676,8 +1692,8 @@ if leftPanel.Buttons.StrikeMusic then
                 strikeMusicClient.StopPlayback(player)
                 currentLocalDownload = nil
                 currentPlaybackKind = nil
-                musicUI.SetPlaybackState(false)
-                musicUI.SetNowPlaying(nil, 0, "0:00", "0:00")
+                setMusicPlaybackState(false)
+                setMusicNowPlaying(nil, 0, "0:00", "0:00")
                 musicUI.SetFavoriteActive(false)
             end
 
@@ -2245,14 +2261,14 @@ if leftPanel.Buttons.StrikeMusic then
 
             if state.status == "playing" then
                 local paused = strikeMusicClient.PauseRobloxAudio()
-                musicUI.SetPlaybackState(false)
+                setMusicPlaybackState(false)
 
                 task.spawn(function()
                     strikeMusicClient.PausePlayback(player, paused.position_seconds or 0)
                 end)
             elseif state.status == "paused" then
                 strikeMusicClient.ResumeRobloxAudio()
-                musicUI.SetPlaybackState(true)
+                setMusicPlaybackState(true)
 
                 task.spawn(function()
                     strikeMusicClient.ResumePlayback(player)
@@ -2275,7 +2291,7 @@ if leftPanel.Buttons.StrikeMusic then
                 elseif playAdjacentLocalDownload(1) then
                     return
                 else
-                    musicUI.SetPlaybackState(false)
+                    setMusicPlaybackState(false)
                     currentLocalDownload = nil
 
                     task.spawn(function()
@@ -2327,6 +2343,13 @@ if leftPanel.Buttons.StrikeMusic then
         musicUI.Buttons.BottomPrevious.MouseButton1Click:Connect(playPrevious)
         musicUI.Buttons.Next.MouseButton1Click:Connect(playNext)
         musicUI.Buttons.BottomNext.MouseButton1Click:Connect(playNext)
+
+        if window.MusicPlayer then
+            window.MusicPlayer.PlayButton.MouseButton1Click:Connect(togglePlayback)
+            window.MusicPlayer.PreviousButton.MouseButton1Click:Connect(playPrevious)
+            window.MusicPlayer.NextButton.MouseButton1Click:Connect(playNext)
+        end
+
         musicUI.Buttons.Shuffle.MouseButton1Click:Connect(function()
             shuffleEnabled = not shuffleEnabled
         end)
@@ -2433,13 +2456,13 @@ if leftPanel.Buttons.StrikeMusic then
                         and (state.position_seconds or 0) / duration
                         or 0
 
-                    musicUI.SetNowPlaying(
+                    setMusicNowPlaying(
                         currentTrack,
                         progress,
                         formatMusicTime(state.position_seconds),
                         formatMusicTime(duration)
                     )
-                    musicUI.SetPlaybackState(state.status == "playing")
+                    setMusicPlaybackState(state.status == "playing")
                 end
 
                 task.wait(0.25)
@@ -2462,6 +2485,12 @@ if leftPanel.Buttons.StrikeMusic then
             end
         end)
         activeStrikeMusicUI.MinimizeButton.MouseButton1Click:Connect(function()
+            window.Gui.Enabled = true
+
+            if window.MusicPlayer then
+                window.MusicPlayer.SetVisible(currentPlaybackKind ~= nil)
+            end
+
             task.spawn(function()
                 strikeMusicClient.Minimize(player)
             end)
@@ -2469,6 +2498,8 @@ if leftPanel.Buttons.StrikeMusic then
 
         if activeStrikeMusicUI.MinimizedButton then
             activeStrikeMusicUI.MinimizedButton.MouseButton1Click:Connect(function()
+                window.Gui.Enabled = false
+
                 task.spawn(function()
                     strikeMusicClient.Restore(player)
                 end)
@@ -2481,6 +2512,11 @@ if leftPanel.Buttons.StrikeMusic then
             task.spawn(function()
                 strikeMusicClient.Close(player)
             end)
+
+            if window.MusicPlayer then
+                window.MusicPlayer.SetNowPlaying(nil, 0)
+                window.MusicPlayer.SetPlaybackState(false)
+            end
 
             activeStrikeMusicUI.Destroy()
             activeStrikeMusicUI = nil
