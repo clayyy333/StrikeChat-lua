@@ -27,6 +27,91 @@ local function tr(text)
     return text
 end
 
+local function makeFloatingButtonDraggable(button)
+    local UserInputService = game:GetService("UserInputService")
+    local dragging = false
+    local dragStart = nil
+    local startAbsolutePosition = nil
+    local moved = false
+
+    button.Active = true
+    button:SetAttribute("WasDragged", false)
+
+    local function getViewportSize()
+        local camera = workspace.CurrentCamera
+
+        if camera then
+            return camera.ViewportSize
+        end
+
+        return Vector2.new(1280, 720)
+    end
+
+    local function clampPosition(position)
+        local viewport = getViewportSize()
+        local width = button.AbsoluteSize.X
+        local height = button.AbsoluteSize.Y
+        local x = math.clamp(position.X.Offset, 0, math.max(viewport.X - width, 0))
+        local y = math.clamp(position.Y.Offset, 0, math.max(viewport.Y - height, 0))
+
+        return UDim2.new(0, x, 0, y)
+    end
+
+    button.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch
+        then
+            dragging = true
+            moved = false
+            button:SetAttribute("WasDragged", false)
+            dragStart = input.Position
+            startAbsolutePosition = button.AbsolutePosition
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging
+            and (
+                input.UserInputType == Enum.UserInputType.MouseMovement
+                or input.UserInputType == Enum.UserInputType.Touch
+            )
+            and dragStart
+            and startAbsolutePosition
+        then
+            local delta = input.Position - dragStart
+
+            if math.abs(delta.X) > 3 or math.abs(delta.Y) > 3 then
+                moved = true
+            end
+
+            button.Position = clampPosition(UDim2.new(
+                    0,
+                    startAbsolutePosition.X + delta.X,
+                    0,
+                    startAbsolutePosition.Y + delta.Y
+                ))
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch
+        then
+            dragging = false
+            dragStart = nil
+            startAbsolutePosition = nil
+            button:SetAttribute("WasDragged", moved)
+
+            if moved then
+                task.delay(0.12, function()
+                    if button.Parent then
+                        button:SetAttribute("WasDragged", false)
+                    end
+                end)
+            end
+        end
+    end)
+end
 local function createCorner(parent, radius)
     local corner = Instance.new("UICorner")
     corner.CornerRadius = UDim.new(0, radius or 10)
@@ -1183,12 +1268,13 @@ function StrikeMusicUI.Create(parent, Theme)
     minimizeButton.BackgroundTransparency = 0.35
     minimizeButton.TextColor3 = Color3.fromRGB(255, 223, 187)
 
-    local minimizedButton = createIconButton(gui, "MinimizedButton", "StrikeMusic", UDim2.new(0, 156, 0, 42), UDim2.new(0, 18, 1, -60))
+    local minimizedButton = createIconButton(gui, "MinimizedButton", "SM", UDim2.new(0, 46, 0, 46), UDim2.new(0, 18, 1, -64))
     minimizedButton.Visible = false
-    minimizedButton.TextSize = 13
+    minimizedButton.TextSize = 15
     minimizedButton.BackgroundColor3 = COLORS.PanelLight
     minimizedButton.BackgroundTransparency = 0.02
     minimizedButton.ZIndex = 20
+    makeFloatingButtonDraggable(minimizedButton)
 
     local sideBar = createPanel(root, "Sidebar", UDim2.new(0, 242, 1, -160), UDim2.new(0, 10, 0, 72))
     sideBar.BackgroundTransparency = 0.14
@@ -2295,6 +2381,10 @@ function StrikeMusicUI.Create(parent, Theme)
     end)
 
     minimizedButton.MouseButton1Click:Connect(function()
+        if minimizedButton:GetAttribute("WasDragged") then
+            return
+        end
+
         minimizedButton.Visible = false
         root.Visible = true
     end)

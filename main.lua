@@ -2707,6 +2707,10 @@ if leftPanel.Buttons.StrikeMusic then
 
         if activeStrikeMusicUI.MinimizedButton then
             activeStrikeMusicUI.MinimizedButton.MouseButton1Click:Connect(function()
+                if activeStrikeMusicUI.MinimizedButton:GetAttribute("WasDragged") then
+                    return
+                end
+
                 window.Gui.Enabled = false
 
                 task.spawn(function()
@@ -2717,6 +2721,10 @@ if leftPanel.Buttons.StrikeMusic then
 
         if window.StrikeMusicShortcutButton then
             window.StrikeMusicShortcutButton.MouseButton1Click:Connect(function()
+                if window.StrikeMusicShortcutButton:GetAttribute("WasDragged") then
+                    return
+                end
+
                 window.Main.Visible = true
                 window.MinimizedButton.Visible = false
                 window.StrikeMusicShortcutButton.Visible = false

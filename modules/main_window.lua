@@ -215,7 +215,83 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
         _G.StrikeChatLayoutMode = layoutMode
     end
 
-    local function getViewportSize()
+    local getViewportSize
+
+    local function makeFloatingButtonDraggable(button)
+        local dragging = false
+        local dragStart = nil
+        local startAbsolutePosition = nil
+        local moved = false
+
+        button.Active = true
+        button:SetAttribute("WasDragged", false)
+
+        local function clampPosition(position)
+            local viewport = getViewportSize()
+            local width = button.AbsoluteSize.X
+            local height = button.AbsoluteSize.Y
+            local x = math.clamp(position.X.Offset, 0, math.max(viewport.X - width, 0))
+            local y = math.clamp(position.Y.Offset, 0, math.max(viewport.Y - height, 0))
+
+            return UDim2.new(0, x, 0, y)
+        end
+
+        button.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch
+            then
+                dragging = true
+                moved = false
+                button:SetAttribute("WasDragged", false)
+                dragStart = input.Position
+                startAbsolutePosition = button.AbsolutePosition
+            end
+        end)
+
+        UserInputService.InputChanged:Connect(function(input)
+            if dragging
+                and (
+                    input.UserInputType == Enum.UserInputType.MouseMovement
+                    or input.UserInputType == Enum.UserInputType.Touch
+                )
+                and dragStart
+                and startAbsolutePosition
+            then
+                local delta = input.Position - dragStart
+
+                if math.abs(delta.X) > 3 or math.abs(delta.Y) > 3 then
+                    moved = true
+                end
+
+                button.Position = clampPosition(UDim2.new(
+                    0,
+                    startAbsolutePosition.X + delta.X,
+                    0,
+                    startAbsolutePosition.Y + delta.Y
+                ))
+            end
+        end)
+
+        UserInputService.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1
+                or input.UserInputType == Enum.UserInputType.Touch
+            then
+                dragging = false
+                dragStart = nil
+                startAbsolutePosition = nil
+                button:SetAttribute("WasDragged", moved)
+
+                if moved then
+                    task.delay(0.12, function()
+                        if button.Parent then
+                            button:SetAttribute("WasDragged", false)
+                        end
+                    end)
+                end
+            end
+        end)
+    end
+    function getViewportSize()
         local camera = workspace.CurrentCamera
 
         if camera then
@@ -999,18 +1075,18 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
 
     local minimizedButton = Instance.new("TextButton")
     minimizedButton.Name = "MinimizedButton"
-    minimizedButton.Size = UDim2.new(0, 58, 0, 58)
-    minimizedButton.Position = UDim2.new(0, 18, 0.5, -29)
+    minimizedButton.Size = UDim2.new(0, 46, 0, 46)
+    minimizedButton.Position = UDim2.new(0, 18, 0.5, -23)
     minimizedButton.BackgroundColor3 = Theme.Colors.SoftBlack
     minimizedButton.Text = "SC"
     minimizedButton.TextColor3 = Theme.Colors.Text
     minimizedButton.Font = Theme.Font.Bold
-    minimizedButton.TextSize = 18
+    minimizedButton.TextSize = 15
     minimizedButton.Visible = false
     minimizedButton.Parent = gui
 
     local miniCorner = Instance.new("UICorner")
-    miniCorner.CornerRadius = UDim.new(0, 16)
+    miniCorner.CornerRadius = UDim.new(0, 13)
     miniCorner.Parent = minimizedButton
 
     local miniStroke = Instance.new("UIStroke")
@@ -1018,21 +1094,22 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     miniStroke.Thickness = 1.2
     miniStroke.Transparency = 0.3
     miniStroke.Parent = minimizedButton
+    makeFloatingButtonDraggable(minimizedButton)
 
     musicShortcutButton = Instance.new("TextButton")
     musicShortcutButton.Name = "StrikeMusicShortcutButton"
-    musicShortcutButton.Size = UDim2.new(0, 58, 0, 58)
-    musicShortcutButton.Position = UDim2.new(0, 84, 0.5, -29)
+    musicShortcutButton.Size = UDim2.new(0, 46, 0, 46)
+    musicShortcutButton.Position = UDim2.new(0, 72, 0.5, -23)
     musicShortcutButton.BackgroundColor3 = Theme.Colors.SoftBlack
     musicShortcutButton.Text = "SM"
     musicShortcutButton.TextColor3 = Theme.Colors.Accent
     musicShortcutButton.Font = Theme.Font.Bold
-    musicShortcutButton.TextSize = 18
+    musicShortcutButton.TextSize = 15
     musicShortcutButton.Visible = false
     musicShortcutButton.Parent = gui
 
     local musicShortcutCorner = Instance.new("UICorner")
-    musicShortcutCorner.CornerRadius = UDim.new(0, 16)
+    musicShortcutCorner.CornerRadius = UDim.new(0, 13)
     musicShortcutCorner.Parent = musicShortcutButton
 
     local musicShortcutStroke = Instance.new("UIStroke")
@@ -1040,6 +1117,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     musicShortcutStroke.Thickness = 1.2
     musicShortcutStroke.Transparency = 0.3
     musicShortcutStroke.Parent = musicShortcutButton
+    makeFloatingButtonDraggable(musicShortcutButton)
 
     minimize.MouseButton1Click:Connect(function()
         main.Visible = false
@@ -1048,6 +1126,10 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     end)
 
     minimizedButton.MouseButton1Click:Connect(function()
+        if minimizedButton:GetAttribute("WasDragged") then
+            return
+        end
+
         minimizedButton.Visible = false
         musicShortcutButton.Visible = false
         main.Visible = true
