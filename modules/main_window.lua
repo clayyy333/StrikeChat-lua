@@ -594,14 +594,14 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     local miniHeart = Instance.new("TextButton")
     miniHeart.Name = "HeartButton"
     miniHeart.Size = UDim2.new(0, 24, 0, 24)
-    miniHeart.Position = UDim2.new(0.26, 0, 0.5, -12)
+    miniHeart.Position = UDim2.new(0.285, 0, 0.5, -12)
     miniHeart.BackgroundColor3 = Theme.Colors.PanelLight
-    miniHeart.BackgroundTransparency = 0.72
+    miniHeart.BackgroundTransparency = 0.82
     miniHeart.BorderSizePixel = 0
-    miniHeart.Text = "<3"
+    miniHeart.Text = "♥"
     miniHeart.TextColor3 = Theme.Colors.Accent
     miniHeart.Font = Theme.Font.Bold
-    miniHeart.TextSize = 10
+    miniHeart.TextSize = 15
     miniHeart.ZIndex = 5
     miniHeart.Parent = musicPlayer
 
@@ -638,7 +638,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     local miniCurrent = Instance.new("TextLabel")
     miniCurrent.Name = "CurrentTime"
     miniCurrent.Size = UDim2.new(0, 34, 0, 12)
-    miniCurrent.Position = UDim2.new(0.48, 0, 0, 4)
+    miniCurrent.Position = UDim2.new(0.48, 0, 0, 17)
     miniCurrent.BackgroundTransparency = 1
     miniCurrent.Text = "0:00"
     miniCurrent.TextColor3 = Theme.Colors.TextMuted
@@ -650,7 +650,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
 
     local miniTotal = miniCurrent:Clone()
     miniTotal.Name = "TotalTime"
-    miniTotal.Position = UDim2.new(0.73, 2, 0, 4)
+    miniTotal.Position = UDim2.new(0.73, 2, 0, 17)
     miniTotal.Text = "0:00"
     miniTotal.TextXAlignment = Enum.TextXAlignment.Left
     miniTotal.Parent = musicPlayer
@@ -710,20 +710,20 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
 
     local volumeIcon = Instance.new("TextLabel")
     volumeIcon.Name = "VolumeIcon"
-    volumeIcon.Size = UDim2.new(0, 18, 0, 16)
-    volumeIcon.Position = UDim2.new(0.79, 0, 0.5, -8)
+    volumeIcon.Size = UDim2.new(0, 26, 0, 16)
+    volumeIcon.Position = UDim2.new(0.78, 0, 0.5, -8)
     volumeIcon.BackgroundTransparency = 1
-    volumeIcon.Text = "V"
+    volumeIcon.Text = "Vol."
     volumeIcon.TextColor3 = Theme.Colors.TextMuted
     volumeIcon.Font = Theme.Font.Bold
-    volumeIcon.TextSize = 10
+    volumeIcon.TextSize = 8
     volumeIcon.ZIndex = 5
     volumeIcon.Parent = musicPlayer
 
     local miniVolumeBack = Instance.new("Frame")
     miniVolumeBack.Name = "VolumeBack"
     miniVolumeBack.Size = UDim2.new(0.13, 0, 0, 3)
-    miniVolumeBack.Position = UDim2.new(0.835, 0, 0.5, -1)
+    miniVolumeBack.Position = UDim2.new(0.84, 0, 0.5, -1)
     miniVolumeBack.BackgroundColor3 = Theme.Colors.Border
     miniVolumeBack.BackgroundTransparency = 0.25
     miniVolumeBack.BorderSizePixel = 0
@@ -840,7 +840,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
         SetFavoriteActive = function(isFavorite)
             local active = isFavorite == true
             miniHeart.BackgroundColor3 = active and Color3.fromRGB(54, 205, 112) or Theme.Colors.PanelLight
-            miniHeart.BackgroundTransparency = active and 0 or 0.72
+            miniHeart.BackgroundTransparency = active and 0 or 0.82
         end,
         SetPlaybackState = function(isPlaying)
             miniPlay.Text = isPlaying and "||" or ">"
@@ -854,7 +854,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
             if item then
                 miniTitle.Text = tostring(item.title or "StrikeMusic")
                 miniArtist.Text = tostring(item.artist or "")
-                miniArt.Image = tostring(item.local_thumbnail_path or item.thumbnail_url or "")
+                miniArt.Image = tostring(item.thumbnail_url or item.local_thumbnail_path or "")
                 miniCurrent.Text = tostring(currentText or "0:00")
                 miniTotal.Text = tostring(totalText or "0:00")
                 musicPlayer.Visible = true
