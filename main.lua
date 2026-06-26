@@ -1704,7 +1704,49 @@ if leftPanel.Buttons.StrikeMusic then
                 or (item.media and item.media.library_item_id)
         end
 
-        local function playFavoriteItem(item)
+        local function buildLocalDownloadFromMediaItem(item)
+            local media = item and (item.media or item)
+
+            if not media or not media.file_key then
+                return nil
+            end
+
+            local metadata = StrikeMusicStorage.ReadMetadata(media.file_key)
+
+            if not metadata then
+                return nil
+            end
+
+            strikeMusicClient.CacheThumbnail(metadata)
+
+            return {
+                title = metadata.title,
+                artist = metadata.artist,
+                media_type = metadata.media_type,
+                source_id = metadata.source_id,
+                thumbnail_url = metadata.thumbnail_url,
+                thumbnail_original_url = metadata.thumbnail_original_url,
+                local_thumbnail_path = metadata.local_thumbnail_path,
+                file_key = metadata.file_key,
+                local_metadata = metadata,
+                local_playback_supported = true,
+                library_item_id = media.library_item_id or item.library_item_id
+            }
+        end
+
+        local function setLocalPlaybackQueueFromItems(items)
+            localDownloadQueue = {}
+
+            for _, queueItem in ipairs(items or {}) do
+                local localJob = buildLocalDownloadFromMediaItem(queueItem)
+
+                if localJob then
+                    table.insert(localDownloadQueue, localJob)
+                end
+            end
+        end
+
+        local function playFavoriteItem(item, queueItems)
             local media = item and (item.media or item)
 
             if not media then
@@ -1721,24 +1763,11 @@ if leftPanel.Buttons.StrikeMusic then
                 return
             end
 
-            if media.file_key then
-                local metadata = StrikeMusicStorage.ReadMetadata(media.file_key)
+            local localJob = buildLocalDownloadFromMediaItem(item)
 
-                if metadata then
-                    strikeMusicClient.CacheThumbnail(metadata)
-                    playLocalDownload({
-                        title = metadata.title,
-                        artist = metadata.artist,
-                        media_type = metadata.media_type,
-                        source_id = metadata.source_id,
-                        thumbnail_url = metadata.thumbnail_url,
-                        thumbnail_original_url = metadata.thumbnail_original_url,
-                        local_thumbnail_path = metadata.local_thumbnail_path,
-                        local_metadata = metadata,
-                        local_playback_supported = true,
-                        library_item_id = media.library_item_id
-                    })
-                end
+            if localJob then
+                setLocalPlaybackQueueFromItems(queueItems or currentFavoriteItems)
+                playLocalDownload(localJob)
             end
         end
 
@@ -1754,7 +1783,7 @@ if leftPanel.Buttons.StrikeMusic then
         end
 
         local function playPlaylistItem(item)
-            playFavoriteItem(item)
+            playFavoriteItem(item, currentPlaylist and currentPlaylist.items or {})
         end
 
         renderCurrentPlaylist = function()
