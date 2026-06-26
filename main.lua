@@ -1264,6 +1264,36 @@ if leftPanel.Buttons.StrikeMusic then
                     or ""
             )
         end
+        local function markMusicItemPlaying(item)
+            local media = item and (item.media or item)
+
+            if not media then
+                return
+            end
+
+            local isPlaying = false
+
+            if currentPlaybackKind == "local" and currentLocalDownload then
+                local currentLibraryItemId = currentLocalDownload.library_item_id
+                local currentKey = getLocalDownloadKey(currentLocalDownload)
+
+                if currentLibraryItemId and media.library_item_id then
+                    isPlaying = tostring(currentLibraryItemId) == tostring(media.library_item_id)
+                elseif currentKey and currentKey ~= "" and media.file_key then
+                    isPlaying = currentKey == tostring(media.file_key)
+                end
+            elseif currentPlaybackKind == "popular" and currentPopularTrack then
+                if currentPopularTrack.library_item_id and media.library_item_id then
+                    isPlaying = tostring(currentPopularTrack.library_item_id) == tostring(media.library_item_id)
+                elseif currentPopularTrack.catalog_track_id and media.source_id then
+                    isPlaying = tostring(currentPopularTrack.catalog_track_id) == tostring(media.source_id)
+                end
+            end
+
+            item.is_playing = isPlaying
+            media.is_playing = isPlaying
+        end
+
         local currentMusicSearchResults = {}
         local favoriteLibraryIds = {}
         local currentFavoriteItems = {}
@@ -1732,6 +1762,10 @@ if leftPanel.Buttons.StrikeMusic then
                 return
             end
 
+            for _, playlistItem in ipairs(currentPlaylist.items or {}) do
+                markMusicItemPlaying(playlistItem)
+            end
+
             setMusicContentView("playlist", currentPlaylist.name)
             musicUI.RenderPlaylistItems(
                 currentPlaylist.items or {},
@@ -1813,6 +1847,8 @@ if leftPanel.Buttons.StrikeMusic then
                     if media then
                         strikeMusicClient.CacheThumbnail(media)
                     end
+
+                    markMusicItemPlaying(playlistItem)
                 end
 
                 renderCurrentPlaylist()
@@ -1869,6 +1905,7 @@ if leftPanel.Buttons.StrikeMusic then
                             strikeMusicClient.CacheThumbnail(media)
                         end
 
+                        markMusicItemPlaying(item)
                         table.insert(currentFavoriteItems, item)
                     end
                 end
