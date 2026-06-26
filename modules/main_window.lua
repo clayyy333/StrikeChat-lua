@@ -518,9 +518,17 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     closeCorner.CornerRadius = UDim.new(0, Theme.Radius.Button)
     closeCorner.Parent = close
 
+    local miniSeekChanged = Instance.new("BindableEvent")
+    local miniVolumeChanged = Instance.new("BindableEvent")
+    local miniProgressDragging = false
+    local miniVolumeDragging = false
+    local miniVolumeValue = 0.52
+    local hasStrikeMusicTrack = false
+    local musicShortcutButton = nil
+
     local musicPlayer = Instance.new("Frame")
     musicPlayer.Name = "StrikeMusicTopPlayer"
-    musicPlayer.Size = UDim2.new(0.46, 0, 0, 34)
+    musicPlayer.Size = UDim2.new(0.62, 0, 0, 34)
     musicPlayer.Position = UDim2.new(0.5, 0, 0, 6)
     musicPlayer.AnchorPoint = Vector2.new(0.5, 0)
     musicPlayer.BackgroundColor3 = Theme.Colors.Background
@@ -540,15 +548,30 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     musicPlayerStroke.Transparency = 0.45
     musicPlayerStroke.Parent = musicPlayer
 
+    local miniArt = Instance.new("ImageLabel")
+    miniArt.Name = "Art"
+    miniArt.Size = UDim2.new(0, 26, 0, 26)
+    miniArt.Position = UDim2.new(0, 8, 0.5, -13)
+    miniArt.BackgroundColor3 = Color3.fromRGB(8, 0, 18)
+    miniArt.BorderSizePixel = 0
+    miniArt.Image = ""
+    miniArt.ScaleType = Enum.ScaleType.Crop
+    miniArt.ZIndex = 5
+    miniArt.Parent = musicPlayer
+
+    local miniArtCorner = Instance.new("UICorner")
+    miniArtCorner.CornerRadius = UDim.new(0, 6)
+    miniArtCorner.Parent = miniArt
+
     local miniTitle = Instance.new("TextLabel")
     miniTitle.Name = "Title"
-    miniTitle.Size = UDim2.new(0.34, 0, 0, 17)
-    miniTitle.Position = UDim2.new(0, 12, 0, 3)
+    miniTitle.Size = UDim2.new(0.22, 0, 0, 17)
+    miniTitle.Position = UDim2.new(0, 40, 0, 3)
     miniTitle.BackgroundTransparency = 1
     miniTitle.Text = "StrikeMusic"
     miniTitle.TextColor3 = Theme.Colors.Text
     miniTitle.Font = Theme.Font.Bold
-    miniTitle.TextSize = 11
+    miniTitle.TextSize = 10
     miniTitle.TextXAlignment = Enum.TextXAlignment.Left
     miniTitle.TextTruncate = Enum.TextTruncate.AtEnd
     miniTitle.ZIndex = 5
@@ -556,37 +579,55 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
 
     local miniArtist = Instance.new("TextLabel")
     miniArtist.Name = "Artist"
-    miniArtist.Size = UDim2.new(0.34, 0, 0, 13)
-    miniArtist.Position = UDim2.new(0, 12, 0, 18)
+    miniArtist.Size = UDim2.new(0.22, 0, 0, 13)
+    miniArtist.Position = UDim2.new(0, 40, 0, 18)
     miniArtist.BackgroundTransparency = 1
     miniArtist.Text = ""
     miniArtist.TextColor3 = Theme.Colors.TextMuted
     miniArtist.Font = Theme.Font.Regular
-    miniArtist.TextSize = 9
+    miniArtist.TextSize = 8
     miniArtist.TextXAlignment = Enum.TextXAlignment.Left
     miniArtist.TextTruncate = Enum.TextTruncate.AtEnd
     miniArtist.ZIndex = 5
     miniArtist.Parent = musicPlayer
 
-    local function createMiniButton(name, text, position)
+    local miniHeart = Instance.new("TextButton")
+    miniHeart.Name = "HeartButton"
+    miniHeart.Size = UDim2.new(0, 24, 0, 24)
+    miniHeart.Position = UDim2.new(0.26, 0, 0.5, -12)
+    miniHeart.BackgroundColor3 = Theme.Colors.PanelLight
+    miniHeart.BackgroundTransparency = 0.72
+    miniHeart.BorderSizePixel = 0
+    miniHeart.Text = "<3"
+    miniHeart.TextColor3 = Theme.Colors.Accent
+    miniHeart.Font = Theme.Font.Bold
+    miniHeart.TextSize = 10
+    miniHeart.ZIndex = 5
+    miniHeart.Parent = musicPlayer
+
+    local miniHeartCorner = Instance.new("UICorner")
+    miniHeartCorner.CornerRadius = UDim.new(1, 0)
+    miniHeartCorner.Parent = miniHeart
+
+    local function createMiniButton(name, text, position, size, textSize)
         local button = Instance.new("TextButton")
         button.Name = name
-        button.Size = UDim2.new(0, 28, 0, 28)
+        button.Size = size or UDim2.new(0, 24, 0, 24)
         button.Position = position
         button.BackgroundTransparency = 1
         button.BorderSizePixel = 0
         button.Text = text
         button.TextColor3 = Theme.Colors.Text
         button.Font = Theme.Font.Bold
-        button.TextSize = 13
+        button.TextSize = textSize or 11
         button.ZIndex = 5
         button.Parent = musicPlayer
         return button
     end
 
-    local miniPrevious = createMiniButton("PreviousButton", "|<", UDim2.new(0.42, -42, 0.5, -14))
-    local miniPlay = createMiniButton("PlayButton", ">", UDim2.new(0.5, -14, 0.5, -14))
-    local miniNext = createMiniButton("NextButton", ">|", UDim2.new(0.58, 14, 0.5, -14))
+    local miniPrevious = createMiniButton("PreviousButton", "|<", UDim2.new(0.42, -36, 0.5, -12))
+    local miniPlay = createMiniButton("PlayButton", ">", UDim2.new(0.42, -10, 0.5, -13), UDim2.new(0, 26, 0, 26), 12)
+    local miniNext = createMiniButton("NextButton", ">|", UDim2.new(0.42, 18, 0.5, -12))
     miniPlay.BackgroundColor3 = Theme.Colors.Accent
     miniPlay.BackgroundTransparency = 0
 
@@ -594,13 +635,34 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     miniPlayCorner.CornerRadius = UDim.new(1, 0)
     miniPlayCorner.Parent = miniPlay
 
+    local miniCurrent = Instance.new("TextLabel")
+    miniCurrent.Name = "CurrentTime"
+    miniCurrent.Size = UDim2.new(0, 34, 0, 12)
+    miniCurrent.Position = UDim2.new(0.48, 0, 0, 4)
+    miniCurrent.BackgroundTransparency = 1
+    miniCurrent.Text = "0:00"
+    miniCurrent.TextColor3 = Theme.Colors.TextMuted
+    miniCurrent.Font = Theme.Font.Regular
+    miniCurrent.TextSize = 8
+    miniCurrent.TextXAlignment = Enum.TextXAlignment.Right
+    miniCurrent.ZIndex = 5
+    miniCurrent.Parent = musicPlayer
+
+    local miniTotal = miniCurrent:Clone()
+    miniTotal.Name = "TotalTime"
+    miniTotal.Position = UDim2.new(0.73, 2, 0, 4)
+    miniTotal.Text = "0:00"
+    miniTotal.TextXAlignment = Enum.TextXAlignment.Left
+    miniTotal.Parent = musicPlayer
+
     local miniProgressBack = Instance.new("Frame")
     miniProgressBack.Name = "ProgressBack"
-    miniProgressBack.Size = UDim2.new(0.24, 0, 0, 3)
-    miniProgressBack.Position = UDim2.new(0.72, 0, 0.5, -1)
+    miniProgressBack.Size = UDim2.new(0.22, 0, 0, 3)
+    miniProgressBack.Position = UDim2.new(0.535, 0, 0, 9)
     miniProgressBack.BackgroundColor3 = Theme.Colors.Border
     miniProgressBack.BackgroundTransparency = 0.25
     miniProgressBack.BorderSizePixel = 0
+    miniProgressBack.Active = true
     miniProgressBack.ZIndex = 5
     miniProgressBack.Parent = musicPlayer
 
@@ -620,29 +682,198 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     miniProgressFillCorner.CornerRadius = UDim.new(1, 0)
     miniProgressFillCorner.Parent = miniProgressFill
 
+    local miniProgressKnob = Instance.new("Frame")
+    miniProgressKnob.Name = "ProgressKnob"
+    miniProgressKnob.Size = UDim2.new(0, 8, 0, 8)
+    miniProgressKnob.Position = UDim2.new(0, -4, 0.5, -4)
+    miniProgressKnob.BackgroundColor3 = Theme.Colors.Text
+    miniProgressKnob.BorderSizePixel = 0
+    miniProgressKnob.Visible = false
+    miniProgressKnob.ZIndex = 7
+    miniProgressKnob.Parent = miniProgressBack
+
+    local miniProgressKnobCorner = Instance.new("UICorner")
+    miniProgressKnobCorner.CornerRadius = UDim.new(1, 0)
+    miniProgressKnobCorner.Parent = miniProgressKnob
+
+    local miniProgressHit = Instance.new("TextButton")
+    miniProgressHit.Name = "ProgressHitArea"
+    miniProgressHit.Size = UDim2.new(1, 0, 0, 18)
+    miniProgressHit.Position = UDim2.new(0, 0, 0.5, -9)
+    miniProgressHit.BackgroundTransparency = 1
+    miniProgressHit.BorderSizePixel = 0
+    miniProgressHit.Text = ""
+    miniProgressHit.AutoButtonColor = false
+    miniProgressHit.Active = true
+    miniProgressHit.ZIndex = 8
+    miniProgressHit.Parent = miniProgressBack
+
+    local volumeIcon = Instance.new("TextLabel")
+    volumeIcon.Name = "VolumeIcon"
+    volumeIcon.Size = UDim2.new(0, 18, 0, 16)
+    volumeIcon.Position = UDim2.new(0.79, 0, 0.5, -8)
+    volumeIcon.BackgroundTransparency = 1
+    volumeIcon.Text = "V"
+    volumeIcon.TextColor3 = Theme.Colors.TextMuted
+    volumeIcon.Font = Theme.Font.Bold
+    volumeIcon.TextSize = 10
+    volumeIcon.ZIndex = 5
+    volumeIcon.Parent = musicPlayer
+
+    local miniVolumeBack = Instance.new("Frame")
+    miniVolumeBack.Name = "VolumeBack"
+    miniVolumeBack.Size = UDim2.new(0.13, 0, 0, 3)
+    miniVolumeBack.Position = UDim2.new(0.835, 0, 0.5, -1)
+    miniVolumeBack.BackgroundColor3 = Theme.Colors.Border
+    miniVolumeBack.BackgroundTransparency = 0.25
+    miniVolumeBack.BorderSizePixel = 0
+    miniVolumeBack.Active = true
+    miniVolumeBack.ZIndex = 5
+    miniVolumeBack.Parent = musicPlayer
+
+    local miniVolumeBackCorner = Instance.new("UICorner")
+    miniVolumeBackCorner.CornerRadius = UDim.new(1, 0)
+    miniVolumeBackCorner.Parent = miniVolumeBack
+
+    local miniVolumeFill = miniProgressFill:Clone()
+    miniVolumeFill.Name = "VolumeFill"
+    miniVolumeFill.Size = UDim2.new(miniVolumeValue, 0, 1, 0)
+    miniVolumeFill.Parent = miniVolumeBack
+
+    local miniVolumeKnob = miniProgressKnob:Clone()
+    miniVolumeKnob.Name = "VolumeKnob"
+    miniVolumeKnob.Visible = true
+    miniVolumeKnob.Position = UDim2.new(miniVolumeValue, -4, 0.5, -4)
+    miniVolumeKnob.Parent = miniVolumeBack
+
+    local miniVolumeHit = miniProgressHit:Clone()
+    miniVolumeHit.Name = "VolumeHitArea"
+    miniVolumeHit.Parent = miniVolumeBack
+
+    local function setMiniProgress(value)
+        local safeValue = math.clamp(tonumber(value) or 0, 0, 1)
+        miniProgressFill.Size = UDim2.new(safeValue, 0, 1, 0)
+        miniProgressKnob.Position = UDim2.new(safeValue, -4, 0.5, -4)
+    end
+
+    local function setMiniProgressFromX(x)
+        local width = math.max(miniProgressBack.AbsoluteSize.X, 1)
+        setMiniProgress((x - miniProgressBack.AbsolutePosition.X) / width)
+    end
+
+    miniProgressHit.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch
+        then
+            miniProgressDragging = true
+            miniProgressKnob.Visible = true
+            setMiniProgressFromX(input.Position.X)
+        end
+    end)
+
+    local function setMiniVolume(value, fireChanged)
+        miniVolumeValue = math.clamp(tonumber(value) or 0, 0, 1)
+        miniVolumeFill.Size = UDim2.new(miniVolumeValue, 0, 1, 0)
+        miniVolumeKnob.Position = UDim2.new(miniVolumeValue, -4, 0.5, -4)
+
+        if fireChanged then
+            miniVolumeChanged:Fire(miniVolumeValue)
+        end
+    end
+
+    local function setMiniVolumeFromX(x)
+        local width = math.max(miniVolumeBack.AbsoluteSize.X, 1)
+        setMiniVolume((x - miniVolumeBack.AbsolutePosition.X) / width, true)
+    end
+
+    miniVolumeHit.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1
+            or input.UserInputType == Enum.UserInputType.Touch
+        then
+            miniVolumeDragging = true
+            setMiniVolumeFromX(input.Position.X)
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input.UserInputType ~= Enum.UserInputType.MouseMovement
+            and input.UserInputType ~= Enum.UserInputType.Touch
+        then
+            return
+        end
+
+        if miniProgressDragging then
+            setMiniProgressFromX(input.Position.X)
+        elseif miniVolumeDragging then
+            setMiniVolumeFromX(input.Position.X)
+        end
+    end)
+
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType ~= Enum.UserInputType.MouseButton1
+            and input.UserInputType ~= Enum.UserInputType.Touch
+        then
+            return
+        end
+
+        if miniProgressDragging then
+            local width = math.max(miniProgressBack.AbsoluteSize.X, 1)
+            miniSeekChanged:Fire(math.clamp((input.Position.X - miniProgressBack.AbsolutePosition.X) / width, 0, 1))
+        end
+
+        miniProgressDragging = false
+        miniVolumeDragging = false
+        miniProgressKnob.Visible = false
+    end)
+
     local musicPlayerApi = {
         Frame = musicPlayer,
         PreviousButton = miniPrevious,
         PlayButton = miniPlay,
         NextButton = miniNext,
+        HeartButton = miniHeart,
+        ProgressSeeked = miniSeekChanged.Event,
+        VolumeChanged = miniVolumeChanged.Event,
         SetVisible = function(visible)
             musicPlayer.Visible = visible == true
+        end,
+        SetFavoriteActive = function(isFavorite)
+            local active = isFavorite == true
+            miniHeart.BackgroundColor3 = active and Color3.fromRGB(54, 205, 112) or Theme.Colors.PanelLight
+            miniHeart.BackgroundTransparency = active and 0 or 0.72
         end,
         SetPlaybackState = function(isPlaying)
             miniPlay.Text = isPlaying and "||" or ">"
         end,
-        SetNowPlaying = function(item, progress)
+        SetVolume = function(value)
+            setMiniVolume(value, false)
+        end,
+        SetNowPlaying = function(item, progress, currentText, totalText)
+            hasStrikeMusicTrack = item ~= nil
+
             if item then
                 miniTitle.Text = tostring(item.title or "StrikeMusic")
                 miniArtist.Text = tostring(item.artist or "")
+                miniArt.Image = tostring(item.local_thumbnail_path or item.thumbnail_url or "")
+                miniCurrent.Text = tostring(currentText or "0:00")
+                miniTotal.Text = tostring(totalText or "0:00")
                 musicPlayer.Visible = true
             else
                 miniTitle.Text = "StrikeMusic"
                 miniArtist.Text = ""
+                miniArt.Image = ""
+                miniCurrent.Text = "0:00"
+                miniTotal.Text = "0:00"
                 musicPlayer.Visible = false
             end
 
-            miniProgressFill.Size = UDim2.new(math.clamp(tonumber(progress) or 0, 0, 1), 0, 1, 0)
+            if musicShortcutButton and main.Visible then
+                musicShortcutButton.Visible = false
+            end
+
+            if not miniProgressDragging then
+                setMiniProgress(progress or 0)
+            end
         end
     }
 
@@ -717,12 +948,12 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
             minimize.Position = UDim2.new(1, -78, 0, 7)
             close.Size = UDim2.new(0, 34, 0, 28)
             close.Position = UDim2.new(1, -40, 0, 7)
-            musicPlayer.Size = UDim2.new(0.46, 0, 0, 32)
+            musicPlayer.Size = UDim2.new(0.62, 0, 0, 32)
             musicPlayer.Position = UDim2.new(0.5, 0, 0, 5)
-            miniTitle.Size = UDim2.new(0.3, 0, 0, 16)
-            miniArtist.Size = UDim2.new(0.3, 0, 0, 12)
-            miniProgressBack.Size = UDim2.new(0.2, 0, 0, 3)
-            miniProgressBack.Position = UDim2.new(0.76, 0, 0.5, -1)
+            miniTitle.Size = UDim2.new(0.22, 0, 0, 16)
+            miniArtist.Size = UDim2.new(0.22, 0, 0, 12)
+            miniProgressBack.Size = UDim2.new(0.22, 0, 0, 3)
+            miniProgressBack.Position = UDim2.new(0.535, 0, 0, 9)
 
             content.Size = UDim2.new(1, 0, 1, -50)
             content.Position = UDim2.new(0, 0, 0, 44)
@@ -744,12 +975,12 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
             minimize.Position = UDim2.new(1, -78, 0, 8)
             close.Size = UDim2.new(0, 34, 0, 30)
             close.Position = UDim2.new(1, -40, 0, 8)
-            musicPlayer.Size = UDim2.new(0.46, 0, 0, 34)
+            musicPlayer.Size = UDim2.new(0.62, 0, 0, 34)
             musicPlayer.Position = UDim2.new(0.5, 0, 0, 6)
-            miniTitle.Size = UDim2.new(0.34, 0, 0, 17)
-            miniArtist.Size = UDim2.new(0.34, 0, 0, 13)
-            miniProgressBack.Size = UDim2.new(0.24, 0, 0, 3)
-            miniProgressBack.Position = UDim2.new(0.72, 0, 0.5, -1)
+            miniTitle.Size = UDim2.new(0.22, 0, 0, 17)
+            miniArtist.Size = UDim2.new(0.22, 0, 0, 13)
+            miniProgressBack.Size = UDim2.new(0.22, 0, 0, 3)
+            miniProgressBack.Position = UDim2.new(0.535, 0, 0, 9)
 
             content.Size = UDim2.new(1, -24, 1, -58)
             content.Position = UDim2.new(0, 12, 0, 50)
@@ -788,13 +1019,37 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
     miniStroke.Transparency = 0.3
     miniStroke.Parent = minimizedButton
 
+    musicShortcutButton = Instance.new("TextButton")
+    musicShortcutButton.Name = "StrikeMusicShortcutButton"
+    musicShortcutButton.Size = UDim2.new(0, 58, 0, 58)
+    musicShortcutButton.Position = UDim2.new(0, 84, 0.5, -29)
+    musicShortcutButton.BackgroundColor3 = Theme.Colors.SoftBlack
+    musicShortcutButton.Text = "SM"
+    musicShortcutButton.TextColor3 = Theme.Colors.Accent
+    musicShortcutButton.Font = Theme.Font.Bold
+    musicShortcutButton.TextSize = 18
+    musicShortcutButton.Visible = false
+    musicShortcutButton.Parent = gui
+
+    local musicShortcutCorner = Instance.new("UICorner")
+    musicShortcutCorner.CornerRadius = UDim.new(0, 16)
+    musicShortcutCorner.Parent = musicShortcutButton
+
+    local musicShortcutStroke = Instance.new("UIStroke")
+    musicShortcutStroke.Color = Theme.Colors.Accent
+    musicShortcutStroke.Thickness = 1.2
+    musicShortcutStroke.Transparency = 0.3
+    musicShortcutStroke.Parent = musicShortcutButton
+
     minimize.MouseButton1Click:Connect(function()
         main.Visible = false
         minimizedButton.Visible = true
+        musicShortcutButton.Visible = hasStrikeMusicTrack == true
     end)
 
     minimizedButton.MouseButton1Click:Connect(function()
         minimizedButton.Visible = false
+        musicShortcutButton.Visible = false
         main.Visible = true
     end)
 
@@ -895,6 +1150,7 @@ function MainWindow.Create(CoreGui, Theme, layoutMode)
         MinimizeButton = minimize,
         MinimizedButton = minimizedButton,
         MusicPlayer = musicPlayerApi,
+        StrikeMusicShortcutButton = musicShortcutButton,
         SetBackgroundDesign = applyBackgroundDesign,
         RaiseContent = function()
             raiseGuiContent(content)

@@ -1181,6 +1181,15 @@ end)
 if leftPanel.Buttons.StrikeMusic then
     leftPanel.Buttons.StrikeMusic.MouseButton1Click:Connect(function()
         if activeStrikeMusicUI then
+            if activeStrikeMusicUI.Root then
+                activeStrikeMusicUI.Root.Visible = true
+            end
+
+            if activeStrikeMusicUI.MinimizedButton then
+                activeStrikeMusicUI.MinimizedButton.Visible = false
+            end
+
+            window.Gui.Enabled = false
             return
         end
 
@@ -1206,11 +1215,19 @@ if leftPanel.Buttons.StrikeMusic then
             end
         end
 
+        local function setMusicFavoriteActive(isFavorite)
+            musicUI.SetFavoriteActive(isFavorite)
+
+            if window.MusicPlayer then
+                window.MusicPlayer.SetFavoriteActive(isFavorite)
+            end
+        end
+
         local function setMusicNowPlaying(item, progress, currentText, totalText)
             musicUI.SetNowPlaying(item, progress, currentText, totalText)
 
             if window.MusicPlayer then
-                window.MusicPlayer.SetNowPlaying(item, progress)
+                window.MusicPlayer.SetNowPlaying(item, progress, currentText, totalText)
             end
         end
 
@@ -1600,7 +1617,7 @@ if leftPanel.Buttons.StrikeMusic then
                     track.library_item_id = libraryItem.library_item_id
                     setMusicPlaybackState(true)
                     setMusicNowPlaying(track, 0, "0:00", "0:00")
-                    musicUI.SetFavoriteActive(favoriteLibraryIds[tostring(libraryItem.library_item_id)] == true)
+                    setMusicFavoriteActive(favoriteLibraryIds[tostring(libraryItem.library_item_id)] == true)
                     strikeMusicClient.StartPlayback(
                         player,
                         libraryItem.library_item_id,
@@ -1632,7 +1649,7 @@ if leftPanel.Buttons.StrikeMusic then
                 currentLocalDownload = job
                 setMusicPlaybackState(true)
                 setMusicNowPlaying(job.local_metadata, 0, "0:00", "0:00")
-                musicUI.SetFavoriteActive(job.library_item_id and favoriteLibraryIds[tostring(job.library_item_id)] == true)
+                setMusicFavoriteActive(job.library_item_id and favoriteLibraryIds[tostring(job.library_item_id)] == true)
 
                 if currentMusicContentView == "favorites" then
                     refreshMusicFavorites(true)
@@ -1694,7 +1711,7 @@ if leftPanel.Buttons.StrikeMusic then
                 currentPlaybackKind = nil
                 setMusicPlaybackState(false)
                 setMusicNowPlaying(nil, 0, "0:00", "0:00")
-                musicUI.SetFavoriteActive(false)
+                setMusicFavoriteActive(false)
             end
 
             local deleteResult = strikeMusicClient.DeleteLocalItem(
@@ -1985,15 +2002,15 @@ if leftPanel.Buttons.StrikeMusic then
                     and currentLocalDownload
                     and currentLocalDownload.library_item_id
                 then
-                    musicUI.SetFavoriteActive(
+                    setMusicFavoriteActive(
                         favoriteLibraryIds[tostring(currentLocalDownload.library_item_id)] == true
                     )
                 elseif currentPopularTrack and currentPopularTrack.library_item_id then
-                    musicUI.SetFavoriteActive(
+                    setMusicFavoriteActive(
                         favoriteLibraryIds[tostring(currentPopularTrack.library_item_id)] == true
                     )
                 else
-                    musicUI.SetFavoriteActive(false)
+                    setMusicFavoriteActive(false)
                 end
             end)
         end
@@ -2017,13 +2034,13 @@ if leftPanel.Buttons.StrikeMusic then
                 if favoriteLibraryIds[key] then
                     strikeMusicClient.DeleteFavorite(player, libraryItemId)
                     favoriteLibraryIds[key] = nil
-                    musicUI.SetFavoriteActive(false)
+                    setMusicFavoriteActive(false)
                 else
                     local result = strikeMusicClient.AddFavorite(player, libraryItemId)
 
                     if result and (result.status == "created" or result.status == "ok") then
                         favoriteLibraryIds[key] = true
-                        musicUI.SetFavoriteActive(true)
+                        setMusicFavoriteActive(true)
                     end
                 end
 
@@ -2348,6 +2365,29 @@ if leftPanel.Buttons.StrikeMusic then
             window.MusicPlayer.PlayButton.MouseButton1Click:Connect(togglePlayback)
             window.MusicPlayer.PreviousButton.MouseButton1Click:Connect(playPrevious)
             window.MusicPlayer.NextButton.MouseButton1Click:Connect(playNext)
+            window.MusicPlayer.HeartButton.MouseButton1Click:Connect(toggleCurrentFavorite)
+            window.MusicPlayer.SetVolume(musicUI.VolumeSlider.GetValue())
+
+            if window.MusicPlayer.ProgressSeeked then
+                window.MusicPlayer.ProgressSeeked:Connect(function(value)
+                    local state = strikeMusicClient.GetRobloxAudioState()
+                    local duration = tonumber(state.duration_seconds) or 0
+
+                    if duration <= 0 then
+                        return
+                    end
+
+                    local nextPosition = math.clamp(tonumber(value) or 0, 0, 1) * duration
+                    strikeMusicClient.SetRobloxAudioTimePosition(nextPosition)
+                end)
+            end
+
+            if window.MusicPlayer.VolumeChanged then
+                window.MusicPlayer.VolumeChanged:Connect(function(value)
+                    musicUI.VolumeSlider.SetValue(value)
+                    strikeMusicClient.SetRobloxAudioVolume(value)
+                end)
+            end
         end
 
         musicUI.Buttons.Shuffle.MouseButton1Click:Connect(function()
@@ -2364,6 +2404,10 @@ if leftPanel.Buttons.StrikeMusic then
         end)
         musicUI.VolumeSlider.Changed:Connect(function(value)
             strikeMusicClient.SetRobloxAudioVolume(value)
+
+            if window.MusicPlayer then
+                window.MusicPlayer.SetVolume(value)
+            end
         end)
 
         if musicUI.ProgressSeeked then
@@ -2487,6 +2531,10 @@ if leftPanel.Buttons.StrikeMusic then
         activeStrikeMusicUI.MinimizeButton.MouseButton1Click:Connect(function()
             window.Gui.Enabled = true
 
+            if activeStrikeMusicUI and activeStrikeMusicUI.MinimizedButton then
+                activeStrikeMusicUI.MinimizedButton.Visible = false
+            end
+
             if window.MusicPlayer then
                 window.MusicPlayer.SetVisible(currentPlaybackKind ~= nil)
             end
@@ -2498,6 +2546,28 @@ if leftPanel.Buttons.StrikeMusic then
 
         if activeStrikeMusicUI.MinimizedButton then
             activeStrikeMusicUI.MinimizedButton.MouseButton1Click:Connect(function()
+                window.Gui.Enabled = false
+
+                task.spawn(function()
+                    strikeMusicClient.Restore(player)
+                end)
+            end)
+        end
+
+        if window.StrikeMusicShortcutButton then
+            window.StrikeMusicShortcutButton.MouseButton1Click:Connect(function()
+                window.Main.Visible = true
+                window.MinimizedButton.Visible = false
+                window.StrikeMusicShortcutButton.Visible = false
+
+                if activeStrikeMusicUI and activeStrikeMusicUI.Root then
+                    activeStrikeMusicUI.Root.Visible = true
+                end
+
+                if activeStrikeMusicUI and activeStrikeMusicUI.MinimizedButton then
+                    activeStrikeMusicUI.MinimizedButton.Visible = false
+                end
+
                 window.Gui.Enabled = false
 
                 task.spawn(function()
