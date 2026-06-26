@@ -304,6 +304,11 @@ function StrikeMusicClient.Create(Api, Storage)
             fileSizeBytes
         )
 
+        if completeResult and completeResult.item and metadataResult.metadata then
+            metadataResult.metadata.library_item_id = completeResult.item.library_item_id
+            Storage.SaveMetadata(metadataResult.metadata)
+        end
+
         return {
             status = "downloaded",
             file_key = fileKey,

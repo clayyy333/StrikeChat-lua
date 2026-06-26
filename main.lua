@@ -1282,6 +1282,7 @@ if leftPanel.Buttons.StrikeMusic then
                 local localSupport = strikeMusicClient.GetLocalAudioSupport()
                 local localJobs = {}
                 local libraryByFileKey = {}
+                strikeMusicClient.RebuildLibraryFromLocal(player)
                 local libraryResult = strikeMusicClient.GetLibrary(player)
 
                 if libraryResult and libraryResult.status == "ok" and libraryResult.items then
@@ -1319,7 +1320,7 @@ if leftPanel.Buttons.StrikeMusic then
                             local_metadata = metadata,
                             local_playback_supported = metadata.media_type == "mp3"
                                 and localSupport.supported == true,
-                            library_item_id = libraryItem and libraryItem.library_item_id,
+                            library_item_id = (libraryItem and libraryItem.library_item_id) or metadata.library_item_id,
                             local_playback_label = localSupport.supported
                                 and tr("Listo para reproducir")
                                 or tr("Audio local no compatible")

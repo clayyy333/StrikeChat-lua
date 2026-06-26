@@ -664,6 +664,28 @@ local function createDownloadPlayButton(parent)
     return button
 end
 
+local function createFavoriteHeartButton(parent)
+    local button = createIconButton(
+        parent,
+        "FavoriteRowButton",
+        "♥",
+        UDim2.new(0, 24, 0, 24),
+        UDim2.new(1, -72, 0.5, -12)
+    )
+    button.BackgroundColor3 = COLORS.Green
+    button.BackgroundTransparency = 0
+    button.TextColor3 = COLORS.Text
+    button.TextSize = 14
+    button.ZIndex = 7
+
+    local corner = button:FindFirstChildOfClass("UICorner")
+    if corner then
+        corner.CornerRadius = UDim.new(1, 0)
+    end
+
+    return button
+end
+
 function StrikeMusicUI.Create(parent, Theme)
     local theme = Theme or {
         Font = {
@@ -1332,7 +1354,7 @@ function StrikeMusicUI.Create(parent, Theme)
         createLabel(rowButton, "Label", name, UDim2.new(1, -48, 1, 0), UDim2.new(0, 33, 0, 0), 13, Enum.Font.Gotham, COLORS.Text)
 
         if index == 1 then
-            local favoriteButton = createIconButton(rowButton, "FavoritesButton", "â™¥", UDim2.new(0, 30, 0, 28), UDim2.new(0, 0, 0.5, -14))
+            local favoriteButton = createIconButton(rowButton, "FavoritesButton", "<3", UDim2.new(0, 30, 0, 28), UDim2.new(0, 0, 0.5, -14))
             favoriteButton.BackgroundTransparency = 1
             favoriteButton.TextColor3 = COLORS.PurpleBright
             favoriteButton.TextSize = 15
@@ -1455,18 +1477,23 @@ function StrikeMusicUI.Create(parent, Theme)
     deletePlaylistButton.TextSize = 11
     deletePlaylistButton.Visible = false
 
-    local downloadsList = Instance.new("ScrollingFrame")
+    local downloadsList = Instance.new("Frame")
     downloadsList.Name = "List"
     downloadsList.Size = UDim2.new(1, 0, 1, -42)
     downloadsList.Position = UDim2.new(0, 0, 0, 42)
     downloadsList.BackgroundTransparency = 1
     downloadsList.BorderSizePixel = 0
-    downloadsList.CanvasSize = UDim2.new(0, 0, 0, 0)
-    downloadsList.ScrollBarThickness = 3
-    downloadsList.ScrollBarImageColor3 = COLORS.Purple
-    downloadsList.ScrollingDirection = Enum.ScrollingDirection.Y
-    downloadsList.Active = true
+    downloadsList.ClipsDescendants = false
     downloadsList.Parent = downloadsView
+
+    local function setDownloadsListHeight(contentHeight)
+        local minHeight = math.max(downloadsView.AbsoluteSize.Y - 42, 520)
+        local height = math.max(math.ceil(tonumber(contentHeight) or 0), minHeight)
+
+        downloadsList.Size = UDim2.new(1, 0, 0, height)
+        downloadsView.Size = UDim2.new(1, -48, 0, height + 42)
+        centerScroll.CanvasSize = UDim2.new(0, 0, 0, downloadsView.Position.Y.Offset + height + 70)
+    end
     local rightTitle = createLabel(rightScroll, "Title", tr("Reproduciendo ahora"), UDim2.new(1, -32, 0, 30), UDim2.new(0, 16, 0, 4), 15, SECTION_TITLE_FONT, COLORS.Text)
 
     local nowArt = createArtFrame(rightScroll, "NowArt", UDim2.new(1, -32, 0, 168), UDim2.new(0, 16, 0, 36), nil)
@@ -1894,7 +1921,7 @@ function StrikeMusicUI.Create(parent, Theme)
 
         if #jobs == 0 then
             createEmptyState(downloadsList, tr("No hay descargas."))
-            downloadsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+            setDownloadsListHeight(0)
             return
         end
 
@@ -1964,7 +1991,7 @@ function StrikeMusicUI.Create(parent, Theme)
             if canPlay or canSaveReadyDownload then
                 local rowButton = Instance.new("TextButton")
                 rowButton.Name = "RowPlayButton"
-                rowButton.Size = UDim2.new(1, -88, 1, 0)
+                rowButton.Size = UDim2.new(1, -108, 1, 0)
                 rowButton.Position = UDim2.new(0, 0, 0, 0)
                 rowButton.BackgroundTransparency = 1
                 rowButton.BorderSizePixel = 0
@@ -2012,12 +2039,7 @@ function StrikeMusicUI.Create(parent, Theme)
         end
 
         task.defer(function()
-            downloadsList.CanvasSize = UDim2.new(
-                0,
-                0,
-                0,
-                layout.AbsoluteContentSize.Y + 8
-            )
+            setDownloadsListHeight(layout.AbsoluteContentSize.Y + 8)
         end)
     end
 
@@ -2028,7 +2050,7 @@ function StrikeMusicUI.Create(parent, Theme)
 
         if #items == 0 then
             createEmptyState(downloadsList, tr("No hay canciones favoritas."))
-            downloadsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+            setDownloadsListHeight(0)
             return
         end
 
@@ -2071,7 +2093,7 @@ function StrikeMusicUI.Create(parent, Theme)
 
             local rowButton = Instance.new("TextButton")
             rowButton.Name = "RowPlayButton"
-            rowButton.Size = UDim2.new(1, -88, 1, 0)
+            rowButton.Size = UDim2.new(1, -108, 1, 0)
             rowButton.Position = UDim2.new(0, 0, 0, 0)
             rowButton.BackgroundTransparency = 1
             rowButton.BorderSizePixel = 0
@@ -2109,12 +2131,7 @@ function StrikeMusicUI.Create(parent, Theme)
         end
 
         task.defer(function()
-            downloadsList.CanvasSize = UDim2.new(
-                0,
-                0,
-                0,
-                layout.AbsoluteContentSize.Y + 8
-            )
+            setDownloadsListHeight(layout.AbsoluteContentSize.Y + 8)
         end)
     end
 
@@ -2126,7 +2143,7 @@ function StrikeMusicUI.Create(parent, Theme)
 
         if #items == 0 then
             createEmptyState(downloadsList, tr("Esta playlist esta vacia."))
-            downloadsList.CanvasSize = UDim2.new(0, 0, 0, 0)
+            setDownloadsListHeight(0)
             return
         end
 
@@ -2169,7 +2186,7 @@ function StrikeMusicUI.Create(parent, Theme)
 
             local rowButton = Instance.new("TextButton")
             rowButton.Name = "RowPlayButton"
-            rowButton.Size = UDim2.new(1, -88, 1, 0)
+            rowButton.Size = UDim2.new(1, -108, 1, 0)
             rowButton.Position = UDim2.new(0, 0, 0, 0)
             rowButton.BackgroundTransparency = 1
             rowButton.BorderSizePixel = 0
@@ -2207,12 +2224,7 @@ function StrikeMusicUI.Create(parent, Theme)
         end
 
         task.defer(function()
-            downloadsList.CanvasSize = UDim2.new(
-                0,
-                0,
-                0,
-                layout.AbsoluteContentSize.Y + 8
-            )
+            setDownloadsListHeight(layout.AbsoluteContentSize.Y + 8)
         end)
     end
 
