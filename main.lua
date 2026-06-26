@@ -1269,11 +1269,18 @@ if leftPanel.Buttons.StrikeMusic then
         local currentFavoriteItems = {}
         local currentPlaylists = {}
         local currentPlaylist = nil
+        local currentMusicContentView = "home"
         local refreshMusicFavorites
         local refreshMusicPlaylists
         local openPlaylist
         local openAddToPlaylistPicker
         local renderCurrentMusicSearchResults
+        local renderCurrentPlaylist
+
+        local function setMusicContentView(view, title)
+            currentMusicContentView = view or "home"
+            musicUI.SetContentView(view, title)
+        end
 
         local function refreshMusicDownloads()
             task.spawn(function()
@@ -1580,7 +1587,14 @@ if leftPanel.Buttons.StrikeMusic then
                 musicUI.SetPlaybackState(true)
                 musicUI.SetNowPlaying(job.local_metadata, 0, "0:00", "0:00")
                 musicUI.SetFavoriteActive(job.library_item_id and favoriteLibraryIds[tostring(job.library_item_id)] == true)
-                refreshMusicDownloads()
+
+                if currentMusicContentView == "favorites" then
+                    refreshMusicFavorites(true)
+                elseif currentMusicContentView == "playlist" and currentPlaylist and renderCurrentPlaylist then
+                    renderCurrentPlaylist()
+                else
+                    refreshMusicDownloads()
+                end
 
                 if job.library_item_id then
                     task.spawn(function()
@@ -1713,12 +1727,12 @@ if leftPanel.Buttons.StrikeMusic then
             playFavoriteItem(item)
         end
 
-        local function renderCurrentPlaylist()
+        renderCurrentPlaylist = function()
             if not currentPlaylist then
                 return
             end
 
-            musicUI.SetContentView("playlist", currentPlaylist.name)
+            setMusicContentView("playlist", currentPlaylist.name)
             musicUI.RenderPlaylistItems(
                 currentPlaylist.items or {},
                 playPlaylistItem,
@@ -1860,7 +1874,7 @@ if leftPanel.Buttons.StrikeMusic then
                 end
 
                 if showView then
-                    musicUI.SetContentView("favorites")
+                    setMusicContentView("favorites")
                     musicUI.RenderFavorites(
                         currentFavoriteItems,
                         playFavoriteItem,
@@ -2279,14 +2293,14 @@ if leftPanel.Buttons.StrikeMusic then
 
         if musicUI.NavButtons.Downloads then
             musicUI.NavButtons.Downloads.MouseButton1Click:Connect(function()
-                musicUI.SetContentView("downloads")
+                setMusicContentView("downloads")
                 refreshMusicDownloads()
             end)
         end
 
         if musicUI.NavButtons.Home then
             musicUI.NavButtons.Home.MouseButton1Click:Connect(function()
-                musicUI.SetContentView("home")
+                setMusicContentView("home")
             end)
         end
 
@@ -2333,7 +2347,7 @@ if leftPanel.Buttons.StrikeMusic then
                     strikeMusicClient.DeletePlaylist(player, playlistToDelete.playlist_id)
                     currentPlaylist = nil
                     refreshMusicPlaylists()
-                    musicUI.SetContentView("home")
+                    setMusicContentView("home")
                 end)
             end)
         end
