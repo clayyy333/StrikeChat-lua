@@ -312,7 +312,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
         "Tienda",
         "🛒",
         UDim2.new(0.5, -19, 0, 32),
-        UDim2.new(0, 14, 0, 158)
+        UDim2.new(0, 14, 0, 198)
     )
 
     createTopButton(
@@ -320,14 +320,14 @@ function LeftPanel.Create(parent, Theme, profile, player)
         "Perfil",
         "👤",
         UDim2.new(0.5, -19, 0, 32),
-        UDim2.new(0.5, 5, 0, 158)
+        UDim2.new(0.5, 5, 0, 198)
     )
 
-    createMenuButton("StrikeMusic", "StrikeMusic", "♫", 212)
-    createMenuButton("CrearSalas", "Crear Sala", "+", 252)
-    createMenuButton("SalasPublicas", "Salas Públicas", "🌐", 292)
-    createMenuButton("SalasPrivadas", "Salas Privadas", "🔒", 332)
-    createMenuButton("TablaClanes", "Tabla de Clanes", "🏆", 372)
+    createMenuButton("StrikeMusic", "StrikeMusic", "♫", 158)
+    createMenuButton("CrearSalas", "Crear Sala", "+", 244)
+    createMenuButton("SalasPublicas", "Salas Públicas", "🌐", 284)
+    createMenuButton("SalasPrivadas", "Salas Privadas", "🔒", 324)
+    createMenuButton("TablaClanes", "Tabla de Clanes", "🏆", 364)
 
     local function setButtonLayout(button, y)
         if not button then
@@ -436,9 +436,9 @@ function LeftPanel.Create(parent, Theme, profile, player)
             pointsIcon.Size = UDim2.new(0, 18, 0, 18)
             pointsIcon.Position = UDim2.new(0.5, -9, 0.5, -9)
 
-            setButtonLayout(createdButtons.Tienda, 136)
-            setButtonLayout(createdButtons.Perfil, 174)
-            setButtonLayout(createdButtons.StrikeMusic, 212)
+            setButtonLayout(createdButtons.StrikeMusic, 136)
+            setButtonLayout(createdButtons.Tienda, 174)
+            setButtonLayout(createdButtons.Perfil, 212)
             setButtonLayout(createdButtons.CrearSalas, 250)
             setButtonLayout(createdButtons.SalasPublicas, 288)
             setButtonLayout(createdButtons.SalasPrivadas, 326)
@@ -470,13 +470,13 @@ function LeftPanel.Create(parent, Theme, profile, player)
             pointsIcon.Size = UDim2.new(0, 20, 0, 20)
             pointsIcon.Position = UDim2.new(0.5, -10, 0.5, -10)
 
-            resetTopButton(createdButtons.Tienda, UDim2.new(0.5, -19, 0, 32), UDim2.new(0, 14, 0, 158))
-            resetTopButton(createdButtons.Perfil, UDim2.new(0.5, -19, 0, 32), UDim2.new(0.5, 5, 0, 158))
-            resetMenuButton(createdButtons.StrikeMusic, 212)
-            resetMenuButton(createdButtons.CrearSalas, 252)
-            resetMenuButton(createdButtons.SalasPublicas, 292)
-            resetMenuButton(createdButtons.SalasPrivadas, 332)
-            resetMenuButton(createdButtons.TablaClanes, 372)
+            resetMenuButton(createdButtons.StrikeMusic, 158)
+            resetTopButton(createdButtons.Tienda, UDim2.new(0.5, -19, 0, 32), UDim2.new(0, 14, 0, 198))
+            resetTopButton(createdButtons.Perfil, UDim2.new(0.5, -19, 0, 32), UDim2.new(0.5, 5, 0, 198))
+            resetMenuButton(createdButtons.CrearSalas, 244)
+            resetMenuButton(createdButtons.SalasPublicas, 284)
+            resetMenuButton(createdButtons.SalasPrivadas, 324)
+            resetMenuButton(createdButtons.TablaClanes, 364)
         end
     end
 
