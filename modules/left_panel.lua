@@ -3,6 +3,7 @@ local LeftPanel = {}
 function LeftPanel.Create(parent, Theme, profile, player)
     local Players = game:GetService("Players")
     local UserInputService = game:GetService("UserInputService")
+    local TweenService = game:GetService("TweenService")
 
     local function getViewportSize()
         local camera = workspace.CurrentCamera
@@ -225,6 +226,59 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     local createdButtons = {}
 
+    local function applyAnimatedBorder(guiObject)
+        if not guiObject or guiObject:GetAttribute("StrikeMusicAnimatedBorderApplied") then
+            return
+        end
+
+        guiObject:SetAttribute("StrikeMusicAnimatedBorderApplied", true)
+
+        local stroke = guiObject:FindFirstChild("StrikeMusicAnimatedBorder")
+
+        if not stroke then
+            stroke = Instance.new("UIStroke")
+            stroke.Name = "StrikeMusicAnimatedBorder"
+            stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+            stroke.Color = Color3.fromRGB(255, 255, 255)
+            stroke.Thickness = 1.6
+            stroke.Transparency = 0.05
+            stroke.Parent = guiObject
+        end
+
+        local gradient = stroke:FindFirstChild("StrikeMusicBorderGradient")
+
+        if not gradient then
+            gradient = Instance.new("UIGradient")
+            gradient.Name = "StrikeMusicBorderGradient"
+            gradient.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(180, 80, 255)),
+                ColorSequenceKeypoint.new(0.7, Color3.fromRGB(78, 190, 92)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(137, 50, 235))
+            })
+            gradient.Rotation = 0
+            gradient.Parent = stroke
+        end
+
+        task.spawn(function()
+            local rotation = 0
+
+            while guiObject.Parent and stroke.Parent and gradient.Parent do
+                rotation += 360
+
+                local tween = TweenService:Create(
+                    gradient,
+                    TweenInfo.new(12, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
+                    {
+                        Rotation = rotation
+                    }
+                )
+
+                tween:Play()
+                tween.Completed:Wait()
+            end
+        end)
+    end
     local function createTopButton(name, text, icon, size, position)
         local btn = Instance.new("TextButton")
         btn.Name = name .. "Button"
@@ -307,6 +361,9 @@ function LeftPanel.Create(parent, Theme, profile, player)
         return btn
     end
 
+    createMenuButton("StrikeMusic", "StrikeMusic", "♫", 158)
+    applyAnimatedBorder(createdButtons.StrikeMusic)
+
     createTopButton(
         "Tienda",
         "Tienda",
@@ -322,8 +379,6 @@ function LeftPanel.Create(parent, Theme, profile, player)
         UDim2.new(0.5, -19, 0, 32),
         UDim2.new(0.5, 5, 0, 198)
     )
-
-    createMenuButton("StrikeMusic", "StrikeMusic", "♫", 158)
     createMenuButton("CrearSalas", "Crear Sala", "+", 244)
     createMenuButton("SalasPublicas", "Salas Públicas", "🌐", 284)
     createMenuButton("SalasPrivadas", "Salas Privadas", "🔒", 324)
