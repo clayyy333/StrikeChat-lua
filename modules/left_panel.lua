@@ -251,19 +251,34 @@ function LeftPanel.Create(parent, Theme, profile, player)
             gradient = Instance.new("UIGradient")
             gradient.Name = "StrikeMusicBorderGradient"
             gradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(137, 50, 235)),
-                ColorSequenceKeypoint.new(0.35, Color3.fromRGB(180, 80, 255)),
-                ColorSequenceKeypoint.new(0.7, Color3.fromRGB(78, 190, 92)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(137, 50, 235))
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(78, 190, 92)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(170, 255, 185)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(78, 190, 92))
             })
             gradient.Rotation = 0
             gradient.Parent = stroke
         end
 
+        local borderPalettes = {
+            ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(78, 190, 92)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(170, 255, 185)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(78, 190, 92))
+            }),
+            ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 92, 198)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(190, 115, 255)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 92, 198))
+            })
+        }
+
         task.spawn(function()
             local rotation = 0
+            local paletteIndex = 1
 
             while guiObject.Parent and stroke.Parent and gradient.Parent do
+                gradient.Color = borderPalettes[paletteIndex]
+                paletteIndex = paletteIndex == #borderPalettes and 1 or paletteIndex + 1
                 rotation += 360
 
                 local tween = TweenService:Create(
@@ -295,7 +310,9 @@ function LeftPanel.Create(parent, Theme, profile, player)
         local colors = {
             Theme.Colors.Text,
             Color3.fromRGB(190, 115, 255),
+            Color3.fromRGB(255, 92, 198),
             Color3.fromRGB(78, 190, 92),
+            Color3.fromRGB(120, 220, 255),
             Color3.fromRGB(245, 245, 245)
         }
 
@@ -599,5 +616,6 @@ function LeftPanel.Create(parent, Theme, profile, player)
 end
 
 return LeftPanel
+
 
 
