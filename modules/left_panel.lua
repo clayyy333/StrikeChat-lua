@@ -268,9 +268,52 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
                 local tween = TweenService:Create(
                     gradient,
-                    TweenInfo.new(12, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
+                    TweenInfo.new(6, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
                     {
                         Rotation = rotation
+                    }
+                )
+
+                tween:Play()
+                tween.Completed:Wait()
+            end
+        end)
+    end
+    local function applyAnimatedTextColor(guiObject)
+        if not guiObject or guiObject:GetAttribute("StrikeMusicAnimatedTextApplied") then
+            return
+        end
+
+        local label = guiObject:FindFirstChild("Label")
+
+        if not label or not label:IsA("TextLabel") then
+            return
+        end
+
+        guiObject:SetAttribute("StrikeMusicAnimatedTextApplied", true)
+
+        local colors = {
+            Theme.Colors.Text,
+            Color3.fromRGB(190, 115, 255),
+            Color3.fromRGB(78, 190, 92),
+            Color3.fromRGB(245, 245, 245)
+        }
+
+        task.spawn(function()
+            local index = 1
+
+            while guiObject.Parent and label.Parent do
+                index += 1
+
+                if index > #colors then
+                    index = 1
+                end
+
+                local tween = TweenService:Create(
+                    label,
+                    TweenInfo.new(1.25, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut),
+                    {
+                        TextColor3 = colors[index]
                     }
                 )
 
@@ -363,6 +406,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
     createMenuButton("StrikeMusic", "StrikeMusic", "♫", 158)
     applyAnimatedBorder(createdButtons.StrikeMusic)
+    applyAnimatedTextColor(createdButtons.StrikeMusic)
 
     createTopButton(
         "Tienda",
@@ -555,3 +599,5 @@ function LeftPanel.Create(parent, Theme, profile, player)
 end
 
 return LeftPanel
+
+
