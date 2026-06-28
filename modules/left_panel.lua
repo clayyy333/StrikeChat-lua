@@ -251,9 +251,11 @@ function LeftPanel.Create(parent, Theme, profile, player)
             gradient = Instance.new("UIGradient")
             gradient.Name = "StrikeMusicBorderGradient"
             gradient.Color = ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(78, 190, 92)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(170, 255, 185)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(78, 190, 92))
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(0.42, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(78, 190, 92)),
+                ColorSequenceKeypoint.new(0.58, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(137, 50, 235))
             })
             gradient.Rotation = 0
             gradient.Parent = stroke
@@ -261,14 +263,18 @@ function LeftPanel.Create(parent, Theme, profile, player)
 
         local borderPalettes = {
             ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(78, 190, 92)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(170, 255, 185)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(78, 190, 92))
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(0.42, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(78, 190, 92)),
+                ColorSequenceKeypoint.new(0.58, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(137, 50, 235))
             }),
             ColorSequence.new({
-                ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 92, 198)),
-                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(190, 115, 255)),
-                ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 92, 198))
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(0.42, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 92, 198)),
+                ColorSequenceKeypoint.new(0.58, Color3.fromRGB(137, 50, 235)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(137, 50, 235))
             })
         }
 
@@ -616,6 +622,7 @@ function LeftPanel.Create(parent, Theme, profile, player)
 end
 
 return LeftPanel
+
 
 
 
